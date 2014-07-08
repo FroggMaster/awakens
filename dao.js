@@ -295,7 +295,7 @@ module.exports = function(callback) {
             settings.log.error && console.error('Could not establish connection: ' + err);
             connection.reject(err);
         } else if (dbconn) {
-            dbconn.query('use ' + DB_SCHEMA);
+            dbconn.query('use ' + settings.db.schema);
             connection.resolve(dbconn);
             settings.log.db && console.log('Database connection established');
         } else {

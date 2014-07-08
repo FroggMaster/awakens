@@ -1,9 +1,11 @@
 var DATE_FORMAT = 'shortTime';
-var BLACKLIST = ['wrdp.info', 'puu.sh'];
+var BLACKLIST = [ 'wrdp.info', 'puu.sh' ];
 
 // ------------------------------------------------------------------
 // Client
 // ------------------------------------------------------------------
+
+ONLINE = new Backbone.Collection();
 
 $(function() {
     var socket = io('/' + window.channel);
@@ -96,7 +98,6 @@ $(function() {
         return null;
     }
 
-    ONLINE = new Backbone.Collection();
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
@@ -261,7 +262,7 @@ $(function() {
         $('#online-' + user.get('id')).remove();
         updateCount();
     });
-    ONLINE.on('clear', function(){
+    ONLINE.on('clear', function() {
         $('#online').html('');
     });
 });
@@ -387,8 +388,7 @@ $(function() {
 $(function() {
     var history = [];
     var historyIndex = -1;
-    var form = $('#input-bar form').submit(function(e) {
-        e.preventDefault();
+    function submit() {
         var text = input.val();
         if (text) {
             CLIENT.submit(text);
@@ -396,10 +396,22 @@ $(function() {
         historyIndex = -1;
         history.push(text);
         input.val('');
-    });
-    var input = $('input[type=text]', form).keyup(function(e) {
+    }
+    var input = $('#input-message').keydown(function(e) {
         var delta = 0;
         switch (e.keyCode) {
+        case 13: // enter
+            if (!e.shiftKey) {
+                e.preventDefault();
+                var text = input.val();
+                if (text) {
+                    CLIENT.submit(text);
+                }
+                historyIndex = -1;
+                history.push(text);
+                input.val('');
+            }
+            return;
         case 38: // up
             delta = 1;
             break;
@@ -411,6 +423,7 @@ $(function() {
             historyIndex = Math.max(0, Math.min(history.length - 1, historyIndex + delta));
             text = history[history.length - historyIndex - 1];
             if (text) {
+                e.preventDefault();
                 input.val(text);
             }
         }
@@ -595,7 +608,7 @@ parser = {
     },
     parse : function(str) {
         // escaping shit
-        str = str.replace('\n', '\\n');
+        str = str.replace(/\n/g, '\\n');
         str = str.replace(/&/gi, '&amp;');
         str = str.replace(/>/gi, '&gt;');
         str = str.replace(/</gi, '&lt;');
@@ -637,8 +650,7 @@ parser = {
         str = str.replace(/( moot)+?/gi, '<div> &#35;ff00bcm&#35;ff00dbi&#35;ff00fas&#35;e300ffs&#35;c400ffi&#35;a500ffn&#35;8500ffg&#35;6600ffn&#35;4700ffo</div>');
         str = str.replace(/(missingno)+?/gi, '<div>&#35;ff00bcm&#35;ff00dbi&#35;ff00fas&#35;e300ffs&#35;c400ffi&#35;a500ffn&#35;8500ffg&#35;6600ffn&#35;4700ffo</div>');
         str = str.replace(/(PENIS)+?/gi, '<div>&#35;2700ffP&#35;0800ffE&#35;0016ffN&#35;0036ffI&#35;0055ffS</div>');
-        str = str.replace(/(mods)+?/gi,
-                '<div>&#35;0075fft&#35;0094ffh&#35;00b3ffe&#35;00d3ff &#35;00f2ffp&#35;00ffece&#35;00ffcco&#35;00ffadp&#35;00ff8el&#35;00ff6ee&#35;00ff4f&#39;&#35;00ff30s&#35;00ff10 &#35;0eff00c&#35;2dff00h&#35;4dff00a&#35;6cff00m&#35;8cff00p&#35;abff00i&#35;caff00o&#35;eaff00n&#35;fff400s</div>');
+        str = str.replace(/(mods)+?/gi, '<div>&#35;0075fft&#35;0094ffh&#35;00b3ffe&#35;00d3ff &#35;00f2ffp&#35;00ffece&#35;00ffcco&#35;00ffadp&#35;00ff8el&#35;00ff6ee&#35;00ff4f&#39;&#35;00ff30s&#35;00ff10 &#35;0eff00c&#35;2dff00h&#35;4dff00a&#35;6cff00m&#35;8cff00p&#35;abff00i&#35;caff00o&#35;eaff00n&#35;fff400s</div>');
         str = str.replace(/(brony)+?/gi, '<div>&#35;ffd500j&#35;ffb500a&#35;ff9600b&#35;ff7700r&#35;ff5700o&#35;ff3800n&#35;ff1900i&#35;ff0006s</div>');
         str = str.replace(/(bronies)+?/gi, '<div>&#35;ffd500j&#35;ffb500a&#35;ff9600b&#35;ff7700r&#35;ff5700o&#35;ff3800n&#35;ff1900i&#35;ff0006s</div>');
         str = str.replace(/(VAGINA)+?/gi, '<div>&#35;ff0083V&#35;ff00a3A&#35;ff00c2G&#35;ff00e1I&#35;fc00ffN&#35;dd00ffA</div>');
@@ -652,8 +664,7 @@ parser = {
         str = str.replace(/(facebook)+?/gi, '<div>&#35;00ff4fm&#35;00ff30y&#35;00ff10s&#35;0eff00p&#35;2dff00a&#35;4dff00c&#35;6cff00e</div>');
         str = str.replace(/(myspace)+?/gi, '<div>&#35;8cff00t&#35;abff00w&#35;caff00i&#35;eaff00t&#35;fff400t&#35;ffd500e&#35;ffb500r</div>');
         str = str.replace(/(newfag)+?/gi, '<div>&#35;ff000co&#35;ff002bl&#35;ff004bd&#35;ff006af&#35;ff0089a&#35;ff00a9g</div>');
-        str = str.replace(/(wikipedia)+?/gi,
-                '<div>&#35;e300ffe&#35;c400ffn&#35;a500ffc&#35;8500ffy&#35;6600ffc&#35;4700ffl&#35;2700ffo&#35;0800ffp&#35;0016ffe&#35;0036ffd&#35;0055ffi&#35;0075ffa&#35;0094ff &#35;00b3ffd&#35;00d3ffr&#35;00f2ffa&#35;00ffecm&#35;00ffcca&#35;00ffadt&#35;00ff8ei&#35;00ff6ec&#35;00ff4fa</div>');
+        str = str.replace(/(wikipedia)+?/gi, '<div>&#35;e300ffe&#35;c400ffn&#35;a500ffc&#35;8500ffy&#35;6600ffc&#35;4700ffl&#35;2700ffo&#35;0800ffp&#35;0016ffe&#35;0036ffd&#35;0055ffi&#35;0075ffa&#35;0094ff &#35;00b3ffd&#35;00d3ffr&#35;00f2ffa&#35;00ffecm&#35;00ffcca&#35;00ffadt&#35;00ff8ei&#35;00ff6ec&#35;00ff4fa</div>');
         str = str.replace(/(encyclopedia dramatica)+?/gi, '<div>&#35;00ff30u&#35;00ff10n&#35;0eff00c&#35;2dff00y&#35;4dff00c&#35;6cff00l&#35;8cff00o&#35;abff00p&#35;caff00e&#35;eaff00d&#35;fff400i&#35;ffd500a</div>');
         str = str.replace(/(uncyclopedia)+?/gi, '<div>&#35;ff0000w&#35;ff001fi&#35;ff003ek&#35;ff005ei&#35;ff007dp&#35;ff009ce&#35;ff00bcd&#35;ff00dbi&#35;ff00faa</div>');
         str = str.replace(/(google)+?/gi, '<div>&#35;ff0006b&#35;ff0025i&#35;ff0044n&#35;ff0064g</div>');
@@ -670,10 +681,7 @@ parser = {
         str = str.replace(/(semen)+?/gi, '<div>&#35;27ff00m&#35;47ff00a&#35;66ff00y&#35;85ff00o&#35;a5ff00n&#35;c4ff00a&#35;e3ff00i&#35;fffa00s&#35;ffdb00e</div>');
         str = str.replace(/(edgy)+?/gi, '<div>&#35;cb0b0be&#35;971717d&#35;632323g&#35;2f2f2fy</div>');
         // endfilters
-        str = str
-                .replace(
-                        /(\/\+ )(.+)$/i,
-                        '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly style=" width: calc(90% - 10%); padding-right: 5px; padding-left: 5px; border: 1px solid #0C0D0E; border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; background: #202020; color: #0F0; font-size: 14px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: normal; box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;" value="$2"/>');
+        str = str.replace(/(\/\+ )(.+)$/i, '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly style=" width: calc(90% - 10%); padding-right: 5px; padding-left: 5px; border: 1px solid #0C0D0E; border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; background: #202020; color: #0F0; font-size: 14px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: normal; box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;" value="$2"/>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
@@ -711,7 +719,7 @@ parser = {
         // change spaces to &nbsp;
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
-        // str = str.replace(/\s{2}/gi, ' &nbsp;');
+        str = str.replace(/\s{2}/gi, ' &nbsp;');
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i]);
         }
