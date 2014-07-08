@@ -1,6 +1,6 @@
-var constants = require('./constants');
+var settings = require('./settings');
 var email = require('emailjs');
-var emailServer = email.server.connect(constants.emailServer);
+var emailServer = email.server.connect(settings.emailServer);
 var $ = require('jquery-deferred');
 module.exports = {
     send : function(email, args) {

@@ -1,5 +1,5 @@
-var constants = require('./constants');
-var msgs = constants.msgs;
+var settings = require('./settings');
+var msgs = settings.msgs;
 var dao = require('./dao');
 
 var _ = require('underscore');
@@ -8,12 +8,12 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var http = require('http');
-var httpPort = constants.server.port;
+var httpPort = settings.server.port;
 var server;
-var verifyEnabled = !!constants.emailServer;
+var verifyEnabled = !!settings.emailServer;
 
-if (constants.https) {
-    var httpsPort = constants.https.port;
+if (settings.https) {
+    var httpsPort = settings.https.port;
     var happ = express();
     var hserver = http.Server(happ);
     happ.get('*', function(req, res) {
@@ -23,8 +23,8 @@ if (constants.https) {
         console.log('http (for redirecting) listening on *:' + httpPort);
     });
     server = require('https').createServer({
-        key : fs.readFileSync(constants.https.key),
-        cert : fs.readFileSync(constants.https.cert)
+        key : fs.readFileSync(settings.https.key),
+        cert : fs.readFileSync(settings.https.cert)
     }, app);
     server.listen(httpsPort, function() {
         console.log('https listening on *:' + httpsPort);
@@ -38,12 +38,12 @@ if (constants.https) {
 
 var io = require('socket.io')(server);
 
-if (constants.server.compression) {
+if (settings.server.compression) {
     app.use(require('compression')());
 }
 
-app.use(express.static(__dirname + '/static', constants.server.cache ? {
-    maxAge : constants.server.cache
+app.use(express.static(__dirname + '/static', settings.server.cache ? {
+    maxAge : settings.server.cache
 } : undefined));
 
 var channels = {};
@@ -84,7 +84,7 @@ function start(channelName) {
         var log = {};
         [ 'error', 'info', 'debug' ].forEach(function(lvl) {
             log[lvl] = function() {
-                if (constants.log[lvl]) {
+                if (settings.log[lvl]) {
                     var prefix = lvl.toUpperCase() + ' [' + user.remote_addr;
                     if (user.nick) {
                         prefix += ',' + user.nick;

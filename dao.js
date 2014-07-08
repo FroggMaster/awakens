@@ -1,12 +1,12 @@
-var constants = require('./constants');
+var settings = require('./settings');
 var email = require('./sendEmail');
-var msgs = constants.msgs;
+var msgs = settings.msgs;
 var _ = require('underscore');
 var $ = require('jquery-deferred');
 var mysql = require('mysql');
 var passwordHash = require('password-hash');
 var fs = require('fs');
-var pool = mysql.createPool(_.extend({}, require('./private').db, constants.db));
+var pool = mysql.createPool(settings.db);
 
 module.exports = function(callback) {
     var connection = $.Deferred();
@@ -90,12 +90,12 @@ module.exports = function(callback) {
                 } else if (info.registered) {
                     done.resolve(false, msgs.alreadyRegistered);
                 } else {
-                    if (constants.emailServer) {
+                    if (settings.emailServer) {
                         var _this = this;
                         var verification_code = Math.floor(Math.random() * 10000);
                         email.send(_.extend({
                             to : 'Spooks Chatter <' + email_address + '>'
-                        }, constants.registrationEmail), {
+                        }, settings.registrationEmail), {
                             text : [ this.get('nick'), verification_code ]
                         }).then(function() {
                             _this.set({
@@ -228,17 +228,17 @@ module.exports = function(callback) {
     function query(sql, params) {
         var rows = $.Deferred();
         connection.then(function(db) {
-            if (constants.log.db) {
+            if (settings.log.db) {
                 console.log('Query request: ' + sql, params);
             }
             db.query(sql, params, function(err, dbrows) {
                 if (err) {
-                    if (constants.log.error) {
+                    if (settings.log.error) {
                         console.error('Query error: ', err);
                     }
                     rows.reject(err);
                 } else {
-                    if (constants.log.db) {
+                    if (settings.log.db) {
                         console.log('Query resolved: ', JSON.stringify(dbrows));
                     }
                     rows.resolve(dbrows);
@@ -292,14 +292,14 @@ module.exports = function(callback) {
 
     pool.getConnection(function(err, dbconn) {
         if (err) {
-            constants.log.error && console.error('Could not establish connection: ' + err);
+            settings.log.error && console.error('Could not establish connection: ' + err);
             connection.reject(err);
         } else if (dbconn) {
             dbconn.query('use ' + DB_SCHEMA);
             connection.resolve(dbconn);
-            constants.log.db && console.log('Database connection established');
+            settings.log.db && console.log('Database connection established');
         } else {
-            constants.log.error && console.error('No connection');
+            settings.log.error && console.error('No connection');
             connection.reject('No connection');
         }
     });
@@ -580,14 +580,14 @@ module.exports = function(callback) {
          */
         nextNick : function() {
             return one('select count(*) count from chat_users').then(function(row) {
-                return _.sample(constants.names) + '.' + row.count;
+                return _.sample(settings.names) + '.' + row.count;
             });
         },
 
         release : function() {
             connection.done(function(dbconn) {
                 dbconn.release();
-                constants.log.db && console.log('DB Connection released');
+                settings.log.db && console.log('DB Connection released');
             });
         }
     };
