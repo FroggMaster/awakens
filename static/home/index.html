@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+html, body {
+    margin: 5px;
+    padding: 0;    
+	overflow: hidden;}#content {    
+	overflow: hidden;}#vertical-scroll-bar,#vertical-scroll-bar .handle {    
+	-webkit-touch-callout: none;    
+	-webkit-user-select: none;    
+	-khtml-user-select: none;    
+	-moz-user-select: none;    
+	-ms-user-select: none;    
+	user-select: none;
+}
+#vertical-scroll-bar {
+    position: absolute;    
+	right: 0;    
+	top: 0;    
+	width: 10px;    
+	margin-right: 3px;
+}
+#vertical-scroll-bar .handle {
+    position: absolute;    
+	left: 0;    
+	width: 100%;    
+	background-color: #555;    
+	border-radius: 5px;    
+	cursor: pointer;
+}
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="home.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+ var images="banner/1.png banner/2.png banner/3.png banner/4.png banner/5.png banner/6.png banner/7.png banner/8.png banner/9.png banner/10.png banner/11.png banner/12.png banner/13.png banner/14.png banner/15.png banner/16.png banner/17.png banner/18.png banner/19.png banner/20.png banner/21.png banner/22.png banner/23.png banner/24.png banner/25.png banner/26.png banner/27.png banner/28.png banner/29.png banner/30.png banner/31.png banner/32.png banner/33.png banner/34.png banner/35.png banner/1.gif banner/2.gif banner/3.gif banner/4.gif".split(" "),i=Math.floor(Math.random()*images.length);function randomImage(){document.getElementById("random").src=images[i]}onload=randomImage;
+ //]]>
+</script>
+<title>Chat Home</title>
+    <style type="text/css">
+    body {
+      font-family: "Tahoma", "Arial", sans-serif;
+      color: #eee;
+      background: #111;
+	}
+body,td,th {
+	font-family: Tahoma, Arial, sans-serif;
+}
+a:link {
+	color: #FFF;
+}
+a:visited {
+	color: #999;
+}
+a:hover {
+	color: #CCC;
+}
+	#Top {
+		margin: 10px;
+		border: 1px solid #0C0D0E;
+		border-radius: 5px;
+		-moz-border-radius: 5px;
+		-khtml-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		background: #202020;
+		padding-top: 4px;
+		padding-bottom: 4px;
+		padding-left: 3px;
+		padding-right: 3px;
+		box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;
+	}
+</style>
+</head>
+<body><div id="content" class="full-height">
+  <div id="Top" class="banner" align="center" style="color:#FF0000">
+    <p><br />
+      <a href="/"><img id="random" src="" width="300" height="100" /></a><br />
+      <strong>Please leave your sanity in a safe place.</strong>    </p>
+<p align="center">------------------------------------------------------------------------------------------------------</p></div>
+This page is the information directory, please use the menu below to navigate to the section that indicates to your specific needs.</p><nav><ul>
+  <li><a href="#Info">Information (1)</a></li>
+  <li><a href="#Begin">Beginners guide (2)</a></li>
+  <li><a href="#Cmds">Commands (3)</a></li>
+  <li><a href="#Dec">Decorative commands (4)</a></li>
+  <li><a href="#Admin">Admin controls (5)</a></li>
+  </ul></nav>
+<h2 id="Info" style="color:#9F0">Information.</h2>
+<p>&quot;hi im 5 and wat is this?&quot;<br />
+  Well basically this website is a chat engine in beta stage. Everything visually is pretty self-explanitory,though technical stuff can be a bit troublesome.<br />
+  It was designed just to be a basic chat engine that I would append to my 'main' website, but I have bigger thoughts in mind. 
+  I'm hoping that one day it can be self-sustaining, but that's a far way off. For the future I want to state that the chat pages themselves will NEVER have advertisements. Though I might add them to this page.</p>
+<p style="color:#FF0000"><strong>DISCLAIMER:</strong> This chat is not safe for work and  I am not a doctor.<br />
+</p>
+<h2 id="Begin" style="color:#9F0">Beginners guide.</h2>
+<p>Starting your own chat directory/channel/world.</p>
+<p>Eventually I might be able to add a system where upon registration your name gets appended to the URL like: username.spooks.me<br />
+My second proposal would be to allow users to add words to the url like: username.spooks.me/myfirstworld<br />
+This would create a separate channel where &quot;username&quot; is the admin.<br />
+But this is all theoretical and is not in practice yet.<br />
+For now you'll have to make do with the main page at <a href="http://this.spooks.me/" target="_blank">http://this.spooks.me/</a>
+</p>
+<p>To the bottom of your screen you'll see the input box. Go ahead and just click in that and type in your unimportant opinions. Often times just getting it out helps emotionally. :)<br />
+  In the input box, you'll have the capability to type in /commands.</p>
+<h2 id="Cmds" style="color:#9F0">Commands:</h2>
+<p>This is an incomplete list of all of the chat commands.<br />
+<a style="color:#F60">/nick</a> = This allows you to choose your own unique name. <a style="color:#0F0">SYNTAX: /nick username</a><br />
+<a style="color:#F60">/register</a> = This attaches a password to your nickname so that it is only usable by you. <a style="color:#0F0">SYNTAX: /register (password) (email@address)</a><br />
+<a style="color:#F60">/verify</a> = Immediatly after registration, you will recieve an email (located in Junk/Spam folder) with instructions.<br />
+<a style="color:#F60">/login</a> = If you have been logged out by any means (usually a nick change) you can log in with this command. <a style="color:#0F0">SYNTAX: /login (password) (username)</a><br />
+<a style="color:#F60">/mute</a> = Removes any horrid noises you hear. (Will not work in reality.) Turns chat sound off.<br />
+<a style="color:#F60">/unmute</a> =
+Pretty self explanitory but, turns the chat sound back on.<br /><a style="color:#F60">/pm</a> = With this command you can send private messages to your friend. Nobody else can view these messages. <a style="color:#0F0">SYNTAX: /pm username|message</a><br />
+<a style="color:#F60">/unregister</a> = This unattaches your password to your nickname so that it is usable to all. <a style="color:#0F0">SYNTAX: /unregister (password) (email@address)</a><br />
+Press F13 to send a bug ticket.</p>
+<h2 id="Dec" style="color:#9F0">Decorative Commands:<br />
+</h2>
+<p>Decorative commands are just for show. It will make you feel like the prettiest girl at the ball.<br />
+<a style="color:#F60">/me</a> = Typing this command will show an action of some kind. <a style="color:#0F0">SYNTAX: /me walks outside</a><br />
+  <a style="color:#F60">/color</a> = This will change the colour of the text following your username. <a style="color:#0F0">SYNTAX: /color tomato</a><br />
+  Read more about colors here: <a href="http://en.wikipedia.org/wiki/Web_colors" target="_blank">http://en.wikipedia.org/wiki/Web_colors</a><br />
+  <a style="color:#F60">/font</a> = The chat system allows for the stylizing of your font. 
+<a style="color:#0F0">SYNTAX: /font Gabriela</a><br />
+All available fonts are listed here: <a href="http://www.google.com/fonts" target="_blank">http://www.google.com/fonts</a> <br />
+<a style="color:#F60">/style</a> = Meaning to add bold or italics and the like.<br />
+styles;<br />
+* = bold<br />
+% = italic<br />
+_ = underscore<br />
+- =
+strikethrough<br />
+<a style="color:#0F0">SYNTAX: /style *%_-</a>
+<br />
+</p>
+<h2 id="Admin" style="color:#9F0">Admin Controls: </h2>
+<p>These commands will make you a super-human.</p>
+<p>But right now being an admin doesn't amount to much. You would be able to kick or ban and change the topic. It's really not great.  </p>
+<p ><a href="#Top">[Top]</a></p></div>
+<div id="vertical-scroll-bar" class="full-height"><span class="handle"></span></div>
+</body>
+</html>
