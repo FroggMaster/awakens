@@ -34,7 +34,7 @@ module.exports = {
     log : {
         error : true,
         info : true,
-        debug : true,
+        debug : false,
         db : false
     },
 
