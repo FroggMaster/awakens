@@ -457,7 +457,7 @@ $(function() {
         },
         unregister : {},
         register : {
-            params : verifyEnabled ? [ 'email_address' ] : [ 'email_address', 'initial_password' ]
+            params : verifyEnabled ? [ 'email_address' ] : [ 'initial_password', 'email_address' ]
         },
         verify : {
             params : [ 'verification_code', 'initial_password' ]
