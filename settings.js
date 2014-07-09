@@ -124,6 +124,12 @@ module.exports = {
 _.each(settings, function(setting, key) {
     var override = module.exports[key];
     if (override) {
-        module.exports[key] = _.extend(override, setting);
+        if (setting) {
+            _.extend(override, setting);
+        } else {
+            module.exports[key] = null;
+        }
+    } else {
+        module.exports[key] = setting;
     }
 });
