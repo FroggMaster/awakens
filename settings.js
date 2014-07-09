@@ -44,6 +44,11 @@ module.exports = {
         text : 'You are registering the nickname {0}.\r\nTo verify your account, all you have to do is type out the following: /verify {1}'
     },
 
+    limits : {
+        message : 10000,
+        nick : 100
+    },
+
     // emailServer : {
     // user : "username",
     // password : "password",

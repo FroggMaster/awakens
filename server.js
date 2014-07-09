@@ -108,12 +108,13 @@ function start(channelName) {
             nick : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    return attemptNick(dao, params.nick);
+                    return attemptNick(dao, params.nick.substring(0, settings.limits.nick));
                 }
             },
             me : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
+                    var message = params.message.substring(0, settings.limits.message)
                     roomEmit('message', {
                         type : 'action-message',
                         message : user.nick + ' ' + params.message
@@ -125,9 +126,10 @@ function start(channelName) {
                 params : [ 'nick', 'password' ],
                 handler : function(dao, dbuser, params) {
                     var done = $.Deferred();
-                    dao.findUser(params.nick).then(function(u) {
+                    var nick = params.nick.substring(0, settings.limits.nick);
+                    dao.findUser(nick).then(function(u) {
                         if (u && u.get('verified')) {
-                            attemptNick(dao, params.nick, params.password).then(function() {
+                            attemptNick(dao, nick, params.password).then(function() {
                                 done.resolve.apply(done, arguments);
                             }, function(err) {
                                 done.reject(err);
@@ -276,6 +278,7 @@ function start(channelName) {
                 access_level : 0,
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
+                    var topic = params.topic.substring(0, settings.limits.message)
                     return dao.setChannelInfo(channelName, 'topic', params.topic).then(function() {
                         roomEmit('update', {
                             topic : params.topic
@@ -295,7 +298,7 @@ function start(channelName) {
                             type : 'personal-message',
                             from : user.nick,
                             to : params.nick,
-                            message : params.message
+                            message : params.message.substring(0, settings.limits.message)
                         };
                         socketEmit(socket, 'message', message);
                         toSocket != socket && socketEmit(toSocket, 'message', message);
@@ -348,7 +351,7 @@ function start(channelName) {
                         roomEmit('message', {
                             nick : user.nick,
                             type : 'chat-message',
-                            message : msg
+                            message : msg.substring(0, settings.limits.message)
                         });
                         done.resolve(true);
                     } else {
