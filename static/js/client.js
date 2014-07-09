@@ -471,6 +471,10 @@ $(function() {
         channel_banlist : {
             access_level : 1
         },
+        find_ip : {
+            access_level : 0,
+            params : [ 'remote_addr' ]
+        },
         ban : {
             access_level : 1,
             params : [ 'id$' ]
