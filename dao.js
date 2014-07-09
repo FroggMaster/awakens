@@ -205,6 +205,7 @@ module.exports = function(callback) {
                 var done = $.Deferred();
                 access_level = new Number(access_level);
                 if (!isNaN(access_level) && access_level >= 0 && access_level <= 3) {
+                    access_level = access_level + "";
                     var nick = this.get('nick');
                     this.set('access_level', access_level).then(function() {
                         done.resolve(true, msgs.get('access_granted', nick, access_level));
