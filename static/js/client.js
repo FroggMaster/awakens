@@ -101,7 +101,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute nick password'.split(' ').forEach(function(key) {
+            'color font style mute nick password images'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     localStorage.setItem('chat-' + key, value);
@@ -109,12 +109,12 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style mute'.split(' ').forEach(function(key) {
+            'color font style mute images'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
-                        this.show('The ' + key + ' was changed to: ' + value);
+                        this.show(key + ' changed to: ' + value);
                     } else {
-                        this.show('The ' + key + ' was reset to default');
+                        this.show(key + ' reset to default');
                     }
                 }, this);
             }, this);
@@ -542,6 +542,11 @@ $(function() {
         },
         pm : {
             params : [ 'nick|message' ]
+        },
+        toggle_images : {
+            handler : function() {
+                CLIENT.set('images', CLIENT.get('images') == 'on' ? 'off' : 'on');
+            }
         }
     };
 
@@ -713,7 +718,7 @@ parser = {
         }
 
         var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:gif|jpg|jpeg|png|bmp))<\/a>/i.exec(str);
-        if (img) {
+        if (img && CLIENT.get('images') == 'on') {
             var blacklisted = false;
             for ( var i = 0; i < BLACKLIST.length && !blacklisted; i++) {
                 blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
