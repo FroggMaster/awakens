@@ -203,7 +203,7 @@ module.exports = function(callback) {
              */
             access : function(access_level) {
                 var done = $.Deferred();
-                var access_level = new Number(params.access_level);
+                access_level = new Number(access_level);
                 if (!isNaN(access_level) && access_level >= 0 && access_level <= 3) {
                     var nick = this.get('nick');
                     return this.set('access_level', access_level).then(function() {
