@@ -225,9 +225,13 @@ function start(channelName) {
                     var done = $.Deferred();
                     dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser) {
-                            dbuser.access(params.access_level).done(handleResponse);
-                            done.resolve(true);
+                            dbuser.access(params.access_level).then(function() {
+                                done.resolve.apply(done, arguments);
+                            }, function(err) {
+                                done.reject(err);
+                            });
                         } else {
+                            log.debug('access: Did not find user');
                             done.resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
                     }, function(err) {
