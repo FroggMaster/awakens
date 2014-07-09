@@ -53,7 +53,7 @@ $(function() {
     });
 
     socket.on('disconnect', function() {
-        ONLINE.clear();
+        ONLINE.reset();
         CLIENT.show({
             message : 'Disconnected',
             type : 'error-message'
@@ -262,7 +262,7 @@ $(function() {
         $('#online-' + user.get('id')).remove();
         updateCount();
     });
-    ONLINE.on('clear', function() {
+    ONLINE.on('reset', function() {
         $('#online').html('');
     });
 });
@@ -389,13 +389,16 @@ $(function() {
     var history = [];
     var historyIndex = -1;
     function submit() {
-        var text = input.val();
-        if (text) {
-            CLIENT.submit(text);
+        var ac = $('#autocomplete');
+        if (ac.length == 0 || ac.css('display') == 'none') {
+            var text = input.val();
+            if (text) {
+                CLIENT.submit(text);
+            }
+            historyIndex = -1;
+            history.push(text);
+            input.val('');
         }
-        historyIndex = -1;
-        history.push(text);
-        input.val('');
     }
     var input = $('#input-message').keydown(function(e) {
         var delta = 0;
@@ -413,10 +416,14 @@ $(function() {
             }
             return;
         case 38: // up
-            delta = 1;
+            if (e.shiftKey) {
+                delta = 1;
+            }
             break;
         case 40: // down
-            delta = -1;
+            if (e.shiftKey) {
+                delta = -1;
+            }
             break;
         }
         if (delta) {
@@ -810,7 +817,7 @@ $(function() {
 });
 
 // ------------------------------------------------------------------
-// Auto-Complete
+// Autocomplete
 // ------------------------------------------------------------------
 
 $(function() {
