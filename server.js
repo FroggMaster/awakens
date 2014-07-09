@@ -48,8 +48,8 @@ app.use(express.static(__dirname + '/static', settings.server.cache ? {
 
 var channels = {};
 
-function getClientIp(req) {
-    return "TODO.IP";
+function getClientIp(socket) {
+    return socket.request.connection.remoteAddress;
 }
 
 function start(channelName) {
@@ -62,7 +62,7 @@ function start(channelName) {
 
     room.on('connection', function(socket) {
         var user = {
-            remote_addr : getClientIp(socket.request),
+            remote_addr : getClientIp(socket),
             socket : socket
         };
 
