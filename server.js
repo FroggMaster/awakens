@@ -270,7 +270,7 @@ function start(channelName) {
                 handler : function(dao, dbuser, params) {
                     return dao.find_ip(params.remote_addr).then(function(nicks) {
                         if (nicks.length > 0) {
-                            showMessage(msgs.get('find_ip', [ params.remote_addr, nicks.join(', ') ]));
+                            showMessage(msgs.get('find_ip', params.remote_addr, nicks.join(', ')));
                         } else {
                             showMessage(msgs.get('find_ip_empty', params.remote_addr));
                         }

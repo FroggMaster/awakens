@@ -93,7 +93,7 @@ module.exports = {
         whoami : 'You are {0} with access_level {1} with ip {2}',
         whois : '{0} has access_level {1} with ip {2}',
         user_doesnt_exist : '{0} does not exist',
-        find_ip : 'ip {0} uses: ',
+        find_ip : 'ip {0} uses: {1}',
         find_ip_empty : 'Could not find ip {0}',
         banned_channel : '{0} is now banned on this channel',
         banned_global : '{0} is now banned globally',
