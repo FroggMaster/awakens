@@ -392,7 +392,8 @@ function start(channelName) {
                                     valid = cmd.access_level >= dbuser.get('access_level');
                                 }
                                 if (valid) {
-                                    cmd.handler(dao, dbuser, params).then(function(success, msg) {
+                                    var def = cmd.handler(dao, dbuser, params);
+                                    def && def.then(function(success, msg) {
                                         done.resolve(success, msg);
                                     }, function(err) {
                                         done.reject(err);
