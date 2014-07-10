@@ -59,6 +59,10 @@ $(function() {
             type : 'error-message'
         });
     });
+    
+    socket.on('refresh', function(){
+        window.location.reload();
+    });
 
     /**
      * @inner
@@ -547,6 +551,9 @@ $(function() {
             handler : function() {
                 CLIENT.set('images', CLIENT.get('images') == 'on' ? 'off' : 'on');
             }
+        },
+        refresh_client : {
+            access_level : 0
         }
     };
 

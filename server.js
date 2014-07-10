@@ -312,6 +312,12 @@ function start(channelName) {
                     }
                     return done.promise();
                 }
+            },
+            refresh_client : {
+                access_level : 0,
+                handler : function(dao, dbuser, params) {
+                    roomEmit('refresh');
+                }
             }
         };
 
