@@ -659,6 +659,7 @@ parser = {
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         str = str.replace(/(\/)(\?)([a-z0-9]+)?/gi, '<div><a style="color: #992222; text-decoration: none;" target="_blank" href="https://this.spooks.me/?$3">$2$3</a></div>');
         // filters
+        /*
         str = str.replace(/(roody poo)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c &#35;ff00bcp&#35;ff00dbo&#35;ff00fao</div>');
         str = str.replace(/(nigger)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c &#35;ff00bcp&#35;ff00dbo&#35;ff00fao</div>');
         str = str.replace(/(faggot)+?/gi, '<div>&#35;e300ffc&#35;c400ffa&#35;a500ffn&#35;8500ffd&#35;6600ffy&#35;4700ff &#35;2700ffa&#35;0800ffs&#35;0016ffs</div>');
@@ -696,6 +697,7 @@ parser = {
         str = str.replace(/(loli )+?/gi, '<div>&#35;ff0c00S&#35;ff0012E&#35;ff0032M&#35;ff0051E&#35;ff0070N&#35;ff0090 &#35;ff00afD&#35;ff00ceE&#35;ff00eeM&#35;f000ffO&#35;d100ffN&#35;b100ff! </div>');
         str = str.replace(/(semen)+?/gi, '<div>&#35;27ff00m&#35;47ff00a&#35;66ff00y&#35;85ff00o&#35;a5ff00n&#35;c4ff00a&#35;e3ff00i&#35;fffa00s&#35;ffdb00e</div>');
         str = str.replace(/(edgy)+?/gi, '<div>&#35;cb0b0be&#35;971717d&#35;632323g&#35;2f2f2fy</div>');
+        */
         // endfilters
         str = str.replace(/(\/\+ )(.+)$/i, '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly style=" width: calc(90% - 10%); padding-right: 5px; padding-left: 5px; border: 1px solid #0C0D0E; border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; background: #202020; color: #0F0; font-size: 14px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: normal; box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;" value="$2"/>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');

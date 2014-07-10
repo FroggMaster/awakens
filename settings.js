@@ -3,7 +3,8 @@ var fs = require('fs');
 var settings;
 
 try {
-    settings = JSON.parse(fs.readFileSync('./conf/settings.json'));
+    var file = fs.readFileSync('./conf/settings.json');
+    settings = JSON.parse(file.toString());
 } catch (e) {
     throw new Error('Invalid settings: /conf/settings.json invalid or does not exist');
 }
