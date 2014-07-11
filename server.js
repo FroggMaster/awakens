@@ -287,9 +287,9 @@ function start(channelName) {
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message)
-                    return dao.setChannelInfo(channelName, 'topic', params.topic).then(function() {
+                    return dao.setChannelInfo(channelName, 'topic', topic).then(function() {
                         roomEmit('update', {
-                            topic : params.topic
+                            topic : topic
                         });
                         return true;
                     });
@@ -321,6 +321,19 @@ function start(channelName) {
                 access_level : 0,
                 handler : function(dao, dbuser, params) {
                     roomEmit('refresh');
+                }
+            },
+            theme : {
+                access_level : 0,
+                params : [ 'theme' ],
+                handler : function(dao, dbuser, params) {
+                    var theme = params.theme.substring(0, settings.limits.message)
+                    return dao.setChannelInfo(channelName, 'theme', theme).then(function() {
+                        roomEmit('update', {
+                            theme : theme
+                        });
+                        return true;
+                    });
                 }
             }
         };

@@ -241,6 +241,19 @@ $(function() {
 });
 
 // ------------------------------------------------------------------
+// Theme
+// ------------------------------------------------------------------
+
+$(function() {
+    CLIENT.on('change:theme', function(m, theme) {
+        var theme = CLIENT.get('theme');
+        if (theme) {
+            $('body').attr("class", theme);
+        }
+    });
+});
+
+// ------------------------------------------------------------------
 // Online User Tracking
 // ------------------------------------------------------------------
 
@@ -559,6 +572,10 @@ $(function() {
         },
         refresh_client : {
             access_level : 0
+        },
+        theme : {
+            access_level : 0,
+            params : [ 'theme' ]
         }
     };
 

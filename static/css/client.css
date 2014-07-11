@@ -21,6 +21,31 @@ body {
     padding-right: 20px;
 }
 
+.spooky #messages {
+    background: url('img/2spooky.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+}
+.bg #messages {
+    background: url('img/bg.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+}
+.bg1 #messages {
+	background: url('img/bg1.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+}
+.bg2 #messages {
+	background: url('img/bg2.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+}
+.bgxmas #messages {
+	background: url('img/bgxmas.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+}
+.original #messages {
+	background: url('img/original.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+}
+.spoops #messages {
+	background: url('img/spoops.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+}
+.logo #messages {
+    background: url('img/logo.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+}
+
 /*\
 |*|
 |*| Font Colors
