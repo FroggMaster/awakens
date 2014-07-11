@@ -9,6 +9,7 @@ ONLINE = new Backbone.Collection();
 
 $(function() {
     var socket = io('/' + window.channel);
+    var first = true;
 
     socket.on('join', function(user) {
         ONLINE.add(user);
@@ -49,7 +50,11 @@ $(function() {
     });
 
     socket.on('connect', function() {
+        if (!first) {
+            window.location.reload();
+        }
         CLIENT.join();
+        first = false;
     });
 
     socket.on('disconnect', function() {
