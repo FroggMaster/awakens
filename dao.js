@@ -233,16 +233,20 @@ module.exports = function(callback) {
                 console.log('Query request: ' + sql, params);
             }
             db.query(sql, params, function(err, dbrows) {
-                if (err) {
-                    if (settings.log.error) {
-                        console.error('Query error: ', err);
+                try {
+                    if (err) {
+                        if (settings.log.error) {
+                            console.error('Query error: ', err);
+                        }
+                        rows.reject(err);
+                    } else {
+                        if (settings.log.db) {
+                            console.log('Query resolved: ', JSON.stringify(dbrows));
+                        }
+                        rows.resolve(dbrows);
                     }
-                    rows.reject(err);
-                } else {
-                    if (settings.log.db) {
-                        console.log('Query resolved: ', JSON.stringify(dbrows));
-                    }
-                    rows.resolve(dbrows);
+                } catch (err) {
+                    settings.log.error && console.error(err, err.stack);
                 }
             });
         }, function(err) {
@@ -297,7 +301,11 @@ module.exports = function(callback) {
             connection.reject(err);
         } else if (dbconn) {
             dbconn.query('use ' + settings.db.schema);
-            connection.resolve(dbconn);
+            try {
+                connection.resolve(dbconn);
+            } catch (err) {
+                settings.log.error && console.error(err, err.stack);
+            }
             settings.log.db && console.log('Database connection established');
         } else {
             settings.log.error && console.error('No connection');

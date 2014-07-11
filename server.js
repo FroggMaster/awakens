@@ -85,19 +85,23 @@ function start(channelName) {
         log.info('New connection');
 
         socket.on('disconnect', function() {
-            if (user.nick) {
-                var i = indexOf(user.nick);
-                if (i >= 0) {
-                    channel.online.splice(i, 1);
-                } else {
-                    log.info('Disconnected user was not found');
+            try {
+                if (user.nick) {
+                    var i = indexOf(user.nick);
+                    if (i >= 0) {
+                        channel.online.splice(i, 1);
+                    } else {
+                        log.info('Disconnected user was not found');
+                    }
+                    roomEmit('left', {
+                        id : user.socket.id,
+                        nick : user.nick
+                    });
                 }
-                roomEmit('left', {
-                    id : user.socket.id,
-                    nick : user.nick
-                });
+                log.info('Disconnected');
+            } catch (err) {
+                console.error(err);
             }
-            log.info('Disconnected');
         });
 
         // -----------------------------------------------------------------------------
@@ -422,23 +426,27 @@ function start(channelName) {
          */
         function(fn, msg) {
             socket.on(msg, function() {
-                var args = _.toArray(arguments);
-                log.debug('Received message: ', msg, args);
-                dao(function(dao) {
-                    dao.isBanned(channelName, user.remote_addr, user.nick).done(function(banned) {
-                        log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
-                        if (banned) {
-                            errorMessage(msgs.banned);
-                            socket.disconnect();
-                            dao.release();
-                        } else {
-                            args.splice(0, 0, dao);
-                            fn.apply(null, args).done(handleResponse).always(function() {
+                try {
+                    var args = _.toArray(arguments);
+                    log.debug('Received message: ', msg, args);
+                    dao(function(dao) {
+                        dao.isBanned(channelName, user.remote_addr, user.nick).done(function(banned) {
+                            log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
+                            if (banned) {
+                                errorMessage(msgs.banned);
+                                socket.disconnect();
                                 dao.release();
-                            });
-                        }
+                            } else {
+                                args.splice(0, 0, dao);
+                                fn.apply(null, args).done(handleResponse).always(function() {
+                                    dao.release();
+                                });
+                            }
+                        });
                     });
-                });
+                } catch (err) {
+                    console.error(err);
+                }
             });
         });
 
@@ -655,24 +663,32 @@ function start(channelName) {
         // INITIALIZE THE CLIENT
         // -----------------------------------------------------------------------------
 
-        dao(function(dao) {
-            initClient(dao).always(function() {
-                dao.release();
+        try {
+            dao(function(dao) {
+                initClient(dao).always(function() {
+                    dao.release();
+                });
             });
-        });
+        } catch (err) {
+            console.error(err);
+        }
     });
 }
 
 var channelRegex = /^\/(\w*\/?)$/;
 app.get(channelRegex, function(req, res) {
-    var channelName = channelRegex.exec(req.url)[1];
-    channels[channelName] || start(channelName);
-    var index = fs.readFileSync('index.html').toString();
-    _.each({
-        channel : channelName,
-        verifyEnabled : verifyEnabled
-    }, function(value, key) {
-        index = index.replace('${' + key + '}', value);
-    });
-    res.send(index);
+    try {
+        var channelName = channelRegex.exec(req.url)[1];
+        channels[channelName] || start(channelName);
+        var index = fs.readFileSync('index.html').toString();
+        _.each({
+            channel : channelName,
+            verifyEnabled : verifyEnabled
+        }, function(value, key) {
+            index = index.replace('${' + key + '}', value);
+        });
+        res.send(index);
+    } catch (err) {
+        console.error(err);
+    }
 });
