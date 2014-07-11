@@ -691,7 +691,11 @@ function start(channelName) {
 var channelRegex = /^\/(\w*\/?)$/;
 app.get(channelRegex, function(req, res) {
     try {
+        var host = req.headers.host;
         var channelName = channelRegex.exec(req.url)[1];
+        if (host != 'this.spooks.me') {
+            channelName = host + '/' + channelName;
+        }
         channels[channelName] || start(channelName);
         var index = fs.readFileSync('index.html').toString();
         _.each({
