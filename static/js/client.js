@@ -420,12 +420,12 @@ $(function() {
             }
             return;
         case 38: // up
-            if (!e.shiftKey) {
+            if (e.shiftKey) {
                 delta = 1;
             }
             break;
         case 40: // down
-            if (!e.shiftKey) {
+            if (e.shiftKey) {
                 delta = -1;
             }
             break;
