@@ -42,7 +42,7 @@ if (settings.server.compression) {
     app.use(require('compression')());
 }
 
-app.use(express.static(__dirname + '/static', settings.server.cache ? {
+app.use(express.static(__dirname + '/public', settings.server.cache ? {
     maxAge : settings.server.cache
 } : undefined));
 
