@@ -26,6 +26,8 @@ module.exports = {
     password : {
         iterations : 1000
     },
+    
+    emailRegex : /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/,
 
     db : {
         host : 'localhost',
@@ -82,11 +84,12 @@ module.exports = {
         invalidCommandAccess : 'Not permissioned for this command',
         invalidLogin : 'The password you provided was incorrect',
         nickVerified : 'The nick has been taken, please use /login instead',
-        nickNotVerified : 'The nick you are attempting to login has not been verified',
+        nickNotVerified : 'You cannot login to a nick that was not registered or verified',
+        change_password_login : 'You must register before you can change the password',
         alreadyBeingUsed : 'That nick is already being used by someone else',
         verified : 'You have verified the nick',
         registered : 'You have registered the nick',
-        registeredAndVerified : 'You have registered the nick, verification is turned off',
+        registeredAndVerified : 'Your nick was registered. Please verify the nick.',
         unregistered : 'You have unregistered the nick',
         banlist : 'Globally banned: {0}',
         channel_banlist : 'Channel banned: {0}',
@@ -106,7 +109,12 @@ module.exports = {
         already_banned_global : '{0} is already banned globally',
         banned_file : '{0} is banned in a file and cannot be unbanned',
         no_banned_channel : 'There is nothing banned on this channel',
-        no_banned_global : 'There is nothing banned globally'
+        no_banned_global : 'There is nothing banned globally',
+        reset_user : '{0} has been reset',
+        change_password : 'You have changed your password',
+        enterSamePassword : 'Please enter the same password that you did when you registered',
+        oldPasswordWrong : 'Your old password is not correct',
+        user_exist_not_registered : '{0} exists but is not registered'
     },
 
     names : [ "AARON", "ABDUL", "ABE", "ABEL", "ABRAHAM", "ABRAM", "ADALBERTO", "ADAM", "ADAN", "ADOLFO", "ADOLPH", "ADRIAN", "AGUSTIN", "AHMAD", "AHMED", "AL", "ALAN", "ALBERT", "ALBERTO", "ALDEN", "ALDO", "ALEC", "ALEJANDRO", "ALEX", "ALEXANDER", "ALEXIS", "ALFONSO", "ALFONZO", "ALFRED", "ALFREDO", "ALI", "ALLAN", "ALLEN", "ALONSO", "ALONZO", "ALPHONSE", "ALPHONSO", "ALTON", "ALVA", "ALVARO", "ALVIN", "AMADO", "AMBROSE", "AMOS", "ANDERSON", "ANDRE", "ANDREA", "ANDREAS", "ANDRES", "ANDREW", "ANDY", "ANGEL", "ANGELO", "ANIBAL", "ANTHONY", "ANTIONE", "ANTOINE", "ANTON", "ANTONE", "ANTONIA", "ANTONIO", "ANTONY", "ANTWAN", "ARCHIE", "ARDEN", "ARIEL", "ARLEN", "ARLIE", "ARMAND", "ARMANDO", "ARNOLD", "ARNOLDO", "ARNULFO", "ARON", "ARRON", "ART", "ARTHUR", "ARTURO", "ASA", "ASHLEY", "AUBREY", "AUGUST", "AUGUSTINE", "AUGUSTUS", "AURELIO", "AUSTIN", "AVERY", "BARNEY", "BARRETT", "BARRY", "BART", "BARTON", "BASIL", "BEAU", "BEN", "BENEDICT", "BENITO", "BENJAMIN", "BENNETT", "BENNIE", "BENNY", "BENTON", "BERNARD", "BERNARDO", "BERNIE", "BERRY", "BERT", "BERTRAM", "BILL", "BILLIE", "BILLY", "BLAINE", "BLAIR", "BLAKE", "BO", "BOB", "BOBBIE", "BOBBY", "BOOKER", "BORIS", "BOYCE", "BOYD",

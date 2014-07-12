@@ -315,19 +315,6 @@ $(function() {
         if (message.nick) {
             $('<span class="nick"></span>').text(message.nick).appendTo(content);
         }
-        if (message.from && message.from == message.to) {
-            $('<span class="from"></span>').text(message.from).appendTo(content);
-        }
-        if (message.from) {
-            if (CLIENT.get('nick') != message.from) {
-                $('<span class="from"></span>').text(message.from).appendTo(content);
-            }
-        }
-        if (message.to) {
-            if (CLIENT.get('nick') != message.to) {
-                $('<span class="to"></span>').text(message.to).appendTo(content);
-            }
-        }
         if (message.message) {
             var parsed;
             switch (message.type) {
@@ -484,13 +471,13 @@ $(function() {
         },
         unregister : {},
         register : {
-            params : verifyEnabled ? [ 'email_address' ] : [ 'initial_password', 'email_address' ]
+            params : [ 'initial_password', 'email_address' ]
         },
         verify : {
-            params : [ 'verification_code', 'initial_password' ]
+            params : verifyByEmail ? [ 'reenter_password', 'verification_code' ] : [ 'reenter_password' ]
         },
-        password : {
-            params : [ 'password' ]
+        change_password : {
+            params : [ 'old_password', 'new_password' ]
         },
         banlist : {
             access_level : 1
@@ -581,14 +568,14 @@ $(function() {
         theme : {
             access_level : 0,
             params : [ 'theme' ]
+        },
+        reset_user : {
+            access_level : 0,
+            params : [ 'nick' ]
         }
     };
 
     COMMANDS.colour = COMMANDS.color;
-
-    if (!verifyEnabled) {
-        delete COMMANDS.verify;
-    }
 })();
 
 // ------------------------------------------------------------------
@@ -1100,3 +1087,26 @@ function video(event, type, input) {
     });
     videoOverlay.show();
 }
+
+// ------------------------------------------------------------------
+// PM Panel
+// ------------------------------------------------------------------
+
+function PM(nick) {
+    this._init(nick);
+}
+
+(function() {
+    var PANELS = {};
+    PM.get = function(nick) {
+        return PANELS[nick] = PANELS[nick] || new PM(nick);
+    }
+    $.extend(PM.prototype, {
+        _init : function(nick) {
+            
+        },
+        addMessage : function() {
+            
+        }
+    });
+})();

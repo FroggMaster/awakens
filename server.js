@@ -10,7 +10,7 @@ var fs = require('fs');
 var http = require('http');
 var httpPort = settings.server.port;
 var server;
-var verifyEnabled = !!settings.emailServer;
+var verifyByEmail = !!settings.emailServer;
 
 if (settings.https) {
     var httpsPort = settings.https.port;
@@ -123,7 +123,7 @@ function start(channelName) {
                         type : 'action-message',
                         message : user.nick + ' ' + params.message
                     });
-                    return $.Deferred().resolve(true).promise();
+                    return $.Deferred().resolve(true);
                 }
             },
             login : {
@@ -131,20 +131,13 @@ function start(channelName) {
                 handler : function(dao, dbuser, params) {
                     var done = $.Deferred();
                     var nick = params.nick.substring(0, settings.limits.nick);
-                    dao.findUser(nick).then(function(u) {
+                    return dao.findUser(nick).then(function(u) {
                         if (u && u.get('verified')) {
-                            attemptNick(dao, nick, params.password).then(function() {
-                                done.resolve.apply(done, arguments);
-                            }, function(err) {
-                                done.reject(err);
-                            });
+                            return attemptNick(dao, nick, params.password);
                         } else {
-                            done.resolve(false, msgs.nickNotVerified);
+                            return $.Deferred().resolve(false, msgs.nickNotVerified);
                         }
-                    }, function(err) {
-                        done.reject(err);
                     });
-                    return done.promise();
                 }
             },
             unregister : {
@@ -153,17 +146,17 @@ function start(channelName) {
                 }
             },
             register : {
-                params : verifyEnabled ? [ 'email_address' ] : [ 'email_address', 'initial_password' ],
+                params : [ 'email_address', 'initial_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.register(params.email_address, params.initial_password);
                 }
             },
             verify : {
-                params : [ 'verification_code', 'initial_password' ],
+                params : verifyByEmail ? [ 'reenter_password', 'verification_code' ] : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
-                    return dbuser.verify(params.verification_code, params.initial_password).done(function() {
-                        socketEmit('update', {
-                            password : params.initial_password
+                    return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
+                        success && socketEmit(socket, 'update', {
+                            password : params.reenter_password
                         });
                     });
                 }
@@ -172,25 +165,27 @@ function start(channelName) {
                 access_level : 1,
                 handler : function(dao, dbuser, params) {
                     return dao.banlist().then(function(list) {
+                        var msg;
                         if (list && list.length > 0) {
-                            showMessage(msgs.get('banlist', list.join(', ')));
+                            msg = msgs.get('banlist', list.join(', '));
                         } else {
-                            showMessage(msgs.no_banned_global);
+                            msg = msgs.no_banned_global;
                         }
-                        return true;
+                        return $.Deferred().resolve(true, msg);
                     });
                 }
             },
             channel_banlist : {
                 access_level : 1,
                 handler : function(dao, dbuser, params) {
-                    return dao.banlist(channelName).done(function(list) {
+                    return dao.banlist(channelName).then(function(list) {
+                        var msg;
                         if (list && list.length > 0) {
-                            showMessage(msgs.get('channel_banlist', list.join(', ')));
+                            msg = msgs.get('channel_banlist', list.join(', '));
                         } else {
-                            showMessage(msgs.no_banned_channel);
+                            msg = msgs.no_banned_channel;
                         }
-                        return true;
+                        return $.Deferred().resolve(true, msg);
                     });
                 }
             },
@@ -227,21 +222,13 @@ function start(channelName) {
                 params : [ 'nick', 'access_level' ],
                 handler : function(dao, dbuser, params) {
                     var done = $.Deferred();
-                    dao.findUser(params.nick).then(function(dbuser) {
+                    return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser) {
-                            dbuser.access(params.access_level).then(function() {
-                                done.resolve.apply(done, arguments);
-                            }, function(err) {
-                                done.reject(err);
-                            });
+                            return dbuser.access(params.access_level);
                         } else {
-                            log.debug('access: Did not find user');
-                            done.resolve(false, msgs.get('user_doesnt_exist', params.nick));
+                            return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
-                    }, function(err) {
-                        done.reject(err);
                     });
-                    return done.promise();
                 }
             },
             whoami : {
@@ -254,18 +241,13 @@ function start(channelName) {
                 access_level : 0,
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    var done = $.Deferred();
-                    dao.findUser(params.nick).done(function(dbuser) {
+                    return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser) {
-                            showMessage(msgs.get('whois', dbuser.get('nick'), dbuser.get('access_level'), dbuser.get('remote_addr')));
-                            done.resolve(true);
+                            return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('access_level'), dbuser.get('remote_addr')));
                         } else {
-                            done.resolve(false, msgs.get('user_doesnt_exist', params.nick));
+                            return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
-                    }, function(err) {
-                        done.reject(err);
                     });
-                    return done.promise();
                 }
             },
             find_ip : {
@@ -286,7 +268,7 @@ function start(channelName) {
                 access_level : 0,
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
-                    var topic = params.topic.substring(0, settings.limits.message)
+                    var topic = params.topic.substring(0, settings.limits.message);
                     return dao.setChannelInfo(channelName, 'topic', topic).then(function() {
                         roomEmit('update', {
                             topic : topic
@@ -303,9 +285,9 @@ function start(channelName) {
                     if (to >= 0) {
                         var toSocket = channel.online[to].socket;
                         var message = {
-                            type : 'personal-message',
-                            from : user.nick,
+                            nick : user.nick,
                             to : params.nick,
+                            type : 'personal-message',
                             message : params.message.substring(0, settings.limits.message)
                         };
                         socketEmit(socket, 'message', message);
@@ -335,6 +317,35 @@ function start(channelName) {
                         return true;
                     });
                 }
+            },
+            change_password : {
+                params : [ 'old_password', 'new_password' ],
+                handler : function(dao, dbuser, params) {
+                    return dbuser.change_password(params.old_password, params.new_password).done(function(success) {
+                        success && clientEmit(client, 'update', {
+                            password : params.new_password
+                        });
+                    });
+                }
+            },
+            reset_user : {
+                access_level : 0,
+                params : [ 'nick' ],
+                handler : function(dao, dbuser, params) {
+                    return dao.findUser(params.nick).then(function(user) {
+                        var err;
+                        if (!user) {
+                            err = msgs.get('user_doesnt_exist', params.nick);
+                        } else if (!user.get('registered')) {
+                            err = msgs.get('user_exist_not_registered', params.nick);
+                        } else {
+                            return user.unregister().then(function() {
+                                return $.Deferred().resolve(true, msgs.get('reset_user', params.nick));
+                            });
+                        }
+                        return $.Deferred().resolve(false, err);
+                    });
+                }
             }
         };
 
@@ -342,6 +353,9 @@ function start(channelName) {
         // MESSAGES
         // -----------------------------------------------------------------------------
 
+        /*
+         * These are all of the messages that can be received by the server.
+         */
         _.each({
             join : function(dao, msg) {
                 if (!user.nick) {
@@ -392,7 +406,7 @@ function start(channelName) {
                 return done.promise();
             },
             command : function(dao, msg) {
-                var done = $.Deferred();
+                var err;
                 if (user.nick) {
                     var cmd = COMMANDS[msg && msg.name];
                     if (cmd) {
@@ -404,32 +418,24 @@ function start(channelName) {
                             });
                         }
                         if (valid) {
-                            dao.findUser(user.nick).done(function(dbuser) {
+                            return dao.findUser(user.nick).then(function(dbuser) {
                                 if (typeof cmd.access_level == 'number') {
                                     valid = cmd.access_level >= dbuser.get('access_level');
                                 }
                                 if (valid) {
-                                    var def = cmd.handler(dao, dbuser, params);
-                                    def && def.then(function(success, msg) {
-                                        done.resolve(success, msg);
-                                    }, function(err) {
-                                        done.reject(err);
-                                    });
+                                    return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
                                 } else {
-                                    done.resolve(false, msgs.invalidCommandAccess);
+                                    return $.Deferred().resolve(false, msgs.invalidCommandAccess);
                                 }
                             });
                         } else {
-                            done.resolve(false, msgs.invalidCommandParams);
+                            err = msgs.invalidCommandParams;
                         }
                     } else {
-                        done.resolve(false, msgs.invalidCommand);
+                        err = msgs.invalidCommand;
                     }
-                } else {
-                    log.debug('User is not online');
-                    done.resolve(false);
                 }
-                return done.promise();
+                return $.Deferred().resolve(false, err);
             }
         },
 
@@ -700,7 +706,7 @@ app.get(channelRegex, function(req, res) {
         var index = fs.readFileSync('index.html').toString();
         _.each({
             channel : channelName,
-            verifyEnabled : verifyEnabled
+            verifyByEmail : verifyByEmail
         }, function(value, key) {
             index = index.replace('${' + key + '}', value);
         });
