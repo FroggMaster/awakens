@@ -51,9 +51,14 @@ body {
 .water #messages {
     background: url('img/water.gif') repeat center #000b11;
 }
+.balls #messages {
+    background: url('img/balls.gif') repeat center #000b11;
+}
 .spooky2 #messages .message-content,
 .water #messages .timestamp,
-.water #messages .message-content {
+.water #messages .message-content,
+.balls #messages .timestamp,
+.balls #messages .message-content {
     background-color: black;
 }
 
