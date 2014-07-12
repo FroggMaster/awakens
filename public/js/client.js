@@ -11,6 +11,8 @@ $(function() {
     var socket = io('/' + window.channel);
     var first = true;
 
+    Game.init(socket);
+
     socket.on('join', function(user) {
         ONLINE.add(user);
         CLIENT.show({
@@ -53,7 +55,10 @@ $(function() {
         if (!first) {
             window.location.reload();
         }
-        CLIENT.join();
+        socket.emit('join', {
+            nick : CLIENT.get('nick'),
+            password : CLIENT.get('password')
+        });
         first = false;
     });
 
@@ -131,14 +136,16 @@ $(function() {
                     }
                 }, this);
             }, this);
-        },
 
-        join : function() {
-            /* Attempt to join. */
-            socket.emit('join', {
-                nick : this.get('nick'),
-                password : this.get('password')
-            });
+            'access_level'.split(' ').forEach(function(key) {
+                var first = true;
+                this.on('change:' + key, function(m, value) {
+                    if (!first) {
+                        this.show(key + ' changed to: ' + value);
+                    }
+                    first = false;
+                }, this);
+            }, this);
         },
 
         getAvailableCommands : function() {

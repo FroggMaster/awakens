@@ -224,7 +224,17 @@ function start(channelName) {
                     var done = $.Deferred();
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser) {
-                            return dbuser.access(params.access_level);
+                            return dbuser.access(params.access_level).done(function(success) {
+                                if (success) {
+                                    channel.online.forEach(function(user) {
+                                        if (user.nick == params.nick) {
+                                            user.socket.emit('update', {
+                                                access_level : dbuser.get('access_level')
+                                            });
+                                        }
+                                    });
+                                }
+                            });
                         } else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
