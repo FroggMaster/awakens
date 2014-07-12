@@ -1,7 +1,7 @@
 {
     "db" : {
         "user" : "root",
-        "password" : "HiThereChatty"
+        "password" : null
     },
     "log" : {
         "error" : true,
