@@ -48,8 +48,13 @@ body {
 .spooky2 #messages {
     background: url('img/spooky2.gif') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
 }
-.spooky2 #messages .message-content {
-	background-color: black;
+.water #messages {
+    background: url('img/water.gif') repeat center #000b11;
+}
+.spooky2 #messages .message-content,
+.water #messages .timestamp,
+.water #messages .message-content {
+    background-color: black;
 }
 
 /*\
