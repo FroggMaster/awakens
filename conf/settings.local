@@ -1,0 +1,16 @@
+{
+    "db" : {
+        "user" : "root",
+        "password" : "HiThereChatty"
+    },
+    "log" : {
+        "error" : true,
+        "info" : true,
+        "debug" : true,
+        "db" : true
+    },
+    "https" : null,
+    "server" : {
+        "port" : 80
+    }
+}
