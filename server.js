@@ -306,6 +306,19 @@ function start(channelName) {
                     roomEmit('refresh');
                 }
             },
+            theme_style : {
+                access_level : 0,
+                params : [ 'theme_style' ],
+                handler : function(dao, dbuser, params) {
+                    var theme_style = params.theme_style.substring(0, settings.limits.message)
+                    return dao.setChannelInfo(channelName, 'theme_style', theme_style).then(function() {
+                        roomEmit('update', {
+                            theme_style : theme_style
+                        });
+                        return true;
+                    });
+                }
+            },
             theme : {
                 access_level : 0,
                 params : [ 'theme' ],

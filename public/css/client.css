@@ -21,6 +21,9 @@ body {
     padding-right: 20px;
 }
 
+.blackbg #messages {
+	background: black;
+}
 .spooky #messages {
     background: url('img/2spooky.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
 }
@@ -54,11 +57,8 @@ body {
 .balls #messages {
     background: url('img/balls.gif') repeat center #000b11;
 }
-.spooky2 #messages .message-content,
-.water #messages .timestamp,
-.water #messages .message-content,
-.balls #messages .timestamp,
-.balls #messages .message-content {
+.blackbg #messages .timestamp,
+.blackbg #messages .message-content {
     background-color: black;
 }
 

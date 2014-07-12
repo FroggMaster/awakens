@@ -251,9 +251,17 @@ $(function() {
 
 $(function() {
     CLIENT.on('change:theme', function(m, theme) {
-        var theme = CLIENT.get('theme');
         if (theme) {
             $('body').attr("class", theme);
+        } else {
+            $('body').attr('class', '');
+        }
+    });
+    CLIENT.on('change:theme_style', function(m, theme_style) {
+        if (theme_style && theme_style != 'default') {
+            $('#messages').css('background', theme_style);
+        } else {
+            $('#messages').css('background', '');
         }
     });
 });
@@ -305,9 +313,9 @@ $(function() {
         message.type = message.type || 'system-message';
         var el = buildMessage(message);
         switch (message.type) {
-        /*case 'personal-message':
-            PM.show(message, el);
-            break;*/
+        /*
+         * case 'personal-message': PM.show(message, el); break;
+         */
         default:
             appendMessage(el);
             break;
@@ -596,7 +604,11 @@ $(function() {
         },
         theme : {
             access_level : 0,
-            params : [ 'theme' ]
+            params : [ 'theme$' ]
+        },
+        theme_style : {
+            access_level : 0,
+            params : [ 'theme_style$' ]
         },
         reset_user : {
             access_level : 0,
