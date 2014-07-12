@@ -265,7 +265,7 @@ function start(channelName) {
                 }
             },
             topic : {
-                access_level : 0,
+                access_level : 2,
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message);
@@ -285,8 +285,9 @@ function start(channelName) {
                     if (to >= 0) {
                         var toSocket = channel.online[to].socket;
                         var message = {
+                            from : socket.id,
+                            to : toSocket.id,
                             nick : user.nick,
-                            to : params.nick,
                             type : 'personal-message',
                             message : params.message.substring(0, settings.limits.message)
                         };

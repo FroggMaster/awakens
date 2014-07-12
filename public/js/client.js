@@ -303,7 +303,15 @@ $(function() {
             };
         }
         message.type = message.type || 'system-message';
-        appendMessage(buildMessage(message));
+        var el = buildMessage(message);
+        switch (message.type) {
+        /*case 'personal-message':
+            PM.show(message, el);
+            break;*/
+        default:
+            appendMessage(el);
+            break;
+        }
     });
 
     function buildMessage(message) {
@@ -318,6 +326,7 @@ $(function() {
         if (message.message) {
             var parsed;
             switch (message.type) {
+            case 'personal-message':
             case 'chat-message':
                 parser.getAllFonts(message.message);
                 parsed = parser.parse(message.message);
@@ -350,6 +359,26 @@ $(function() {
         }
     }
 });
+
+// ------------------------------------------------------------------
+// PM Panel
+// ------------------------------------------------------------------
+
+(function() {
+    var PANELS = {};
+    window.PM = {
+        show : function(message, el) {
+            var id = message.to;
+            if (message.to == CLIENT.get('id')) {
+                id = message.from;
+            }
+            var panel = PANELS[id];
+            if (!panel) {
+                panel = $('<div>').attr('title', 'PM: ' + ONLINE.get(id).get('NICK'));
+            }
+        }
+    };
+})();
 
 // ------------------------------------------------------------------
 // Input Box Shadow Color
@@ -515,7 +544,7 @@ $(function() {
             params : [ 'nick$' ]
         },
         topic : {
-            access_level : 0,
+            access_level : 2,
             params : [ 'topic$' ]
         },
         clear : function() {
@@ -1087,26 +1116,3 @@ function video(event, type, input) {
     });
     videoOverlay.show();
 }
-
-// ------------------------------------------------------------------
-// PM Panel
-// ------------------------------------------------------------------
-
-function PM(nick) {
-    this._init(nick);
-}
-
-(function() {
-    var PANELS = {};
-    PM.get = function(nick) {
-        return PANELS[nick] = PANELS[nick] || new PM(nick);
-    }
-    $.extend(PM.prototype, {
-        _init : function(nick) {
-            
-        },
-        addMessage : function() {
-            
-        }
-    });
-})();
