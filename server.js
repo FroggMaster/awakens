@@ -336,7 +336,7 @@ function start(channelName) {
                 params : [ 'old_password', 'new_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.change_password(params.old_password, params.new_password).done(function(success) {
-                        success && clientEmit(client, 'update', {
+                        success && socketEmit(socket, 'update', {
                             password : params.new_password
                         });
                     });

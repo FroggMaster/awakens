@@ -191,7 +191,7 @@ module.exports = function(callback) {
                     err = msgs.oldPasswordWrong
                 } else {
                     return this.set({
-                        pw_hash : passwordHash.generate(password)
+                        pw_hash : passwordHash.generate(new_password)
                     }).then(function() {
                         return $.Deferred().resolve(true, msgs.change_password);
                     });
