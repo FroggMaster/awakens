@@ -13,16 +13,12 @@ body {
 }
 
 #messages {
-    background: url('img/bg2.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
+    background: black;
     color: white;
     overflow-x: hidden;
     overflow-y: hidden;
     height: 1000px;
     padding-right: 20px;
-}
-
-.blackbg #messages {
-	background: black;
 }
 .spooky #messages {
     background: url('img/2spooky.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
@@ -57,8 +53,8 @@ body {
 .balls #messages {
     background: url('img/balls.gif') repeat center #000b11;
 }
-.blackbg #messages .timestamp,
-.blackbg #messages .message-content {
+#messages .timestamp,
+#messages .message-content {
     background-color: black;
 }
 

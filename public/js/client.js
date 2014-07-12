@@ -113,7 +113,11 @@ $(function() {
             'color font style mute nick password images'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
-                    localStorage.setItem('chat-' + key, value);
+                    if (value) {
+                        localStorage.setItem('chat-' + key, value);
+                    } else {
+                        localStorage.removeItem('chat-' + key);
+                    }
                 });
             }, this);
 
