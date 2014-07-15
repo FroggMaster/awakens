@@ -23,10 +23,30 @@ module.exports = {
         port : 8443
     },
 
+    throttle : {
+        user : {
+            time : 1000,
+            max : 2
+        },
+        channel : {
+            time : 1000,
+            max : 10
+        },
+        global : {
+            time : 1000,
+            max : 20
+        },
+        banned : {
+            time : 1000,
+            max : 5,
+            unban : 5 * 60 * 1000
+        }
+    },
+
     password : {
         iterations : 1000
     },
-    
+
     emailRegex : /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/,
 
     db : {
@@ -114,7 +134,9 @@ module.exports = {
         change_password : 'You have changed your password',
         enterSamePassword : 'Please enter the same password that you did when you registered',
         oldPasswordWrong : 'Your old password is not correct',
-        user_exist_not_registered : '{0} exists but is not registered'
+        user_exist_not_registered : '{0} exists but is not registered',
+        throttled : 'Either you are doing that too much, or the site is under too much load',
+        temporary_ban : 'You are way too fast, you have been banned for a while, try again later'
     },
 
     names : [ "AARON", "ABDUL", "ABE", "ABEL", "ABRAHAM", "ABRAM", "ADALBERTO", "ADAM", "ADAN", "ADOLFO", "ADOLPH", "ADRIAN", "AGUSTIN", "AHMAD", "AHMED", "AL", "ALAN", "ALBERT", "ALBERTO", "ALDEN", "ALDO", "ALEC", "ALEJANDRO", "ALEX", "ALEXANDER", "ALEXIS", "ALFONSO", "ALFONZO", "ALFRED", "ALFREDO", "ALI", "ALLAN", "ALLEN", "ALONSO", "ALONZO", "ALPHONSE", "ALPHONSO", "ALTON", "ALVA", "ALVARO", "ALVIN", "AMADO", "AMBROSE", "AMOS", "ANDERSON", "ANDRE", "ANDREA", "ANDREAS", "ANDRES", "ANDREW", "ANDY", "ANGEL", "ANGELO", "ANIBAL", "ANTHONY", "ANTIONE", "ANTOINE", "ANTON", "ANTONE", "ANTONIA", "ANTONIO", "ANTONY", "ANTWAN", "ARCHIE", "ARDEN", "ARIEL", "ARLEN", "ARLIE", "ARMAND", "ARMANDO", "ARNOLD", "ARNOLDO", "ARNULFO", "ARON", "ARRON", "ART", "ARTHUR", "ARTURO", "ASA", "ASHLEY", "AUBREY", "AUGUST", "AUGUSTINE", "AUGUSTUS", "AURELIO", "AUSTIN", "AVERY", "BARNEY", "BARRETT", "BARRY", "BART", "BARTON", "BASIL", "BEAU", "BEN", "BENEDICT", "BENITO", "BENJAMIN", "BENNETT", "BENNIE", "BENNY", "BENTON", "BERNARD", "BERNARDO", "BERNIE", "BERRY", "BERT", "BERTRAM", "BILL", "BILLIE", "BILLY", "BLAINE", "BLAIR", "BLAKE", "BO", "BOB", "BOBBIE", "BOBBY", "BOOKER", "BORIS", "BOYCE", "BOYD",

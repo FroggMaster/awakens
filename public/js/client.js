@@ -10,6 +10,8 @@ ONLINE = new Backbone.Collection();
 $(function() {
     var socket = io('/' + window.channel);
     var first = true;
+    var requestId = 0;
+    var requests = {};
 
     Game.init(socket);
 
@@ -72,6 +74,18 @@ $(function() {
 
     socket.on('refresh', function() {
         window.location.reload();
+    });
+
+    socket.on('response', function(msg) {
+        var def = msg && requests[msg.id];
+        if (def && def.state() == 'pending') {
+            requests[msg.id] = null;
+            if (msg.error) {
+                def.reject(msg.error);
+            } else {
+                def.resolve(msg.message);
+            }
+        }
     });
 
     /**
@@ -146,6 +160,16 @@ $(function() {
                     first = false;
                 }, this);
             }, this);
+        },
+
+        request : function(msg) {
+            var id = requestId++;
+            var result = requests[id] = $.Deferred();
+            socket.emit('request', {
+                id : id,
+                msg : msg
+            });
+            return result.promise();
         },
 
         getAvailableCommands : function() {

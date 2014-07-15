@@ -1,6 +1,7 @@
 var settings = require('./settings');
 var msgs = settings.msgs;
 var dao = require('./dao');
+var throttle = require('./throttle');
 
 var _ = require('underscore');
 var $ = require('jquery-deferred');
@@ -429,6 +430,8 @@ function start(channelName) {
                 }
                 return done.promise();
             },
+            request : function(dao, msg) {
+            },
             command : function(dao, msg) {
                 var err;
                 if (user.nick) {
@@ -469,27 +472,48 @@ function start(channelName) {
          */
         function(fn, msg) {
             socket.on(msg, function() {
-                try {
-                    var args = _.toArray(arguments);
-                    log.debug('Received message: ', msg, args);
-                    dao(function(dao) {
-                        dao.isBanned(channelName, user.remote_addr, user.nick).done(function(banned) {
-                            log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
-                            if (banned) {
-                                errorMessage(msgs.banned);
-                                socket.disconnect();
-                                dao.release();
-                            } else {
-                                args.splice(0, 0, dao);
-                                fn.apply(null, args).done(handleResponse).always(function() {
-                                    dao.release();
+                var args = _.toArray(arguments);
+                throttle.on('banned-' + socket.id, settings.throttle.banned).done(function() {
+                    var throttles = [];
+                    throttles.push(throttle.on(msg + 'Global', settings.throttle.global))
+                    throttles.push(throttle.on(msg + '-' + channelName, settings.throttle.channel));
+                    throttles.push(throttle.on(msg + '-' + socket.id, settings.throttle.user));
+                    $.when.apply($, throttles).fail(function() {
+                        errorMessage(msgs.throttled);
+                    }).done(function() {
+                        try {
+                            log.debug('Received message: ', msg, args);
+                            dao(function(dao) {
+                                dao.isBanned(channelName, user.remote_addr, user.nick).done(function(banned) {
+                                    log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
+                                    if (banned) {
+                                        errorMessage(msgs.banned);
+                                        socket.disconnect();
+                                        dao.release();
+                                    } else {
+                                        args.splice(0, 0, dao);
+                                        fn.apply(null, args).done(handleResponse).always(function() {
+                                            dao.release();
+                                        });
+                                    }
                                 });
-                            }
-                        });
+                            });
+                        } catch (err) {
+                            console.error(err);
+                        }
                     });
-                } catch (err) {
-                    console.error(err);
-                }
+                }).fail(function() {
+                    dao(function(dao) {
+                        dao.ban(user.remote_addr);
+                        errorMessage(msgs.temporary_ban);
+                    });
+                    setTimeout(function() {
+                        dao(function(dao) {
+                            dao.unban(user.remote_addr);
+                        });
+                    }, settings.throttle.banned.unban);
+                    socket.disconnect();
+                });
             });
         });
 
