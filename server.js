@@ -13,6 +13,16 @@ var httpPort = settings.server.port;
 var server;
 var verifyByEmail = !!settings.emailServer;
 
+/*
+ * catch the uncaught errors that weren't wrapped in a domain or try catch
+ * statement do not use this in modules, but only in applications, as otherwise
+ * we could have multiple of these bound
+ */
+process.on('uncaughtException', function(err) {
+    // handle the error safely
+    console.log(err);
+});
+
 if (settings.https) {
     var httpsPort = settings.https.port;
     var happ = express();
@@ -509,14 +519,12 @@ function start(channelName) {
                 }).fail(function() {
                     dao(function(dao) {
                         dao.ban(user.remote_addr);
-                        errorMessage(msgs.temporary_ban);
                     });
                     setTimeout(function() {
                         dao(function(dao) {
                             dao.unban(user.remote_addr);
                         });
                     }, settings.throttle.banned.unban);
-                    socket.disconnect();
                 });
             });
         });
