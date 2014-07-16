@@ -518,11 +518,15 @@ function start(channelName) {
                     });
                 }).fail(function() {
                     dao(function(dao) {
+                        errorMessage(msgs.temporary_ban);
                         dao.ban(user.remote_addr);
+                        dao.release();
+                        socket.disconnect();
                     });
                     setTimeout(function() {
                         dao(function(dao) {
                             dao.unban(user.remote_addr);
+                            dao.release();
                         });
                     }, settings.throttle.banned.unban);
                 });
