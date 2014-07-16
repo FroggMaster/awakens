@@ -410,7 +410,8 @@ $(function() {
 
     window.imageError = function(el) {
         var $el = $(el);
-        $el.replaceWith($('<a target="_blank">[Image Error]</a>').attr('href', $el.attr('src')));
+        var src = $el.attr('src');
+        $el.replaceWith($('<a target="_blank"></a>').attr('href', src)).text(src);
     }
 });
 
