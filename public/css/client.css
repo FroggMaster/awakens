@@ -1,5 +1,5 @@
 body {
-    background-color: #3A3A3A;
+    background-color: #111;
     overflow: hidden;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3A3A3A),
         to(#292929) );
