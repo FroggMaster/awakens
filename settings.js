@@ -37,8 +37,13 @@ module.exports = {
             max : 20
         },
         banned : {
-            time : 1000,
-            max : 5,
+            limits : [ {
+                time : 1000,
+                max : 5
+            }, {
+                time : 60 * 1000,
+                max : 20
+            } ],
             unban : 5 * 60 * 1000
         }
     },

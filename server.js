@@ -473,7 +473,11 @@ function start(channelName) {
         function(fn, msg) {
             socket.on(msg, function() {
                 var args = _.toArray(arguments);
-                throttle.on('banned-' + socket.id, settings.throttle.banned).done(function() {
+                var banned_throttles = [];
+                settings.throttle.banned.limits.forEach(function(limit, i) {
+                    banned_throttles.push(throttle.on(i + '-banned-' + socket.id, limit));
+                });
+                $.when.apply($, banned_throttles).done(function() {
                     var throttles = [];
                     throttles.push(throttle.on(msg + 'Global', settings.throttle.global))
                     throttles.push(throttle.on(msg + '-' + channelName, settings.throttle.channel));
