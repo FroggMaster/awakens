@@ -424,12 +424,17 @@ function start(channelName) {
                 var done = $.Deferred();
                 if (user.nick) {
                     if (typeof msg == 'string') {
-                        roomEmit('message', {
-                            nick : user.nick,
-                            type : 'chat-message',
-                            message : msg.substring(0, settings.limits.message)
+                        dao.findUser(user.nick).done(function(dbuser) {
+                            if (dbuser.get('access_level') <= 3) {
+                                roomEmit('message', {
+                                    nick : user.nick,
+                                    type : 'chat-message',
+                                    message : msg.substring(0, settings.limits.message)
+                                });
+                            }
+                        }).always(function() {
+                            done.resolve(true);
                         });
-                        done.resolve(true);
                     } else {
                         log.debug('Invalid message');
                         done.resolve(false);
