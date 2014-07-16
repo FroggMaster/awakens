@@ -383,6 +383,20 @@ $(function() {
         return el;
     }
 
+    window.scrollToBottom = function() {
+        var containerEl = $('#messages');
+        var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
+        animation && animation.stop(true, false);
+        animation = containerEl.animate({
+            scrollTop : scrollDelta
+        }, {
+            duration : 100,
+            complete : function() {
+                animation = null;
+            }
+        });
+    }
+
     function appendMessage(el) {
         var containerEl = $('#messages');
         var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
@@ -390,16 +404,13 @@ $(function() {
         playAudio('message');
         var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         if (scrolledToBottom && scrollDelta > 0) {
-            animation && animation.stop(true, false);
-            animation = containerEl.animate({
-                scrollTop : scrollDelta
-            }, {
-                duration : 100,
-                complete : function() {
-                    animation = null;
-                }
-            });
+            scrollToBottom();
         }
+    }
+
+    window.imageError = function(el) {
+        var $el = $(el);
+        $el.replaceWith($('<a target="_blank">[Image Error]</a>').attr('href', $el.attr('src')));
     }
 });
 
@@ -839,7 +850,7 @@ parser = {
                 blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
             }
             if (!blacklisted) {
-                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '" onload="MESSAGES.loadImage(this)" /></a>');
+                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '" onload="scrollToBottom()" onerror="imageError(this)" /></a>');
             }
         }
 

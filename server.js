@@ -431,6 +431,8 @@ function start(channelName) {
                                     type : 'chat-message',
                                     message : msg.substring(0, settings.limits.message)
                                 });
+                            } else {
+                                errorMessage(msgs.muted);
                             }
                         }).always(function() {
                             done.resolve(true);
