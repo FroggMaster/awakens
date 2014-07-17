@@ -271,6 +271,13 @@ $(function() {
             updateTitle();
         }
     });
+    CLIENT.on('change:notification', function(m, notification) {
+        updateTitle();
+        CLIENT.show({
+            type : 'general-message',
+            message : notification
+        });
+    });
     CLIENT.on('change:topic', function(m, topic) {
         updateTitle();
         CLIENT.show({
@@ -601,6 +608,10 @@ $(function() {
         topic : {
             access_level : 2,
             params : [ 'topic$' ]
+        },
+        notify : {
+            access_level : 1,
+            params : [ 'message$' ]
         },
         clear : function() {
             $('#messages').html('');

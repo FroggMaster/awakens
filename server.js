@@ -285,6 +285,19 @@ function start(channelName) {
                     });
                 }
             },
+            notify : {
+                access_level : 1,
+                params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+                    var message = params.message.substring(0, settings.limits.message);
+                    return dao.setChannelInfo(channelName, 'notification', message).then(function() {
+                        roomEmit('update', {
+                            notification : message
+                        });
+                        return true;
+                    });
+                }
+            },
             topic : {
                 access_level : 2,
                 params : [ 'topic' ],
