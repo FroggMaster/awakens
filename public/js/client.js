@@ -274,7 +274,7 @@ $(function() {
     CLIENT.on('change:notification', function(m, notification) {
         updateTitle();
         CLIENT.show({
-            type : 'general-message',
+            type : 'note-message',
             message : notification
         });
     });
@@ -609,7 +609,7 @@ $(function() {
             access_level : 2,
             params : [ 'topic$' ]
         },
-        notify : {
+        note : {
             access_level : 1,
             params : [ 'message$' ]
         },

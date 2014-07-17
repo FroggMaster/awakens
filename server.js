@@ -285,7 +285,7 @@ function start(channelName) {
                     });
                 }
             },
-            notify : {
+            note : {
                 access_level : 1,
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
