@@ -154,6 +154,7 @@ module.exports = function(callback) {
             unregister : function() {
                 if (info.registered) {
                     return this.set({
+                        access_level : 3,
                         registered_on : null,
                         registered : 0,
                         verified : 0,
@@ -205,15 +206,19 @@ module.exports = function(callback) {
              * @returns {$.Promise}
              */
             access : function(access_level) {
-                access_level = new Number(access_level);
-                if (!isNaN(access_level) && access_level >= 0 && access_level <= 4) {
-                    access_level = access_level + "";
-                    var nick = this.get('nick');
-                    return this.set('access_level', access_level).then(function() {
-                        return $.Deferred().resolve(true, msgs.get('access_granted', nick, access_level));
-                    });
+                if (this.get('verified')) {
+                    access_level = new Number(access_level);
+                    if (!isNaN(access_level) && access_level >= 0 && access_level <= 4) {
+                        access_level = access_level + "";
+                        var nick = this.get('nick');
+                        return this.set('access_level', access_level).then(function() {
+                            return $.Deferred().resolve(true, msgs.get('access_granted', nick, access_level));
+                        });
+                    } else {
+                        return $.Deferred().resolve(false, msgs.invalidAccess);
+                    }
                 } else {
-                    return $.Deferred().resolve(false, msgs.invalidAccess);
+                    return $.Deferred().resolve(false, msgs.notRegistered);
                 }
             }
         };
