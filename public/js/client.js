@@ -508,7 +508,7 @@ $(function() {
                 e.preventDefault();
                 var text = input.val();
                 if (text) {
-                    CLIENT.submit(text);
+                     CLIENT.submit(text.replace(/\n/gm,"\\n "));
                 }
                 historyIndex = -1;
                 history.push(text);
