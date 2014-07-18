@@ -1186,3 +1186,20 @@ function video(event, type, input) {
     });
     videoOverlay.show();
 }
+
+function updateSlider(slideAmount) {
+	function rgbToHex(R,G,B) {return toHex(R)+toHex(G)+toHex(B)}
+	function toHex(n) {
+	  n = parseInt(n,10);
+	  if (isNaN(n)) return "00";
+	  n = Math.max(0,Math.min(n,255));
+	  return "0123456789ABCDEF".charAt((n-n%16)/16)  + "0123456789ABCDEF".charAt(n%16);
+	}
+R = parseInt(document.getElementById("Rslide").value)
+G = parseInt(document.getElementById("Gslide").value)
+B = parseInt(document.getElementById("Bslide").value)
+a = document.getElementById('color')
+hex = rgbToHex(R,G,B);
+a.style.background = '#' + hex
+CLIENT.set('color', '#black' + '#' + hex);
+} 
