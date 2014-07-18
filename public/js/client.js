@@ -506,9 +506,9 @@ $(function() {
         case 13: // enter
             if (!e.shiftKey) {
                 e.preventDefault();
-                var text = input.val();
+                var text = input.val().replace(/\n/gm,"\\n ");
                 if (text) {
-                     CLIENT.submit(text.replace(/\n/gm,"\\n "));
+                    CLIENT.submit(text);
                 }
                 historyIndex = -1;
                 history.push(text);
