@@ -525,6 +525,12 @@ $(function() {
                 delta = -1;
             }
             break;
+        case 18: // alt
+	    if($('#color').css("visibility") == "visible"){
+       	    $('#color').css("visibility", "hidden");
+ 	    }
+	    else{$('#color').css("visibility", "visible")};
+            break;
         }
         if (delta) {
             historyIndex = Math.max(0, Math.min(history.length - 1, historyIndex + delta));
