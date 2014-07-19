@@ -21,6 +21,15 @@
                 <ul id="online"></ul>
             </div>
         </div>
+        <div id="color" class="colors">
+		<center>
+		<br/>
+		<br/>
+		<div id="slider">0 <input id="Rslide" type="range"min="0" max="255" step="25.5" value="100"onchange="updateSlider(this.value);" /> 255 R</div><br/>
+		<div id="slider">0 <input id="Gslide" type="range"min="0" max="255" step="25.5" value="100"onchange="updateSlider(this.value);" /> 255 G</div><br/>
+		<div id="slider">0 <input id="Bslide" type="range"min="0" max="255" step="25.5" value="100"onchange="updateSlider(this.value);" /> 255 B</div><br/>
+		</center>
+		</div>
         <div id="messages" class="full-height"></div>
         <div id="input-bar">
             <textarea id="input-message" type="text" placeholder="Enter chat message. Then press enter to submit" autocomplete="off"></textarea>

@@ -491,7 +491,7 @@ $(function() {
     function submit() {
         var ac = $('#autocomplete');
         if (ac.length == 0 || ac.css('display') == 'none') {
-            var text = input.val();
+            var text = input.val().replace(/\n/gm,"\\n ");
             if (text) {
                 CLIENT.submit(text);
             }
