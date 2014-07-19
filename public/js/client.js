@@ -96,7 +96,7 @@ $(function() {
      */
     function parseParams(name, input, expect) {
         if (name == 'pm') {
-            var pm = /^(.*?[^\\])\|(.*)$/.exec(input);
+            var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2];
@@ -183,7 +183,7 @@ $(function() {
         submit : function(input) {
             var access_level = this.get('access_level');
             if (access_level >= 0) {
-                var parsed = /^\/(\w+) ?(.*)$/.exec(input);
+                var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1];
@@ -491,7 +491,7 @@ $(function() {
     function submit() {
         var ac = $('#autocomplete');
         if (ac.length == 0 || ac.css('display') == 'none') {
-            var text = input.val().replace(/\n/gm,"\\n ");
+            var text = input.val();
             if (text) {
                 CLIENT.submit(text);
             }
@@ -753,7 +753,9 @@ parser = {
         str = str.replace(/#/gi, '&#35;');
         str = str.replace(/'/gi, '&#39;');
         str = str.replace(/~/gi, '&#126;');
-        str = str.replace(/([^\\])\\n/g, '$1<br />');
+        str = str.replace(/\\\\n/g, this.repslsh);
+        str = str.replace(/\\n/g, '<br />');
+        str = str.replace(this.repslsh, '\\\\n');
         // remove my replacement characters. they are not fscking allowed. lol.
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
