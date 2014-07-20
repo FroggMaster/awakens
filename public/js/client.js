@@ -908,9 +908,12 @@ $(function() {
 // ------------------------------------------------------------------
 
 $(function() {
-    var SHIM = $('<div class="shim"></div>').on('selectstart', function(e) {
-        e.preventDefault();
-    });
+    function hasScrollBar() {
+        var tester = $('<div style="width:50px;height:50px;overflow:auto;position:absolute"><div style="width:100px;height:100px"></div></div>').appendTo('body');
+        var result = tester.prop('clientWidth') < tester.prop('offsetWidth');
+        tester.remove();
+        return result;
+    }
 
     function getScrollBarWidth() {
         var t1 = $('<div></div>').css({
@@ -924,10 +927,13 @@ $(function() {
     }
 
     function initScroll() {
+        var shim = $('<div class="shim"></div>').on('selectstart', function(e) {
+            e.preventDefault();
+        });
         var msgel = $('#messages').css('margin-right', -getScrollBarWidth()).css('overflowY', 'scroll');
         $('#vertical-scroll-bar .handle').on('mousedown touchstart', function(start) {
             var top = msgel.prop('scrollTop');
-            SHIM.appendTo('body');
+            shim.appendTo('body');
             function scrollMove(move) {
                 var sh = msgel.prop('scrollHeight');
                 var ch = msgel.prop('clientHeight');
@@ -935,7 +941,7 @@ $(function() {
                 msgel.prop('scrollTop', st);
             }
             var el = $(window).on('mousemove touchmove', scrollMove).on('mouseup touchend', function() {
-                SHIM.detach();
+                shim.detach();
                 el.off('mousemove touchmove', scrollMove);
             });
             start.preventDefault();
@@ -950,6 +956,7 @@ $(function() {
         var handle = $('.handle', scrollBar);
         var sh = messages.prop('scrollHeight');
         var st = messages.prop('scrollTop');
+        messages.prop('scrollLeft', 0);
         var ch = messages.prop('clientHeight');
         var hh = ch * ch / sh;
         var ht = st * ch / sh;
@@ -960,9 +967,11 @@ $(function() {
         });
     }
 
-    $(window).resize(repositionScroll);
-    $('#messages').scroll(repositionScroll);
-    initScroll();
+    if (hasScrollBar()) {
+        $(window).resize(repositionScroll);
+        $('#messages').scroll(repositionScroll);
+        initScroll();
+    }
 });
 
 // ------------------------------------------------------------------
