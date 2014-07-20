@@ -31,6 +31,11 @@ body {
     height: 1000px;
     padding-right: 20px;
 }
+
+.noScroll #messages {
+	overflow-y: auto;
+}
+
 .spooky #messages {
     background: url('img/2spooky.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
 }

@@ -907,14 +907,22 @@ $(function() {
 // Custom Scroll Bar
 // ------------------------------------------------------------------
 
-$(function() {
+(function(){
+    var HAS_SCROLL;
+    
     function hasScrollBar() {
         var tester = $('<div style="width:50px;height:50px;overflow:auto;position:absolute"><div style="width:100px;height:100px"></div></div>').appendTo('body');
         var result = tester.prop('clientWidth') < tester.prop('offsetWidth');
         tester.remove();
         return result;
     }
+    
+    window.hasScrollBar = function() {
+        return HAS_SCROLL = (HAS_SCROLL == null ? hasScrollBar() : HAS_SCROLL);
+    }
+})();
 
+$(function() {
     function getScrollBarWidth() {
         var t1 = $('<div></div>').css({
             overflow : 'auto',
@@ -971,6 +979,8 @@ $(function() {
         $(window).resize(repositionScroll);
         $('#messages').scroll(repositionScroll);
         initScroll();
+    } else {
+        $('html').addClass('noScroll');
     }
 });
 
