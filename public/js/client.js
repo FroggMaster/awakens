@@ -380,7 +380,7 @@ $(function() {
                 if (parser.removeHTML(parsedFlair) != message.nick) {
                     parsedFlair = null;
                 } else {
-                    parser.getAllFonts(parsedFlair);
+                    parser.getAllFonts(message.flair);
                 }
             }
             if (parsedFlair) {
