@@ -163,7 +163,7 @@ a:hover {
 \*/
 
 #input-bar {
-    position: fixed;
+    position: absolute;
     background-color: #3A3A3A;
     bottom: 0;
     width: 100%;
