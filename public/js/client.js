@@ -537,7 +537,7 @@ $(function() {
     });
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
-        input.css('height', Math.min(Math.max(input.prop('scrollHeight') - 8, 18), $(window).height() / 3) + 'px');
+        input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
         $(window).resize();
     });
 });
@@ -891,8 +891,7 @@ $(function() {
     function resize() {
         var width = $(window).width();
         var height = $(window).height();
-        var input = $('#input-message');
-        input.css('width', (width - input.outerWidth(true) + input.width()) + 'px');
+        var input = $('#input-bar');
         $('.full-height').each(function() {
             var $this = $(this);
             var padding = $this.outerHeight(true) - $this.height();
