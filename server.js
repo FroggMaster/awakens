@@ -436,13 +436,15 @@ function start(channelName) {
             message : function(dao, msg) {
                 var done = $.Deferred();
                 if (user.nick) {
-                    if (typeof msg == 'string') {
+                    var message = msg && msg.message;
+                    if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (dbuser.get('access_level') <= 3) {
                                 roomEmit('message', {
                                     nick : user.nick,
+                                    flair : typeof msg.flair =='string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
-                                    message : msg.substring(0, settings.limits.message)
+                                    message : message.substring(0, settings.limits.message)
                                 });
                             } else {
                                 errorMessage(msgs.muted);

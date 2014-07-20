@@ -129,7 +129,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute nick password images'.split(' ').forEach(function(key) {
+            'color font style mute nick password images flair'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -141,7 +141,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style mute images'.split(' ').forEach(function(key) {
+            'color font style flair mute images'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -229,7 +229,10 @@ $(function() {
                             input = '$' + font + '|' + input;
                         }
                     }
-                    socket.emit('message', input);
+                    socket.emit('message', {
+                        flair : CLIENT.get('flair'),
+                        message : input
+                    });
                 }
             }
         },
@@ -371,7 +374,18 @@ $(function() {
         el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
-            $('<span class="nick"></span>').text(message.nick).appendTo(content);
+            var parsedFlair = null;
+            if (message.flair) {
+                parsedFlair = parser.parse(message.flair);
+                if (parser.removeHTML(parsedFlair) != message.nick) {
+                    parsedFlair = null;
+                }
+            }
+            if (parsedFlair) {
+                $('<span class="nick"></span>').html(parsedFlair).appendTo(content);
+            } else {
+                $('<span class="nick"></span>').text(message.nick).appendTo(content);
+            }
         }
         if (message.message) {
             var parsed;
@@ -649,6 +663,15 @@ $(function() {
                 CLIENT.set('color', params.color);
             }
         },
+        flair : {
+            params : [ 'flair$' ],
+            handler : function(params) {
+                if (params.flair == 'default' || params.flair == 'none') {
+                    params.flair = null;
+                }
+                CLIENT.set('flair', params.flair);
+            }
+        },
         pm : {
             params : [ 'nick|message' ]
         },
@@ -708,6 +731,9 @@ parser = {
             str = str.replace(this.fontRegex, "$2");
             this.addFont(match[1]);
         }
+    },
+    removeHTML : function(parsed) {
+        return $(parsed).text();
     },
     parseLinks : function(str) {
         // escaping shit
@@ -906,16 +932,16 @@ $(function() {
 // Custom Scroll Bar
 // ------------------------------------------------------------------
 
-(function(){
+(function() {
     var HAS_SCROLL;
-    
+
     function hasScrollBar() {
         var tester = $('<div style="width:50px;height:50px;overflow:auto;position:absolute"><div style="width:100px;height:100px"></div></div>').appendTo('body');
         var result = tester.prop('clientWidth') < tester.prop('offsetWidth');
         tester.remove();
         return result;
     }
-    
+
     window.hasScrollBar = function() {
         return HAS_SCROLL = (HAS_SCROLL == null ? hasScrollBar() : HAS_SCROLL);
     }
