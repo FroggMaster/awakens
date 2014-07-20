@@ -379,6 +379,8 @@ $(function() {
                 parsedFlair = parser.parse(message.flair);
                 if (parser.removeHTML(parsedFlair) != message.nick) {
                     parsedFlair = null;
+                } else {
+                    parser.getAllFonts(parsedFlair);
                 }
             }
             if (parsedFlair) {
