@@ -735,7 +735,7 @@ parser = {
         }
     },
     removeHTML : function(parsed) {
-        return $(parsed).text();
+        return $('<span>'+parsed+'</span>').text();
     },
     parseLinks : function(str) {
         // escaping shit
