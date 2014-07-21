@@ -151,6 +151,12 @@ $(function() {
                 }, this);
             }, this);
 
+            'color font style flair'.split(' ').forEach(function(key) {
+                this.on('change:' + key, function(m, value) {
+                    this.submit('/echo Now your messages look like this');
+                }, this);
+            }, this);
+
             'access_level'.split(' ').forEach(function(key) {
                 var first = true;
                 this.on('change:' + key, function(m, value) {
@@ -214,21 +220,7 @@ $(function() {
                         });
                     }
                 } else {
-                    if (input.charAt(0) != '>') {
-                        var style = this.get('style');
-                        var color = this.get('color');
-                        var font = this.get('font');
-                        if (style) {
-                            input = style + input + style.split('').reverse().join('');
-                        }
-                        input = ' ' + input;
-                        if (color) {
-                            input = '#' + color + input + ' ';
-                        }
-                        if (font) {
-                            input = '$' + font + '|' + input;
-                        }
-                    }
+                    input = this.decorate(input);
                     socket.emit('message', {
                         flair : CLIENT.get('flair'),
                         message : input
@@ -239,6 +231,25 @@ $(function() {
 
         show : function(message) {
             this.trigger('message', message);
+        },
+
+        decorate : function(input) {
+            if (input.charAt(0) != '>') {
+                var style = this.get('style');
+                var color = this.get('color');
+                var font = this.get('font');
+                if (style) {
+                    input = style + input + style.split('').reverse().join('');
+                }
+                input = ' ' + input;
+                if (color) {
+                    input = '#' + color + input + ' ';
+                }
+                if (font) {
+                    input = '$' + font + '|' + input;
+                }
+            }
+            return input;
         }
     }));
 });
@@ -674,6 +685,17 @@ $(function() {
                 CLIENT.set('flair', params.flair);
             }
         },
+        echo : {
+            params : [ 'message$' ],
+            handler : function(params) {
+                CLIENT.show({
+                    type : 'chat-message',
+                    nick : CLIENT.get('nick'),
+                    message : CLIENT.decorate(params.message),
+                    flair : CLIENT.get('flair')
+                });
+            }
+        },
         pm : {
             params : [ 'nick|message' ]
         },
@@ -735,7 +757,7 @@ parser = {
         }
     },
     removeHTML : function(parsed) {
-        return $('<span>'+parsed+'</span>').text();
+        return $('<span>' + parsed + '</span>').text();
     },
     parseLinks : function(str) {
         // escaping shit
