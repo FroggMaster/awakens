@@ -718,6 +718,24 @@ $(function() {
         reset_user : {
             access_level : 0,
             params : [ 'nick' ]
+        },
+        get : {
+            params : [ 'attribute_name' ],
+            handler : function(params) {
+                var attribute_name = params.attribute_name;
+                var valid = 'color font style flair mute images'.split(' ');
+                if (valid.indexOf(attribute_name)) {
+                    CLIENT.show({
+                        type : 'general-message',
+                        message : attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
+                    });
+                } else {
+                    CLIENT.show({
+                        type : 'error-message',
+                        message : 'Invalid: Variable can be one of [' + valid.join(', ') + ']'
+                    });
+                }
+            }
         }
     };
 
@@ -731,9 +749,9 @@ $(function() {
 parser = {
     linkreg : /([^A-Za-z0-9,.~\-\/:+%&?@=;_\#]|^)((?:http|ftp)s?:\/\/[A-Za-z0-9,.~\-\/:+%&?@=;_\#]+)/g,
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|azure|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
-    replink : 'éä!#@&5nøúENONHEInoheåö',
-    repslsh : 'øú!#@&5nåöEESCHEInoheéä',
-    fontRegex : /\$([\w \-\,®]*)\|(.*)$/,
+    replink : 'Ã©Ã¤!#@&5nÃ¸ÃºENONHEInoheÃ¥Ã¶',
+    repslsh : 'Ã¸Ãº!#@&5nÃ¥Ã¶EESCHEInoheÃ©Ã¤',
+    fontRegex : /\$([\w \-\,Â®]*)\|(.*)$/,
     multiple : function(str, mtch, rep) {
         var ct = 0;
         while (str.match(mtch) != null && ct++ < 6)
@@ -830,8 +848,10 @@ parser = {
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
-        str = str.replace(/(\/)(\?)([a-z0-9]+)?/gi, '<div><a style="color: #992222; text-decoration: none;" target="_blank" href="https://this.spooks.me/?$3">$2$3</a></div>');
+        str = str.replace(/(\/)(\?)([a-z0-9]+)?/gi, '<div><a style="color: #992222; text-decoration: none;" target="_blank" href="https://this.spooks.me/$3">$2$3</a></div>');
         // filters
+        str = str.replace(/(nigger)+?/gi, '<div>&#35;hotpinkroody poo</div>');
+        str = str.replace(/(faggot)+?/gi, '<div>&#35;hotpinkcandy ass</div>');
         /*
          * str = str.replace(/(roody poo)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c
          * &#35;ff00bcp&#35;ff00dbo&#35;ff00fao</div>'); str =
