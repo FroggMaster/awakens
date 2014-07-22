@@ -788,7 +788,10 @@ parser = {
         str = str.replace(/&/gi, '&amp;');
         str = str.replace(/>/gi, '&gt;');
         str = str.replace(/</gi, '&lt;');
-        str = str.replace(/([^\\])\\n/g, '$1<br />');
+        str = str.replace(/\n/g, '\\n');
+        str = str.replace(/\\\\n/g, this.repslsh);
+        str = str.replace(/\\n/g, '<br />');
+        str = str.replace(this.repslsh, '\\\\n');
         // remove my replacement characters. they are not fscking allowed. lol.
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
