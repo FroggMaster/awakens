@@ -404,7 +404,7 @@ $(function() {
             var parsed;
             switch (message.type) {
             case 'escaped-message':
-                parsed = $('<span></span>').text(message.message).html();
+                parsed = $('<span></span>').text(message.message).html().replace(/\n/g, '<br/>');
                 break;
             case 'personal-message':
             case 'chat-message':
