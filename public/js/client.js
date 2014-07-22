@@ -403,6 +403,9 @@ $(function() {
         if (message.message) {
             var parsed;
             switch (message.type) {
+            case 'escaped-message':
+                parsed = $('<span></span>').text(message.message).html();
+                break;
             case 'personal-message':
             case 'chat-message':
                 parser.getAllFonts(message.message);
@@ -723,11 +726,14 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute images'.split(' ');
-                if (valid.indexOf(attribute_name)) {
+                var valid = 'color font style flair mute images note topic'.split(' ');
+                if (valid.indexOf(attribute_name) >= 0) {
+                    if (attribute_name == 'note') {
+                        attribute_name = 'notification';
+                    }
                     CLIENT.show({
-                        type : 'general-message',
-                        message : attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
+                        type : 'escaped-message',
+                        message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
                     });
                 } else {
                     CLIENT.show({
