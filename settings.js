@@ -24,6 +24,10 @@ module.exports = {
     },
 
     throttle : {
+        speak : {
+            time : 10000,
+            max : 2
+        },
         user : {
             time : 1000,
             max : 2
@@ -74,7 +78,8 @@ module.exports = {
 
     limits : {
         message : 10000,
-        nick : 100
+        nick : 100,
+        spoken : 100
     },
 
     // emailServer : {

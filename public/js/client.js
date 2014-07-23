@@ -417,6 +417,19 @@ $(function() {
             }
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
+        if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on') {
+            var uri = 'http://www.codefactor.net/tts.php?tl=en&q=' + encodeURIComponent(message.message);
+            var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
+            var audio = $(html);
+            audio.on('error', function() {
+                audio.remove();
+            }).on('play', function() {
+                audio.on('paused', function() {
+                    audio.remove();
+                });
+            }).appendTo('body');
+            audio[0].play();
+        }
         return el;
     }
 
@@ -742,6 +755,9 @@ $(function() {
                     });
                 }
             }
+        },
+        speak : {
+            params : [ 'message$' ]
         }
     };
 
@@ -1178,7 +1194,7 @@ $(function() {
         message : '/audio/Bing.mp3'
     };
     for ( var sound in SOUNDS) {
-        var html = [ '<audio id="', sound, '_audio"><source src="', SOUNDS[sound], '"></source><source src="', SOUNDS[sound], '"></source><embed width=0 height=0 src="', SOUNDS[sound], '"></audio>' ].join('');
+        var html = [ '<audio id="', sound, '_audio"><source src="', SOUNDS[sound], '"></source><embed width=0 height=0 src="', SOUNDS[sound], '"></audio>' ].join('');
         $(html).appendTo('body');
     }
     window.playAudio = function(sound) {

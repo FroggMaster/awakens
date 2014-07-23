@@ -81,7 +81,7 @@ function start(channelName) {
         [ 'error', 'info', 'debug' ].forEach(function(lvl) {
             log[lvl] = function() {
                 if (settings.log[lvl]) {
-                    var prefix = lvl.toUpperCase() + ' [' + user.remote_addr;
+                    var prefix = new Date().toString() + ' ' + lvl.toUpperCase() + ' [' + user.remote_addr;
                     if (user.nick) {
                         prefix += ',' + user.nick;
                     }
@@ -394,6 +394,25 @@ function start(channelName) {
                         return $.Deferred().resolve(false, err);
                     });
                 }
+            },
+            speak : {
+                params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+                    return throttle.on('speak', settings.throttle.speak).then(function() {
+                        var message = params.message;
+                        if (message) {
+                            message = message.substring(0, settings.limits.spoken);
+                            roomEmit('message', {
+                                nick : dbuser.get('nick'),
+                                type : 'spoken-message',
+                                message : message
+                            });
+                        }
+                        return true;
+                    }, function() {
+                        return $.Deferred().resolve(false, msgs.throttled);
+                    });
+                }
             }
         };
 
@@ -442,7 +461,7 @@ function start(channelName) {
                             if (dbuser.get('access_level') <= 3) {
                                 roomEmit('message', {
                                     nick : user.nick,
-                                    flair : typeof msg.flair =='string' ? msg.flair.substring(0, settings.limits.message) : null,
+                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message)
                                 });
