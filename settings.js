@@ -25,7 +25,7 @@ module.exports = {
 
     throttle : {
         speak : {
-            time : 1000,
+            time : 20000,
             max : 1
         },
         user : {
