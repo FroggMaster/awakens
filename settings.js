@@ -22,12 +22,21 @@ module.exports = {
         cert : './ssl/localhost.crt',
         port : 8443
     },
+    
+    speak : {
+        0: null,
+        1: null,
+        2: {
+            time: 10000,
+            max: 1
+        },
+        'default': {
+            time: 20000,
+            max: 1
+        }
+    },
 
     throttle : {
-        speak : {
-            time : 20000,
-            max : 1
-        },
         user : {
             time : 1000,
             max : 2

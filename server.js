@@ -398,20 +398,36 @@ function start(channelName) {
             speak : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
-                    return throttle.on('speak', settings.throttle.speak).then(function() {
-                        var message = params.message;
-                        if (message) {
-                            message = message.substring(0, settings.limits.spoken);
-                            roomEmit('message', {
-                                nick : dbuser.get('nick'),
-                                type : 'spoken-message',
-                                message : message
-                            });
+                    var message = params.message;
+                    if (message) {
+                        if (dbuser.get('access_level') < 4) {
+                            var al = dbuser.get('access_level');
+                            var t = settings.speak[al];
+                            if (t === undefined) {
+                                t = settings.speak['default'];
+                            }
+                            if (t) {
+                                return throttle.on('speak-' + al, t).then(function() {
+                                    roomEmit('message', {
+                                        nick : dbuser.get('nick'),
+                                        type : 'spoken-message',
+                                        message : message.substring(0, settings.limits.spoken)
+                                    });
+                                    return true;
+                                }, function() {
+                                    return $.Deferred().resolve(false, msgs.throttled);
+                                });
+                            } else {
+                                roomEmit('message', {
+                                    nick : dbuser.get('nick'),
+                                    type : 'spoken-message',
+                                    message : message.substring(0, settings.limits.spoken)
+                                });
+                            }
+                        } else {
+                            return $.Deferred().resolve(false, msgs.muted);
                         }
-                        return true;
-                    }, function() {
-                        return $.Deferred().resolve(false, msgs.throttled);
-                    });
+                    }
                 }
             }
         };
