@@ -428,6 +428,7 @@ function start(channelName) {
                             return $.Deferred().resolve(false, msgs.muted);
                         }
                     }
+                    return $.Deferred().resolve(true);
                 }
             }
         };
