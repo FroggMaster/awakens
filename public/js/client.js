@@ -420,15 +420,12 @@ $(function() {
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on') {
             var uri = 'http://www.codefactor.net/tts.php?tl=en&q=' + encodeURIComponent(message.message);
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
-            var audio = $(html);
-            audio.on('error', function() {
-                audio.remove();
-            }).on('play', function() {
-                audio.on('paused', function() {
-                    audio.remove();
-                });
-            }).appendTo('body');
-            audio[0].play();
+            var $audio = $(html);
+            var audio = $audio[0];
+            audio.onerror = audio.onpause = function(){
+                $audio.remove();
+            }
+            audio.play();
         }
         return el;
     }
