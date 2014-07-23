@@ -420,9 +420,9 @@ $(function() {
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on') {
             var uri = 'http://www.codefactor.net/tts.php?tl=en&q=' + encodeURIComponent(message.message);
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
-            var $audio = $(html);
+            var $audio = $(html).appendTo('body');
             var audio = $audio[0];
-            audio.onerror = audio.onpause = function(){
+            audio.onerror = audio.onpause = function(e) {
                 $audio.remove();
             }
             audio.play();
@@ -1201,6 +1201,16 @@ $(function() {
         }
     }
 })();
+
+$(function() {
+    CLIENT.on('change:mute', function(m, mute) {
+        if (mute == 'on') {
+            $('audio').each(function() {
+                this.pause();
+            });
+        }
+    });
+});
 
 // ------------------------------------------------------------------
 // Video
