@@ -88,6 +88,10 @@ $(function() {
         }
     });
 
+    socket.on('updateMousePosition', function(msg) {
+        CLIENT.trigger('updateMousePosition', msg);
+    });
+
     /**
      * @inner
      * @param {string} name
@@ -250,6 +254,10 @@ $(function() {
                 }
             }
             return input;
+        },
+
+        updateMousePosition : function(position) {
+            socket.emit('updateMousePosition', position);
         }
     }));
 });
@@ -1314,3 +1322,44 @@ function video(event, type, input) {
     });
     videoOverlay.show();
 }
+
+// ------------------------------------------------------------------
+// Mouse Positions
+// ------------------------------------------------------------------
+
+$(function() {
+    var position = null, x, y;
+    $(window).mousemove(function(e) {
+        x = e.clientX / $(window).width();
+        y = e.clientY / $(window).height();
+    });
+    setInterval(function() {
+        if (!position || position.x != x || position.y != y) {
+            CLIENT.updateMousePosition(position = {
+                x : x,
+                y : y
+            });
+        }
+    }, 250);
+    CLIENT.on('updateMousePosition', function(msg) {
+        var el = $('#cursor-' + msg.id);
+        if (el.length == 0) {
+            var user = ONLINE.get(msg.id);
+            var nick = $('<span class="nick"></span>').text(user.get('nick'));
+            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
+            user.on('change:nick', function(m, nick) {
+                nick.text(user.get('nick'));
+            });
+        }
+        el.css({
+            left : (msg.position.x * 100) + '%',
+            top : (msg.position.y * 100) + '%'
+        });
+    });
+    ONLINE.on('remove', function(user) {
+        $('#cursor-' + user.get('id')).remove();
+    });
+    ONLINE.on('reset', function() {
+        $('.mouseCursor').remove();
+    });
+});

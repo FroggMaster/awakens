@@ -498,8 +498,6 @@ function start(channelName) {
                 }
                 return done.promise();
             },
-            request : function(dao, msg) {
-            },
             command : function(dao, msg) {
                 var err;
                 if (user.nick) {
@@ -531,6 +529,18 @@ function start(channelName) {
                     }
                 }
                 return $.Deferred().resolve(false, err);
+            },
+            updateMousePosition : function(dao, position) {
+                if (position && typeof position.x == 'number' && typeof position.y == 'number') {
+                    otherEmit('updateMousePosition', {
+                        id : socket.id,
+                        position : {
+                            x : position.x,
+                            y : position.y
+                        }
+                    });
+                }
+                return $.Deferred().resolve(true);
             }
         },
 
@@ -542,16 +552,19 @@ function start(channelName) {
             socket.on(msg, function() {
                 var args = _.toArray(arguments);
                 var banned_throttles = [];
-                settings.throttle.banned.limits.forEach(function(limit, i) {
+                var throttleProps = settings.throttle[msg] || settings.throttle['default'];
+                throttleProps.banned.limits.forEach(function(limit, i) {
                     banned_throttles.push(throttle.on(i + '-banned-' + socket.id, limit));
                 });
                 $.when.apply($, banned_throttles).done(function() {
                     var throttles = [];
-                    throttles.push(throttle.on(msg + 'Global', settings.throttle.global))
-                    throttles.push(throttle.on(msg + '-' + channelName, settings.throttle.channel));
-                    throttles.push(throttle.on(msg + '-' + socket.id, settings.throttle.user));
+                    throttles.push(throttle.on(msg + 'Global', throttleProps.global))
+                    throttles.push(throttle.on(msg + '-' + channelName, throttleProps.channel));
+                    throttles.push(throttle.on(msg + '-' + socket.id, throttleProps.user));
                     $.when.apply($, throttles).fail(function() {
-                        errorMessage(msgs.throttled);
+                        if (throttleProps.errorMessage) {
+                            errorMessage(msgs.throttled);
+                        }
                     }).done(function() {
                         try {
                             log.debug('Received message: ', msg, args);
@@ -586,7 +599,7 @@ function start(channelName) {
                             dao.unban(user.remote_addr);
                             dao.release();
                         });
-                    }, settings.throttle.banned.unban);
+                    }, throttleProps.banned.unban);
                 });
             });
         });
@@ -645,6 +658,14 @@ function start(channelName) {
         function roomEmit() {
             log.debug('room emit', JSON.stringify(_.toArray(arguments)));
             room.emit.apply(room, arguments);
+        }
+
+        /**
+         * @inner
+         */
+        function otherEmit() {
+            log.debug('other emit', JSON.stringify(_.toArray(arguments)));
+            socket.broadcast.emit.apply(socket.broadcast, arguments);
         }
 
         /**

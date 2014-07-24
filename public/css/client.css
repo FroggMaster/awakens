@@ -403,3 +403,31 @@ a:hover {
 #autocomplete>span:first-child {
     background: #555;
 }
+
+/*\
+|*|
+|*| Mouse cursors
+|*|
+\*/
+
+.mouseCursor {
+	position: fixed;
+}
+
+.mouseCursor .nick {
+	margin-left: 20px;
+	font-size: 9px;
+    background-color: black;
+    color: white;
+}
+
+.mouseCursor:before {
+	content: ' ';
+	position: absolute;
+	width: 38px;
+	height: 33px;
+	background: url(img/cursor.png);
+	background-size: 100% 100%;
+	margin-left: -11px;
+	margin-top: -4px;
+}

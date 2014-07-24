@@ -22,42 +22,63 @@ module.exports = {
         cert : './ssl/localhost.crt',
         port : 8443
     },
-    
+
     speak : {
-        0: null,
-        1: null,
-        2: {
-            time: 10000,
-            max: 1
+        0 : null,
+        1 : null,
+        2 : {
+            time : 10000,
+            max : 1
         },
-        'default': {
-            time: 20000,
-            max: 1
+        'default' : {
+            time : 20000,
+            max : 1
         }
     },
 
     throttle : {
-        user : {
-            time : 1000,
-            max : 2
-        },
-        channel : {
-            time : 1000,
-            max : 10
-        },
-        global : {
-            time : 1000,
-            max : 20
-        },
-        banned : {
-            limits : [ {
+        updateMousePosition : {
+            errorMessage : false,
+            user : {
                 time : 1000,
-                max : 5
-            }, {
-                time : 60 * 1000,
+                max : 10
+            },
+            channel : {
+                time : 1000,
+                max : 50
+            },
+            global : {
+                time : 1000,
+                max : 100
+            },
+            banned : {
+                limits : []
+            }
+        },
+        'default' : {
+            errorMessage : true,
+            user : {
+                time : 1000,
+                max : 2
+            },
+            channel : {
+                time : 1000,
+                max : 10
+            },
+            global : {
+                time : 1000,
                 max : 20
-            } ],
-            unban : 5 * 60 * 1000
+            },
+            banned : {
+                limits : [ {
+                    time : 1000,
+                    max : 5
+                }, {
+                    time : 60 * 1000,
+                    max : 20
+                } ],
+                unban : 5 * 60 * 1000
+            }
         }
     },
 
@@ -159,7 +180,7 @@ module.exports = {
         muted : 'You have been muted, please try again later.'
     },
 
-    names : ["AARON", "ABDUL", "ABE", "ABEL", "ABRAHAM", "ABRAM", "ADALBERTO", "ADAM", "ADAN", "ADOLFO", "ADOLPH", "ADRIAN", "AGUSTIN", "AHMAD", "AHMED", "AL", "ALAN", "ALBERT", "ALBERTO", "ALDEN", "ALDO", "ALEC", "ALEJANDRO", "ALEX", "ALEXANDER", "ALEXIS", "ALFONSO", "ALFONZO", "ALFRED", "ALFREDO", "ALI", "ALLAN", "ALLEN", "ALONSO", "ALONZO", "ALPHONSE", "ALPHONSO", "ALTON", "ALVA", "ALVARO", "ALVIN", "AMADO", "AMBROSE", "AMOS", "ANDERSON", "ANDRE", "ANDREA", "ANDREAS", "ANDRES", "ANDREW", "ANDY", "ANGEL", "ANGELO", "ANIBAL", "ANTHONY", "ANTIONE", "ANTOINE", "ANTON", "ANTONE", "ANTONIA", "ANTONIO", "ANTONY", "ANTWAN", "ARCHIE", "ARDEN", "ARIEL", "ARLEN", "ARLIE", "ARMAND", "ARMANDO", "ARNOLD", "ARNOLDO", "ARNULFO", "ARON", "ARRON", "ART", "ARTHUR", "ARTURO", "ASA", "ASHLEY", "AUBREY", "AUGUST", "AUGUSTINE", "AUGUSTUS", "AURELIO", "AUSTIN", "AVERY", "BARNEY", "BARRETT", "BARRY", "BART", "BARTON", "BASIL", "BEAU", "BEN", "BENEDICT", "BENITO", "BENJAMIN", "BENNETT", "BENNIE", "BENNY", "BENTON", "BERNARD", "BERNARDO", "BERNIE", "BERRY", "BERT", "BERTRAM", "BILL", "BILLIE", "BILLY", "BLAINE", "BLAIR", "BLAKE", "BO", "BOB", "BOBBIE", "BOBBY", "BOOKER", "BORIS", "BOYCE", "BOYD",
+    names : [ "AARON", "ABDUL", "ABE", "ABEL", "ABRAHAM", "ABRAM", "ADALBERTO", "ADAM", "ADAN", "ADOLFO", "ADOLPH", "ADRIAN", "AGUSTIN", "AHMAD", "AHMED", "AL", "ALAN", "ALBERT", "ALBERTO", "ALDEN", "ALDO", "ALEC", "ALEJANDRO", "ALEX", "ALEXANDER", "ALEXIS", "ALFONSO", "ALFONZO", "ALFRED", "ALFREDO", "ALI", "ALLAN", "ALLEN", "ALONSO", "ALONZO", "ALPHONSE", "ALPHONSO", "ALTON", "ALVA", "ALVARO", "ALVIN", "AMADO", "AMBROSE", "AMOS", "ANDERSON", "ANDRE", "ANDREA", "ANDREAS", "ANDRES", "ANDREW", "ANDY", "ANGEL", "ANGELO", "ANIBAL", "ANTHONY", "ANTIONE", "ANTOINE", "ANTON", "ANTONE", "ANTONIA", "ANTONIO", "ANTONY", "ANTWAN", "ARCHIE", "ARDEN", "ARIEL", "ARLEN", "ARLIE", "ARMAND", "ARMANDO", "ARNOLD", "ARNOLDO", "ARNULFO", "ARON", "ARRON", "ART", "ARTHUR", "ARTURO", "ASA", "ASHLEY", "AUBREY", "AUGUST", "AUGUSTINE", "AUGUSTUS", "AURELIO", "AUSTIN", "AVERY", "BARNEY", "BARRETT", "BARRY", "BART", "BARTON", "BASIL", "BEAU", "BEN", "BENEDICT", "BENITO", "BENJAMIN", "BENNETT", "BENNIE", "BENNY", "BENTON", "BERNARD", "BERNARDO", "BERNIE", "BERRY", "BERT", "BERTRAM", "BILL", "BILLIE", "BILLY", "BLAINE", "BLAIR", "BLAKE", "BO", "BOB", "BOBBIE", "BOBBY", "BOOKER", "BORIS", "BOYCE", "BOYD",
             "BRAD", "BRADFORD", "BRADLEY", "BRADLY", "BRADY", "BRAIN", "BRANDEN", "BRANDON", "BRANT", "BRENDAN", "BRENDON", "BRENT", "BRENTON", "BRET", "BRETT", "BRIAN", "BRICE", "BRITT", "BROCK", "BRODERICK", "BROOKS", "BRUCE", "BRUNO", "BRYAN", "BRYANT", "BRYCE", "BRYON", "BUCK", "BUD", "BUDDY", "BUFORD", "BURL", "BURT", "BURTON", "BUSTER", "BYRON", "CALEB", "CALVIN", "CAMERON", "CAREY", "CARL", "CARLO", "CARLOS", "CARLTON", "CARMELO", "CARMEN", "CARMINE", "CAROL", "CARROL", "CARROLL", "CARSON", "CARTER", "CARY", "CASEY", "CECIL", "CEDRIC", "CEDRICK", "CESAR", "CHAD", "CHADWICK", "CHANCE", "CHANG", "CHARLES", "CHARLEY", "CHARLIE", "CHAS", "CHASE", "CHAUNCEY", "CHESTER", "CHET", "CHI", "CHONG", "CHRIS", "CHRISTIAN", "CHRISTOPER", "CHRISTOPHER", "CHUCK", "CHUNG", "CLAIR", "CLARENCE", "CLARK", "CLAUD", "CLAUDE", "CLAUDIO", "CLAY", "CLAYTON", "CLEMENT", "CLEMENTE", "CLEO", "CLETUS", "CLEVELAND", "CLIFF", "CLIFFORD", "CLIFTON", "CLINT", "CLINTON", "CLYDE", "CODY", "COLBY", "COLE", "COLEMAN", "COLIN", "COLLIN", "COLTON", "COLUMBUS", "CONNIE", "CONRAD", "CORDELL", "COREY", "CORNELIUS", "CORNELL", "CORTEZ", "CORY", "COURTNEY", "COY", "CRAIG", "CRISTOBAL", "CRISTOPHER", "CRUZ", "CURT",
             "CURTIS", "CYRIL", "CYRUS", "DALE", "DALLAS", "DALTON", "DAMIAN", "DAMIEN", "DAMION", "DAMON", "DAN", "DANA", "DANE", "DANIAL", "DANIEL", "DANILO", "DANNIE", "DANNY", "DANTE", "DARELL", "DAREN", "DARIN", "DARIO", "DARIUS", "DARNELL", "DARON", "DARREL", "DARRELL", "DARREN", "DARRICK", "DARRIN", "DARRON", "DARRYL", "DARWIN", "DARYL", "DAVE", "DAVID", "DAVIS", "DEAN", "DEANDRE", "DEANGELO", "DEE", "DEL", "DELBERT", "DELMAR", "DELMER", "DEMARCUS", "DEMETRIUS", "DENIS", "DENNIS", "DENNY", "DENVER", "DEON", "DEREK", "DERICK", "DERRICK", "DESHAWN", "DESMOND", "DEVIN", "DEVON", "DEWAYNE", "DEWEY", "DEWITT", "DEXTER", "DICK", "DIEGO", "DILLON", "DINO", "DION", "DIRK", "DOMENIC", "DOMINGO", "DOMINIC", "DOMINICK", "DOMINIQUE", "DON", "DONALD", "DONG", "DONN", "DONNELL", "DONNIE", "DONNY", "DONOVAN", "DONTE", "DORIAN", "DORSEY", "DOUG", "DOUGLAS", "DOUGLASS", "DOYLE", "DREW", "DUANE", "DUDLEY", "DUNCAN", "DUSTIN", "DUSTY", "DWAIN", "DWAYNE", "DWIGHT", "DYLAN", "EARL", "EARLE", "EARNEST", "ED", "EDDIE", "EDDY", "EDGAR", "EDGARDO", "EDISON", "EDMOND", "EDMUND", "EDMUNDO", "EDUARDO", "EDWARD", "EDWARDO", "EDWIN", "EFRAIN", "EFREN", "ELBERT", "ELDEN", "ELDON", "ELDRIDGE", "ELI",
             "ELIAS", "ELIJAH", "ELISEO", "ELISHA", "ELLIOT", "ELLIOTT", "ELLIS", "ELLSWORTH", "ELMER", "ELMO", "ELOY", "ELROY", "ELTON", "ELVIN", "ELVIS", "ELWOOD", "EMANUEL", "EMERSON", "EMERY", "EMIL", "EMILE", "EMILIO", "EMMANUEL", "EMMETT", "EMMITT", "EMORY", "ENOCH", "ENRIQUE", "ERASMO", "ERIC", "ERICH", "ERICK", "ERIK", "ERIN", "ERNEST", "ERNESTO", "ERNIE", "ERROL", "ERVIN", "ERWIN", "ESTEBAN", "ETHAN", "EUGENE", "EUGENIO", "EUSEBIO", "EVAN", "EVERETT", "EVERETTE", "EZEKIEL", "EZEQUIEL", "EZRA", "FABIAN", "FAUSTINO", "FAUSTO", "FEDERICO", "FELIPE", "FELIX", "FELTON", "FERDINAND", "FERMIN", "FERNANDO", "FIDEL", "FILIBERTO", "FLETCHER", "FLORENCIO", "FLORENTINO", "FLOYD", "FOREST", "FORREST", "FOSTER", "FRANCES", "FRANCESCO", "FRANCIS", "FRANCISCO", "FRANK", "FRANKIE", "FRANKLIN", "FRANKLYN", "FRED", "FREDDIE", "FREDDY", "FREDERIC", "FREDERICK", "FREDRIC", "FREDRICK", "FREEMAN", "FRITZ", "GABRIEL", "GAIL", "GALE", "GALEN", "GARFIELD", "GARLAND", "GARRET", "GARRETT", "GARRY", "GARTH", "GARY", "GASTON", "GAVIN", "GAYLE", "GAYLORD", "GENARO", "GENE", "GEOFFREY", "GEORGE", "GERALD", "GERALDO", "GERARD", "GERARDO", "GERMAN", "GERRY", "GIL", "GILBERT", "GILBERTO", "GINO",
