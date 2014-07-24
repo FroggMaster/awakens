@@ -41,15 +41,15 @@ module.exports = {
             errorMessage : false,
             user : {
                 time : 1000,
-                max : 10
+                max : 1000
             },
             channel : {
                 time : 1000,
-                max : 50
+                max : 5000
             },
             global : {
                 time : 1000,
-                max : 100
+                max : 10000
             },
             banned : {
                 limits : []
