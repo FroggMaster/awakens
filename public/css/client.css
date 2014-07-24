@@ -429,10 +429,7 @@ a:hover {
 .mouseCursor:before {
 	content: ' ';
 	position: absolute;
-	width: 38px;
-	height: 33px;
+	width: 25px;
+	height: 25px;
 	background: url(img/cursor.png);
-	background-size: 100% 100%;
-	margin-left: -11px;
-	margin-top: -4px;
 }
