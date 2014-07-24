@@ -129,7 +129,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute nick password images flair'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -141,7 +141,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute images'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -417,7 +417,7 @@ $(function() {
             }
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
-        if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on') {
+        if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
             var uri = 'http://www.codefactor.net/tts.php?tl=en&q=' + encodeURIComponent(message.message);
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
@@ -656,11 +656,17 @@ $(function() {
         clear : function() {
             $('#messages').html('');
         },
-        unmute : function(params) {
+        unmute : function() {
             CLIENT.set('mute', 'off');
         },
-        mute : function(params) {
+        mute : function() {
             CLIENT.set('mute', 'on');
+        },
+        unmute_speak : function() {
+            CLIENT.set('mute_speak', 'off');
+        },
+        mute_speak : function() {
+            CLIENT.set('mute_speak', 'on');
         },
         style : {
             params : [ 'style' ],
@@ -736,7 +742,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute images note topic'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1203,7 +1209,7 @@ $(function() {
 })();
 
 $(function() {
-    CLIENT.on('change:mute', function(m, mute) {
+    CLIENT.on('change:mute change:mute_speak', function(m, mute) {
         if (mute == 'on') {
             $('audio').each(function() {
                 this.pause();
