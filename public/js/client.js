@@ -257,7 +257,7 @@ $(function() {
         },
 
         updateMousePosition : function(position) {
-            //socket.emit('updateMousePosition', position);
+            socket.emit('updateMousePosition', position);
         }
     }));
 });
@@ -1348,8 +1348,8 @@ $(function() {
                 var user = ONLINE.get(msg.id);
                 var nick = $('<span class="nick"></span>').text(user.get('nick'));
                 el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
-                user.on('change:nick', function(m, nick) {
-                    nick.text(user.get('nick'));
+                user.on('change:nick', function(m, newNick) {
+                    nick.text(newNick);
                 });
             }
             el.css({
