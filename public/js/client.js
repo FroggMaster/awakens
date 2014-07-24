@@ -133,7 +133,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -145,7 +145,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -769,6 +769,11 @@ $(function() {
         },
         speak : {
             params : [ 'message$' ]
+        },
+        toggle_cursors : {
+            handler : function() {
+                CLIENT.set('cursors', CLIENT.get('cursors') == 'off' ? 'on' : 'off');
+            }
         }
     };
 
@@ -1347,6 +1352,7 @@ $(function() {
             var user = ONLINE.get(msg.id);
             var nick = $('<span class="nick"></span>').text(user.get('nick'));
             el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
+            el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
             user.on('change:nick', function(m, newNick) {
                 nick.text(newNick);
             });
@@ -1361,5 +1367,10 @@ $(function() {
     });
     ONLINE.on('reset', function() {
         $('.mouseCursor').remove();
+    });
+    CLIENT.on('change:cursors', function(m, cursors) {
+        $('.mouseCursor').css({
+            display : cursors == 'off' ? 'none' : 'block'
+        })
     });
 });
