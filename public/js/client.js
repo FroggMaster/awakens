@@ -1328,14 +1328,19 @@ function video(event, type, input) {
 // ------------------------------------------------------------------
 
 $(function() {
+    var position = null, x, y;
     $(window).mousemove(function(e) {
         x = e.clientX / $(window).width();
         y = e.clientY / $(window).height();
-        CLIENT.updateMousePosition({
-            x : x,
-            y : y
-        });
     });
+    setInterval(function() {
+        if (!position || position.x != x || position.y != y) {
+            CLIENT.updateMousePosition(position = {
+                x : x,
+                y : y
+            });
+        }
+    }, 50);
     CLIENT.on('updateMousePosition', function(msg) {
         var el = $('#cursor-' + msg.id);
         if (el.length == 0) {
