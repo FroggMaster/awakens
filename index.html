@@ -10,8 +10,21 @@
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
-        <link rel="apple-touch-startup-image" href="splash_320x460.png" />
-        <link rel="apple-touch-startup-image" sizes="640x960" href="splash_640x960.png" />
+		<!-- iphone start up screens -->
+		<script type="application/javascript">
+		    var appl = document.createElement("link");
+		    appl.setAttribute('rel', 'apple-touch-startup-image');
+		    if(screen.width < 321 && window.devicePixelRatio == 1) {
+		      appl.setAttribute('href', 'splash_320x460.png'); //iphone 3Gs or below
+		    } else if (screen.width < 321 && window.devicePixelRatio == 2) { 
+		      appl.setAttribute('href', 'splash_640x960.png'); //setting @2x or a 640x920 image fails, just use the iphone splash screen
+		    } else if (screen.width < 769 && Math.abs(window.orientation) != 90) {
+		      appl.setAttribute('href', 'splash_1024x748.png'); //ipad 2 or below (portait)
+		    } else if (screen.width < 769 && Math.abs(window.orientation) == 90) { 
+		      appl.setAttribute('href', 'splash_768x1004.png'); //landscape fails as well, use standard ipad screen
+		    }
+		    document.getElementsByTagName("head")[0].appendChild(appl);
+		</script>
         <link rel="stylesheet" href="/css/normalize.css">
         <link rel="stylesheet" href="/css/client.css">
         <link rel="stylesheet" href="/vendor/jquery-ui-1.11.0/jquery-ui.min.css">
