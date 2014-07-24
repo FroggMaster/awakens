@@ -257,7 +257,7 @@ $(function() {
         },
 
         updateMousePosition : function(position) {
-            socket.emit('updateMousePosition', position);
+            //socket.emit('updateMousePosition', position);
         }
     }));
 });
