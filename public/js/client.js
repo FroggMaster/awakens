@@ -1342,19 +1342,23 @@ $(function() {
         }
     }, 250);
     CLIENT.on('updateMousePosition', function(msg) {
-        var el = $('#cursor-' + msg.id);
-        if (el.length == 0) {
-            var user = ONLINE.get(msg.id);
-            var nick = $('<span class="nick"></span>').text(user.get('nick'));
-            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
-            user.on('change:nick', function(m, nick) {
-                nick.text(user.get('nick'));
+        try {
+            var el = $('#cursor-' + msg.id);
+            if (el.length == 0) {
+                var user = ONLINE.get(msg.id);
+                var nick = $('<span class="nick"></span>').text(user.get('nick'));
+                el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
+                user.on('change:nick', function(m, nick) {
+                    nick.text(user.get('nick'));
+                });
+            }
+            el.css({
+                left : (msg.position.x * 100) + '%',
+                top : (msg.position.y * 100) + '%'
             });
+        } catch (e) {
+            console.log(e);
         }
-        el.css({
-            left : (msg.position.x * 100) + '%',
-            top : (msg.position.y * 100) + '%'
-        });
     });
     ONLINE.on('remove', function(user) {
         $('#cursor-' + user.get('id')).remove();
