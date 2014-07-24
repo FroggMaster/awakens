@@ -419,6 +419,11 @@ a:hover {
 	font-size: 9px;
     background-color: black;
     color: white;
+    max-width: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
 }
 
 .mouseCursor:before {
