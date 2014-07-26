@@ -735,7 +735,7 @@ $(function() {
             access_level : 0
         },
         theme : {
-            access_level : 0,
+            access_level : 1,
             params : [ 'theme$' ]
         },
         theme_style : {
