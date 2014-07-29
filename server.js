@@ -66,6 +66,7 @@ function getClientIp(socket) {
 function start(channelName) {
     console.log('Starting channel: ' + (channelName || '<fontpage>'));
 
+    var elbot = require('./elbot').start();
     var room = io.of('/' + channelName);
     var channel = channels[channelName] = {
         online : []
@@ -429,6 +430,26 @@ function start(channelName) {
                         }
                     }
                     return $.Deferred().resolve(true);
+                }
+            },
+            elbot : {
+                params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+                    roomEmit('message', {
+                        nick : dbuser.get('nick'),
+                        type : 'elbot-message',
+                        message : params.message
+                    });
+                    return elbot.then(function(elbot) {
+                        return elbot.next(params.message).then(function(msg) {
+                            roomEmit('message', {
+                                nick : 'Elbot Chat Bot',
+                                type : 'elbot-response',
+                                message : msg
+                            });
+                            return $.Deferred().resolve(true);
+                        });
+                    });
                 }
             }
         };

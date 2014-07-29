@@ -145,6 +145,8 @@ a:hover {
     font-weight: bold;
 }
 
+.elbot-message,
+.elbot-message .nick,
 .spoken-message,
 .spoken-message .nick {
 	font-weight: normal;
@@ -166,8 +168,18 @@ a:hover {
 .message .nick:after {
 	content: ': ';
 }
+
 .spoken-message .nick:after {
 	content: ' says ';
+}
+
+.elbot-message .nick:after {
+    content: ' said to Elbot: ';
+}
+
+.elbot-message .content:before,
+.elbot-message .content:after {
+    content: '"';
 }
 
 .timestamp {

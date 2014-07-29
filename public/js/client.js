@@ -419,6 +419,9 @@ $(function() {
                 parser.getAllFonts(message.message);
                 parsed = parser.parse(message.message);
                 break;
+            case 'elbot-response':
+                parsed = message.message;
+                break;
             default:
                 parsed = parser.parseLinks(message.message);
                 break;
@@ -774,6 +777,9 @@ $(function() {
             handler : function() {
                 CLIENT.set('cursors', CLIENT.get('cursors') == 'off' ? 'on' : 'off');
             }
+        },
+        elbot : {
+            params : [ 'message$' ]
         }
     };
 
