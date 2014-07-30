@@ -197,6 +197,7 @@ a:hover {
     background-color: #3A3A3A;
     bottom: 0;
     width: 100%;
+    z-index: 2;
 }
 #input-bar > div {
 	padding: 10px;
@@ -423,11 +424,13 @@ a:hover {
 \*/
 
 .mouseCursor {
+	opacity : .5;
 	position: fixed;
+	z-index: 1;
 }
 
 .mouseCursor .nick {
-	margin-left: 20px;
+	margin: 4px 0 0 14px;
 	font-size: 9px;
     background-color: black;
     color: white;
@@ -443,5 +446,5 @@ a:hover {
 	position: absolute;
 	width: 25px;
 	height: 25px;
-	background: url(img/cursor.png);
+	background: url(img/cursor.png) no-repeat;
 }
