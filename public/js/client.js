@@ -1317,7 +1317,7 @@ function video(event, type, input) {
             }
         }).mouseup(function(e) {
             dragging = false;
-            shim.remove();
+            shim && shim.remove();
             $(document).unbind('selectstart', stop);
         });
         videoOverlay.click(function(e) {
