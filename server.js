@@ -6,12 +6,10 @@ var throttle = require('./throttle');
 var _ = require('underscore');
 var $ = require('jquery-deferred');
 var express = require('express');
-var app = express();
 var fs = require('fs');
-var http = require('http');
-var httpPort = settings.server.port;
-var server;
 var verifyByEmail = !!settings.emailServer;
+var httpsPort = settings.https && settings.https.port;
+var httpPort = settings.server.port;
 
 /*
  * catch the uncaught errors that weren't wrapped in a domain or try catch
@@ -23,58 +21,18 @@ process.on('uncaughtException', function(err) {
     console.log(err);
 });
 
-if (settings.https) {
-    var httpsPort = settings.https.port;
-    var happ = express();
-    var hserver = http.Server(happ);
-    happ.get('*', function(req, res) {
-        res.redirect('https://' + /^([^:]+)(?::\d+|)$/.exec(req.get('host'))[1] + (httpsPort == 443 ? '' : ':' + httpsPort) + req.url);
-    });
-    hserver.listen(httpPort, function() {
-        console.log('http (for redirecting) listening on *:' + httpPort);
-    });
-    server = require('https').createServer({
-        key : fs.readFileSync(settings.https.key),
-        cert : fs.readFileSync(settings.https.cert)
-    }, app);
-    server.listen(httpsPort, function() {
-        console.log('https listening on *:' + httpsPort);
-    });
-} else {
-    server = http.Server(app);
-    server.listen(httpPort, function() {
-        console.log('http listening on *:' + httpPort);
-    });
-}
-
-var io = require('socket.io')(server);
-
-if (settings.server.compression) {
-    app.use(require('compression')());
-}
-
-app.use(express.static(__dirname + '/public', settings.server.cache ? {
-    maxAge : settings.server.cache
-} : undefined));
-
-var channels = {};
-
-function getClientIp(socket) {
-    return socket.request.connection.remoteAddress;
-}
-
-function start(channelName) {
+function createChannel(io, channelName) {
     console.log('Starting channel: ' + (channelName || '<fontpage>'));
 
     var elbot = require('./elbot').start();
     var room = io.of('/' + channelName);
-    var channel = channels[channelName] = {
+    var channel = {
         online : []
     };
 
     room.on('connection', function(socket) {
         var user = {
-            remote_addr : getClientIp(socket),
+            remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
 
@@ -856,26 +814,77 @@ function start(channelName) {
             console.error(err);
         }
     });
+
+    return channel;
 }
 
-var channelRegex = /^\/(\w*\/?)$/;
-app.get(channelRegex, function(req, res) {
-    try {
-        var host = req.headers.host;
-        var channelName = channelRegex.exec(req.url)[1];
-        if (host != 'this.spooks.me') {
-            channelName = host + '/' + channelName;
-        }
-        channels[channelName] || start(channelName);
-        var index = fs.readFileSync('index.html').toString();
-        _.each({
-            channel : channelName,
-            verifyByEmail : verifyByEmail
-        }, function(value, key) {
-            index = index.replace('${' + key + '}', value);
-        });
-        res.send(index);
-    } catch (err) {
-        console.error(err);
+function initApp(app, server, https) {
+    if (settings.server.compression) {
+        app.use(require('compression')());
     }
-});
+    app.use(express.static(__dirname + '/public', settings.server.cache ? {
+        maxAge : settings.server.cache
+    } : undefined));
+    var io = require('socket.io')(server);
+    var channels = {};
+    var channelRegex = /^\/(\w*\/?)$/;
+    app.get(channelRegex, function(req, res) {
+        var domain = /^([^:]+)(?::\d+|)$/.exec(req.get('host'))[1];
+        var httpsDomain = settings.https && settings.https.domain;
+        var allHttps = !httpsDomain && settings.https && !https;
+        var onHttpDomain = httpsDomain && https != (httpsDomain == domain);
+        if (allHttps || onHttpDomain) {
+            console.log('redirect', allHttps, onHttpDomain);
+            if (https) {
+                var port = httpsPort == 80 ? '' : ':' + httpPort;
+                res.redirect('http://' + domain + port + req.url);
+            } else {
+                var port = httpsPort == 443 ? '' : ':' + httpsPort;
+                res.redirect('https://' + domain + port + req.url);
+            }
+        } else {
+            try {
+                var host = req.headers.host;
+                var channelName = channelRegex.exec(req.url)[1];
+                if (host != 'this.spooks.me') {
+                    channelName = host + '/' + channelName;
+                }
+                if (!channels[channelName]) {
+                    channels[channelName] = createChannel(io, channelName);
+                }
+                var index = fs.readFileSync('index.html').toString();
+                _.each({
+                    channel : channelName,
+                    verifyByEmail : verifyByEmail
+                }, function(value, key) {
+                    index = index.replace('${' + key + '}', value);
+                });
+                res.send(index);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    });
+}
+
+(function() {
+    var httpApp = express();
+    var httpServer = require('http').Server(httpApp);
+
+    if (settings.https) {
+        var httpsApp = express();
+        var httpsServer = require('https').createServer({
+            key : fs.readFileSync(settings.https.key),
+            cert : fs.readFileSync(settings.https.cert)
+        }, httpsApp);
+        initApp(httpsApp, httpsServer, true);
+        httpsServer.listen(httpsPort, function() {
+            console.log('https listening on *:' + httpsPort);
+        });
+    }
+
+    initApp(httpApp, httpServer, false);
+    httpServer.listen(httpPort, function() {
+        console.log('http listening on *:' + httpPort);
+    });
+})();

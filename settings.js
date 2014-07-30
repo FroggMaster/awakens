@@ -18,6 +18,7 @@ module.exports = {
     },
 
     https : {
+        domain : 'this.spooks.me',
         key : './ssl/localhost.key',
         cert : './ssl/localhost.crt',
         port : 8443
