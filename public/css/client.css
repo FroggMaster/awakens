@@ -35,7 +35,7 @@ body {
 .noScroll #messages {
 	overflow-y: auto;
 }
-.red #messages {
+.red body {
 	background-color: #FF0000;
 	overflow: hidden;
 	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FF0000), to(#800000) );
