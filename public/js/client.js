@@ -1268,6 +1268,9 @@ function video(event, type, input) {
     case 'vimeo':
         embed = '<iframe src="//player.vimeo.com/video/' + input + '" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
         break;
+    case 'ustream':
+        embed = '<iframe src="//www.ustream.tv/embed/' + input + '" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+        break;
     }
     var videoOverlay = $('.video-overlay');
     if (videoOverlay.length == 0) {
