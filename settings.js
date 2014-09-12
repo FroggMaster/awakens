@@ -152,7 +152,7 @@ module.exports = {
         registered : 'You have registered the nick',
         registeredAndVerified : 'Your nick was registered. Please verify the nick by typing /verify (your password here)',
         unregistered : 'You have unregistered the nick',
-        banlist : 'Globally banned: {0}',
+        banlist : '#f00000Globally banned: {0}',
         channel_banlist : 'Channel banned: {0}',
         access_granted : 'User {0} now has level {1}',
         whoami : 'You are {0} with access_level {1} with ip {2}',
