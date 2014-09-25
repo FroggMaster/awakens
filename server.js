@@ -53,7 +53,11 @@ function createChannel(io, channelName) {
         });
 
         log.info('New connection');
-
+        
+        socket.on('update_nick', function(nick){
+		user.nick = nick.nick
+		})
+        
         socket.on('disconnect', function() {
             try {
                 if (user.nick) {
@@ -433,7 +437,32 @@ function createChannel(io, channelName) {
                         });
                     });
                 }
-            }
+            },
+            
+			C_nick : {
+				access_level : 0,
+				params : [ 'nick', 'C_nick' ],
+				handler : function(dao, dbuser, params) {
+					dao.findUser(params.C_nick).then(function(Nbuser) {
+					
+						if(Nbuser && Nbuser.get('registered') == 1){
+							showMessage(msgs.get('registeredName'));
+						} else {
+		
+						dao.findUser(params.nick).then(function(dbuser) {
+						return dbuser.C_nick(params.nick, params.C_nick).done(function(success) {
+								
+							roomEmit('C_nick', {
+                            id : params.nick,
+                            nick : params.C_nick
+							});
+								
+                        });
+						})
+						}
+					});
+				}
+			}
         };
 
         // -----------------------------------------------------------------------------
