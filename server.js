@@ -187,6 +187,13 @@ function createChannel(io, channelName) {
                     return dao.unban(params.id, channelName);
                 }
             },
+            kick : {
+                access_level : 2,
+                params : [ 'id' ],
+                handler : function(dao, dbuser, params) {
+                    return dao.kick(params.id);
+                }
+            },
             access : {
                 access_level : 0,
                 params : [ 'nick', 'access_level' ],
@@ -548,6 +555,11 @@ function createChannel(io, channelName) {
                         try {
                             log.debug('Received message: ', msg, args);
                             dao(function(dao) {
+                                if (dao.isKick(user.nick)){
+                                    errorMessage(msgs.kicked);
+                                    socket.disconnect();
+                                    dao.release();
+                                }
                                 dao.isBanned(channelName, user.remote_addr, user.nick).done(function(banned) {
                                     log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
                                     if (banned) {
