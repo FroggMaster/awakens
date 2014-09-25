@@ -99,7 +99,7 @@ $(function() {
      * @param {Array.<string>} expect
      */
     function parseParams(name, input, expect) {
-        if (name == 'pm') {
+        if (name == 'pm' || name == 'kick') {
             var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -650,7 +650,7 @@ $(function() {
         },
         kick : {
             access_level : 2,
-            params : [ 'id$' ]
+            params : [ 'nick|message' ]
         },
         access : {
             access_level : 0,
