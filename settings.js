@@ -181,8 +181,7 @@ module.exports = {
         user_exist_not_registered : '{0} exists but is not registered',
         throttled : 'Either you are doing that too much, or the site is under too much load',
         temporary_ban : 'You are way too fast, you have been banned for a while, try again later',
-        muted : 'You have been muted, please try again later.',
-        registeredName : 'That nick is registered'
+        muted : 'You have been muted, please try again later.'
     },
 
     names : [ "Johnny Bravo", "Felix the cat", "Doug Funnie", "Tommy Pickles", "Courage the cowardly dog", "Timmy Turner", "Ren", "Stimpy", "Pinky", "Brain", "ed", "edd", "eddy", "Batman", "Ash Ketchum", "Agumon", "Beavis", "Butt-Head", "Rocko", "Sonic", "Space Ghost", "Captain Planet", "penis", "Buzz Lightyear", "Dexter", "DeeDee", "Arnold", "Yugi", "Yami-Yugi", "Kai Hiwatashi", "Tyson Granger", "Arthur", "Norbert Beaver", "Daggett Beaver", "Daria", "Hank Hill", "Peggy Hill", "Bobby Hill", "Luanne Kleinschmidt", "Dale Gribble", "Bill Dauterive", "Jeffrey Boomhauer", "Homer Simpson", "Marge Simpson", "Bubbles", "Buttercup", "Blossom", "Mojojojo", "Samurai Jack", "Aku", "Squidward", "Spongebob", "Mr Krabs", "Stan Marsh", "Kyle Broflovski", "Eric Cartman", "Kenny McCormick", "Peter Griffin", "Meg Griffin", "Glenn Quagmire", "Joe Swanson", "Cleveland Brown", "Philip J. Fry", "Bender Bending Rodriguez", "Turanga Leela", "Dr John Zoidberg", "Amy Wong" ]
