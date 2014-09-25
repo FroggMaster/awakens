@@ -191,7 +191,7 @@ function createChannel(io, channelName) {
                 access_level : 2,
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-                    user = indexOf(params.nick);
+                    var user = indexOf(params.nick);
                     if(user != -1)
                         user = channel.online[user]
                     else
