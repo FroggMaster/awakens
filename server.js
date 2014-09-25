@@ -189,9 +189,26 @@ function createChannel(io, channelName) {
             },
             kick : {
                 access_level : 2,
-                params : [ 'id' ],
+                params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-                    return dao.kick(params.id);
+                    user = indexOf(params.nick);
+                    if(user != -1)
+                        user = channel.online[user]
+                    else
+                        return false
+                    if(!params.message.trim()){
+                        socketEmit(user.socket, 'message', {
+                            type : 'error-message',
+                            message : msgs.kicked
+                        });
+                        user.socket.disconnect();
+                    }else{
+                        socketEmit(user.socket, 'message', {
+                            type : 'error-message',
+                            message : msgs.get("kicked_reason", params.message.trim())
+                        });
+                        user.socket.disconnect();
+                    }
                 }
             },
             access : {
@@ -555,11 +572,6 @@ function createChannel(io, channelName) {
                         try {
                             log.debug('Received message: ', msg, args);
                             dao(function(dao) {
-                                if (dao.isKick(user.nick)){
-                                    errorMessage(msgs.kicked);
-                                    socket.disconnect();
-                                    dao.release();
-                                }
                                 dao.isBanned(channelName, user.remote_addr, user.nick).done(function(banned) {
                                     log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
                                     if (banned) {
@@ -734,6 +746,14 @@ function createChannel(io, channelName) {
              * @inner
              */
             function attempt(dbuser, password) {
+                if (indexOf(dbuser.get('nick')) >= 0 && password) {
+                    var osock = channel.online[indexOf(dbuser.get('nick'))].socket;
+                    socketEmit(osock, 'message', {
+                        type : 'error-message',
+                        message : msgs.ghosted
+                    });
+                    osock.disconnect();
+                }
                 if (indexOf(dbuser.get('nick')) >= 0) {
                     log.debug('Attempted to nick to ', dbuser.get('nick'), ' but someone else is using that nick right now');
                     if (user.nick) {

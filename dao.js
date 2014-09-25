@@ -7,7 +7,6 @@ var mysql = require('mysql');
 var passwordHash = require('password-hash');
 var fs = require('fs');
 var pool = mysql.createPool(settings.db);
-var kicklist = [];
 
 module.exports = function(callback) {
     var connection = $.Deferred();
@@ -456,30 +455,6 @@ module.exports = function(callback) {
                 result.reject(err);
             });
             return result.promise();
-        },
-
-        /**
-         * @param {string} kicked
-         * @returns Boolean
-         */
-
-        kick : function(kicked) {
-            kicklist.push(kicked);
-            return true;
-        },
-
-        /**
-         * @param {string} kicked
-         * @returns Boolean
-         */
-
-        isKick : function(user) {
-            if(kicklist.indexOf(user) != -1){
-                kicklist.splice(kicklist.indexOf(user), 1);
-                return true;
-            }else{
-                return false;
-            }
         },
 
         /**
