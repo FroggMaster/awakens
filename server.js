@@ -746,6 +746,14 @@ function createChannel(io, channelName) {
              * @inner
              */
             function attempt(dbuser, password) {
+                if (indexOf(dbuser.get('nick')) >= 0 && password) {
+                    var osock = channel.online[indexOf(dbuser.get('nick'))].socket;
+                    socketEmit(osock, 'message', {
+                        type : 'error-message',
+                        message : msgs.ghosted
+                    });
+                    osock.disconnect();
+                }
                 if (indexOf(dbuser.get('nick')) >= 0) {
                     log.debug('Attempted to nick to ', dbuser.get('nick'), ' but someone else is using that nick right now');
                     if (user.nick) {
