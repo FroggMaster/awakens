@@ -220,12 +220,7 @@ module.exports = function(callback) {
                 } else {
                     return $.Deferred().resolve(false, msgs.notRegistered);
                 }
-            },
-            
-            C_nick : function(nick, C_nick) {
-				query("delete from chat_users where nick='" + [ C_nick ] + "'" )
-				return this.set('nick', C_nick)
-			}
+            }
         };
     }
 
