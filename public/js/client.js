@@ -648,6 +648,10 @@ $(function() {
             access_level : 1,
             params : [ 'id$' ]
         },
+        kick : {
+            access_level : 2,
+            params : [ 'id$' ]
+        },
         access : {
             access_level : 0,
             params : [ 'access_level', 'nick$' ]

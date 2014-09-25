@@ -132,6 +132,7 @@ module.exports = {
         },
 
         banned : 'You are banned.',
+        kicked: 'You have been kicked.',
         pmOffline : 'Cannot pm a nick unless they are online.',
         notRegistered : 'Not registered yet',
         alreadyRegistered : 'Already registered',
