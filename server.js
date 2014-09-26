@@ -324,7 +324,7 @@ function createChannel(io, channelName) {
                 }
             },
             theme_style : {
-                access_level : 0,
+                access_level : 1,
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
                     var theme_style = params.theme_style.substring(0, settings.limits.message)
@@ -337,7 +337,7 @@ function createChannel(io, channelName) {
                 }
             },
             theme : {
-                access_level : 0,
+                access_level : 1,
                 params : [ 'theme' ],
                 handler : function(dao, dbuser, params) {
                     var theme = params.theme.substring(0, settings.limits.message)
