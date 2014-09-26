@@ -52,6 +52,12 @@ $(function() {
         message : info.id + ' is now known as ' + info.nick
         });
 		if(info.id == CLIENT.get('nick')){
+		CLIENT.name = info.nick
+		socket.emit('update_nick', {
+            nick : info.nick,
+        });
+		} else if (info.id == CLIENT.name){
+		CLIENT.name = info.nick
 		socket.emit('update_nick', {
             nick : info.nick,
         });
