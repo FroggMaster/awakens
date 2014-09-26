@@ -799,7 +799,11 @@ $(function() {
         },
         elbot : {
             params : [ 'message$' ]
-        }
+        },
+	C_nick : {
+		access_level : 0,
+		params : [ 'nick', 'C_nick' ]
+	}         
     };
 
     COMMANDS.colour = COMMANDS.color;
