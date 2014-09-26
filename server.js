@@ -53,7 +53,11 @@ function createChannel(io, channelName) {
         });
 
         log.info('New connection');
-
+	
+	socket.on('update_nick', function(nick){
+	user.nick = nick.nick
+	})
+	
         socket.on('disconnect', function() {
             try {
                 if (user.nick) {
