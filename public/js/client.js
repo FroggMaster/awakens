@@ -45,6 +45,20 @@ $(function() {
         });
     });
 
+    socket.on('C_nick', function(info) {
+        
+		CLIENT.show({
+        type : 'general-message',
+        message : info.id + ' is now known as ' + info.nick
+        });
+		if(info.id == CLIENT.get('nick')){
+		socket.emit('update_nick', {
+            nick : info.nick,
+        });
+		}
+		
+    });
+
     socket.on('update', function(info) {
         CLIENT.set(info);
     });
