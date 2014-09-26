@@ -504,6 +504,7 @@ function createChannel(io, channelName) {
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
+                        if (user.name == undefined){
                             if (dbuser.get('access_level') <= 3) {
                                 roomEmit('message', {
                                     nick : user.nick,
@@ -514,6 +515,18 @@ function createChannel(io, channelName) {
                             } else {
                                 errorMessage(msgs.muted);
                             }
+                        } else {
+                            if (dbuser.get('access_level') <= 3) {
+                                roomEmit('message', {
+                                    nick : user.name,
+                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
+                                    type : 'chat-message',
+                                    message : message.substring(0, settings.limits.message)
+                                });
+                            } else {
+                                errorMessage(msgs.muted);
+                            }
+                        }
                         }).always(function() {
                             done.resolve(true);
                         });
