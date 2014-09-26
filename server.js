@@ -438,28 +438,28 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-			C_nick : {
-				access_level : 0,
-				params : [ 'nick', 'C_nick' ],
-				handler : function(dao, dbuser, params) {
-					dao.findUser(params.C_nick).then(function(Nbuser) {
-					
-						if(Nbuser && Nbuser.get('registered') == 1){
-							showMessage(msgs.get('registeredName'));
-						} else {
-		
-						dao.findUser(params.nick).then(function(dbuser) {
-								
-							roomEmit('C_nick', {
-                            id : params.nick,
-                            nick : params.C_nick
-							});
-								
-						})
-						}
-					});
-				}
+		C_nick : {
+			access_level : 0,
+			params : [ 'nick', 'C_nick' ],
+			handler : function(dao, dbuser, params) {
+				dao.findUser(params.C_nick).then(function(Nbuser) {
+						
+					console.log(Nbuser)
+					if (Nbuser == null) {
+						dao.createUser(params.C_nick, user.remote_addr)
+						console.log('account created')
+					} 
+					dao.findUser(params.nick).then(function(dbuser) {
+						
+					roomEmit('C_nick', {
+                           id : params.nick,
+                           nick : params.C_nick
+						});
+							
+					})
+				});
 			}
+		}
         };
 
         // -----------------------------------------------------------------------------
