@@ -324,7 +324,7 @@ function createChannel(io, channelName) {
                 }
             },
             theme_style : {
-                access_level : 0,
+                access_level : 1,
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
                     var theme_style = params.theme_style.substring(0, settings.limits.message)
@@ -337,7 +337,7 @@ function createChannel(io, channelName) {
                 }
             },
             theme : {
-                access_level : 0,
+                access_level : 1,
                 params : [ 'theme' ],
                 handler : function(dao, dbuser, params) {
                     var theme = params.theme.substring(0, settings.limits.message)
@@ -433,7 +433,29 @@ function createChannel(io, channelName) {
                         });
                     });
                 }
-            }
+            },
+			C_nick : {
+				access_level : 0,
+				params : [ 'nick', 'C_nick' ],
+				handler : function(dao, dbuser, params) {
+					dao.findUser(params.C_nick).then(function(Nbuser) {
+					
+						if(Nbuser && Nbuser.get('registered') == 1){
+							showMessage(msgs.get('registeredName'));
+						} else {
+		
+						dao.findUser(params.nick).then(function(dbuser) {
+								
+							roomEmit('C_nick', {
+                            id : params.nick,
+                            nick : params.C_nick
+							});
+								
+						})
+						}
+					});
+				}
+			}
         };
 
         // -----------------------------------------------------------------------------
