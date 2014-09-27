@@ -130,7 +130,7 @@ $(function() {
      * @param {Array.<string>} expect
      */
     function parseParams(name, input, expect) {
-        if (name == 'pm' || name == 'kick' || name == 'C_nick') {
+        if (name == 'pm' || name == 'C_nick') {
             var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -140,6 +140,17 @@ $(function() {
                     message : message,
 		    C_nick : message
                 };	
+            }
+        } else if (name == 'kick') {
+            var pm = /^(.*?[^\\])(\|[\s\S]*)?$/.exec(input);
+            if (pm) {
+                var nick = pm[1].replace('\\|', '|');
+                var message = pm[2]  || " ";
+                return {
+                    nick : nick,
+                    message : message,
+            C_nick : message
+                };  
             }
         } else {
             var values = input.split(' ');
@@ -687,7 +698,7 @@ $(function() {
         },
         kick : {
             access_level : 2,
-            params : [ 'nick|message' ]
+            params : [ 'nick[|message]' ]
         },
         access : {
             access_level : 0,
