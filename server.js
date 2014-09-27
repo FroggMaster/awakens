@@ -167,8 +167,22 @@ function createChannel(io, channelName) {
                 access_level : 1,
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
-                    return dao.ban(params.id);
-                }
+					dao.findUser(user.nick).then(function(admin){
+						dao.findUser(params.id).then(function(dbuser){
+							if(dbuser != null){
+								if(dbuser.get('access_level') <= admin.get('access_level')){
+								showMessage('You may not ban admins');
+								} else {
+								return dao.ban(params.id);
+								showMessage(params.id + 'is now banned gloablly');
+								}
+							} else {
+								showMessage(params.id + 'is now banned gloablly');
+								return dao.ban(params.id);
+							}
+						})
+					})
+				}
             },
             unban : {
                 access_level : 1,
