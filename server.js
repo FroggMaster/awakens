@@ -531,12 +531,21 @@ function createChannel(io, channelName) {
                             }
                         } else {
                             if (dbuser.get('access_level') <= 3) {
-                                roomEmit('message', {
-                                    nick : user.name,
-                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
-                                    type : 'chat-message',
-                                    message : message.substring(0, settings.limits.message)
-                                });
+				if(user.name == undefined){
+					roomEmit('message', {
+						nick : user.nick,
+						flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
+						type : 'chat-message',
+						message : message.substring(0, settings.limits.message)
+					});
+					} else{
+						roomEmit('message', {
+						nick : user.name,
+						flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
+						type : 'chat-message',
+						message : message.substring(0, settings.limits.message)
+					});									
+					}
                             } else {
                                 errorMessage(msgs.muted);
                             }
