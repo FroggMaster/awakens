@@ -55,7 +55,7 @@ function createChannel(io, channelName) {
         log.info('New connection');
 	
 	socket.on('update_nick', function(nick){
-	user.nick = nick.nick
+	user.name = nick.nick
 	})
 	
         socket.on('disconnect', function() {
