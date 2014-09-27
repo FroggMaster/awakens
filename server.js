@@ -213,7 +213,6 @@ function createChannel(io, channelName) {
                 access_level : 2,
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-                    broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,dbuser.get("access_level"));
                     var user = indexOf(params.nick);
                     if(user != -1)
                         user = channel.online[user]
@@ -225,7 +224,9 @@ function createChannel(io, channelName) {
                             message : msgs.kicked
                         });
                         user.socket.disconnect();
+                        broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,dbuser.get("access_level"));
                     }else{
+                        broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),dbuser.get("access_level"));
                         socketEmit(user.socket, 'message', {
                             type : 'error-message',
                             message : msgs.get("kicked_reason", params.message.trim())
