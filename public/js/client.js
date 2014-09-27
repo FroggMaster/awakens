@@ -929,7 +929,6 @@ parser = {
     parse : function(str) {
         // escaping shit
         str = str.replace(/\n/g, '\\n');
-        str = str.replace(/&/gi, '&amp;');
         str = str.replace(/>/gi, '&gt;');
         str = str.replace(/</gi, '&lt;');
         str = str.replace(/"/gi, '&quot;');
@@ -950,6 +949,7 @@ parser = {
         // replace underscores, et cetera
         str = this.multiple(str, /\^([^\^]+?)\^/i, '<big>$1</big>');
         str = str.replace(/\*([^\s].+?[^\s])\*/g, '<strong>$1</strong>');
+        str = str.replace(/\&([^\s].+?[^\s])\&/g, '<marquee direction="right">$1</marquee>');
         str = this.multiple(str, /&#126;([^&#126;]+?)&#126;/i, '<small>$1</small>');
         str = str.replace(/`([^\s].+?[^\s])`/g, '<code>$1</code>');
         // try to replace all >>>/x/??? for links to boards.4chan.org/x/res/???
