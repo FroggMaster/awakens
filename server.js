@@ -167,20 +167,21 @@ function createChannel(io, channelName) {
                 access_level : 1,
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
+                broadcast(dao, dbuser.get("nick")+" has banned "+params.id,dbuser.get("access_level"));
 				dao.findUser(user.nick).then(function(admin){
-				dao.findUser(params.id).then(function(dbuser){
-					if(dbuser != null){
-						if(dbuser.get('access_level') <= admin.get('access_level')){
-							showMessage('You may not ban admins');
-						} else {
-							showMessage(params.id + ' is now banned gloablly');
-							return dao.ban(params.id);
-						}
-					} else {
-						showMessage(params.id + ' is now banned gloablly');
-						return dao.ban(params.id);
-					}
-				})
+    				dao.findUser(params.id).then(function(dbuser){
+    					if(dbuser != null){
+    						if(dbuser.get('access_level') <= admin.get('access_level')){
+    							showMessage('You may not ban admins');
+    						} else {
+    							showMessage(params.id + ' is now banned gloablly');
+    							return dao.ban(params.id);
+    						}
+    					} else {
+    						showMessage(params.id + ' is now banned gloablly');
+    						return dao.ban(params.id);
+    					}
+    				})
 				})
 				}
             },
@@ -188,6 +189,7 @@ function createChannel(io, channelName) {
                 access_level : 1,
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
+                    broadcast(dao, dbuser.get("nick")+" has unbanned "+params.id,dbuser.get("access_level"));
                     return dao.unban(params.id);
                 }
             },
@@ -195,6 +197,7 @@ function createChannel(io, channelName) {
                 access_level : 1,
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
+                    broadcastChannel(dao, channel, dbuser.get("nick")+" has channel banned "+params.id,dbuser.get("access_level"));
                     return dao.ban(params.id, channelName);
                 }
             },
@@ -202,6 +205,7 @@ function createChannel(io, channelName) {
                 access_level : 1,
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
+                    broadcastChannel(dao, channel, dbuser.get("nick")+" has channel unbanned "+params.id,dbuser.get("access_level"));
                     return dao.unban(params.id, channelName);
                 }
             },
@@ -209,6 +213,7 @@ function createChannel(io, channelName) {
                 access_level : 2,
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
+                    broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,dbuser.get("access_level"));
                     var user = indexOf(params.nick);
                     if(user != -1)
                         user = channel.online[user]
@@ -768,6 +773,22 @@ function createChannel(io, channelName) {
             });
         }
 
+        function broadcast(dao, message, level) {
+            for(var key in channels){
+                broadcastChannel(dao, channels[key], message, level)
+            }
+        }
+
+        function broadcastChannel(dao, channel, message, level) {
+            channel.online.forEach(function(user){
+                dao.findUser(user.nick).done(function(dbuser) {
+                    if(dbuser.get("access_level")<=level){
+                        socketEmit(user.socket, 'general-message', message);
+                    }
+                })
+            })
+        }
+
         /**
          * @inner
          * @param {string} nick
@@ -924,7 +945,7 @@ function initApp(app, server, https) {
         maxAge : settings.server.cache
     } : undefined));
     var io = require('socket.io')(server);
-    var channels = {};
+    channels = {};
     var channelRegex = /^\/(\w*\/?)$/;
     app.get(channelRegex, function(req, res) {
         var domain = /^([^:]+)(?::\d+|)$/.exec(req.get('host'))[1];
