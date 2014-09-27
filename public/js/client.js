@@ -929,6 +929,7 @@ parser = {
     parse : function(str) {
         // escaping shit
         str = str.replace(/\n/g, '\\n');
+        str = str.replace(/&/gi, '&amp;');
         str = str.replace(/>/gi, '&gt;');
         str = str.replace(/</gi, '&lt;');
         str = str.replace(/"/gi, '&quot;');
