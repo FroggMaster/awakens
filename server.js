@@ -55,7 +55,7 @@ function createChannel(io, channelName) {
         log.info('New connection');
 	
 	socket.on('update_nick', function(nick){
-	user.nick = nick.nick
+	user.name = nick.nick
 	})
 	
         socket.on('disconnect', function() {
@@ -287,7 +287,7 @@ function createChannel(io, channelName) {
                 }
             },
             note : {
-                access_level : 1,
+                access_level : 0,
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
