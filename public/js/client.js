@@ -142,7 +142,7 @@ $(function() {
                 };	
             }
         } else if (name == 'kick') {
-            var pm = /^(.*?[^\\])(\|[\s\S]*)?$/.exec(input);
+            var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
