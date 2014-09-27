@@ -66,7 +66,11 @@ $(function() {
     });
 
     socket.on('update', function(info) {
-        CLIENT.set(info);
+		if(info.theme_style != undefined && CLIENT.get('bg') == 'off'){
+		CLIENT.set(info);
+		} else {
+		CLIENT.set(info);
+		}
     });
 
     socket.on('message', function(msg) {
@@ -329,6 +333,7 @@ $(function() {
         });
     });
     CLIENT.set('images', 'on'); 
+    CLIENT.set('bg', 'off'); 
 });
 
 // ------------------------------------------------------------------
@@ -810,7 +815,16 @@ $(function() {
 	C_nick : {
 		access_level : 0,
 		params : [ 'nick|C_nick' ]
-	}         
+	},
+	toggle_bg : function() {
+               CLIENT.set('bg', CLIENT.get('bg') == 'on' ? 'off' : 'on');
+		if(CLIENT.get('bg') == 'on'){
+			CLIENT.show('background toggled on')
+			$('#messages').css('background-image','url(https://dl.dropboxusercontent.com/u/76962608/ss/Indent1.png)')
+		} else {
+			CLIENT.show('background toggled off')
+		}
+	}
     };
 
     COMMANDS.colour = COMMANDS.color;
