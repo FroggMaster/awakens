@@ -165,24 +165,28 @@ function createChannel(io, channelName) {
             },
             ban : {
                 access_level : 1,
-                params : [ 'id' ],
-                handler : function(dao, dbuser, params) {
-                broadcast(dao, dbuser.get("nick")+" has banned "+params.id,dbuser.get("access_level"));
-				dao.findUser(user.nick).then(function(admin){
-    				dao.findUser(params.id).then(function(dbuser){
-    					if(dbuser != null){
-    						if(dbuser.get('access_level') <= admin.get('access_level')){
-    							showMessage('You may not ban admins');
-    						} else {
-    							showMessage(params.id + ' is now banned gloablly');
-    							return dao.ban(params.id);
-    						}
-    					} else {
-    						showMessage(params.id + ' is now banned gloablly');
-    						return dao.ban(params.id);
-    					}
+                params : [ 'nick', 'message' ],
+                handler : function(dao, dbsender, params) {
+                    var msg = dbsender.get("nick")+" has banned "+params.nick;
+                    if(params.message.trim())
+                        msg+=": "+params.message.trim();
+    				dao.findUser(user.nick).then(function(admin){
+        				dao.findUser(params.nick).then(function(dbuser){
+        					if(dbuser != null){
+        						if(dbuser.get('access_level') <= admin.get('access_level')){
+        							showError('You may not ban admins');
+        						} else {
+        							showMessage(params.nick + ' is now banned gloablly');
+                                    broadcast(dao, msg, dbsender.get("access_level"));
+        							return dao.ban(params.nick);
+        						}
+        					} else {
+        						showMessage(params.nick + ' is now banned gloablly');
+                                roadcast(dao, msg, dbsender.get("access_level"));
+        						return dao.ban(params.nick);
+        					}
+        				})
     				})
-				})
 				}
             },
             unban : {
@@ -195,9 +199,12 @@ function createChannel(io, channelName) {
             },
             channel_ban : {
                 access_level : 1,
-                params : [ 'id' ],
+                params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-                    broadcastChannel(dao, channel, dbuser.get("nick")+" has channel banned "+params.id,dbuser.get("access_level"));
+                    var msg = dbuser.get("nick")+" has channel banned "+params.nick;
+                    if(params.message.trim())
+                        msg+=": "+params.message.trim();
+                    broadcastChannel(dao, channel, msg,dbuser.get("access_level"));
                     return dao.ban(params.id, channelName);
                 }
             },

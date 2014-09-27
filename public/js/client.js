@@ -141,7 +141,7 @@ $(function() {
 		    C_nick : message
                 };	
             }
-        } else if (name == 'kick') {
+        } else if (name == 'kick' || name == "ban" || name == "channel_ban") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -682,7 +682,7 @@ $(function() {
         },
         ban : {
             access_level : 1,
-            params : [ 'id$' ]
+            params : [ 'nick[|message]' ]
         },
         unban : {
             access_level : 1,
@@ -690,7 +690,7 @@ $(function() {
         },
         channel_ban : {
             access_level : 1,
-            params : [ 'id$' ]
+            params : [ 'nick[|message]' ]
         },
         channel_unban : {
             access_level : 1,
