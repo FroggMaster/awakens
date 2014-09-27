@@ -688,7 +688,7 @@ $(function() {
         },
         whoami : {},
         whois : {
-            access_level : 0,
+            access_level : 1,
             params : [ 'nick$' ]
         },
         topic : {
