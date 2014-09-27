@@ -260,16 +260,20 @@ function createChannel(io, channelName) {
                 }
             },
             whois : {
-                access_level : 0,
+                access_level : 1,
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
+					return dao.findUser(user.nick).then(function(fuser) {
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        if (dbuser) {
+                        if (dbuser && fuser.get('access_level') == 0) {
                             return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('access_level'), dbuser.get('remote_addr')));
-                        } else {
+                        } else if (dbuser && fuser.get('access_level')) {
+							return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('access_level')));
+						} else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
                     });
+					});
                 }
             },
             find_ip : {
