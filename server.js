@@ -267,7 +267,7 @@ function createChannel(io, channelName) {
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser && fuser.get('access_level') == 0) {
                             return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('access_level'), dbuser.get('remote_addr')));
-                        } else if (dbuser && fuser.get('access_level')) {
+                        } else if (dbuser && fuser.get('access_level') == 1) {
 							return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('access_level')));
 						} else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
