@@ -73,8 +73,10 @@ $(function() {
     });
 
     socket.on('update', function(info) {
-		if(info.theme_style != undefined && CLIENT.get('bg') == 'off'){
-		CLIENT.set(info);
+		if(info.theme_style != undefined){
+			if(CLIENT.get('bg') == 'off'){
+				CLIENT.set(info);
+			}
 		} else {
 		CLIENT.set(info);
 		}
