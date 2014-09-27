@@ -332,8 +332,12 @@ $(function() {
             message : 'Topic: ' + topic
         });
     });
-    CLIENT.set('images', 'on'); 
-    CLIENT.set('bg', 'off'); 
+	if (CLIENT.get('images') == null){
+	  CLIENT.set('images', 'on'); 
+	}
+	if (CLIENT.get('bg') == null){
+	CLIENT.set('bg', 'off'); 
+	}
 });
 
 // ------------------------------------------------------------------
