@@ -78,12 +78,6 @@ body {
 .balls #messages {
     background: url('img/balls.gif') repeat center #000b11;
 }
-#messages .timestamp,
-#messages .message-content {
-    -webkit-text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    -moz-text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
 
 /*\
 |*|
