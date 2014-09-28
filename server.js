@@ -225,7 +225,7 @@ function createChannel(io, channelName) {
                         user = channel.online[user]
 						dao.findUser(user.nick).then(function(admin){
 						dao.findUser(params.nick).then(function(dbuser){
-                        if(dbuser.get('access_level') <= admin.get('access_level')){
+                        if(dbuser.get('access_level') >= admin.get('access_level')){
 							errorMessage('You may not kick admins');
 						} else {
 						if(!params.message.trim()){
