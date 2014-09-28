@@ -476,6 +476,9 @@ $(function() {
 	    case 'general-message':
 		parsed = parser.parse(message.message);
 		break;
+	    case 'note-message':
+		parsed = parser.parse(message.message);
+		break;		
             default:
                 parsed = parser.parseLinks(message.message);
                 break;
