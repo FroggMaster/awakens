@@ -263,6 +263,17 @@ a:hover {
     max-height: 200px;
 }
 
+#bigimg {
+position: fixed;
+top:0;
+right:0;
+width:60%;
+}
+#bigimg  img{
+width: 100%;
+height: 100%:
+}
+
 .timestamp {
     padding-left: .4em;
     font-size: .8em;
