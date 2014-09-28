@@ -643,6 +643,15 @@ $(function() {
             }
         }
     });
+    
+	$('#messages').on('mousemove', function(e) {
+		if(e.target.localName == 'img'){
+			$('#bigimg')[0].innerHTML = e.target.outerHTML
+		} else {
+			$('#bigimg')[0].innerHTML = ''
+		}
+	});
+    
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
         input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
