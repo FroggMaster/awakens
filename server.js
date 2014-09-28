@@ -223,11 +223,9 @@ function createChannel(io, channelName) {
                     var user = indexOf(params.nick);
                     if(user != -1){
                         user = channel.online[user]
-						dao.findUser(user.nick).then(function(admin){
-						dao.findUser(params.nick).then(function(dbuser){
-                        if(dbuser.get('access_level') >= admin.get('access_level')){
-							errorMessage('You may not kick admins');
-						} else {
+						dao.findUser(params.nick).then(function(admin){
+						if(dbuser.get('access_level') <= admin.get('access_level')){
+						console.log(dbuser.get('nick'),admin.get('nick'))
 						if(!params.message.trim()){
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
@@ -243,9 +241,10 @@ function createChannel(io, channelName) {
 							});
 							user.socket.disconnect();
                     }
+					} else {
+					  errorMessage('You may not kick admins');
 					}
-                })
-				})
+					})
 				} else{
 					errorMessage(params.nick  +' is not online');
 				}
