@@ -463,7 +463,8 @@ $(function() {
             var parsed;
             switch (message.type) {
             case 'escaped-message':
-                parsed = $('<span></span>').text(message.message).html().replace(/\n/g, '<br/>');
+                //parsed = $('<span></span>').text(message.message).html().replace(/\n/g, '<br/>');
+                parsed = parser.parse(message.message);
                 break;
             case 'personal-message':
             case 'chat-message':
