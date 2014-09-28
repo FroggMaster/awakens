@@ -473,6 +473,9 @@ $(function() {
             case 'elbot-response':
                 parsed = message.message;
                 break;
+	    case 'general-message':
+		parsed = parser.parse(message.message);
+		break;
             default:
                 parsed = parser.parseLinks(message.message);
                 break;
