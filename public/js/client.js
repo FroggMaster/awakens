@@ -1075,17 +1075,21 @@ parser = {
                 link = links[i].replace(/^(.)(.+)$/, '$2');
             str = str.replace(this.replink, '<a target="_blank" href="' + link + '">' + link + '</a>');
         }
-
-        var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:gif|jpg|jpeg|png|bmp))<\/a>/i.exec(str);
-        if (img && CLIENT.get('images') == 'on') {
-            var blacklisted = false;
-            for ( var i = 0; i < BLACKLIST.length && !blacklisted; i++) {
-                blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
-            }
-            if (!blacklisted) {
-                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '" onload="scrollToBottom()" onerror="imageError(this)" /></a>');
+        while(true){
+            var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:gif|jpg|jpeg|png|bmp))<\/a>/i.exec(str);
+            if(!img)
+                break;
+            if (img && CLIENT.get('images') == 'on') {
+                var blacklisted = false;
+                for ( var i = 0; i < BLACKLIST.length && !blacklisted; i++) {
+                    blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
+                }
+                if (!blacklisted) {
+                    str = str.replace(img[0], img[1] + '<img src="' + img[2] + '" onload="scrollToBottom()" onerror="imageError(this)" /></a>');
+                }
             }
         }
+        
 
         str = str.replace(/<a [^>]*href="[^"]*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
