@@ -644,11 +644,31 @@ $(function() {
         }
     });
     
+    var ctrl = false;
+    var hover = null;
+
+    $(document).keydown(function(e){
+        if(e.keyCode == 17){
+            if(hover.localName == 'img'){
+                $('#bigimg')[0].innerHTML = hover.outerHTML;
+            }
+            ctrl = true;
+        }
+    })
+
+    $(document).keyup(function(e){
+        if(e.keyCode == 17){
+            ctrl = false;
+            $('#bigimg')[0].innerHTML = '';
+        }
+    })
+
 	$('#messages').on('mousemove', function(e) {
-		if(e.target.localName == 'img'){
-			$('#bigimg')[0].innerHTML = e.target.outerHTML
+        hover = e.target;
+		if(hover.localName == 'img' && ctrl){
+			$('#bigimg')[0].innerHTML = hover.outerHTML;
 		} else {
-			$('#bigimg')[0].innerHTML = ''
+			$('#bigimg')[0].innerHTML = '';
 		}
 	});
     
