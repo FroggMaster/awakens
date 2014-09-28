@@ -859,7 +859,7 @@ $(function() {
                CLIENT.set('bg', CLIENT.get('bg') == 'on' ? 'off' : 'on');
 		if(CLIENT.get('bg') == 'on'){
 			CLIENT.show('background toggled on')
-			$('#messages').css('background-image','url(https://dl.dropboxusercontent.com/u/76962608/ss/Indent1.png)')
+			CLIENT.set('theme_style','url(https://dl.dropboxusercontent.com/u/76962608/ss/Indent1.png) center / auto 100% no-repeat rgb(17, 17, 17)')
 		} else {
 			CLIENT.show('background toggled off')
 		}
