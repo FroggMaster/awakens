@@ -463,7 +463,8 @@ $(function() {
             var parsed;
             switch (message.type) {
             case 'escaped-message':
-                parsed = $('<span></span>').text(message.message).html().replace(/\n/g, '<br/>');
+                //parsed = $('<span></span>').text(message.message).html().replace(/\n/g, '<br/>');
+                parsed = parser.parse(message.message);
                 break;
             case 'personal-message':
             case 'chat-message':
@@ -901,7 +902,7 @@ parser = {
     fontRegex : /\$([\w \-\,Â®]*)\|(.*)$/,
     multiple : function(str, mtch, rep) {
         var ct = 0;
-        while (str.match(mtch) != null && ct++ < 6)
+        while (str.match(mtch) != null && ct++ < 20)
             str = str.replace(mtch, rep);
         return str;
     },
@@ -985,7 +986,8 @@ parser = {
         // replace underscores, et cetera
         str = this.multiple(str, /\^([^\^]+?)\^/i, '<big>$1</big>');
         str = str.replace(/\*([^\s].+?[^\s])\*/g, '<strong>$1</strong>');
-        str = str.replace(/\&amp;([^\s].+?[^\s])\&amp;/g, '<marquee width="98%" behavior="alternate" direction="right">$1</marquee>');
+        str = str.replace(/\&amp;([^\s].+?[^\s])\&amp;/g, '<div id=marquee>$1</div>');
+        str = str.replace(/\!([^\s].+?[^\s])\!/g, '<div id=flashing>$1</div>');
         str = this.multiple(str, /&#126;([^&#126;]+?)&#126;/i, '<small>$1</small>');
         str = str.replace(/`([^\s].+?[^\s])`/g, '<code>$1</code>');
         // try to replace all >>>/x/??? for links to boards.4chan.org/x/res/???
