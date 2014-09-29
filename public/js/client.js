@@ -967,7 +967,7 @@ parser = {
         str = this.multiple(str, /\^([^\^]+?)\^/i, '<big>$1</big>');
         str = str.replace(/\*([^\s].+?[^\s])\*/g, '<strong>$1</strong>');
         str = str.replace(/\&amp;([^\s].+?[^\s])\&amp;/g, '<div id=marquee>$1</div>');
-        str = str.replace(/\!([^\s].+?[^\s])\!/g, '<div id=flashing>$1</div>');
+        str = str.replace(/\%([^\s].+?[^\s])\%/g, '<div id=flashing>$1</div>');
         str = this.multiple(str, /&#126;([^&#126;]+?)&#126;/i, '<small>$1</small>');
         str = str.replace(/`([^\s].+?[^\s])`/g, '<code>$1</code>');
         // try to replace all >>>/x/??? for links to boards.4chan.org/x/res/???
