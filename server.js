@@ -173,9 +173,15 @@ function createChannel(io, channelName) {
     				dao.findUser(user.nick).then(function(admin){
         				dao.findUser(params.nick).then(function(dbuser){
         					if(dbuser != null){
-        						if(dbuser.get('access_level') <= admin.get('access_level')){
+        						if(dbuser.get('access_level') < admin.get('access_level')){
         							errorMessage('You may not ban admins');
         						} else {
+									
+									socketEmit(user.socket, 'message', {
+									type : 'error-message',
+									message : 'You have been banned by ' + user.nick + ': ' + params.message
+									});
+									
         							showMessage(params.nick + ' is now banned gloablly');
                                     broadcast(dao, msg, dbsender.get("access_level"));
         							return dao.ban(params.nick);
