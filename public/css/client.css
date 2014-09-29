@@ -281,7 +281,7 @@ height: 100%:
 
 #flashing {
 	width:95%;
-    -webkit-animation: flash 5s infinite;
+    -webkit-animation: flash 15s linear;
 }
 
 @-webkit-keyframes rightThenLeft {
