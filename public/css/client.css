@@ -274,14 +274,14 @@ width: 100%;
 height: 100%:
 }
 
-#marquee {
+#no {
     width:95%;
     -webkit-animation: rightThenLeft 15s linear;
 }
 
-#flashing {
+#no {
 	width:95%;
-    -webkit-animation: flash 5s infinite;
+    -webkit-animation: flash 30s linear;
 }
 
 @-webkit-keyframes rightThenLeft {
