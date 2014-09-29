@@ -278,6 +278,12 @@ height: 100%:
     width:95%;
     -webkit-animation: rightThenLeft 15s linear;
 }
+
+#flashing {
+	width:95%;
+    -webkit-animation: flash 5s infinite;
+}
+
 @-webkit-keyframes rightThenLeft {
 
     0%  {margin-left:0%;}
@@ -285,6 +291,16 @@ height: 100%:
     50%  {margin-left:0%;}
 	75%  {margin-left:85%;}
     100% {margin-left:0%;}
+	
+}
+
+@-webkit-keyframes flash {
+
+	0% {color: #45CEEF;} 
+	25% {color: #FFF5A5;}
+	50% {color: #FFD4DA;}
+	75% {color: #99D2E4;}
+	100% {color: #D8CAB4;}
 	
 }
 
