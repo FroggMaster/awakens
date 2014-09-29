@@ -782,7 +782,8 @@ $(function() {
                 if (params.flair == 'default' || params.flair == 'none') {
                     params.flair = null;
                 }
-                CLIENT.set('flair', params.flair);
+				flair = params.flair.replace(/&/g, '\\&')
+                CLIENT.set('flair', flair);
             }
         },
         echo : {
