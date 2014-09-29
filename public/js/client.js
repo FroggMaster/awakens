@@ -802,7 +802,8 @@ $(function() {
                 if (params.flair == 'default' || params.flair == 'none') {
                     params.flair = null;
                 }
-                CLIENT.set('flair', params.flair);
+				flair = params.flair.replace(/&/g, '\\&')
+                CLIENT.set('flair', flair);
             }
         },
         echo : {
@@ -901,7 +902,7 @@ parser = {
     fontRegex : /\$([\w \-\,Â®]*)\|(.*)$/,
     multiple : function(str, mtch, rep) {
         var ct = 0;
-        while (str.match(mtch) != null && ct++ < 20)
+        while (str.match(mtch) != null && ct++ < 6)
             str = str.replace(mtch, rep);
         return str;
     },
