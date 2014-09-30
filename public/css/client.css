@@ -277,7 +277,7 @@ height: 100%:
 #marquee {
 	position: relative;
 	width:95%;
-    -webkit-animation: rightThenLeft 15s linear;
+    -webkit-animation: rightThenLeft 15s infinite;
 }  
 
 #flashing {
@@ -297,11 +297,12 @@ height: 100%:
 
 @-webkit-keyframes flash {
 
-	0% {color: red;} 
-	25% {color: gold;}
-	50% {color: orange;}
-	75% {color: #ae2de3;}
-	100% {color: red;}
+	0% {color: #F00;} 
+	20% {color: #F90;}
+	40% {color: #FF0;}
+	60% {color: #0F0;}
+	80% {color: #09F;}
+	80% {color: #B0F;}
 	
 }
 
