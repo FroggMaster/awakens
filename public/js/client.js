@@ -358,6 +358,9 @@ $(function() {
 	if (CLIENT.get('bg') == null){
 	CLIENT.set('bg', 'off'); 
 	}
+	if (CLIENT.get('marquee') == null){
+	CLIENT.set('marquee', 'off'); 
+	}
 });
 
 // ------------------------------------------------------------------
@@ -884,6 +887,15 @@ $(function() {
 		} else {
 			CLIENT.show('background toggled off')
 		}
+	},
+	toggle_marquee : function() {
+               CLIENT.set('marquee', CLIENT.get('marquee') == 'on' ? 'off' : 'on');
+		if(CLIENT.get('marquee') == 'on'){
+			CLIENT.show('marquee toggled on')
+		} else {
+			CLIENT.show('marquee toggled off')
+		}
+		
 	}
     };
 
@@ -989,7 +1001,7 @@ parser = {
 	str = str.replace(/\/%([^\s].+?[^\s])\|/g, '<i>$1</i>');
 	str = str.replace(/\/_([^\s].+?[^\s])\|/g, '<u>$1</u>');
 	str = str.replace(/\/-([^\s].+?[^\s])\|/g, '<strike>$1</strike>');
-	str = str.replace(/\/&amp;([^\s].+?[^\s])\|/g, '<div id=marquee>$1</div>');
+	if(CLIENT.get('marquee') == 'off'){str = str.replace(/\/&amp;([^\s].+?[^\s])\|/g, '<div id=marquee>$1</div>')};
 	str = str.replace(/\/!([^\s].+?[^\s])\|/g, '<div id=flashing>$1</div>');
         str = this.multiple(str, /\/&#126;([^&#126;]+?)\|/i, '<small>$1</small>');
         str = str.replace(/\/`([^\s].+?[^\s])\|/g, '<code>$1</code>');

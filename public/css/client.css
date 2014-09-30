@@ -275,32 +275,33 @@ height: 100%:
 }
 
 #marquee {
-    width:95%;
+	position: relative;
+	width:95%;
     -webkit-animation: rightThenLeft 15s linear;
-}
+}  
 
 #flashing {
 	width:95%;
-    -webkit-animation: flash 30s linear;
+    -webkit-animation: flash 15s linear;
 }
 
 @-webkit-keyframes rightThenLeft {
 
-    0%  {margin-left:0%;}
-	25%  {margin-left:85%;}
-    50%  {margin-left:0%;}
-	75%  {margin-left:85%;}
-    100% {margin-left:0%;}
+    0%  {left:0%;}
+	25%  {left:90%;}
+    50%  {left:0%;}
+	75%  {left:90%;}
+    100% {left:0%;}
 	
 }
 
 @-webkit-keyframes flash {
 
-	0% {color: #45CEEF;} 
-	25% {color: #FFF5A5;}
-	50% {color: #FFD4DA;}
-	75% {color: #99D2E4;}
-	100% {color: #D8CAB4;}
+	0% {color: red;} 
+	25% {color: gold;}
+	50% {color: orange;}
+	75% {color: #ae2de3;}
+	100% {color: red;}
 	
 }
 
