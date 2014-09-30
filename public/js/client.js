@@ -1,5 +1,6 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'wrdp.info', 'puu.sh' ];
+var HighlightName;
 
 // ------------------------------------------------------------------
 // Client
@@ -17,6 +18,7 @@ $(function() {
 
     socket.on('join', function(user) {
         ONLINE.add(user);
+        HighlightName = user.nick;
         CLIENT.show({
             type : 'general-message',
             message : user.nick + ' has joined'
@@ -444,7 +446,7 @@ $(function() {
         var el = $('<div class="message"></div>');
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
-	if(message.message.indexOf(name) != -1){
+	if(message.message.indexOf(HighlightName) != -1){
 	el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
 	} else{
         el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
