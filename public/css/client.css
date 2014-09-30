@@ -313,7 +313,7 @@ max-height: 100%:
     display: inline;
 }
 #highlightname.timestamp {
-background-color:gold;
+color:gold;
 }
 
 .message div,
