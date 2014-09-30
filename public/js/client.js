@@ -444,7 +444,11 @@ $(function() {
         var el = $('<div class="message"></div>');
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
+	if(message.message.indexOf(name) != -1){
+	el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
+	} else{
         el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
+	}
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
             var parsedFlair = null;
