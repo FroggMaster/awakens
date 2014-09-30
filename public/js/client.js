@@ -18,7 +18,6 @@ $(function() {
 
     socket.on('join', function(user) {
         ONLINE.add(user);
-        HighlightName = user.nick;
         CLIENT.show({
             type : 'general-message',
             message : user.nick + ' has joined'
@@ -86,6 +85,7 @@ $(function() {
 
     socket.on('message', function(msg) {
         CLIENT.show(msg);
+        HighlightName = msg.nick;
     });
 
     socket.on('connect', function() {
