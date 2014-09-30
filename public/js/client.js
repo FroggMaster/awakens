@@ -1,5 +1,6 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'wrdp.info', 'puu.sh' ];
+var name;
 
 // ------------------------------------------------------------------
 // Client
