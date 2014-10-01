@@ -268,10 +268,12 @@ position: fixed;
 top:0;
 right:0;
 max-height:100%;
+max-width:60%;
 }
 #bigimg  img{
+position: relative;
+max-height: 100%;
 max-width: 100%;
-max-height: 100%:
 }
 
 #marquee {
