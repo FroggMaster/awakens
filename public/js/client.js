@@ -492,7 +492,14 @@ $(function() {
 		break;
 	    case 'note-message':
 		parsed = parser.parse(message.message);
-		break;		
+		break;	
+	case 'anon-message':
+		if(CLIENT.get('access_level') > 1){
+			parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
+		} else {
+			parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
+		}
+		break
             default:
                 parsed = parser.parseLinks(message.message);
                 break;
@@ -907,6 +914,9 @@ $(function() {
 			CLIENT.show('marquee toggled off')
 		}
 		
+	},
+	anon : {
+		params : [ 'message$' ]
 	}
     };
 
