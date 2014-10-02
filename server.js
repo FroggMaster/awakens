@@ -504,6 +504,21 @@ function createChannel(io, channelName) {
 					})
 				});
 			}
+		},
+		anon : {
+			params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+					console.log('test')
+                    var message = params.message.substring(0, settings.limits.message)
+					
+                    roomEmit('message', {
+                        type : 'anon-message',
+                        message : params.message,
+						name : user.nick
+                    });
+					
+                    return $.Deferred().resolve(true);
+                }
 		}
         };
 
