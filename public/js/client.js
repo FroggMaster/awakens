@@ -728,51 +728,37 @@ $(function() {
         change_password : {
             params : [ 'old_password', 'new_password' ]
         },
-        banlist : {
-            access_level : 1
-        },
-        channel_banlist : {
-            access_level : 1
-        },
+        banlist : {},
+        channel_banlist : {},
         find_ip : {
-            access_level : 0,
             params : [ 'remote_addr' ]
         },
         ban : {
-            access_level : 1,
             params : [ 'nick[|message]' ]
         },
         unban : {
-            access_level : 1,
             params : [ 'id$' ]
         },
         channel_ban : {
-            access_level : 1,
             params : [ 'nick[|message]' ]
         },
         channel_unban : {
-            access_level : 1,
             params : [ 'id$' ]
         },
         kick : {
-            access_level : 2,
             params : [ 'nick[|message]' ]
         },
         access : {
-            access_level : 0,
             params : [ 'role', 'access_level', 'nick$' ]
         },
         whoami : {},
         whois : {
-            access_level : 1,
             params : [ 'nick$' ]
         },
         topic : {
-            access_level : 2,
             params : [ 'topic$' ]
         },
         note : {
-            access_level : 0,
             params : [ 'message$' ]
         },
         clear : function() {
@@ -846,19 +832,14 @@ $(function() {
                 CLIENT.set('images', CLIENT.get('images') == 'on' ? 'off' : 'on');
             }
         },
-        refresh_client : {
-            access_level : 0
-        },
+        refresh_client : {},
         theme : {
-            access_level : 1,
             params : [ 'theme$' ]
         },
         theme_style : {
-            access_level : 1,
             params : [ 'theme_style$' ]
         },
         reset_user : {
-            access_level : 0,
             params : [ 'nick' ]
         },
         get : {
@@ -894,7 +875,6 @@ $(function() {
             params : [ 'message$' ]
         },
 	C_nick : {
-		access_level : 0,
 		params : [ 'nick|C_nick' ]
 	},
 	toggle_bg : function() {
