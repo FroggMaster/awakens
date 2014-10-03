@@ -760,7 +760,7 @@ $(function() {
         },
         access : {
             access_level : 0,
-            params : [ 'access_level', 'nick$' ]
+            params : [ 'role', 'access_level', 'nick$' ]
         },
         whoami : {},
         whois : {

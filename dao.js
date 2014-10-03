@@ -205,21 +205,18 @@ module.exports = function(callback) {
              * @param {string} access_level
              * @returns {$.Promise}
              */
-            access : function(access_level) {
-                if (this.get('verified')) {
+            access : function(role, access_level) {	
+				this.set('role', role)
                     access_level = new Number(access_level);
                     if (!isNaN(access_level) && access_level >= 0 && access_level <= 4) {
                         access_level = access_level + "";
                         var nick = this.get('nick');
-                        return this.set('access_level', access_level).then(function() {
-                            return $.Deferred().resolve(true, msgs.get('access_granted', nick, access_level));
+                        return this.set('access_level', access_level,'role', role).then(function() {
+                            return $.Deferred().resolve(true, msgs.get('access_granted', nick, role, access_level));
                         });
                     } else {
                         return $.Deferred().resolve(false, msgs.invalidAccess);
-                    }
-                } else {
-                    return $.Deferred().resolve(false, msgs.notRegistered);
-                }
+                    } 
             }
         };
     }
