@@ -647,16 +647,14 @@ function createChannel(io, channelName) {
                         }
                         if (valid) {
                             return dao.findUser(user.nick).then(function(dbuser) {
-							status = dbuser.get('role')
-							if(status == 'god' || status == 'super' || status == 'admin' || status == 'mod' || status == 'basic' || status == 'sub'){
+				status = dbuser.get('role')
+				if(status == 'god' || status == 'super' || status == 'admin' || status == 'mod' || status == 'basic' || status == 'sub'){
                                 if (typeof cmd.access_level == 'number') {
-									if(role.indexOf(dbuser.get('role')) <= role.indexOf(cmd.role)){ //2222 needs 2 or better
-									console.log(role.indexOf(dbuser.get('role')))
-									console.log(cmd.role, dbuser.get('role'))
-                                    valid = cmd.access_level >= dbuser.get('access_level');
-									} else {
-										valid = false
-									}
+					if(role.indexOf(dbuser.get('role')) <= role.indexOf(cmd.role)){ 
+                                    		valid = cmd.access_level >= dbuser.get('access_level');
+					} else {
+					valid = false
+					}
                                 }
                                 if (valid) {
                                     return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
