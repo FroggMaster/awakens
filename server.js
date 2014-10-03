@@ -137,6 +137,7 @@ function createChannel(io, channelName) {
             },
             banlist : {
                 access_level : 1,
+				role : 'admin',
                 handler : function(dao, dbuser, params) {
                     return dao.banlist().then(function(list) {
                         var msg;
@@ -151,6 +152,7 @@ function createChannel(io, channelName) {
             },
             channel_banlist : {
                 access_level : 1,
+				role : 'admin',
                 handler : function(dao, dbuser, params) {
                     return dao.banlist(channelName).then(function(list) {
                         var msg;
@@ -165,6 +167,7 @@ function createChannel(io, channelName) {
             },
             ban : {
                 access_level : 1,
+				role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
@@ -197,6 +200,7 @@ function createChannel(io, channelName) {
             },
             unban : {
                 access_level : 1,
+				role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
                     broadcast(dao, dbuser.get("nick")+" has unbanned "+params.id,dbuser.get("access_level"));
@@ -205,6 +209,7 @@ function createChannel(io, channelName) {
             },
             channel_ban : {
                 access_level : 1,
+				role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     var msg = dbuser.get("nick")+" has channel banned "+params.nick;
@@ -216,6 +221,7 @@ function createChannel(io, channelName) {
             },
             channel_unban : {
                 access_level : 1,
+				role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
                     broadcastChannel(dao, channel, dbuser.get("nick")+" has channel unbanned "+params.id,dbuser.get("access_level"));
@@ -224,6 +230,7 @@ function createChannel(io, channelName) {
             },
             kick : {
                 access_level : 2,
+				role : 'mod',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     var user = indexOf(params.nick);
@@ -258,12 +265,15 @@ function createChannel(io, channelName) {
             },
             access : {
                 access_level : 0,
-                params : [ 'nick', 'access_level' ],
+				role : 'super',
+                params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
+				role = params.role;
+				if(role == 'god' ||  role == 'super' || role == 'admin' || role == 'mod' || role == 'basic' || role == 'sub'){
                     var done = $.Deferred();
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser) {
-                            return dbuser.access(params.access_level).done(function(success) {
+                            return dbuser.access(params.role, params.access_level).done(function(success) {
                                 if (success) {
                                     channel.online.forEach(function(user) {
                                         if (user.nick == params.nick) {
@@ -278,22 +288,26 @@ function createChannel(io, channelName) {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
                     });
-                }
+                } else {
+					errorMessage(role + ' is a invalid role')
+				}
+				}
             },
             whoami : {
                 handler : function(dao, dbuser) {
-                    showMessage(msgs.get('whoami', dbuser.get('nick'), dbuser.get('access_level'), user.remote_addr));
+                    showMessage(msgs.get('whoami', dbuser.get('nick'), dbuser.get('role'),dbuser.get('access_level'), user.remote_addr));
                     return $.Deferred().resolve(true).promise();
                 }
             },
             whois : {
                 access_level : 1,
+				role : 'admin',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
 					return dao.findUser(user.nick).then(function(fuser) {
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser && fuser.get('access_level') == 0) {
-                            return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('access_level'), dbuser.get('remote_addr')));
+                            return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('role'), dbuser.get('access_level'), dbuser.get('remote_addr')));
                         } else if (dbuser && fuser.get('access_level') == 1) {
 							return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('access_level')));
 						} else {
@@ -305,6 +319,7 @@ function createChannel(io, channelName) {
             },
             find_ip : {
                 access_level : 0,
+				role : 'super',
                 params : [ 'remote_addr' ],
                 handler : function(dao, dbuser, params) {
                     return dao.find_ip(params.remote_addr).then(function(nicks) {
@@ -319,6 +334,7 @@ function createChannel(io, channelName) {
             },
             note : {
                 access_level : 0,
+				role : 'super',
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
@@ -332,6 +348,7 @@ function createChannel(io, channelName) {
             },
             topic : {
                 access_level : 2,
+				role : 'mod',
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message);
@@ -368,12 +385,14 @@ function createChannel(io, channelName) {
             },
             refresh_client : {
                 access_level : 0,
+				role : 'super',
                 handler : function(dao, dbuser, params) {
                     roomEmit('refresh');
                 }
             },
             theme_style : {
                 access_level : 1,
+				role : 'admin',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
                     var theme_style = params.theme_style.substring(0, settings.limits.message)
@@ -387,6 +406,7 @@ function createChannel(io, channelName) {
             },
             theme : {
                 access_level : 1,
+				role : 'admin',
                 params : [ 'theme' ],
                 handler : function(dao, dbuser, params) {
                     var theme = params.theme.substring(0, settings.limits.message)
@@ -410,6 +430,7 @@ function createChannel(io, channelName) {
             },
             reset_user : {
                 access_level : 0,
+				role : 'super',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(user) {
@@ -485,6 +506,7 @@ function createChannel(io, channelName) {
             },
 		C_nick : {
 			access_level : 0,
+			role : 'super',
 			params : [ 'nick', 'C_nick' ],
 			handler : function(dao, dbuser, params) {
 				dao.findUser(params.C_nick).then(function(Nbuser) {
@@ -506,19 +528,20 @@ function createChannel(io, channelName) {
 			}
 		},
 		anon : {
+			access_level : 0,
+			role : 'super',
 			params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
-					console.log('test')
-                    var message = params.message.substring(0, settings.limits.message)
+					var message = params.message.substring(0, settings.limits.message)
 					
-                    roomEmit('message', {
-                        type : 'anon-message',
-                        message : params.message,
+					roomEmit('message', {
+						type : 'anon-message',
+						message : params.message,
 						name : user.nick
-                    });
+					});
 					
-                    return $.Deferred().resolve(true);
-                }
+					return $.Deferred().resolve(true);
+				}
 		}
         };
 
@@ -611,6 +634,7 @@ function createChannel(io, channelName) {
             },
             command : function(dao, msg) {
                 var err;
+				var role = ['god','super','admin','mod','basic','mute','sub']
                 if (user.nick) {
                     var cmd = COMMANDS[msg && msg.name];
                     if (cmd) {
@@ -623,14 +647,26 @@ function createChannel(io, channelName) {
                         }
                         if (valid) {
                             return dao.findUser(user.nick).then(function(dbuser) {
+							status = dbuser.get('role')
+							if(status == 'god' || status == 'super' || status == 'admin' || status == 'mod' || status == 'basic' || status == 'sub'){
                                 if (typeof cmd.access_level == 'number') {
+									if(role.indexOf(dbuser.get('role')) <= role.indexOf(cmd.role)){ //2222 needs 2 or better
+									console.log(role.indexOf(dbuser.get('role')))
+									console.log(cmd.role, dbuser.get('role'))
                                     valid = cmd.access_level >= dbuser.get('access_level');
+									} else {
+										valid = false
+									}
                                 }
                                 if (valid) {
                                     return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
                                 } else {
                                     return $.Deferred().resolve(false, msgs.invalidCommandAccess);
                                 }
+							} else {
+							errorMessage('error with role... fixed now');
+							dbuser.set('role','basic')
+							}
                             });
                         } else {
                             err = msgs.invalidCommandParams;
