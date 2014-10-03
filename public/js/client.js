@@ -181,7 +181,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors marquee bg role'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -193,7 +193,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors marquee bg role'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -362,7 +362,7 @@ $(function() {
 	CLIENT.set('bg', 'off'); 
 	}
 	if (CLIENT.get('marquee') == null){
-	CLIENT.set('marquee', 'off'); 
+	CLIENT.set('marquee', 'on'); 
 	}
 });
 
@@ -728,51 +728,37 @@ $(function() {
         change_password : {
             params : [ 'old_password', 'new_password' ]
         },
-        banlist : {
-            access_level : 1
-        },
-        channel_banlist : {
-            access_level : 1
-        },
+        banlist : {},
+        channel_banlist : {},
         find_ip : {
-            access_level : 0,
             params : [ 'remote_addr' ]
         },
         ban : {
-            access_level : 1,
             params : [ 'nick[|message]' ]
         },
         unban : {
-            access_level : 1,
             params : [ 'id$' ]
         },
         channel_ban : {
-            access_level : 1,
             params : [ 'nick[|message]' ]
         },
         channel_unban : {
-            access_level : 1,
             params : [ 'id$' ]
         },
         kick : {
-            access_level : 2,
             params : [ 'nick[|message]' ]
         },
         access : {
-            access_level : 0,
             params : [ 'role', 'access_level', 'nick$' ]
         },
         whoami : {},
         whois : {
-            access_level : 1,
             params : [ 'nick$' ]
         },
         topic : {
-            access_level : 2,
             params : [ 'topic$' ]
         },
         note : {
-            access_level : 0,
             params : [ 'message$' ]
         },
         clear : function() {
@@ -846,26 +832,21 @@ $(function() {
                 CLIENT.set('images', CLIENT.get('images') == 'on' ? 'off' : 'on');
             }
         },
-        refresh_client : {
-            access_level : 0
-        },
+        refresh_client : {},
         theme : {
-            access_level : 1,
             params : [ 'theme$' ]
         },
         theme_style : {
-            access_level : 1,
             params : [ 'theme_style$' ]
         },
         reset_user : {
-            access_level : 0,
             params : [ 'nick' ]
         },
         get : {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic marquee bg'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -894,7 +875,6 @@ $(function() {
             params : [ 'message$' ]
         },
 	C_nick : {
-		access_level : 0,
 		params : [ 'nick|C_nick' ]
 	},
 	toggle_bg : function() {
@@ -902,17 +882,10 @@ $(function() {
 		if(CLIENT.get('bg') == 'on'){
 			CLIENT.show('background toggled on')
 			CLIENT.set('theme_style','url(https://dl.dropboxusercontent.com/u/76962608/ss/Indent1.png) center / auto 100% no-repeat rgb(17, 17, 17)')
-		} else {
-			CLIENT.show('background toggled off')
 		}
 	},
 	toggle_marquee : function() {
                CLIENT.set('marquee', CLIENT.get('marquee') == 'on' ? 'off' : 'on');
-		if(CLIENT.get('marquee') == 'on'){
-			CLIENT.show('marquee toggled on')
-		} else {
-			CLIENT.show('marquee toggled off')
-		}
 		
 	},
 	anon : {
@@ -1022,7 +995,7 @@ parser = {
 	str = str.replace(/\/%([^\s].+?[^\s])\|/g, '<i>$1</i>');
 	str = str.replace(/\/_([^\s].+?[^\s])\|/g, '<u>$1</u>');
 	str = str.replace(/\/-([^\s].+?[^\s])\|/g, '<strike>$1</strike>');
-	if(CLIENT.get('marquee') == 'off'){str = str.replace(/\/&amp;([^\s].+?[^\s])\|/g, '<div id=marquee>$1</div>')};
+	if(CLIENT.get('marquee') == 'on'){str = str.replace(/\/&amp;([^\s].+?[^\s])\|/g, '<div id=marquee>$1</div>')};
 	str = str.replace(/\/!([^\s].+?[^\s])\|/g, '<div id=flashing>$1</div>');
         str = this.multiple(str, /\/&#126;([^&#126;]+?)\|/i, '<small>$1</small>');
         str = str.replace(/\/`([^\s].+?[^\s])\|/g, '<code>$1</code>');

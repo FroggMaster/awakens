@@ -270,7 +270,8 @@ function createChannel(io, channelName) {
                                     channel.online.forEach(function(user) {
                                         if (user.nick == params.nick) {
                                             user.socket.emit('update', {
-                                                access_level : dbuser.get('access_level')
+                                                access_level : dbuser.get('access_level'),
+                                                role : dbuser.get('role')
                                             });
                                         }
                                     });
