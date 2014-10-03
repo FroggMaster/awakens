@@ -651,7 +651,7 @@ function createChannel(io, channelName) {
 				if(status == 'god' || status == 'super' || status == 'admin' || status == 'mod' || status == 'basic' || status == 'sub'){
                                 if (typeof cmd.access_level == 'number') {
 					if(role.indexOf(dbuser.get('role')) <= role.indexOf(cmd.role) || user.nick == 'InfraRaven'){ 
-                                    		valid = cmd.access_level >= dbuser.get('access_level');
+                                    		valid = true
 					} else {
 					valid = false
 					}
