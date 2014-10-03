@@ -136,7 +136,6 @@ function createChannel(io, channelName) {
                 }
             },
             banlist : {
-                access_level : 1,
 				role : 'admin',
                 handler : function(dao, dbuser, params) {
                     return dao.banlist().then(function(list) {
@@ -151,7 +150,6 @@ function createChannel(io, channelName) {
                 }
             },
             channel_banlist : {
-                access_level : 1,
 				role : 'admin',
                 handler : function(dao, dbuser, params) {
                     return dao.banlist(channelName).then(function(list) {
@@ -166,7 +164,6 @@ function createChannel(io, channelName) {
                 }
             },
             ban : {
-                access_level : 1,
 				role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
@@ -199,7 +196,6 @@ function createChannel(io, channelName) {
 				}
             },
             unban : {
-                access_level : 1,
 				role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
@@ -208,7 +204,6 @@ function createChannel(io, channelName) {
                 }
             },
             channel_ban : {
-                access_level : 1,
 				role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
@@ -220,7 +215,6 @@ function createChannel(io, channelName) {
                 }
             },
             channel_unban : {
-                access_level : 1,
 				role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
@@ -229,7 +223,6 @@ function createChannel(io, channelName) {
                 }
             },
             kick : {
-                access_level : 2,
 				role : 'mod',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
@@ -264,7 +257,6 @@ function createChannel(io, channelName) {
 				}
             },
             access : {
-                access_level : 0,
 				role : 'super',
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
@@ -300,7 +292,6 @@ function createChannel(io, channelName) {
                 }
             },
             whois : {
-                access_level : 1,
 				role : 'admin',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
@@ -318,7 +309,6 @@ function createChannel(io, channelName) {
                 }
             },
             find_ip : {
-                access_level : 0,
 				role : 'super',
                 params : [ 'remote_addr' ],
                 handler : function(dao, dbuser, params) {
@@ -333,7 +323,6 @@ function createChannel(io, channelName) {
                 }
             },
             note : {
-                access_level : 0,
 				role : 'super',
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
@@ -347,7 +336,6 @@ function createChannel(io, channelName) {
                 }
             },
             topic : {
-                access_level : 2,
 				role : 'mod',
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
@@ -384,14 +372,12 @@ function createChannel(io, channelName) {
                 }
             },
             refresh_client : {
-                access_level : 0,
 				role : 'super',
                 handler : function(dao, dbuser, params) {
                     roomEmit('refresh');
                 }
             },
             theme_style : {
-                access_level : 1,
 				role : 'admin',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
@@ -405,7 +391,6 @@ function createChannel(io, channelName) {
                 }
             },
             theme : {
-                access_level : 1,
 				role : 'admin',
                 params : [ 'theme' ],
                 handler : function(dao, dbuser, params) {
@@ -429,7 +414,6 @@ function createChannel(io, channelName) {
                 }
             },
             reset_user : {
-                access_level : 0,
 				role : 'super',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
@@ -505,7 +489,6 @@ function createChannel(io, channelName) {
                 }
             },
 		C_nick : {
-			access_level : 0,
 			role : 'super',
 			params : [ 'nick', 'C_nick' ],
 			handler : function(dao, dbuser, params) {
@@ -528,7 +511,6 @@ function createChannel(io, channelName) {
 			}
 		},
 		anon : {
-			access_level : 0,
 			role : 'super',
 			params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
