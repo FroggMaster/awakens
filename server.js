@@ -323,7 +323,7 @@ function createChannel(io, channelName) {
                 }
             },
             note : {
-				role : 'super',
+		role : 'admin',
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
