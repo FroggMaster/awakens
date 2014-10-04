@@ -377,7 +377,7 @@ function createChannel(io, channelName) {
                     roomEmit('refresh');
                 }
             },
-            theme_style : {
+            theme : {
 				role : 'admin',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
@@ -385,19 +385,6 @@ function createChannel(io, channelName) {
                     return dao.setChannelInfo(channelName, 'theme_style', theme_style).then(function() {
                         roomEmit('update', {
                             theme_style : theme_style
-                        });
-                        return true;
-                    });
-                }
-            },
-            theme : {
-				role : 'admin',
-                params : [ 'theme' ],
-                handler : function(dao, dbuser, params) {
-                    var theme = params.theme.substring(0, settings.limits.message)
-                    return dao.setChannelInfo(channelName, 'theme', theme).then(function() {
-                        roomEmit('update', {
-                            theme : theme
                         });
                         return true;
                     });
