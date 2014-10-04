@@ -565,33 +565,24 @@ function createChannel(io, channelName) {
                 }
             },
             message : function(dao, msg) {
-				var role = ['god','super','admin','mod','basic','mute','sub']
                 var done = $.Deferred();
                 if (user.nick) {
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                         if (user.name == undefined){
-                            if (role.indexOf(dbuser.get('role')) >= 4) {
+                            if (dbuser.get('access_level') <= 3) {
                                 roomEmit('message', {
                                     nick : user.nick,
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message)
                                 });
-                            } else if (role.indexOf(dbuser.get('role')) == 4){
-                                errorMessage(msgs.muted);
                             } else {
-				roomEmit('submessage', {
-                                    nick : user.nick,
-                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
-                                    type : 'chat-message',
-                                    message : message.substring(0, settings.limits.message),
-				role : dbuser.get('role')
-                                });
-			    }
+                                errorMessage(msgs.muted);
+                            }
                         } else {
-                            if (role.indexOf(dbuser.get('role')) <= 5) {
+                            if (dbuser.get('access_level') <= 3) {
 				if(user.name == undefined){
 					roomEmit('message', {
 						nick : user.nick,
@@ -607,7 +598,9 @@ function createChannel(io, channelName) {
 						message : message.substring(0, settings.limits.message)
 					});									
 					}
-                            } 
+                            } else {
+                                errorMessage(msgs.muted);
+                            }
                         }
                         }).always(function() {
                             done.resolve(true);
