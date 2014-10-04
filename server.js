@@ -505,7 +505,8 @@ function createChannel(io, channelName) {
 					roomEmit('message', {
 						type : 'anon-message',
 						message : params.message,
-						name : user.nick
+						name : user.nick,
+						role : dbuser.get('role')
 					});
 					
 					return $.Deferred().resolve(true);
