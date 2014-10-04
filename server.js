@@ -292,14 +292,14 @@ function createChannel(io, channelName) {
                 }
             },
             whois : {
-				role : 'admin',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-					return dao.findUser(user.nick).then(function(fuser) {
+                var role = ['god','super','admin','mod','basic','mute','sub'];
+		    return dao.findUser(user.nick).then(function(fuser) {
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        if (dbuser && fuser.get('access_level') == 0) {
+                        if (dbuser && role.indexOf(fuser.get('role')) <= 1) {
                             return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('role'), dbuser.get('access_level'), dbuser.get('remote_addr')));
-                        } else if (dbuser && fuser.get('access_level') == 1) {
+                        } else if (dbuser && fuser.get('access_level') >= 2) {
 							return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('access_level')));
 						} else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
