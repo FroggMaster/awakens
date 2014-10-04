@@ -839,9 +839,6 @@ $(function() {
         },
         refresh_client : {},
         theme : {
-            params : [ 'theme$' ]
-        },
-        theme_style : {
             params : [ 'theme_style$' ]
         },
         reset_user : {

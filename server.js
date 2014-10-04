@@ -164,7 +164,7 @@ function createChannel(io, channelName) {
                 }
             },
             ban : {
-				role : 'admin',
+		role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
@@ -173,7 +173,7 @@ function createChannel(io, channelName) {
     				dao.findUser(user.nick).then(function(admin){
         				dao.findUser(params.nick).then(function(dbuser){
         					if(dbuser != null){
-        						if(dbuser.get('access_level') < admin.get('access_level')){
+        						if(dbuser.get('role') < admin.get('role')){
         							errorMessage('You may not ban admins');
         						} else {
 									
@@ -223,15 +223,14 @@ function createChannel(io, channelName) {
                 }
             },
             kick : {
-				role : 'mod',
+		role : 'mod',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     var user = indexOf(params.nick);
                     if(user != -1){
                         user = channel.online[user]
 						dao.findUser(params.nick).then(function(admin){
-						if(dbuser.get('access_level') <= admin.get('access_level')){
-						console.log(dbuser.get('nick'),admin.get('nick'))
+						if(role.indexOf(dbuser.get('role')) <= role.indexOf(admin.get('role'))){
 						if(!params.message.trim()){
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
@@ -293,14 +292,14 @@ function createChannel(io, channelName) {
                 }
             },
             whois : {
-				role : 'admin',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-					return dao.findUser(user.nick).then(function(fuser) {
+                var role = ['god','super','admin','mod','basic','mute','sub'];
+		    return dao.findUser(user.nick).then(function(fuser) {
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        if (dbuser && fuser.get('access_level') == 0) {
+                        if (dbuser && role.indexOf(fuser.get('role')) <= 1) {
                             return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('role'), dbuser.get('access_level'), dbuser.get('remote_addr')));
-                        } else if (dbuser && fuser.get('access_level') == 1) {
+                        } else if (dbuser && fuser.get('access_level') >= 2) {
 							return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('access_level')));
 						} else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
@@ -324,7 +323,7 @@ function createChannel(io, channelName) {
                 }
             },
             note : {
-				role : 'super',
+		role : 'admin',
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
@@ -378,7 +377,7 @@ function createChannel(io, channelName) {
                     roomEmit('refresh');
                 }
             },
-            theme_style : {
+            theme : {
 				role : 'admin',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
@@ -386,19 +385,6 @@ function createChannel(io, channelName) {
                     return dao.setChannelInfo(channelName, 'theme_style', theme_style).then(function() {
                         roomEmit('update', {
                             theme_style : theme_style
-                        });
-                        return true;
-                    });
-                }
-            },
-            theme : {
-				role : 'admin',
-                params : [ 'theme' ],
-                handler : function(dao, dbuser, params) {
-                    var theme = params.theme.substring(0, settings.limits.message)
-                    return dao.setChannelInfo(channelName, 'theme', theme).then(function() {
-                        roomEmit('update', {
-                            theme : theme
                         });
                         return true;
                     });
@@ -512,7 +498,6 @@ function createChannel(io, channelName) {
 			}
 		},
 		anon : {
-			role : 'super',
 			params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
 					var message = params.message.substring(0, settings.limits.message)
