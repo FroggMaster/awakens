@@ -86,8 +86,13 @@ $(function() {
 
     socket.on('message', function(msg) {
         CLIENT.show(msg);
-        HighlightName = msg.nick;
     });
+    
+    socket.on('submessage', function(msg) {
+	if(msg.role == 'sub'){
+	CLIENT.show(msg);
+	}
+})
 
     socket.on('connect', function() {
         if (!first) {
