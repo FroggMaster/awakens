@@ -572,26 +572,26 @@ function createChannel(io, channelName) {
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                         if (user.name == undefined){
-                            if (role.indexOf(dbuser.get('role')) <= 4) {
+                            if (role.indexOf(dbuser.get('role')) >= 4) {
                                 roomEmit('message', {
                                     nick : user.nick,
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message)
                                 });
-                            } else if (role.indexOf(dbuser.get('role')) == 5){
+                            } else if (role.indexOf(dbuser.get('role')) == 4){
                                 errorMessage(msgs.muted);
                             } else {
-								    roomEmit('submessage', {
+				roomEmit('submessage', {
                                     nick : user.nick,
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message),
-									role : dbuser.get('role')
+				role : dbuser.get('role')
                                 });
-							}
+			    }
                         } else {
-                            if (role.indexOf(dbuser.get('role')) <= 4) {
+                            if (role.indexOf(dbuser.get('role')) <= 5) {
 				if(user.name == undefined){
 					roomEmit('message', {
 						nick : user.nick,
