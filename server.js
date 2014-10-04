@@ -164,7 +164,7 @@ function createChannel(io, channelName) {
                 }
             },
             ban : {
-				role : 'admin',
+		role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
@@ -173,7 +173,7 @@ function createChannel(io, channelName) {
     				dao.findUser(user.nick).then(function(admin){
         				dao.findUser(params.nick).then(function(dbuser){
         					if(dbuser != null){
-        						if(dbuser.get('access_level') < admin.get('access_level')){
+        						if(dbuser.get('role') < admin.get('role')){
         							errorMessage('You may not ban admins');
         						} else {
 									
@@ -223,15 +223,14 @@ function createChannel(io, channelName) {
                 }
             },
             kick : {
-				role : 'mod',
+		role : 'mod',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     var user = indexOf(params.nick);
                     if(user != -1){
                         user = channel.online[user]
 						dao.findUser(params.nick).then(function(admin){
-						if(dbuser.get('access_level') <= admin.get('access_level')){
-						console.log(dbuser.get('nick'),admin.get('nick'))
+						if(role.indexOf(dbuser.get('role')) <= role.indexOf(admin.get('role'))){
 						if(!params.message.trim()){
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
