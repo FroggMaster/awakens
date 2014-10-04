@@ -511,7 +511,6 @@ function createChannel(io, channelName) {
 			}
 		},
 		anon : {
-			role : 'super',
 			params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
 					var message = params.message.substring(0, settings.limits.message)
