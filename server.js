@@ -574,10 +574,15 @@ function createChannel(io, channelName) {
 									});	
 								}
                             } else if(role.indexOf(dbuser.get('role')) == 6){
-                                errorMessage('you are a sub thats pretty gay');
+                                    roomEmit('submessage', {
+                                    nick : user.nick,
+                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
+                                    type : 'chat-message',
+                                    message : message.substring(0, settings.limits.message),
+				    role : dbuser.get('role')
                             } else {
-								errorMessage(msgs.muted);
-							}
+				errorMessage(msgs.muted);
+			    }
                         }).always(function() {
                             done.resolve(true);
                         });
