@@ -579,10 +579,11 @@ function createChannel(io, channelName) {
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message),
-				    role : dbuser.get('role')
+									role : dbuser.get('role')
+									})
                             } else {
-				errorMessage(msgs.muted);
-			    }
+							errorMessage(msgs.muted);
+							}
                         }).always(function() {
                             done.resolve(true);
                         });
