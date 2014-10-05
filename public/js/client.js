@@ -498,11 +498,10 @@ $(function() {
 	    case 'note-message':
 		parsed = parser.parse(message.message);
 		break;	
-            case 'anon-message':
-		if(role.indexOf(message.role) >= 2){
+	case 'anon-message':
+		if(CLIENT.get('access_level') > 1){
 			parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
 		} else {
-			console.log(role.indexOf(message.role))
 			parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
 		}
 		break
