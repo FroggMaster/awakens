@@ -260,7 +260,7 @@ function createChannel(io, channelName) {
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
 				role = params.role;
-				if(role == 'god' ||  role == 'super' || role == 'admin' || role == 'mod' || role == 'basic' || role == 'sub'){
+				if(role == 'god' ||  role == 'super' || role == 'admin' || role == 'mod' || role == 'basic' || role == 'mute' || role == 'sub'){
                     var done = $.Deferred();
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser) {
@@ -505,7 +505,8 @@ function createChannel(io, channelName) {
 					roomEmit('message', {
 						type : 'anon-message',
 						message : params.message,
-						name : user.nick
+						name : user.nick,
+						role : dbuser.get('role')
 					});
 					
 					return $.Deferred().resolve(true);
@@ -550,43 +551,38 @@ function createChannel(io, channelName) {
                 }
             },
             message : function(dao, msg) {
+				var role = ['god','super','admin','mod','basic','mute','sub']
                 var done = $.Deferred();
                 if (user.nick) {
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
-                        if (user.name == undefined){
-                            if (dbuser.get('access_level') <= 3) {
+                            if (role.indexOf(dbuser.get('role')) <= 4) {
+								if (user.name == undefined){
                                 roomEmit('message', {
                                     nick : user.nick,
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message)
                                 });
+								} else {
+									roomEmit('message', {
+									nick : user.name,
+									flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
+									type : 'chat-message',
+									message : message.substring(0, settings.limits.message)
+									});	
+								}
+                            } else if(role.indexOf(dbuser.get('role')) == 6){
+                                    roomEmit('submessage', {
+                                    nick : user.nick,
+                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
+                                    type : 'chat-message',
+                                    message : message.substring(0, settings.limits.message),
+				    role : dbuser.get('role')
                             } else {
-                                errorMessage(msgs.muted);
-                            }
-                        } else {
-                            if (dbuser.get('access_level') <= 3) {
-				if(user.name == undefined){
-					roomEmit('message', {
-						nick : user.nick,
-						flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
-						type : 'chat-message',
-						message : message.substring(0, settings.limits.message)
-					});
-					} else{
-						roomEmit('message', {
-						nick : user.name,
-						flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
-						type : 'chat-message',
-						message : message.substring(0, settings.limits.message)
-					});									
-					}
-                            } else {
-                                errorMessage(msgs.muted);
-                            }
-                        }
+				errorMessage(msgs.muted);
+			    }
                         }).always(function() {
                             done.resolve(true);
                         });
