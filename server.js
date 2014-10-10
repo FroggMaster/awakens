@@ -168,12 +168,13 @@ function createChannel(io, channelName) {
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
+					var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(params.message.trim())
                         msg+=": "+params.message.trim();
     				dao.findUser(user.nick).then(function(admin){
         				dao.findUser(params.nick).then(function(dbuser){
         					if(dbuser != null){
-        						if(dbuser.get('role') < admin.get('role')){
+        						if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
         							errorMessage('You may not ban admins');
         						} else {
 									
