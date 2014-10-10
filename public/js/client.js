@@ -456,6 +456,7 @@ $(function() {
         var el = $('<div class="message"></div>');
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
+        var role = ['god','super','admin','mod','basic','mute','sub'];
 	if(message.message.indexOf(HighlightName) != -1){
 	el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
 	} else{
@@ -499,7 +500,7 @@ $(function() {
 		parsed = parser.parse(message.message);
 		break;	
 	case 'anon-message':
-		if(CLIENT.get('access_level') > 1){
+		if(role.indexOf(message.role) >= 1){
 			parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
 		} else {
 			parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
