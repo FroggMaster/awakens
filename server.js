@@ -136,7 +136,7 @@ function createChannel(io, channelName) {
                 }
             },
             banlist : {
-				role : 'admin',
+		role : 'admin',
                 handler : function(dao, dbuser, params) {
                     return dao.banlist().then(function(list) {
                         var msg;
@@ -168,12 +168,13 @@ function createChannel(io, channelName) {
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
+		    var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(params.message.trim())
                         msg+=": "+params.message.trim();
     				dao.findUser(user.nick).then(function(admin){
         				dao.findUser(params.nick).then(function(dbuser){
         					if(dbuser != null){
-        						if(dbuser.get('role') < admin.get('role')){
+        						if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
         							errorMessage('You may not ban admins');
         						} else {
 									
@@ -505,7 +506,8 @@ function createChannel(io, channelName) {
 					roomEmit('message', {
 						type : 'anon-message',
 						message : params.message,
-						name : user.nick
+						name : user.nick,
+						role : dbuser.get('role')
 					});
 					
 					return $.Deferred().resolve(true);
