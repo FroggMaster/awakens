@@ -136,7 +136,7 @@ function createChannel(io, channelName) {
                 }
             },
             banlist : {
-				role : 'admin',
+		role : 'admin',
                 handler : function(dao, dbuser, params) {
                     return dao.banlist().then(function(list) {
                         var msg;
@@ -168,7 +168,7 @@ function createChannel(io, channelName) {
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
-					var role = ['god','super','admin','mod','basic','mute','sub'];
+		    var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(params.message.trim())
                         msg+=": "+params.message.trim();
     				dao.findUser(user.nick).then(function(admin){
