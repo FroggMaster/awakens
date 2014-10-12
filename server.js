@@ -227,15 +227,17 @@ function createChannel(io, channelName) {
 		role : 'mod',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-                    var user = indexOf(params.nick);
+                var user = indexOf(params.nick);
+		var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(user != -1){
                         user = channel.online[user]
 						dao.findUser(params.nick).then(function(admin){
 						if(role.indexOf(dbuser.get('role')) <= role.indexOf(admin.get('role'))){
+						console.log(dbuser.get('nick') + ' has kicked ' + admin.get('nick'));
 						if(!params.message.trim()){
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
-								message : msgs.kicked + 'by' + user.nick
+								message : msgs.kicked + 'by' + dbuser.get('nick')
 							});
 							user.socket.disconnect();
 							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,dbuser.get("access_level"));
@@ -246,7 +248,7 @@ function createChannel(io, channelName) {
 								message : msgs.get("kicked_reason",params.message.trim(),user.nick)
 							});
 							user.socket.disconnect();
-                    }
+                    				}
 					} else {
 					  errorMessage('You may not kick admins');
 					}
