@@ -164,7 +164,7 @@ function createChannel(io, channelName) {
                 }
             },
             ban : {
-		role : 'admin',
+			role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
@@ -176,20 +176,14 @@ function createChannel(io, channelName) {
         					if(dbuser != null){
         						if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
         							errorMessage('You may not ban admins');
-        						} else {
-									
-									socketEmit(user.socket, 'message', {
-									type : 'error-message',
-									message : 'You have been banned by ' + user.nick + ': ' + params.message
-									});
-									
+        						} else {									
         							showMessage(params.nick + ' is now banned gloablly');
-                        					broadcast(dao, msg, 3);
+                                    broadcast(dao, msg, 3);
         							return dao.ban(params.nick);
         						}
         					} else {
         						showMessage(params.nick + ' is now banned gloablly');
-                        				broadcast(dao, msg, 3);
+                                broadcast(dao, msg, 3);
         						return dao.ban(params.nick);
         					}
         				})
