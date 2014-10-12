@@ -164,11 +164,11 @@ function createChannel(io, channelName) {
                 }
             },
             ban : {
-		role : 'admin',
+			role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
-		    var role = ['god','super','admin','mod','basic','mute','sub'];
+				var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(params.message.trim())
                         msg+=": "+params.message.trim();
     				dao.findUser(user.nick).then(function(admin){
@@ -176,20 +176,14 @@ function createChannel(io, channelName) {
         					if(dbuser != null){
         						if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
         							errorMessage('You may not ban admins');
-        						} else {
-									
-									socketEmit(user.socket, 'message', {
-									type : 'error-message',
-									message : 'You have been banned by ' + user.nick + ': ' + params.message
-									});
-									
+        						} else {									
         							showMessage(params.nick + ' is now banned gloablly');
-                                    broadcast(dao, msg, dbsender.get("access_level"));
+                                    broadcast(dao, msg, 3);
         							return dao.ban(params.nick);
         						}
         					} else {
         						showMessage(params.nick + ' is now banned gloablly');
-                                broadcast(dao, msg, dbsender.get("access_level"));
+                                broadcast(dao, msg, 3);
         						return dao.ban(params.nick);
         					}
         				})
@@ -228,22 +222,24 @@ function createChannel(io, channelName) {
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     var user = indexOf(params.nick);
+					var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(user != -1){
                         user = channel.online[user]
 						dao.findUser(params.nick).then(function(admin){
 						if(role.indexOf(dbuser.get('role')) <= role.indexOf(admin.get('role'))){
+						console.log(dbuser.get('nick') + ' has kicked ' + admin.get('nick'));
 						if(!params.message.trim()){
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
-								message : msgs.kicked + 'by' + user.nick
+								message : msgs.get("kicked",dbuser.get('nick'))
 							});
 							user.socket.disconnect();
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,dbuser.get("access_level"));
+							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,3);
 						}else{
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),dbuser.get("access_level"));
+							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),3);
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
-								message : msgs.get("kicked_reason",params.message.trim(),user.nick)
+								message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
 							});
 							user.socket.disconnect();
                     }
@@ -824,9 +820,10 @@ function createChannel(io, channelName) {
         }
 
         function broadcastChannel(dao, channel, message, level) {
+	var role = ['god','super','admin','mod','basic','mute','sub']
             channel.online.forEach(function(user){
                 dao.findUser(user.nick).done(function(dbuser) {
-                    if(dbuser.get("access_level")<=level){
+                    if(role.indexOf(dbuser.get("role"))<=level){
                         socketEmit(user.socket, 'general-message', message);
                     }
                 })
