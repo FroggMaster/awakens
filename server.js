@@ -501,7 +501,7 @@ function createChannel(io, channelName) {
 					
 					roomEmit('message', {
 						type : 'anon-message',
-						message : params.message,
+						message : message,
 						name : user.nick
 					});
 					
