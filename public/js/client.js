@@ -999,6 +999,7 @@ parser = {
 	str = str.replace(/\/_([^\s].+?[^\s])\|/g, '<u>$1</u>');
 	str = str.replace(/\/-([^\s].+?[^\s])\|/g, '<strike>$1</strike>');
 	if(CLIENT.get('marquee') == 'on'){str = str.replace(/\/&amp;([^\s].+?[^\s])\|/g, '<div id=marquee>$1</div>')};
+	str = str.replace(/\/@([^\s].+?[^\s])\|/g, '<div id=spookytext>$1</div>');
 	str = str.replace(/\/!([^\s].+?[^\s])\|/g, '<div id=flashing>$1</div>');
         str = this.multiple(str, /\/&#126;([^&#126;]+?)\|/i, '<small>$1</small>');
         str = str.replace(/\/`([^\s].+?[^\s])\|/g, '<code>$1</code>');
