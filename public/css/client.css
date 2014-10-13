@@ -287,6 +287,11 @@ max-width: 100%;
     -webkit-animation: flash 15s linear;
 }
 
+#spookytext{
+	text-shadow: 0 0 2px white;
+	color: transparent;
+}
+
 @-webkit-keyframes rightThenLeft {
 
     0%  {left:0%;}
