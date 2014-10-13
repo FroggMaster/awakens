@@ -292,17 +292,17 @@ function createChannel(io, channelName) {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                 var role = ['god','super','admin','mod','basic','mute','sub'];
-		    return dao.findUser(user.nick).then(function(fuser) {
+		return dao.findUser(user.nick).then(function(fuser) {
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser && role.indexOf(fuser.get('role')) <= 1) {
                             return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('role'), dbuser.get('access_level'), dbuser.get('remote_addr')));
-                        } else if (dbuser && fuser.get('role') >= 2) {
-							return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('access_level')));
-						} else {
+                        } else if (dbuser && role.indexOf(fuser.get('role')) >= 2) {
+			    return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('access_level')));
+			} else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
                     });
-					});
+		});
                 }
             },
             find_ip : {

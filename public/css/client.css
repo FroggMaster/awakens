@@ -328,6 +328,7 @@ color:gold;
     padding-left: 4.2em;
     text-indent: -4.2em;
     word-wrap: break-word;
+    overflow: hidden;
 }
 
 /*\
