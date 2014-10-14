@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -83,25 +84,32 @@ This page is the information directory, please use the menu below to navigate to
   <li><a href="#Begin">Beginners guide (2)</a></li>
   <li><a href="#Cmds">Commands (3)</a></li>
   <li><a href="#Dec">Decorative commands (4)</a></li>
-  <li><a href="#new">New Stuff (5)</a></li>
-  <li><a href="#Admin">Admin controls (6)</a></li>
+  <li><a href="#new">Every Command Ever (5)</a></li>
   </ul></nav>
 <h2 id="Info" style="color:#9F0">Information.</h2>
-<p>Well basically this website is a chat engine in beta stage. Everything visually is pretty, self-explanitory, though technical stuff can be a bit troublesome.<br />
-  It was designed just to be a basic chat engine that I would append to my 'main' website, but I have bigger thoughts in mind.</p>
+<p>Well basically this website is a chat engine. Everything visually is pretty self-explanatory, though technical stuff can be a bit troublesome.<br />
+  It was designed just to be a basic IRC that I would append to my 'main' website, but I have bigger thoughts in mind.</p>
 <p style="color:#FF0000"><strong>DISCLAIMER:</strong> This chat is not safe for work.<br />
 </p>
 <h2 id="Begin" style="color:#9F0">Beginners guide.</h2>
 <p>Starting your own chat directory/channel/world.</p>
-<p>Simply add a word to the url. Example: <a href="http://this.spooks.me/example" target="_blank">https://this.spooks.me/example</a></p>
+<p>Simply add a word to the url. Example: <a href="http://this.spooks.me/example" target="_blank">http://this.spooks.me/example</a> or <a href="http://example.spooks.me/" target="_blank">http://example.spooks.me/</a></p>
 <p>To the bottom of your screen you'll see the input box. Go ahead and just click in that and type in your unimportant opinions.<br />
   In the input box, you'll have the capability to type in /commands.</p>
+<h3 style="color:#9F0">Crash course:</h3>
+<p>Change your name by typing <a style="color:#0F0">/nick UserName</a><br />
+  Register your nick with <a style="color:#0F0">/register password email@email.com</a><br />
+  Beginner users cannot change topics or backgrounds, sorry.<br />
+  Change your font with <a style="color:#0F0">/font Lemon</a><br />
+  Usable fonts <a href="http://www.google.com/fonts" target="_blank">http://www.google.com/fonts</a><br />
+  Change your font color with <a style="color:#0F0">/color Tomato</a><br />
+  Usable colors <a href="http://en.wikipedia.org/wiki/Web_colors" target="_blank">http://en.wikipedia.org/wiki/Web_colors</a></p>
 <h2 id="Cmds" style="color:#9F0">Commands:</h2>
 <p>This is an incomplete list of all of the chat commands.<br />
 <a style="color:#F60">/nick</a> = This allows you to choose your own unique name. <a style="color:#0F0">SYNTAX: /nick username</a><br />
-<a style="color:#F60">/register</a> = This attaches a password to your nickname so that it is only usable by you. <a style="color:#0F0">SYNTAX: /register (password) (email@address.com)</a><br />
-<a style="color:#F60">/verify</a> = Immediatly after registration, you should recieve an email (located in Junk/Spam folder) with instructions. As of 25th of July 2014 just type <a style="color:#0F0">/verify (password)</a><br />
-<a style="color:#F60">/login</a> = If you have been logged out by any means (usually a nick change) you can log in with this command. <a style="color:#0F0">SYNTAX: /login (password) (username)</a><br />
+<a style="color:#F60">/register</a> = This attaches a password to your nickname so that it is only usable by you. <a style="color:#0F0">SYNTAX: /register password email@address.com</a><br />
+<a style="color:#F60">/verify</a> = Immediatly after registration, you should recieve an email (located in Junk/Spam folder) with instructions. As of 25th of July 2014 just type <a style="color:#0F0">/verify password</a><br />
+<a style="color:#F60">/login</a> = If you have been logged out by any means (usually a nick change) you can log in with this command. <a style="color:#0F0">SYNTAX: /login password username</a><br />
 <a style="color:#F60">/mute</a> = Turns chat sound off.<br />
 <a style="color:#F60">/unmute</a> =
 Turns the chat sound back on.<br /><a style="color:#F60">/pm</a> = With this command you can send private messages to your friend. Nobody else can view these messages. <a style="color:#0F0">SYNTAX: /pm username|message</a><br />
@@ -118,88 +126,122 @@ Press F13 to send a bug ticket.</p>
 All available fonts are listed here: <a href="http://www.google.com/fonts" target="_blank">http://www.google.com/fonts</a> <br />
 <a style="color:#F60">/flair</a> = Meaning to add colors and fonts to your name. <a style="color:#0F0">SYNTAX: /flair $font|#colorusername</a><br />
 Example: /flair $Gabriela|#F00000Jason</p>
-<h2 id="new" style="color:#9F0">New Stuff!:<br />
+<h2 id="new" style="color:#9F0">Every Command Ever:<br />
 </h2>
-We've just added /speak<br />
-It allows you to say stuff out loud to everyone.<br />
-And now you can see everyone's cursor.
-<br />
-</p>
-<h2 id="Admin" style="color:#9F0">Admin Controls: </h2>
-<p>After registration, you might be gifted with extra abilities. Here's a basic run down of the current system.</p>
-<p><a style="color:#9F0">0 = owner:<br /></a><a style="color:#F39">
-  /access<br />
-  /whois<br />
-  /theme<br />
-  /theme_style
-  <br />
-  /change_password<br />
-  /find_ip<br />
-  /note<br />
-  /refresh_client<br />
-  /reset_user<br /></a>
-  <a style="color:#F36">/ban<br />
-/unban<br />
-/banlist<br />
-/channel_ban<br />
-/channel_unban<br />
-/channel_banlist<br />
-  </a> <a style="color:#F33">/topic<br />
-  </a> <a style="color:#F30">/clear <br />
-/echo <br />
-/toggle_images <br />
-/toggle_cursors <br />
-/whoami<br />
-/speak <br />
-/mute_speak<br />
-/unmute_speak<br />
-/get</a></p>
-<p><a style="color:#9F0">1 = Admin<br /></a><a style="color:#F36">
-  /ban<br />
-  /unban<br />
-  /banlist<br />
-  /channel_ban<br />
-  /channel_unban<br />
-  /channel_banlist<br /></a>
-  <a style="color:#F33">/topic<br /></a>
-  <a style="color:#F30">/clear <br />
-/echo <br />
-/toggle_images <br />
-/toggle_cursors <br />
-/whoami<br />
-/speak <br />
-/mute_speak<br />
-/unmute_speak<br />
-/get<br /></a>
-</p>
-<p><a style="color:#9F0">2 = Mod<br /></a><a style="color:#F33">
-  /topic
-  </a><br />
-  <a style="color:#F30">/clear <br />
-/echo <br />
-/toggle_images <br />
-/toggle_cursors <br />
-/whoami<br />
-/speak <br />
-/mute_speak<br />
-/unmute_speak<br />
-/get</a><br />
-</p>
-<p><a style="color:#9F0">3 = Basic</a><a style="color:#F30">
-  <br />
-  /clear  <br />
-  /echo  <br />
-  /toggle_images
-  <br />
-  /toggle_cursors  <br />
+<p><a style="color:#9F0">Information retrieval.<br /></a><a style="color:#F39">/help<br />
   /whoami<br />
-  /speak <br />
-/mute_speak<br />
-/unmute_speak<br />
-/get</a></p>
-<p><a style="color:#9F0">4 = Muted<br /></a><a style="color:#F00">
-  Muted users cannot talk or input commands.<br /></a>
+  /whois<br />
+  /get topic<br />
+  /get note<br />
+  /get flair
+</a><a style="color:#F39"> <br />
+  </a><a style="color:#F39"><br />
+    </a>
+  <a style="color:#9F0">Nickname modification.<br />
+    </a><a style="color:#F36">/nick<br />
+    /login<br />
+    /unregister<br />
+    /register<br />
+    /verify<br />
+    /change_password<br />
+    <br />
+    </a> <a style="color:#9F0">Ban listing.<br />
+    </a><a style="color:#F33">/banlist<br />
+    /channel_banlist<br />
+    <br />
+    </a> <a style="color:#9F0">Banning.</a><a style="color:#F30"><br />
+    /ban<br />
+    /ban username|optional reason
+    </a><a style="color:#F30"><br />
+    /unban<br />
+    /channel_ban<br />
+    /channel_unban<br />
+    /kick<br />
+    /kick username|optional reason
+            
+  </a></p>
+<p><a style="color:#9F0">Top level powers.<br /></a><a style="color:#F00">/refresh_client<br />
+  /theme<br />
+  /reset_user<br />
+  /find_ip<br />
+  /access<br /></a>
 </p>
+<p><a style="color:#9F0">Simple commands.<br />
+</a><a style="color:#F39">/pm username|message</a><a style="color:#F30"></a><a style="color:#F39"><br />
+/topic<br />
+/C_nick username|newname<br />
+/note<br />
+</a><a style="color:#F39"><br />
+</a> <a style="color:#9F0">Artistic.<br />
+</a><a style="color:#F36">/color<br />
+/font<br />
+/flair<br />
+/style<br />
+<br />
+</a> <a style="color:#9F0">Play commands.<br />
+</a><a style="color:#F33">/echo<br />
+/me<br />
+/anon<br />
+/elbot<br />
+/speak<br />
+<br />
+</a> <a style="color:#9F0">Text toys.</a><a style="color:#F30"><br />
+/!example text|<br />
+/@example text|<br />
+/%example text|<br />
+/^example text|<br />
+/&amp;example text|<br />
+/*example text|<br />
+/_example text|<br />
+/-example text|<br />
+/~example text|<br />
+/`example text|<br />
+/+example text<br />
+/$example font|<br />
+/?pagelink<br />
+#red<br />
+&gt;green text</a></p>
+<p><a style="color:#9F0">Cleaning.<br />
+  </a><a style="color:#F00">/clear<br />
+  /mute<br />
+  /unmute<br />
+  /mute_speak<br />
+  /unmute_speak<br />
+  /toggle_cursors<br />
+  /toggle_images<br />
+  /toggle_bg<br />
+  /toggle_marquee</a></p>
+<p>========<br />
+  faq <a style="color:#F00">(Sorry for this. I'll fix it later.)</a><br />
+  ========</p>
+<p>What is /whoami ?<br />
+  After using this command you'll see some confusing information like this:<br />
+  You are MYNAME with role basic with access_level 0 with ip xx.xx.xx.xx<br />
+  Basically you're broken down into two groups. <br />
+  Your &quot;role&quot; and your &quot;access_level&quot;</p>
+<p>Your role defines you as:<br />
+  muted (Unable to be heard)<br />
+  basic (Can talk)<br />
+  mod (Able to change the topic and give access to other users only up to a level below their own.)<br />
+  admin (Able to channel_ban users. If you own a channel, this will be your default.)<br />
+  super (Able to globally ban users and everything else)</p>
+<p>Your access_level defines you as the level your role is:<br />
+  If you're a mod with level 3, you cannot ban a mod with level 2. Also you can give another user the power of modship but only up to level 4 or lower.</p>
+<p>--------</p>
+<p>How do people put codes in this website?</p>
+<p>They have knowledge of either html javascript or css and depending how deep you go, maybe other languages.<br />
+  Then they go to github where spooks is hosted and make a pull request; adding new code to the old code.<br />
+  Only certain people can accept the request and push the updates.</p>
+<p>And github is a...?</p>
+<p>It's a hosting website for code.<br />
+  Usually for developers to get help.<br />
+  We use it as a third party to inject code directly into the server.<br />
+  https://github.com/codefactor/spooks-chatjs<br />
+  That is spooks.<br />
+  After the request is pushed, it is up to a higher admin, like me, to reset the chat, so the code is correctly injected.<br />
+  There's a few steps to all of this, but it helps security.<br />
+  I get an email for every pull request, so I know what to merge and when to reset.<a style="color:#F00"><br />
+  </a></p>
 <p ><a href="#Top">[Top]</a></p></div>
 <div id="vertical-scroll-bar" class="full-height"><span class="handle"></span></div>
 </body>
