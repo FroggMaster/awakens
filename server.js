@@ -515,9 +515,9 @@ function createChannel(io, channelName) {
 				var message = params.message.substring(0, settings.limits.message)
 				
 					user.part = '(' + message + ')'
-					roomEmit('update', {
-                			part : user.part
-                    			});
+					socketEmit(socket, 'update', {
+                			       part : user.part
+                			});
 					
 					return $.Deferred().resolve(true);
 				}
