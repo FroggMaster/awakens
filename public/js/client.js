@@ -993,16 +993,16 @@ parser = {
         var escs = str.match(/\\./g);
         str = str.replace(/\\./g, this.repslsh);
         // replace underscores, et cetera
-        str = this.multiple(str, /\^([^\^]+?)\^/i, '<big>$1</big>');
-        str = str.replace(/\/\*([^\s].+?[^\s])\|/g, '<strong>$1</strong>');
-	str = str.replace(/\/%([^\s].+?[^\s])\|/g, '<i>$1</i>');
-	str = str.replace(/\/_([^\s].+?[^\s])\|/g, '<u>$1</u>');
-	str = str.replace(/\/-([^\s].+?[^\s])\|/g, '<strike>$1</strike>');
-	if(CLIENT.get('marquee') == 'on'){str = str.replace(/\/&amp;([^\s].+?[^\s])\|/g, '<div id=marquee>$1</div>')};
-	str = str.replace(/\/@([^\s].+?[^\s])\|/g, '<div id=spookytext style="text-shadow: 0 0 2px white;color: transparent;">$1</div>');
-	str = str.replace(/\/!([^\s].+?[^\s])\|/g, '<div id=flashing>$1</div>');
+        str = this.multiple(str, /\/\^([^\|]+.)/g, '<big>$1</big>');
+	str = this.multiple(str, /\/\*([^\|]+.)/g, '<strong>$1</strong>');
+	str = this.multiple(str, /\/\%([^\|]+.)/g, '<i>$1</i>');
+	str = this.multiple(str, /\/\_([^\|]+.)/g, '<u>$1</u>');
+	str = this.multiple(str, /\/\-([^\|]+.)/g, '<strike>$1</strike>');
+	if(CLIENT.get('marquee') == 'on'){str = str.replace(/\/\&amp;([^\|]+.)/g, '<div id=marquee>$1</div>')};
+	str = this.multiple(str, /\/\@([^\|]+.)/g, '<div id=test style="text-shadow: 0 0 2px white;color: transparent;">$1</div>')
+	str = this.multiple(str, /\/\!([^\|]+.)/g, '<div id=flashing>$1</div>');
         str = this.multiple(str, /\/&#126;([^&#126;]+?)\|/i, '<small>$1</small>');
-        str = str.replace(/\/`([^\s].+?[^\s])\|/g, '<code>$1</code>');
+        str = this.multiple(str, /\/\`([^\|]+.)/g, '<code>$1</code>');
         // try to replace all >>>/x/??? for links to boards.4chan.org/x/res/???
         str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="http://boards.4chan.org$1/res/$2">$&</a>');
         // if there's any links leading to boards.4chan.org/?/res/ (nothing
