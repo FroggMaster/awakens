@@ -296,7 +296,7 @@ $(function() {
                 var color = this.get('color');
                 var font = this.get('font');
                 if (style) {
-                    input = style + input + style.split('').reverse().join('');
+                    input = style + input;
                 }
                 input = ' ' + input;
                 if (color) {
