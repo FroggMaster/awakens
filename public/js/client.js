@@ -38,10 +38,17 @@ $(function() {
 
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
+		if(user.part == undefined){
+		CLIENT.show({
+		    type : 'general-message',
+            message : user.nick + ' has left'
+		});
+		} else {
         CLIENT.show({
             type : 'general-message',
-            message : user.nick + ' has left'
+            message : user.nick + ' has left' + user.part
         });
+		}
     });
 
     socket.on('nick', function(info) {
@@ -186,7 +193,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors marquee bg role'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors marquee bg role part'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -198,7 +205,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors marquee bg role'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors marquee bg role part'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -849,7 +856,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic marquee bg'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic marquee bg part'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
