@@ -69,7 +69,8 @@ function createChannel(io, channelName) {
                     }
                     roomEmit('left', {
                         id : user.socket.id,
-                        nick : user.nick
+                        nick : user.nick,
+                        part : user.part
                     });
                 }
                 log.info('Disconnected');
@@ -513,8 +514,11 @@ function createChannel(io, channelName) {
 				handler : function(dao, dbuser, params) {
 				var message = params.message.substring(0, settings.limits.message)
 				
-					broadcast(dao, user.nick + ' has left :( \n his final words were: ' + message, 4);
-					socket.disconnect();
+					user.part = '(' + message + ')'
+					roomEmit('update', {
+                			part : user.part
+                    			});
+					
 					return $.Deferred().resolve(true);
 				}
 		}
