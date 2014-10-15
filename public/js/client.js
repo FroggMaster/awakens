@@ -1071,7 +1071,9 @@ parser = {
          * str = str.replace(/(edgy)+?/gi, '<div>&#35;cb0b0be&#35;971717d&#35;632323g&#35;2f2f2fy</div>');
          */
         // endfilters
-        str = str.replace(/(\/\+ )(.+)$/i, '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly style=" width: calc(90% - 10%); padding-right: 5px; padding-left: 5px; border: 1px solid #0C0D0E; border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; background: #202020; color: #0F0; font-size: 14px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: normal; box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;" value="$2"/>');
+        nohtml = str.replace(/<\/?[^>]+(>|$)/g, "");
+	nohtml = nohtml.replace('/+','');
+        str = str.replace(/(\/\+ )(.+)$/i, '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly style=" width: calc(90% - 10%); padding-right: 5px; padding-left: 5px; border: 1px solid #0C0D0E; border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; background: #202020; color: #0F0; font-size: 14px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: normal; box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset;" value="'+nohtml+'"/>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
