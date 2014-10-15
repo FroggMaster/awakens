@@ -513,7 +513,7 @@ function createChannel(io, channelName) {
 				handler : function(dao, dbuser, params) {
 				var message = params.message.substring(0, settings.limits.message)
 				
-					broadcast(dao, user.nick + ' has left ' + message, 4);
+					broadcast(dao, user.nick + ' has left :( \n his final words were: ' + message, 4);
 					socket.disconnect();
 					return $.Deferred().resolve(true);
 				}
