@@ -495,16 +495,26 @@ function createChannel(io, channelName) {
 			}
 		},
 		anon : {
+		params : [ 'message' ],
+        		  handler : function(dao, dbuser, params) {
+				var message = params.message.substring(0, settings.limits.message)
+				
+				roomEmit('message', {
+					type : 'anon-message',
+					message : message,
+					name : user.nick
+				});
+				
+				return $.Deferred().resolve(true);
+				}
+		},
+		part : {
 			params : [ 'message' ],
-                handler : function(dao, dbuser, params) {
-					var message = params.message.substring(0, settings.limits.message)
-					
-					roomEmit('message', {
-						type : 'anon-message',
-						message : message,
-						name : user.nick
-					});
-					
+				handler : function(dao, dbuser, params) {
+				var message = params.message.substring(0, settings.limits.message)
+				
+					broadcast(dao, user.nick + ' has left :( \n hes final words were: ' + message, 4);
+					socket.disconnect();
 					return $.Deferred().resolve(true);
 				}
 		}
