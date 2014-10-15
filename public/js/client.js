@@ -46,7 +46,7 @@ $(function() {
 		} else {
         CLIENT.show({
             type : 'general-message',
-            message : user.nick + ' has left' + user.part
+            message : user.nick + ' has left ' + user.part
         });
 		}
     });
