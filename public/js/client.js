@@ -893,6 +893,9 @@ $(function() {
 	},
 	anon : {
 		params : [ 'message$' ]
+	},
+	part : {
+		params : [ 'message$' ]
 	}
     };
 
