@@ -235,9 +235,9 @@ function createChannel(io, channelName) {
 								message : msgs.get("kicked",dbuser.get('nick'))
 							});
 							user.socket.disconnect();
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,3);
+							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,5);
 						}else{
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),3);
+							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),5);
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
 								message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
@@ -421,9 +421,10 @@ function createChannel(io, channelName) {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message;
+					var role = ['god','super','admin','mod','basic','mute','sub'];
                     if (message) {
-                        if (dbuser.get('access_level') < 4) {
-                            var al = dbuser.get('access_level');
+                        if (role.indexOf(dbuser.get('role')) >= 4) {
+                            var al = role.indexOf(dbuser.get('role'));
                             var t = settings.speak[al];
                             if (t === undefined) {
                                 t = settings.speak['default'];

@@ -507,7 +507,7 @@ $(function() {
 		parsed = parser.parse(message.message);
 		break;	
 	case 'anon-message':
-		if(role.indexOf(CLIENT.get('role')) >= 1){
+		if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
 			parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
 		} else {
 			parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
