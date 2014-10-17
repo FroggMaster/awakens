@@ -235,9 +235,9 @@ function createChannel(io, channelName) {
 								message : msgs.get("kicked",dbuser.get('nick'))
 							});
 							user.socket.disconnect();
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,3);
+							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,5);
 						}else{
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),3);
+							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),5);
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
 								message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
