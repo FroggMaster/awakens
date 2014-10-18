@@ -292,6 +292,22 @@ max-width: 100%;
 	color: transparent;
 }
 
+#neon {
+-webkit-animation: neon1 1.5s ease-in-out infinite alternate;
+font: normal 24px/normal "Warnes", Helvetica, sans-serif;
+}
+
+@-webkit-keyframes neon1 {
+  from {
+	text-shadow: 0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1) , 0 0 15px rgba(255,255,255,1) , 0 0 20px #ff00de , 0 0 70px #ff00de , 0 0 40px #ff00de , 0 0 50px #ff00de ;
+    color:#ff00de;
+  }
+  to {
+	text-shadow: 0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1) , 0 0 15px rgba(255,255,255,1) , 0 0 20px #00ffff , 0 0 70px #00ffff , 0 0 40px #00ffff , 0 0 50px #00ffff ;
+    color:#00ffff;
+  }
+}
+
 @-webkit-keyframes rightThenLeft {
 
     0%  {left:0%;}
