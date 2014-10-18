@@ -293,7 +293,8 @@ max-width: 100%;
 }
 
 #neon {
--webkit-animation: neon1 1.5s ease-in-out infinite alternate;
+-webkit-animation: neon1 1.5s ease-in-out alternate;
+-webkit-animation-iteration-count: 20;
 font: normal 24px/normal "Warnes", Helvetica, sans-serif;
 }
 
