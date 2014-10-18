@@ -35,6 +35,10 @@ function createChannel(io, channelName) {
             remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
+        
+    socket.on('SetPart', function(parts){
+	user.part = parts
+    })
 
         var log = {};
         [ 'error', 'info', 'debug' ].forEach(function(lvl) {
