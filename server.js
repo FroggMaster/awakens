@@ -423,7 +423,7 @@ function createChannel(io, channelName) {
                     var message = params.message;
 					var role = ['god','super','admin','mod','basic','mute','sub'];
                     if (message) {
-                        if (role.indexOf(dbuser.get('role')) >= 4) {
+                        if (role.indexOf(dbuser.get('role')) <= 5) {
                             var al = role.indexOf(dbuser.get('role'));
                             var t = settings.speak[al];
                             if (t === undefined) {
