@@ -25,6 +25,11 @@ $(function() {
         });
     });
 
+    if(CLIENT.get('part') != undefined){
+	socket.emit('SetPart', CLIENT.get('part'));
+	}
+    });
+
     socket.on('general-message', function(message) {
         CLIENT.show({
             type : 'general-message',
