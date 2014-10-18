@@ -260,7 +260,7 @@ $(function() {
                 var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
-                    var name = parsed[1];
+                    var name = parsed[1].toLowerCase();
                     var cmd = COMMANDS[name];
                     if (cmd && access_level <= (cmd.access_level || 3)) {
                         var expect = cmd.params || [];
