@@ -464,7 +464,8 @@ $(function() {
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
         var role = ['god','super','admin','mod','basic','mute','sub'];
-	if(message.message.indexOf(HighlightName) != -1){
+        var check = new RegExp('\\b'+ HighlightName +'\\b',"gi");
+	if(check.test(message.message)){
 	el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
 	} else{
         el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
