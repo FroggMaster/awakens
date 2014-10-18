@@ -23,6 +23,10 @@ $(function() {
             type : 'general-message',
             message : user.nick + ' has joined'
         });
+	
+	if(CLIENT.get('part') != undefined){
+		socket.emit('SetPart', CLIENT.get('part'));
+	}
     });
 
     socket.on('general-message', function(message) {
