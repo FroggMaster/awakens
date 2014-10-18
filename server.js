@@ -35,6 +35,10 @@ function createChannel(io, channelName) {
             remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
+        
+    socket.on('SetPart', function(parts){
+	user.part = parts
+    })
 
         var log = {};
         [ 'error', 'info', 'debug' ].forEach(function(lvl) {
@@ -911,6 +915,7 @@ function createChannel(io, channelName) {
                             id : socket.id,
                             nick : dbuser.get('nick'),
                             access_level : dbuser.get('access_level'),
+                            role : dbuser.get('role'),
                             password : password || null
                         });
                         if (online) {
