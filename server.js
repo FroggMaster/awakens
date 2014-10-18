@@ -915,6 +915,7 @@ function createChannel(io, channelName) {
                             id : socket.id,
                             nick : dbuser.get('nick'),
                             access_level : dbuser.get('access_level'),
+                            role : dbuser.get('role'),
                             password : password || null
                         });
                         if (online) {
