@@ -518,6 +518,7 @@ function createChannel(io, channelName) {
 			params : [ 'message' ],
 				handler : function(dao, dbuser, params) {
 				var message = params.message.substring(0, settings.limits.part)
+				message = message.replace(/\r?\n|\r/g, '');
 				
 					user.part = '(' + message + ')'
 					socketEmit(socket, 'update', {
