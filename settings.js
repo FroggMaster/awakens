@@ -110,7 +110,8 @@ module.exports = {
     limits : {
         message : 10000,
         nick : 100,
-        spoken : 100
+        spoken : 100,
+        part : 50
     },
 
     // emailServer : {
