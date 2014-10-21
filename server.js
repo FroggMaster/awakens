@@ -479,18 +479,18 @@ function createChannel(io, channelName) {
             },
 		c_nick : {
 			role : 'super',
-			params : [ 'nick', 'C_nick' ],
+			params : [ 'nick', 'c_nick' ],
 			handler : function(dao, dbuser, params) {
-				dao.findUser(params.C_nick).then(function(Nbuser) {
+				dao.findUser(params.c_nick).then(function(Nbuser) {
 						
 					if (Nbuser == null) {
-						dao.createUser(params.C_nick, user.remote_addr)
+						dao.createUser(params.c_nick, user.remote_addr)
 					} 
 					dao.findUser(params.nick).then(function(dbuser) {
 						
-					roomEmit('C_nick', {
-                           id : params.nick,
-                           nick : params.C_nick
+					roomEmit('c_nick', {
+                        		  id : params.nick,
+                        		  nick : params.c_nick
 						});
 							
 					})
