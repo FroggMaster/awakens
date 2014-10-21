@@ -65,7 +65,7 @@ $(function() {
         });
     });
 
-    socket.on('C_nick', function(info) {
+    socket.on('c_nick', function(info) {
         
 		CLIENT.show({
         type : 'general-message',
@@ -151,7 +151,7 @@ $(function() {
      * @param {Array.<string>} expect
      */
     function parseParams(name, input, expect) {
-        if (name == 'pm' || name == 'C_nick') {
+        if (name == 'pm' || name == 'c_nick') {
             var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -159,7 +159,7 @@ $(function() {
                 return {
                     nick : nick,
                     message : message,
-		    C_nick : message
+		    c_nick : message
                 };	
             }
         } else if (name == 'kick' || name == "ban" || name == "channel_ban") {
@@ -170,7 +170,7 @@ $(function() {
                 return {
                     nick : nick,
                     message : message,
-            C_nick : message
+        	    c_nick : message
                 };  
             }
         } else {
@@ -687,7 +687,7 @@ $(function() {
     var hover = null;
 
     $(document).keydown(function(e){
-        if(e.keyCode == 17){
+        if(e.keyCode == 17 && hover != null){
             if(hover.localName == 'img'){
                 $('#bigimg')[0].innerHTML = hover.outerHTML;
             }
@@ -889,8 +889,8 @@ $(function() {
         elbot : {
             params : [ 'message$' ]
         },
-	C_nick : {
-		params : [ 'nick|C_nick' ]
+	c_nick : {
+		params : [ 'nick|c_nick' ]
 	},
 	toggle_bg : function() {
                CLIENT.set('bg', CLIENT.get('bg') == 'on' ? 'off' : 'on');
@@ -1497,7 +1497,7 @@ $(function() {
         var el = $('#cursor-' + msg.id);
         if (el.length == 0) {
             var user = ONLINE.get(msg.id);
-            var nick = $('<span class="nick"></span>').text(user.get('nick'));
+            var nick = $('<span class="nick"></span>').text(CLIENT.get('nick'));
             el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
             el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
             user.on('change:nick', function(m, newNick) {
