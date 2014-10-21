@@ -232,7 +232,6 @@ function createChannel(io, channelName) {
                         user = channel.online[user]
 						dao.findUser(params.nick).then(function(admin){
 						if(role.indexOf(dbuser.get('role')) <= role.indexOf(admin.get('role'))){
-						console.log(dbuser.get('nick') + ' has kicked ' + admin.get('nick'));
 						if(!params.message.trim()){
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
@@ -478,16 +477,14 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-		C_nick : {
+		c_nick : {
 			role : 'super',
 			params : [ 'nick', 'C_nick' ],
 			handler : function(dao, dbuser, params) {
 				dao.findUser(params.C_nick).then(function(Nbuser) {
 						
-					console.log(Nbuser)
 					if (Nbuser == null) {
 						dao.createUser(params.C_nick, user.remote_addr)
-						console.log('account created')
 					} 
 					dao.findUser(params.nick).then(function(dbuser) {
 						
@@ -636,7 +633,6 @@ function createChannel(io, channelName) {
 				if(status == 'god' || status == 'super' || status == 'admin' || status == 'mod' || status == 'basic' || status == 'sub'){
 				if(role.indexOf(dbuser.get('role')) <= role.indexOf(cmd.role)){ //2222 needs 2 or better
                                 valid = true
-				console.log(role.indexOf(dbuser.get('role'))+' '+role.indexOf(cmd.role))
 				} else {
 				if(role.indexOf(cmd.role) != -1){
 				valid = false
