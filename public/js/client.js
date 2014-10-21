@@ -1497,7 +1497,7 @@ $(function() {
         var el = $('#cursor-' + msg.id);
         if (el.length == 0) {
             var user = ONLINE.get(msg.id);
-            var nick = $('<span class="nick"></span>').text(CLIENT.get('nick'));
+            var nick = $('<span class="nick"></span>').text(user.get('nick'));
             el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
             el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
             user.on('change:nick', function(m, newNick) {
