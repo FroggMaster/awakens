@@ -65,7 +65,7 @@ $(function() {
         });
     });
 
-    socket.on('C_nick', function(info) {
+    socket.on('c_nick', function(info) {
         
 		CLIENT.show({
         type : 'general-message',
@@ -151,7 +151,7 @@ $(function() {
      * @param {Array.<string>} expect
      */
     function parseParams(name, input, expect) {
-        if (name == 'pm' || name == 'C_nick') {
+        if (name == 'pm' || name == 'c_nick') {
             var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -159,7 +159,7 @@ $(function() {
                 return {
                     nick : nick,
                     message : message,
-		    C_nick : message
+		    c_nick : message
                 };	
             }
         } else if (name == 'kick' || name == "ban" || name == "channel_ban") {
@@ -170,7 +170,7 @@ $(function() {
                 return {
                     nick : nick,
                     message : message,
-            C_nick : message
+        	    c_nick : message
                 };  
             }
         } else {
@@ -889,8 +889,8 @@ $(function() {
         elbot : {
             params : [ 'message$' ]
         },
-	C_nick : {
-		params : [ 'nick|C_nick' ]
+	c_nick : {
+		params : [ 'nick|c_nick' ]
 	},
 	toggle_bg : function() {
                CLIENT.set('bg', CLIENT.get('bg') == 'on' ? 'off' : 'on');
