@@ -162,6 +162,8 @@ $(function() {
 		    c_nick : message
                 };	
             }
+        } else if(name == 'toggle'){
+        	toggled(input)
         } else if (name == 'kick' || name == "ban" || name == "channel_ban") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
@@ -845,11 +847,6 @@ $(function() {
         pm : {
             params : [ 'nick|message' ]
         },
-        toggle_images : {
-            handler : function() {
-                CLIENT.set('images', CLIENT.get('images') == 'on' ? 'off' : 'on');
-            }
-        },
         refresh_client : {},
         theme : {
             params : [ 'theme_style$' ]
@@ -881,11 +878,6 @@ $(function() {
         speak : {
             params : [ 'message$' ]
         },
-        toggle_cursors : {
-            handler : function() {
-                CLIENT.set('cursors', CLIENT.get('cursors') == 'off' ? 'on' : 'off');
-            }
-        },
         elbot : {
             params : [ 'message$' ]
         },
@@ -899,20 +891,21 @@ $(function() {
 			CLIENT.set('theme_style','url(https://dl.dropboxusercontent.com/u/76962608/ss/Indent1.png) center / auto 100% no-repeat rgb(17, 17, 17)')
 		}
 	},
-	toggle_marquee : function() {
-               CLIENT.set('marquee', CLIENT.get('marquee') == 'on' ? 'off' : 'on');
-		
-	},
 	anon : {
 		params : [ 'message$' ]
 	},
 	part : {
 		params : [ 'message$' ]
-	}
+	},
+	toggle : function(){}
     };
 
     COMMANDS.colour = COMMANDS.color;
 })();
+
+toggled = function(att){
+CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
+}
 
 // ------------------------------------------------------------------
 // Message Parser
