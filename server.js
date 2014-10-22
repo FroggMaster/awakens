@@ -111,11 +111,15 @@ function createChannel(io, channelName) {
                     var done = $.Deferred();
                     var nick = params.nick.substring(0, settings.limits.nick);
                     return dao.findUser(nick).then(function(u) {
-                        if (u && u.get('verified')) {
-                            return attemptNick(dao, nick, params.password);
-                        } else {
-                            return $.Deferred().resolve(false, msgs.nickNotVerified);
-                        }
+			if (u && u.get('verified')) {
+			   if(user.nick != u.get('nick')){
+			       return attemptNick(dao, nick, params.password);
+			   } else {
+			       errorMessage('You\'re already logged in...');
+			   }
+			} else {
+			   return $.Deferred().resolve(false, msgs.nickNotVerified);
+			}
                     });
                 }
             },
