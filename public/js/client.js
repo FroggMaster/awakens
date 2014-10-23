@@ -252,10 +252,11 @@ $(function() {
         },
 
         getAvailableCommands : function() {
-            var access_level = this.get('access_level');
-            return access_level == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
-                var cmd_level = COMMANDS[key].access_level;
-                return cmd_level == null || access_level <= cmd_level;
+	    var role = ['god','super','admin','mod','basic','mute','sub'];
+            var myrole = this.get('role');
+            return myrole == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
+                var cmd_level = COMMANDS[key].role;
+                return cmd_level == null || role.indexOf(myrole) <= role.indexOf(cmd_level);
             });
         },
 
@@ -751,27 +752,34 @@ $(function() {
         change_password : {
             params : [ 'old_password', 'new_password' ]
         },
-        banlist : {},
-        channel_banlist : {},
+        banlist : {role : 'admin'},
+        channel_banlist : {role : 'admin'},
         find_ip : {
+	    role : 'admin',
             params : [ 'remote_addr' ]
         },
         ban : {
+	    role : 'admin',
             params : [ 'nick[|message]' ]
         },
         unban : {
+	    role : 'admin',
             params : [ 'id$' ]
         },
         channel_ban : {
+	    role : 'admin',
             params : [ 'nick[|message]' ]
         },
         channel_unban : {
+	    role : 'admin',
             params : [ 'id$' ]
         },
         kick : {
+	    role : 'mod',
             params : [ 'nick[|message]' ]
         },
         access : {
+	    role : 'super',
             params : [ 'role', 'access_level', 'nick$' ]
         },
         whoami : {},
@@ -779,9 +787,11 @@ $(function() {
             params : [ 'nick$' ]
         },
         topic : {
+	    role : 'mod',
             params : [ 'topic$' ]
         },
         note : {
+	    role : 'admin',
             params : [ 'message$' ]
         },
         clear : function() {
@@ -850,11 +860,12 @@ $(function() {
         pm : {
             params : [ 'nick|message' ]
         },
-        refresh_client : {},
+        refresh_client : {role : 'super'},
         theme : {
             params : [ 'theme_style$' ]
         },
         reset_user : {
+			role : 'super',
             params : [ 'nick' ]
         },
         get : {
@@ -885,23 +896,19 @@ $(function() {
             params : [ 'message$' ]
         },
 	c_nick : {
-		params : [ 'nick|c_nick' ]
+	    role : 'super',
+	    params : [ 'nick|c_nick' ]
 	},
 	toggle_bg : function() {
-               CLIENT.set('bg', CLIENT.get('bg') == 'on' ? 'off' : 'on');
-			if(CLIENT.get('bg') == 'off'){
-				CLIENT.set('theme_style',CLIENT.get('old'))
-			} else {
-				CLIENT.set('theme_style','url(https://dl.dropboxusercontent.com/u/76962608/ss/Indent1.png) center / auto 100% no-repeat rgb(17, 17, 17)')
-			}
+            CLIENT.set('bg', CLIENT.get('bg') == 'on' ? 'off' : 'on');
 	},
 	anon : {
-		params : [ 'message$' ]
+	    params : [ 'message$' ]
 	},
 	part : {
-		params : [ 'message$' ]
+	    params : [ 'message$' ]
 	},
-	toggle : function(){}
+	toggle : function(){},
     };
 
     COMMANDS.colour = COMMANDS.color;
