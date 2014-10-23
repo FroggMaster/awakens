@@ -329,6 +329,37 @@ max-width: 100%;
 	
 }
 
+/*fonts*/
+
+@font-face {
+    font-family: "Waltograph";
+    src: url(fonts/waltographUI.ttf);
+}
+@font-face {
+    font-family: "ka1";
+    src: url(fonts/ka1.ttf);
+}
+@font-face {
+    font-family: "orange juice";
+    src: url(fonts/orangejuice.ttf);
+}
+@font-face {
+    font-family: "BlackWidow";
+    src: url(fonts/BlackWidow.ttf);
+}
+@font-face {
+    font-family: "ScreamAgain";
+    src: url(fonts/ScreamAgain.ttf);
+}
+@font-face {
+    font-family: "OctoberCrow";
+    src: url(fonts/OctoberCrow.ttf);
+}
+@font-face {
+    font-family: "CHERL";
+    src: url(fonts/CHERL___.ttf);
+}
+
 .timestamp {
     padding-left: .4em;
     font-size: .8em;
