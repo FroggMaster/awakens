@@ -89,6 +89,9 @@ $(function() {
 		if(info.theme_style != undefined){
 			if(CLIENT.get('bg') == 'off'){
 				CLIENT.set(info);
+				CLIENT.set('old',info.theme_style)
+			} else {
+				CLIENT.set('old',info.theme_style);
 			}
 		} else {
 		CLIENT.set(info);
@@ -886,10 +889,11 @@ $(function() {
 	},
 	toggle_bg : function() {
                CLIENT.set('bg', CLIENT.get('bg') == 'on' ? 'off' : 'on');
-		if(CLIENT.get('bg') == 'on'){
-			CLIENT.show('background toggled on')
-			CLIENT.set('theme_style','url(https://dl.dropboxusercontent.com/u/76962608/ss/Indent1.png) center / auto 100% no-repeat rgb(17, 17, 17)')
-		}
+			if(CLIENT.get('bg') == 'off'){
+				CLIENT.set('theme_style',CLIENT.get('old'))
+			} else {
+				CLIENT.set('theme_style','url(https://dl.dropboxusercontent.com/u/76962608/ss/Indent1.png) center / auto 100% no-repeat rgb(17, 17, 17)')
+			}
 	},
 	anon : {
 		params : [ 'message$' ]
