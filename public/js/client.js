@@ -252,10 +252,11 @@ $(function() {
         },
 
         getAvailableCommands : function() {
-            var access_level = this.get('access_level');
-            return access_level == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
-                var cmd_level = COMMANDS[key].access_level;
-                return cmd_level == null || access_level <= cmd_level;
+	    var role = ['god','super','admin','mod','basic','mute','sub'];
+            var myrole = this.get('role');
+            return myrole == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
+                var cmd_level = COMMANDS[key].role;
+                return cmd_level == null || role.indexOf(myrole) <= role.indexOf(cmd_level);
             });
         },
 
