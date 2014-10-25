@@ -167,7 +167,11 @@ $(function() {
             }
         } else if(name == 'toggle'){
         	toggled(input)
-        } else if (name == 'kick' || name == "ban" || name == "channel_ban") {
+        } else if(name == 'block'){
+		blocked(input)
+	} else if(name == 'unblock') {
+		unblocked(input)
+	} else if (name == 'kick' || name == "ban" || name == "channel_ban") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -909,6 +913,8 @@ $(function() {
 	    params : [ 'message$' ]
 	},
 	toggle : function(){},
+	block : function(){},
+	unblock : function(){}
     };
 
     COMMANDS.colour = COMMANDS.color;
@@ -916,6 +922,35 @@ $(function() {
 
 toggled = function(att){
 CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
+}
+
+blocked = function(att){
+list = []
+    ONLINE.each(function(user) {
+        var user_name = user.get('nick');
+            list.push(user_name);
+    });
+	if(block.indexOf(att) == -1){
+		block.push(att)
+		CLIENT.show(att + ' is now blocked')
+	} else {
+		CLIENT.show({
+            message : 'That user is already blocked.',
+            type : 'error-message'
+        });
+	}
+}
+unblocked = function(att){
+index = block.indexOf(att)
+	if(block.indexOf(att) != -1){
+		block.splice(index,1)
+		CLIENT.show(att + ' is not longer blocked.')
+	} else {
+		CLIENT.show({
+            message : 'You don\'t have that user blocked.',
+            type : 'error-message'
+        });
+	}
 }
 
 // ------------------------------------------------------------------
