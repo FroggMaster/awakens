@@ -99,7 +99,9 @@ $(function() {
     });
 
     socket.on('message', function(msg) {
-        CLIENT.show(msg);
+	if(block.indexOf(msg.nick) == -1){
+		CLIENT.show(msg);
+	}
     });
     
     socket.on('submessage', function(msg) {
