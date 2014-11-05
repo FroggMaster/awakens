@@ -905,9 +905,6 @@ $(function() {
 	    role : 'super',
 	    params : [ 'nick|c_nick' ]
 	},
-	toggle_bg : function() {
-            CLIENT.set('bg', CLIENT.get('bg') == 'on' ? 'off' : 'on');
-	},
 	anon : {
 	    params : [ 'message$' ]
 	},
