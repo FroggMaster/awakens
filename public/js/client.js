@@ -87,16 +87,7 @@ $(function() {
     });
 
     socket.on('update', function(info) {
-		if(info.theme_style != undefined){
-			if(CLIENT.get('bg') == 'off'){
-				CLIENT.set(info);
-				CLIENT.set('old',info.theme_style)
-			} else {
-				CLIENT.set('old',info.theme_style);
-			}
-		} else {
-		CLIENT.set(info);
-		}
+	CLIENT.set(info);
     });
 
     socket.on('message', function(msg) {
@@ -388,7 +379,7 @@ $(function() {
 	  CLIENT.set('images', 'on'); 
 	}
 	if (CLIENT.get('bg') == null){
-	CLIENT.set('bg', 'off'); 
+	CLIENT.set('bg', 'on'); 
 	}
 	if (CLIENT.get('marquee') == null){
 	CLIENT.set('marquee', 'on'); 
@@ -408,12 +399,19 @@ $(function() {
         }
     });
     CLIENT.on('change:theme_style', function(m, theme_style) {
-        if (theme_style && theme_style != 'default') {
+        if (theme_style && CLIENT.get('bg') == 'on' && theme_style != 'default') {
             $('#messages').css('background', theme_style);
         } else {
-            $('#messages').css('background', '');
+			CLIENT.set('old', theme_style);
         }
     });
+    CLIENT.on('change:bg', function(m, bg){
+	if(bg == 'on'){
+	   $('#messages').css('background', CLIENT.get('old'));
+        } else {
+	   $('#messages').css('background', 'url(http://i.imgur.com/b9xE8sb.png?1) center / auto 100% no-repeat rgb(17, 17, 17)');
+        }
+    })
 });
 
 // ------------------------------------------------------------------
@@ -924,7 +922,10 @@ $(function() {
 })();
 
 toggled = function(att){
-CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
+	if (att == 'bg' && CLIENT.get('bg') == 'off'){
+      	   $('#messages').css('background', CLIENT.get('old'));
+	}
+	CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
 }
 
 blocked = function(att){
