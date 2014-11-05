@@ -401,8 +401,9 @@ $(function() {
     CLIENT.on('change:theme_style', function(m, theme_style) {
         if (theme_style && CLIENT.get('bg') == 'on' && theme_style != 'default') {
             $('#messages').css('background', theme_style);
+            CLIENT.set('old', theme_style);
         } else {
-			CLIENT.set('old', theme_style);
+	    CLIENT.set('old', theme_style);
         }
     });
     CLIENT.on('change:bg', function(m, bg){
