@@ -91,7 +91,8 @@ function createChannel(io, channelName) {
             nick : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    return attemptNick(dao, params.nick.substring(0, settings.limits.nick));
+                    nick = params.nick.replace(/\s+/g, '');
+                    return attemptNick(dao, nick.substring(0, settings.limits.nick));
                 }
             },
             me : {
