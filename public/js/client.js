@@ -94,7 +94,7 @@ $(function() {
 	if(url.url == "stop"){
 		$("#youtube")[0].innerHTML = ""
 	} else {
-		$("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"http://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+		$("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
 	}
     });
 
