@@ -32,6 +32,10 @@ body {
     padding-right: 20px;
 }
 
+#youtube{
+	display:none;
+}
+
 .noScroll #messages {
 	overflow-y: auto;
 }

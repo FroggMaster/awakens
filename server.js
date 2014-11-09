@@ -528,6 +528,15 @@ function createChannel(io, channelName) {
 					
 					return $.Deferred().resolve(true);
 				}
+		},
+		play : {
+			role : 'super',
+			params : [ 'url' ],
+			handler : function(dao, dbuser, params) {
+				roomEmit('playvid', {
+					url : params.url
+				})
+			}
 		}
         };
 
