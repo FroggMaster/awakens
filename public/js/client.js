@@ -925,6 +925,16 @@ $(function() {
 	play : {
 		role : 'super',
 		params : [ 'url' ]
+	},
+	safe : function(){
+		CLIENT.set('bg','off'),
+		CLIENT.set('images','off'),
+		CLIENT.set('mute_speak','off')
+	},
+	unsafe : function(){
+		CLIENT.set('bg','on'),
+		CLIENT.set('images','on'),
+		CLIENT.set('mute_speak','on')
 	}
     };
 
