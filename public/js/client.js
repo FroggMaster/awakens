@@ -89,6 +89,14 @@ $(function() {
     socket.on('update', function(info) {
 	CLIENT.set(info);
     });
+    
+    socket.on('playvid', function(url){
+	if(url.url == "stop"){
+		$("#youtube")[0].innerHTML = ""
+	} else {
+		$("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"http://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+	}
+    });
 
     socket.on('message', function(msg) {
 	if(block.indexOf(msg.nick) == -1){
@@ -913,7 +921,11 @@ $(function() {
 	},
 	toggle : function(){},
 	block : function(){},
-	unblock : function(){}
+	unblock : function(){},
+	play : {
+		role : 'super',
+		params : [ 'url' ]
+	}
     };
 
     COMMANDS.colour = COMMANDS.color;
