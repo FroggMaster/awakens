@@ -1072,6 +1072,7 @@ parser = {
         str = str.replace(/\\./g, this.repslsh);
         // replace underscores, et cetera
 	str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
+	str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
         str = this.multiple(str, /\/\^([^\|]+)\|?/g, '<big>$1</big>');
 	str = this.multiple(str, /\/\*([^\|]+)\|?/g, '<strong>$1</strong>');
 	str = this.multiple(str, /\/\%([^\|]+)\|?/g, '<i>$1</i>');
