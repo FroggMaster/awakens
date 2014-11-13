@@ -522,7 +522,7 @@ function createChannel(io, channelName) {
 				var message = params.message.substring(0, settings.limits.part)
 				message = message.replace(/\r?\n|\r/g, '');
 				
-					user.part = '(' + message + ')'
+					user.part = message
 					socketEmit(socket, 'update', {
                 			       part : user.part
                 			});
