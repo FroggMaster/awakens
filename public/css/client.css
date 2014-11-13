@@ -309,6 +309,20 @@ color:black;
 color:white;
 }
 
+#rotat{
+	clear:both;
+	-webkit-animation: rotate 1.5s ease-in-out alternate;
+}
+
+@-webkit-keyframes rotate {
+  from {
+	transform:rotate(0deg);
+  }
+  to {
+	transform:rotate(360deg);
+  }
+}
+
 @-webkit-keyframes neon1 {
   from {
 	text-shadow: 0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1) , 0 0 15px rgba(255,255,255,1) , 0 0 20px #ff00de , 0 0 70px #ff00de , 0 0 40px #ff00de , 0 0 50px #ff00de ;
