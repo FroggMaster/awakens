@@ -542,8 +542,9 @@ function createChannel(io, channelName) {
 		msg : {
 			params : [ 'message' ],
 			handler : function(dao, dbuser, params) {
+			var message = params.message.substring(0, 50)
 				roomEmit('centermsg', {
-					msg : params.message
+					msg : message
 				})
 			}
 		}
