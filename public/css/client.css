@@ -87,6 +87,14 @@ body {
 position:relative;
 z-index:1;
 }
+.note-message{
+position:relative;
+z-index:1;
+}
+.general-message{
+position:relative;
+z-index:1;
+}
 
 #messages .timestamp,
 #messages .message-content {
