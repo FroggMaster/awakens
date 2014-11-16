@@ -83,6 +83,11 @@ body {
     background: url('img/balls.gif') repeat center #000b11;
 }
 
+.chat-message{
+position:relative;
+z-index:1;
+}
+
 #messages .timestamp,
 #messages .message-content {
     text-shadow:
@@ -280,6 +285,14 @@ max-height: 100%;
 max-width: 100%;
 }
 
+#sam{
+position: absolute;
+top:40%;
+left:0;
+font-size: 50px;
+right:0;
+}
+
 #marquee {
 	position: relative;
 	width:95%;
@@ -459,6 +472,20 @@ color:gold;
 |*| Menu
 |*|
 \*/
+
+#toggle{
+position: absolute;
+background-color:#555;
+right:0;
+width:25px;
+height:25px;
+padding-top: 3px;
+cursor:pointer;
+opacity: .7;
+color:white;
+text-align:center;
+font: bold 20px/20px "Gill Sans", "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
 
 .menu-container {
 	position: absolute;

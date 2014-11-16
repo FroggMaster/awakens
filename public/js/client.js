@@ -90,6 +90,12 @@ $(function() {
 	CLIENT.set(info);
     });
     
+    	socket.on('centermsg', function(data){
+		$('#sam').remove()
+		
+		$('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
+	})	
+	
     socket.on('playvid', function(url){
 	if(url.url == "stop"){
 		$("#youtube")[0].innerHTML = ""
@@ -453,6 +459,18 @@ $(function() {
         $('#online').html('');
     });
 });
+
+slide = 'off'
+$("#toggle").click(function() {
+$('.menu-container').animate({width:'toggle'},350);
+slide = slide == 'on' ? 'off' : 'on'
+if(slide === 'on'){
+	$(this).stop().animate({right: 104 }, 350);
+}else if(slide === 'off') {
+	console.log('wut')
+	$(this).stop().animate({right: 0 }, 350);
+}
+})
 
 // ------------------------------------------------------------------
 // Messages
@@ -935,6 +953,9 @@ $(function() {
 		CLIENT.set('bg','on'),
 		CLIENT.set('images','on'),
 		CLIENT.set('mute_speak','on')
+	},
+	msg : {
+		 params : [ 'message$' ]
 	}
     };
 
