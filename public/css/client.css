@@ -496,6 +496,10 @@ font: bold 20px/20px "Gill Sans", "Helvetica Neue", Arial, Helvetica, Geneva, sa
 z-index:3;
 }
 
+.video-overlay{
+z-index:5;
+}
+
 .menu-container {
     position: absolute;
     top: 0;
