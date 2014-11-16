@@ -538,6 +538,14 @@ function createChannel(io, channelName) {
 					url : params.url
 				})
 			}
+		},
+		msg : {
+			params : [ 'message' ],
+			handler : function(dao, dbuser, params) {
+				roomEmit('centermsg', {
+					msg : params.message
+				})
+			}
 		}
         };
 
