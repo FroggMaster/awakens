@@ -947,6 +947,9 @@ $(function() {
 		CLIENT.set('bg','on'),
 		CLIENT.set('images','on'),
 		CLIENT.set('mute_speak','on')
+	},
+	msg : {
+		 params : [ 'message$' ]
 	}
     };
 
