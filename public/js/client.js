@@ -454,6 +454,18 @@ $(function() {
     });
 });
 
+slide = 'off'
+$("#toggle").click(function() {
+$('.menu-container').animate({width:'toggle'},350);
+slide = slide == 'on' ? 'off' : 'on'
+if(slide === 'on'){
+	$(this).stop().animate({right: 104 }, 350);
+}else if(slide === 'off') {
+	console.log('wut')
+	$(this).stop().animate({right: 0 }, 350);
+}
+})
+
 // ------------------------------------------------------------------
 // Messages
 // ------------------------------------------------------------------
