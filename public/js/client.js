@@ -90,6 +90,12 @@ $(function() {
 	CLIENT.set(info);
     });
     
+    	socket.on('centermsg', function(data){
+		$('#sam').remove()
+		
+		$('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
+	})	
+	
     socket.on('playvid', function(url){
 	if(url.url == "stop"){
 		$("#youtube")[0].innerHTML = ""
