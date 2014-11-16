@@ -251,7 +251,23 @@ function createChannel(io, channelName) {
 								message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
 							});
 							user.socket.disconnect();
-                    }
+                				}
+					} elseif(role.indexOf(dbuser.get('access_level')) == role.indexOf(admin.get('access_level'))){
+						if(!params.message.trim()){
+							socketEmit(user.socket, 'message', {
+								type : 'error-message',
+								message : msgs.get("kicked",dbuser.get('nick'))
+							});
+							user.socket.disconnect();
+							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,5);
+						}else{
+							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),5);
+							socketEmit(user.socket, 'message', {
+								type : 'error-message',
+								message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
+							});
+							user.socket.disconnect();
+						}
 					} else {
 					  errorMessage('You may not kick admins');
 					}
