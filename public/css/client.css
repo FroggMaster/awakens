@@ -496,11 +496,12 @@ font: bold 20px/20px "Gill Sans", "Helvetica Neue", Arial, Helvetica, Geneva, sa
 }
 
 .menu-container {
-	position: absolute;
-	top: 0;
-	right: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
     opacity: .7;
     z-index: 2;
+    display:none;
 }
 
 .menu-container .help {
