@@ -465,12 +465,23 @@ $("#toggle").click(function() {
 $('.menu-container').animate({width:'toggle'},350);
 slide = slide == 'on' ? 'off' : 'on'
 if(slide === 'on'){
+	dir = 180
 	$(this).stop().animate({right: 104 }, 350);
 }else if(slide === 'off') {
-	console.log('wut')
+	dir = 0
 	$(this).stop().animate({right: 0 }, 350);
 }
-})
+
+$('#toggle').animate({  borderSpacing: dir }, {
+    step: function(now,fx) {
+      $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+      $(this).css('-moz-transform','rotate('+now+'deg)');
+      $(this).css('transform','rotate('+now+'deg)');
+    },
+    duration:'slow'
+},'linear');
+
+});
 
 // ------------------------------------------------------------------
 // Messages
