@@ -325,7 +325,7 @@ module.exports = function(callback) {
             } else if (!notEmptyString(remote_addr)) {
                 user.reject('Invalid remote_addr');
             } else {
-                query('insert into chat_users (nick, remote_addr, access_level, role) values(?,?,3)', [ nick, remote_addr ]).then(function() {
+                query('insert into chat_users (nick, remote_addr, access_level, role) values(?,?,3,"basic")', [ nick, remote_addr ]).then(function() {
                     findUser(nick).then(function(fuser) {
                         if (fuser) {
                             user.resolve(fuser);
