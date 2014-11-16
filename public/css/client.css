@@ -493,6 +493,7 @@ opacity: .7;
 color:white;
 text-align:center;
 font: bold 20px/20px "Gill Sans", "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+z-index:3;
 }
 
 .menu-container {
