@@ -214,7 +214,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors marquee bg role part'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -226,7 +226,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors marquee bg role part'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors marquee styles bg role part'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -397,6 +397,9 @@ $(function() {
 	}
 	if (CLIENT.get('marquee') == null){
 	CLIENT.set('marquee', 'on'); 
+	}
+	if (CLIENT.get('styles') == null){
+	CLIENT.set('styles', 'on'); 
 	}
 });
 
@@ -915,7 +918,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic marquee bg part'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic marquee styles bg part'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1103,6 +1106,7 @@ parser = {
         var escs = str.match(/\\./g);
         str = str.replace(/\\./g, this.repslsh);
         // replace underscores, et cetera
+        if(CLIENT.get('styles') == 'on'){
 	str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
 	str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
 	str = this.multiple(str, /\/\+([^\|]+)\|?/g, '<div id=rotat>$1</div>');
@@ -1116,6 +1120,7 @@ parser = {
 	str = this.multiple(str, /\/\!([^\|]+)\|?/g, '<div id=flashing>$1</div>');
         str = this.multiple(str, /\/\&#126;([^\|]+)\|?/g, '<small>$1</small>');
         str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
+        }
         // try to replace all >>>/x/??? for links to boards.4chan.org/x/res/???
         str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="http://boards.4chan.org$1/res/$2">$&</a>');
         // if there's any links leading to boards.4chan.org/?/res/ (nothing
