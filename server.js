@@ -252,7 +252,7 @@ function createChannel(io, channelName) {
 							});
 							user.socket.disconnect();
                 				}
-					} else if(role.indexOf(dbuser.get('access_level')) == role.indexOf(admin.get('access_level'))){
+					} else if(dbuser.get('access_level') < admin.get('access_level')){
 						if(!params.message.trim()){
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
