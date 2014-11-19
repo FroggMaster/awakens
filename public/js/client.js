@@ -463,28 +463,34 @@ $(function() {
     });
 });
 
-slide = 'off'
-$("#toggle").click(function() {
+$("#toggle").mouseover(function() {
 $('.menu-container').animate({width:'toggle'},350);
-slide = slide == 'on' ? 'off' : 'on'
-if(slide === 'on'){
-	dir = 180
 	$(this).stop().animate({right: 104 }, 350);
-}else if(slide === 'off') {
-	dir = 0
-	$(this).stop().animate({right: 0 }, 350);
-}
+	
+	$(this).animate({ borderSpacing: 180 }, {
+		step: function(now,fx){
+		$(this).css('-webkit-transform','rotate('+now+'deg)'); 
+		$(this).css('-moz-transform','rotate('+now+'deg)');
+		$(this).css('transform','rotate('+now+'deg)');
+		}, 
+	duration:'slow'
+	},'linear');
+})
 
-$('#toggle').animate({  borderSpacing: dir }, {
-    step: function(now,fx) {
-      $(this).css('-webkit-transform','rotate('+now+'deg)'); 
-      $(this).css('-moz-transform','rotate('+now+'deg)');
-      $(this).css('transform','rotate('+now+'deg)');
-    },
-    duration:'slow'
-},'linear');
-
-});
+$(".menu-container").mouseleave(function(){
+$(this).animate({width:'toggle'},350);
+	$("#toggle").stop().animate({right: 0 }, 350);
+	
+	$("#toggle").animate({ borderSpacing: 0 }, {
+		step: function(now,fx){
+		$("#toggle").css('-webkit-transform','rotate('+now+'deg)'); 
+		$("#toggle").css('-moz-transform','rotate('+now+'deg)');
+		$("#toggle").css('transform','rotate('+now+'deg)');
+		}, 
+	duration:'slow'
+	},'linear');
+	
+})
 
 // ------------------------------------------------------------------
 // Messages
