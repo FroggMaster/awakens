@@ -475,7 +475,7 @@ $('.menu-container').animate({width:'toggle'},350);
 		}, 
 	duration:'slow'
 	},'linear');
-})
+});
 
 $(".menu-container").mouseleave(function(){
 $(this).animate({width:'toggle'},350);
@@ -483,14 +483,14 @@ $(this).animate({width:'toggle'},350);
 	
 	$("#toggle").animate({ borderSpacing: 0 }, {
 		step: function(now,fx){
-		$("#toggle").css('-webkit-transform','rotate('+now+'deg)'); 
-		$("#toggle").css('-moz-transform','rotate('+now+'deg)');
-		$("#toggle").css('transform','rotate('+now+'deg)');
+		$(this).css('-webkit-transform','rotate('+now+'deg)'); 
+		$(this).css('-moz-transform','rotate('+now+'deg)');
+		$(this).css('transform','rotate('+now+'deg)');
 		}, 
 	duration:'slow'
 	},'linear');
 	
-})
+});
 
 // ------------------------------------------------------------------
 // Messages

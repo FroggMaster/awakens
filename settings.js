@@ -160,7 +160,7 @@ module.exports = {
         channel_banlist : 'Channel banned: {0}',
         access_granted : 'User {0} now has level {1}',
         whoami : 'You are {0} with role {1} with access_level {2} with ip {3}',
-        whois : '{0} has role {1} with access_level {2} with ip {3}',
+        whois : '{0} has role {1} with access_level {2} with ip {3} and is {4}',
         whoiss : '{0} has role {1}',
         user_doesnt_exist : '{0} does not exist',
         find_ip : 'ip {0} uses: {1}',
