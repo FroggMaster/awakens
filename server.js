@@ -576,7 +576,7 @@ function createChannel(io, channelName) {
         _.each({
             join : function(dao, msg) {
                 if (!user.nick) {
-                    var nick = msg && msg.nick;
+                    var nick = msg && msg.nick.slice(0,100);
                     var pwd = msg && msg.password;
                     if (nick) {
                         var done = $.Deferred();
