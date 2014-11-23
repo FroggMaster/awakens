@@ -1539,6 +1539,11 @@ function video(event, type, input) {
             width : '560px',
             height : '315px'
         }).appendTo(videoOverlay);
+	var bottom = $('<div class="bottom"></div>').css({
+		width : '100%',
+		height : '15px',
+		backgroundColor : '#444'
+	}).appendTo(videoOverlay);
         header.mousedown(function(e) {
             dragging = e;
             shim = $('<div></div>').css({
@@ -1580,6 +1585,12 @@ function video(event, type, input) {
         marginLeft : (-videoOverlay.width() / 2) + 'px'
     });
     videoOverlay.show();
+    $(".video-overlay").resizable({
+	start: function( event, ui ) {},
+	stop: function( event, ui ) {}
+    });
+    $(".video-overlay").on( "resizestart", function( event, ui ) {$(".video-overlay iframe").css("display","none")} );
+    $(".video-overlay").on( "resizestop", function( event, ui ) {$(".video-overlay iframe").css("display","block")} );
 }
 
 // ------------------------------------------------------------------
