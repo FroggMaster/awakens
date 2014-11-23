@@ -1030,7 +1030,7 @@ parser = {
     fontRegex : /\$([\w \-\,Â®]*)\|(.*)$/,
     multiple : function(str, mtch, rep) {
         var ct = 0;
-        while (str.match(mtch) != null && ct++ < 6)
+        while (str.match(mtch) != null && ct++ < 10)
             str = str.replace(mtch, rep);
         return str;
     },
