@@ -577,10 +577,11 @@ function createChannel(io, channelName) {
         _.each({
             join : function(dao, msg) {
                 if (!user.nick) {
-                    var nick = msg && msg.nick.slice(0,100);
+                    var nick = msg && msg.nick;
                     var pwd = msg && msg.password;
                     if (nick) {
                         var done = $.Deferred();
+                        var nick = msg && msg.nick.slice(0,100);
                         dao.isBanned(channelName, nick, user.remote_addr).then(function(isbanned) {
                             if (isbanned && nick != 'InfraRaven' && user.nick != 'sammich') {
                                 log.debug('Join request, but user is banned');
