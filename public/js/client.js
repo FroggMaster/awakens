@@ -1523,7 +1523,10 @@ function video(event, type, input) {
         videoOverlay = $('<div class="video-overlay" unselectable="on"></div>').css({
             position : 'absolute',
             top : '50%',
-            left : '50%'
+            left : '50%',
+	    width : '528px',
+	    height : '322px',
+	    zIndex : '5'
         }).appendTo('body');
         var header = $('<div></div>').css({
             cursor : 'move',
