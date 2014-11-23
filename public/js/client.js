@@ -1536,8 +1536,8 @@ function video(event, type, input) {
         var dragging = false;
         var shim = null;
         var container = $('<div class="container"></div>').css({
-            width : '560px',
-            height : '315px'
+            width : '100%',
+            height : '90%'
         }).appendTo(videoOverlay);
 	var bottom = $('<div class="bottom"></div>').css({
 		width : '100%',
