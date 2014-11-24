@@ -332,7 +332,6 @@ color:white;
 }
 
 #rotat{
-	clear:both;
 	-webkit-animation: rotate 1.5s ease-in-out alternate;
 }
 

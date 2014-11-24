@@ -1030,7 +1030,7 @@ parser = {
     fontRegex : /\$([\w \-\,Â®]*)\|(.*)$/,
     multiple : function(str, mtch, rep) {
         var ct = 0;
-        while (str.match(mtch) != null && ct++ < 6)
+        while (str.match(mtch) != null && ct++ < 10)
             str = str.replace(mtch, rep);
         return str;
     },
@@ -1523,7 +1523,10 @@ function video(event, type, input) {
         videoOverlay = $('<div class="video-overlay" unselectable="on"></div>').css({
             position : 'absolute',
             top : '50%',
-            left : '50%'
+            left : '50%',
+	    width : '528px',
+	    height : '322px',
+	    zIndex : '5'
         }).appendTo('body');
         var header = $('<div></div>').css({
             cursor : 'move',
@@ -1536,9 +1539,14 @@ function video(event, type, input) {
         var dragging = false;
         var shim = null;
         var container = $('<div class="container"></div>').css({
-            width : '560px',
-            height : '315px'
+            width : '100%',
+            height : '90%'
         }).appendTo(videoOverlay);
+	var bottom = $('<div class="bottom"></div>').css({
+		width : '100%',
+		height : '15px',
+		backgroundColor : '#444'
+	}).appendTo(videoOverlay);
         header.mousedown(function(e) {
             dragging = e;
             shim = $('<div></div>').css({
@@ -1580,6 +1588,12 @@ function video(event, type, input) {
         marginLeft : (-videoOverlay.width() / 2) + 'px'
     });
     videoOverlay.show();
+    $(".video-overlay").resizable({
+	start: function( event, ui ) {},
+	stop: function( event, ui ) {}
+    });
+    $(".video-overlay").on( "resizestart", function( event, ui ) {$(".video-overlay iframe").css("display","none")} );
+    $(".video-overlay").on( "resizestop", function( event, ui ) {$(".video-overlay iframe").css("display","block")} );
 }
 
 // ------------------------------------------------------------------
