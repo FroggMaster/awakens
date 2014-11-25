@@ -463,10 +463,10 @@ $(function() {
     });
 });
 
-$("#toggle").mouseover(function() {
+$("#toggle").click(function() {
 $('.menu-container').animate({width:'toggle'},350);
 	$(this).stop().animate({right: 104 }, 350);
-	
+	$('.menu-content').show();
 	$(this).animate({ borderSpacing: 180 }, {
 		step: function(now,fx){
 		$(this).css('-webkit-transform','rotate('+now+'deg)'); 
