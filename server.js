@@ -236,7 +236,7 @@ function createChannel(io, channelName) {
                     if(user != -1){
                         user = channel.online[user]
 						dao.findUser(params.nick).then(function(admin){
-						if(role.indexOf(dbuser.get('role')) <= role.indexOf(admin.get('role'))){
+						if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
 						if(!params.message.trim()){
 							socketEmit(user.socket, 'message', {
 								type : 'error-message',
