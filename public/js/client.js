@@ -463,35 +463,6 @@ $(function() {
     });
 });
 
-$("#toggle").click(function() {
-$('.menu-container').animate({width:'toggle'},350);
-	$(this).stop().animate({right: 104 }, 350);
-	$('.menu-content').show();
-	$(this).animate({ borderSpacing: 180 }, {
-		step: function(now,fx){
-		$(this).css('-webkit-transform','rotate('+now+'deg)'); 
-		$(this).css('-moz-transform','rotate('+now+'deg)');
-		$(this).css('transform','rotate('+now+'deg)');
-		}, 
-	duration:'slow'
-	},'linear');
-});
-
-$(".menu-container").mouseleave(function(){
-$(this).animate({width:'toggle'},350);
-	$("#toggle").stop().animate({right: 0 }, 350);
-	
-	$("#toggle").animate({ borderSpacing: 0 }, {
-		step: function(now,fx){
-		$(this).css('-webkit-transform','rotate('+now+'deg)'); 
-		$(this).css('-moz-transform','rotate('+now+'deg)');
-		$(this).css('transform','rotate('+now+'deg)');
-		}, 
-	duration:'slow'
-	},'linear');
-	
-});
-
 // ------------------------------------------------------------------
 // Messages
 // ------------------------------------------------------------------

@@ -480,21 +480,6 @@ color:gold;
 |*|
 \*/
 
-#toggle{
-position: absolute;
-background-color:#555;
-right:0;
-width:25px;
-height:25px;
-padding-top: 3px;
-cursor:pointer;
-opacity: .7;
-color:white;
-text-align:center;
-font: bold 20px/20px "Gill Sans", "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
-z-index:3;
-}
-
 .video-overlay{
 z-index:5;
 }
@@ -584,6 +569,7 @@ z-index:5;
     display: none;
     color: #eee;
     background: #333;
+    z-index:5;
 }
 
 #autocomplete>span {
