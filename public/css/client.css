@@ -569,6 +569,7 @@ z-index:5;
     display: none;
     color: #eee;
     background: #333;
+    z-index:5;
 }
 
 #autocomplete>span {
