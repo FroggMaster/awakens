@@ -26,6 +26,8 @@ body {
 #messages {
     background: #111;
     color: white;
+	position: absolute;
+	width: 98.5%;
     overflow-x: hidden;
     overflow-y: hidden;
     height: 1000px;
@@ -445,6 +447,7 @@ color:gold;
     top: 0;
     width: 10px;
     margin-right: 3px;
+	z-index:20;
 }
 
 .shim {
@@ -488,7 +491,7 @@ z-index:5;
     position: absolute;
 	display:none;
 	min-width: 175px;
-	max-width: 250px;
+	min-height: 175px;
 	height:300px;
 	cursor:default;
 	background-color:#555;
