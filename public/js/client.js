@@ -755,7 +755,9 @@ $(function() {
 (function() {
     window.COMMANDS = {
         help : function() {
-            CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
+             var display = $('.menu-container').css('display') == 'none' ? 'block' : 'none'
+	     $('.menu-container').css('display',display)
+            //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
         },
         nick : {
             params : [ 'nick$' ]
