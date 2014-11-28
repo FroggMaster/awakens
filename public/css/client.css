@@ -491,7 +491,7 @@ z-index:5;
     position: absolute;
 	display:none;
 	min-width: 175px;
-	max-width: 250px;
+	min-height: 175px;
 	height:300px;
 	cursor:default;
 	background-color:#555;
