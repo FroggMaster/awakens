@@ -486,24 +486,34 @@ z-index:5;
 
 .menu-container {
     position: absolute;
-    display:none;
-    min-width: 175px;
-    max-width: 250px;
-    height:300px;
-    cursor:default;
-    background-color:#555;
+	display:none;
+	min-width: 175px;
+	max-width: 250px;
+	height:300px;
+	cursor:default;
+	background-color:#555;
     z-index: 2;
 }
 
-.menu-container .help {
+.menu-container .footer{
 	position: absolute;
+	width:100%;
+	bottom:0;
 	text-align:center;
+	margin-bottom:10px;
+	display: inline-block;
+}
+
+.menu-container .menu-content {
+	overflow-y:auto;
+	height:208px;
+	width:100%;
+}
+
+.menu-container .help {
 	font: bold italic 20px/20px "Gill Sans", "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
 	color:white;
 	width:100%;
-	margin-bottom:10px;
-	bottom:0;
-	display: inline-block;
 }
 
 .menu-container .menu {
