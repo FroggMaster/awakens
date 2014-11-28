@@ -1,0 +1,20 @@
+{
+  "name": "spooks-chat",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/codefactor/spooks-chat.git"
+  },
+  "description": "A simple node.js chat server with some user management and games.",
+  "dependencies": {
+    "express": "^4.4.5",
+    "socket.io": "^1.0.6",
+    "compression": "^1.0.8",
+    "mysql": "^2.3.2",
+    "password-hash": "^1.2.2",
+    "jquery-deferred": "^0.3.0",
+    "underscore": "^1.6.0",
+    "emailjs": "^0.3.9",
+    "request": "^2.39.0"
+  }
+}

@@ -228,7 +228,7 @@ function createChannel(io, channelName) {
                 }
             },
             kick : {
-		role : 'mod',
+			role : 'mod',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     var user = indexOf(params.nick);
