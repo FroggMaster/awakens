@@ -486,15 +486,21 @@ z-index:5;
 
 .menu-container {
     position: absolute;
-    top: 0;
-    right: 0;
-    opacity: .7;
+    min-width: 175px;
+    height:300px;
+    background-color:#555;
     z-index: 2;
+    display:none;
 }
 
 .menu-container .help {
+	position: absolute;
+	left:50%;
+	margin-left:-50.5px;
 	width: 93px;
 	height: 25px;
+	margin-bottom:10px;
+	bottom:0;
 	display: inline-block;
 	background-image: url(img/help.png);
 }
@@ -504,32 +510,12 @@ z-index:5;
     cursor: pointer;
 }
 
-.menu-container .menu-content,
+.menu-container,
 .menu-container .menu {
 	clear: both;
     float: right;
     background-color: #555;
     color: white;
-}
-
-.menu-container .menu:hover,
-.menu-container .menu:active,
-.menu-container .menu:visited,
-.menu-container .menu {
-    padding: 5px 20px;
-}
-
-.menu-container .menu-content {
-    display: none;
-    background-color: #555;
-    min-width: 200px;
-    padding: 5px;
-    max-height: 700px;
-    overflow: auto;
-}
-
-.menu-container:hover .menu-content {
-    display: block;
 }
 
 /*\
@@ -541,16 +527,20 @@ z-index:5;
 #online-users .category {
     font-size: 1.4em;
     font-weight: bold;
+    text-align: center;
+    margin:15px;
+    border-bottom: 1px solid lightgrey;
 }
 
 #online-users ul {
     list-style: none;
-    padding: 0 0 0 20px;
     margin: 0;
+    margin-right: 30px;
 }
 
 #online-users li {
     font-weight: bold;
+    margin-bottom:5px;
 }
 
 /*\
