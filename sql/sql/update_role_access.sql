@@ -1,1 +1,0 @@
-ALTER TABLE `nodejs_chat`.`chat_users` ADD COLUMN `role` VARCHAR(45) NULL DEFAULT NULL  AFTER `pw_hash` ;
