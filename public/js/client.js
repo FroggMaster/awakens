@@ -461,7 +461,7 @@ $(function() {
     ONLINE.on('reset', function() {
         $('#online').html('');
     });
-    $('#online-users').draggable();
+    $('#online-users').draggable({ containment: '#messages' });
 });
 
 // ------------------------------------------------------------------
