@@ -486,11 +486,13 @@ z-index:5;
 
 .menu-container {
     position: absolute;
+    display:none;
     min-width: 175px;
+    max-width: 250px;
     height:300px;
+    cursor:default;
     background-color:#555;
     z-index: 2;
-    display:none;
 }
 
 .menu-container .help {
@@ -511,7 +513,7 @@ z-index:5;
 
 .menu-container,
 .menu-container .menu {
-	clear: both;
+    clear: both;
     float: right;
     background-color: #555;
     color: white;
