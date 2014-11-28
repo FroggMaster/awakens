@@ -445,6 +445,7 @@ color:gold;
     top: 0;
     width: 10px;
     margin-right: 3px;
+	z-index:20;
 }
 
 .shim {
