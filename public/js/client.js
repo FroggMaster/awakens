@@ -461,7 +461,7 @@ $(function() {
     ONLINE.on('reset', function() {
         $('#online').html('');
     });
-	$('#online-users').draggable({ containment: '#messages' });
+    $('#online-users').draggable();
 });
 
 // ------------------------------------------------------------------
@@ -566,7 +566,7 @@ $(function() {
         }
         return el;
     }
-	
+
     window.scrollToBottom = function() {
         var containerEl = $('#messages');
         var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
@@ -579,7 +579,6 @@ $(function() {
                 animation = null;
             }
         });
-		$("#messages").scrollTop($("#messages")[0].scrollHeight);
     }
 
     function appendMessage(el) {
@@ -756,8 +755,8 @@ $(function() {
 (function() {
     window.COMMANDS = {
         help : function() {
-			var display = $('.menu-container').css('display') == 'none' ? 'block' : 'none'
-			$('.menu-container').css('display',display)
+             var display = $('.menu-container').css('display') == 'none' ? 'block' : 'none'
+	     $('.menu-container').css('display',display)
             //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
         },
         nick : {
@@ -1243,7 +1242,6 @@ $(function() {
 // Custom Scroll Bar
 // ------------------------------------------------------------------
 
-/*
 (function() {
     var HAS_SCROLL;
 
@@ -1294,7 +1292,7 @@ $(function() {
             e.preventDefault();
         });
     }
-	
+
     function repositionScroll() {
         var messages = $('#messages');
         var scrollBar = $('#vertical-scroll-bar');
@@ -1319,10 +1317,7 @@ $(function() {
     } else {
         $('html').addClass('noScroll');
     }
-	
-	
 });
-*/
 
 // ------------------------------------------------------------------
 // Autocomplete
