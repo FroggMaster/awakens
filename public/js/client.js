@@ -579,7 +579,7 @@ $(function() {
                 animation = null;
             }
         });
-	$("#messages").animate({scrollTop:$("#messages")[0].scrollHeight}, '500', 'swing');
+		$("#messages").scrollTop($("#messages")[0].scrollHeight);
     }
 
     function appendMessage(el) {
