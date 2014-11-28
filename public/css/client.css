@@ -493,6 +493,7 @@ z-index:5;
 	min-width: 175px;
 	min-height: 175px;
 	height:300px;
+	min-height: 300px;
 	cursor:default;
 	background-color:#555;
     z-index: 2;
