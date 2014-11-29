@@ -277,7 +277,7 @@ $(function() {
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)|^\:(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
-		    if(parsed[0] == '/'){
+		    if(parsed[0][0] == '/'){
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
 		} else {
