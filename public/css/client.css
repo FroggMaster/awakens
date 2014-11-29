@@ -491,11 +491,10 @@ z-index:5;
     position: absolute;
 	display:none;
 	min-width: 175px;
-	min-height: 175px;
-	height:300px;
 	min-height: 300px;
+	height:300px;
 	cursor:default;
-	background-color:#555;
+	background-color:#171717;
     z-index: 2;
 }
 
@@ -529,8 +528,12 @@ z-index:5;
 .menu-container .menu {
     clear: both;
     float: right;
-    background-color: #555;
+    background-color: #171717;
+	border: 5px solid #2C2C2C;
+	border-radius:5px;
+	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
     color: white;
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKUlEQVQIW2PU1tb+zwAFHz9+ZGCECYA4/Pz8EAEYB6SQUUZG5j9IBgYAUXoO2P/TRPwAAAAASUVORK5CYII=) repeat;
 }
 
 /*\
