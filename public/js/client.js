@@ -1,7 +1,6 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'wrdp.info', 'puu.sh' ];
 var HighlightName;
-var block = [];
 
 // ------------------------------------------------------------------
 // Client
@@ -105,7 +104,7 @@ $(function() {
     });
 
     socket.on('message', function(msg) {
-	if(block.indexOf(msg.nick) == -1){
+	if(CLIENT.get('block').indexOf(msg.nick) == -1){
 		CLIENT.show(msg);
 	}
     });
@@ -214,7 +213,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -276,14 +275,15 @@ $(function() {
             var access_level = this.get('access_level');
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)|^\:(\w+) ?([\s\S]*)/.exec(input);
+				console.log(parsed)
                 if (parsed) {
-		    if(parsed[0][0] == '/'){
+					if(parsed[0][0] == '/'){
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
-		} else {
-		    input = parsed[4];
+					} else {
+					input = parsed[4];
                     var name = parsed[3].toLowerCase();
-		}
+					}
                     var cmd = COMMANDS[name];
                     if (cmd && access_level <= (cmd.access_level || 3)) {
                         var expect = cmd.params || [];
@@ -395,16 +395,19 @@ $(function() {
         });
     });
 	if (CLIENT.get('images') == null){
-	  CLIENT.set('images', 'on'); 
+		CLIENT.set('images', 'on'); 
 	}
 	if (CLIENT.get('bg') == null){
-	CLIENT.set('bg', 'on'); 
+		CLIENT.set('bg', 'on'); 
 	}
 	if (CLIENT.get('marquee') == null){
-	CLIENT.set('marquee', 'on'); 
+		CLIENT.set('marquee', 'on'); 
 	}
 	if (CLIENT.get('styles') == null){
-	CLIENT.set('styles', 'on'); 
+		CLIENT.set('styles', 'on'); 
+	}
+	if (CLIENT.get('block') == null){
+		CLIENT.set('block', ''); 
 	}
 });
 
@@ -970,11 +973,7 @@ toggled = function(att){
 }
 
 blocked = function(att){
-list = []
-    ONLINE.each(function(user) {
-        var user_name = user.get('nick');
-            list.push(user_name);
-    });
+	block = CLIENT.get('block').split(',')
 	if(block.indexOf(att) == -1){
 		block.push(att)
 		CLIENT.show(att + ' is now blocked')
@@ -984,9 +983,11 @@ list = []
             type : 'error-message'
         });
 	}
+	CLIENT.set('block',block.join(','))
 }
 unblocked = function(att){
-index = block.indexOf(att)
+	block = CLIENT.get('block').split(',')
+	index = block.indexOf(att)
 	if(block.indexOf(att) != -1){
 		block.splice(index,1)
 		CLIENT.show(att + ' is not longer blocked.')
@@ -996,6 +997,7 @@ index = block.indexOf(att)
             type : 'error-message'
         });
 	}
+	CLIENT.set('block',block.join(','))
 }
 
 // ------------------------------------------------------------------
