@@ -275,15 +275,14 @@ $(function() {
             var access_level = this.get('access_level');
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)|^\:(\w+) ?([\s\S]*)/.exec(input);
-				console.log(parsed)
                 if (parsed) {
-					if(parsed[0][0] == '/'){
-                    input = parsed[2];
-                    var name = parsed[1].toLowerCase();
-					} else {
-					input = parsed[4];
-                    var name = parsed[3].toLowerCase();
-					}
+		   if(parsed[0][0] == '/'){
+                      input = parsed[2];
+                      var name = parsed[1].toLowerCase();
+	           } else {
+		      input = parsed[4];
+                      var name = parsed[3].toLowerCase();
+	           }
                     var cmd = COMMANDS[name];
                     if (cmd && access_level <= (cmd.access_level || 3)) {
                         var expect = cmd.params || [];
