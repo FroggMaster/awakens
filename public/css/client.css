@@ -502,6 +502,7 @@ z-index:5;
 
 .menu-container .menu-content {
 	overflow-y:auto;
+	overflow-x:hidden;
 	height:70%;
 	width:100%;
 }
