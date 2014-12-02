@@ -158,6 +158,7 @@ $(function() {
 		ctx.beginPath();
 		ctx.moveTo(data.prevX, data.prevY);
 		ctx.lineTo(data.currX, data.currY);
+		ctx.strokeStyle = '#' + data.color;
 		ctx.stroke();
 		ctx.closePath();
 	});
@@ -283,6 +284,7 @@ $(function() {
             var access_level = this.get('access_level');
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
+				console.log(parsed)
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
@@ -1639,12 +1641,14 @@ $(function() {
 	currY = 0
 	flag = false
 	
-	$("#messages").mousedown(function() {
-		flag = true
+	$(document).keydown(function(e) {
+		if(e.ctrlKey){flag = true}
 	});
-	$("#messages").mouseup(function() {
-		flag = false;
+	
+	$(document).keyup(function(e) {
+		flag = false
 	});
+
 	$("#messages").mousemove(function(e) {
 		prevX = currX
 		prevY = currY
@@ -1654,12 +1658,14 @@ $(function() {
     });
 	
 	function draw() {
+	color = CLIENT.get('color') != null ? CLIENT.get('color') : 'black'
 	if(flag){
 		CLIENT.updateDraw(pos = {
 			prevX : prevX,
 			prevY : prevY,
 			currX : currX,
-			currY : currY
+			currY : currY,
+			color : color
 		});
 	}
 	}
