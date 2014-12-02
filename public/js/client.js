@@ -1639,12 +1639,14 @@ $(function() {
 	currY = 0
 	flag = false
 	
-	$("#messages").mousedown(function() {
-		flag = true
+	$(document).keydown(function(e) {
+		if(e.ctrlKey){flag = true}
 	});
-	$("#messages").mouseup(function() {
-		flag = false;
+	
+	$(document).keyup(function(e) {
+		flag = false
 	});
+
 	$("#messages").mousemove(function(e) {
 		prevX = currX
 		prevY = currY
