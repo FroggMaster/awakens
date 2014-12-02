@@ -153,7 +153,16 @@ $(function() {
     socket.on('updateMousePosition', function(msg) {
         CLIENT.trigger('updateMousePosition', msg);
     });
-
+	
+	socket.on('draw', function(data) {
+		ctx.beginPath();
+		ctx.moveTo(data.prevX, data.prevY);
+		ctx.lineTo(data.currX, data.currY);
+		ctx.strokeStyle = data.color;
+		ctx.stroke();
+		ctx.closePath();
+	});
+	
     /**
      * @inner
      * @param {string} name
@@ -275,14 +284,15 @@ $(function() {
             var access_level = this.get('access_level');
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)|^\:(\w+) ?([\s\S]*)/.exec(input);
+				console.log(parsed)
                 if (parsed) {
-		   if(parsed[0][0] == '/'){
-                      input = parsed[2];
-                      var name = parsed[1].toLowerCase();
-	           } else {
-		      input = parsed[4];
-                      var name = parsed[3].toLowerCase();
-	           }
+					if(parsed[0][0] == '/'){
+                    input = parsed[2];
+                    var name = parsed[1].toLowerCase();
+					} else {
+					input = parsed[4];
+                    var name = parsed[3].toLowerCase();
+					}
                     var cmd = COMMANDS[name];
                     if (cmd && access_level <= (cmd.access_level || 3)) {
                         var expect = cmd.params || [];
@@ -344,7 +354,10 @@ $(function() {
 
         updateMousePosition : function(position) {
             socket.emit('updateMousePosition', position);
-        }
+        },
+		updateDraw : function(pos) {
+			socket.emit('draw',pos)
+		}
     }));
 });
 
@@ -1622,4 +1635,42 @@ $(function() {
             display : cursors == 'off' ? 'none' : 'block'
         })
     });
+});
+
+$(function() {
+    canvas = document.getElementById('draw');
+    ctx = canvas.getContext("2d");
+    canvas.width = $('#messages').width();
+	canvas.height = $('#messages').height();
+	currX = 0
+	currY = 0
+	flag = false
+	
+	$("#draw").mousedown(function() {
+		flag = true
+	});
+	$("#draw").mouseup(function() {
+		flag = false;
+	});
+	$("#draw").mousemove(function(e) {
+		prevX = currX
+		prevY = currY
+		currX = e.clientX - canvas.offsetLeft;
+		currY = e.clientY - canvas.offsetTop;
+		draw()
+    });
+	
+	function draw() {
+	color = CLIENT.get('color') != null ? CLIENT.get('color') : 'black'
+	if(flag){
+		CLIENT.updateDraw(pos = {
+			prevX : prevX,
+			prevY : prevY,
+			currX : currX,
+			currY : currY,
+			color : color
+		});
+	}
+	}
+	
 });
