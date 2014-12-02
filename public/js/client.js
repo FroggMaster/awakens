@@ -157,7 +157,7 @@ $(function() {
 	
 	socket.on('draw', function(data) {
         data.time = new Date().getTime()
-        ctx.strokeStyle = 'rgba(0,0,0,0)';
+        ctx.strokeStyle = 'rgba(0,0,0,1)';
 		ctx.beginPath();
 		ctx.moveTo(data.prevX*canvas.width, data.prevY*canvas.height);
 		ctx.lineTo(data.currX*canvas.width, data.currY*canvas.height);
@@ -1250,6 +1250,10 @@ $(function() {
             var padding = $this.outerHeight(true) - $this.height();
             $this.css('height', (height - input.outerHeight(true) - padding) + 'px');
         });
+        $('.full-width').each(function() {
+            var $this = $(this);
+            $this.css('width', $(window).width() + 'px');
+        });
     }
     $(window).resize(resize);
     resize();
@@ -1614,7 +1618,7 @@ $(function() {
         if (el.length == 0) {
             var user = ONLINE.get(msg.id);
             var nick = $('<span class="nick"></span>').text(user.get('nick'));
-            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('#messages');
+            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('#mice');
             el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
             user.on('change:nick', function(m, newNick) {
                 nick.text(newNick);
@@ -1698,5 +1702,5 @@ $(function() {
                 ctx.closePath();
             });
         }
-    },50);
+    },500);
 });
