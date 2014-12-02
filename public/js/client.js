@@ -158,7 +158,7 @@ $(function() {
 		ctx.beginPath();
 		ctx.moveTo(data.prevX, data.prevY);
 		ctx.lineTo(data.currX, data.currY);
-		ctx.strokeStyle = data.color;
+		ctx.strokeStyle = '#' + data.color;
 		ctx.stroke();
 		ctx.closePath();
 	});
@@ -284,7 +284,6 @@ $(function() {
             var access_level = this.get('access_level');
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
-				console.log(parsed)
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
@@ -1641,13 +1640,13 @@ $(function() {
 	currY = 0
 	flag = false
 	
-	$("#draw").mousedown(function() {
+	$("#messages").mousedown(function() {
 		flag = true
 	});
-	$("#draw").mouseup(function() {
+	$("#messages").mouseup(function() {
 		flag = false;
 	});
-	$("#draw").mousemove(function(e) {
+	$("#messages").mousemove(function(e) {
 		prevX = currX
 		prevY = currY
 		currX = e.clientX - canvas.offsetLeft;
