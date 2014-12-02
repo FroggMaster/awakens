@@ -158,7 +158,6 @@ $(function() {
 		ctx.beginPath();
 		ctx.moveTo(data.prevX, data.prevY);
 		ctx.lineTo(data.currX, data.currY);
-		ctx.strokeStyle = '#' + data.color;
 		ctx.stroke();
 		ctx.closePath();
 	});
@@ -1658,14 +1657,12 @@ $(function() {
     });
 	
 	function draw() {
-	color = CLIENT.get('color') != null ? CLIENT.get('color') : 'black'
 	if(flag){
 		CLIENT.updateDraw(pos = {
 			prevX : prevX,
 			prevY : prevY,
 			currX : currX,
-			currY : currY,
-			color : color
+			currY : currY
 		});
 	}
 	}
