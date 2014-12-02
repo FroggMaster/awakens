@@ -158,7 +158,7 @@ $(function() {
 		ctx.beginPath();
 		ctx.moveTo(data.prevX, data.prevY);
 		ctx.lineTo(data.currX, data.currY);
-		ctx.strokeStyle = data.color;
+		ctx.strokeStyle = '#' + data.color;
 		ctx.stroke();
 		ctx.closePath();
 	});
