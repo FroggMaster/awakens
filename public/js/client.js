@@ -7,6 +7,7 @@ var HighlightName;
 // ------------------------------------------------------------------
 
 ONLINE = new Backbone.Collection();
+lines = []
 
 $(function() {
     var socket = io('/' + window.channel);
@@ -155,11 +156,14 @@ $(function() {
     });
 	
 	socket.on('draw', function(data) {
+        data.time = new Date().getTime()
+        ctx.strokeStyle = 'rgba(0,0,0,0)';
 		ctx.beginPath();
-		ctx.moveTo(data.prevX, data.prevY);
-		ctx.lineTo(data.currX, data.currY);
+		ctx.moveTo(data.prevX*canvas.width, data.prevY*canvas.height);
+		ctx.lineTo(data.currX*canvas.width, data.currY*canvas.height);
 		ctx.stroke();
 		ctx.closePath();
+        lines.push(data);
 	});
 	
     /**
@@ -1589,10 +1593,14 @@ function video(event, type, input) {
 
 $(function() {
     var position = null, x, y;
-    $(window).mousemove(function(e) {
-        x = e.clientX / $(window).width();
-        y = e.clientY / $(window).height();
+    $("body").mousemove(function(e) {
+        x = e.clientX / $(window).outerWidth();
+        y = e.clientY / $("#messages").outerHeight();
     });
+    $("body").mouseout(function(){
+        x = -1;
+        y = -1;
+    })
     setInterval(function() {
         if (!position || position.x != x || position.y != y) {
             CLIENT.updateMousePosition(position = {
@@ -1606,7 +1614,7 @@ $(function() {
         if (el.length == 0) {
             var user = ONLINE.get(msg.id);
             var nick = $('<span class="nick"></span>').text(user.get('nick'));
-            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
+            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('#messages');
             el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
             user.on('change:nick', function(m, newNick) {
                 nick.text(newNick);
@@ -1633,12 +1641,11 @@ $(function() {
 $(function() {
     canvas = document.getElementById('draw');
     ctx = canvas.getContext("2d");
-    canvas.width = $('#messages').width();
-	canvas.height = $('#messages').height();
+    canvas.width = $(window).outerWidth();
+	canvas.height = $('#messages').outerHeight();
 	currX = 0
 	currY = 0
 	flag = false
-	
 	$(document).keydown(function(e) {
 		if(e.ctrlKey){flag = true}
 	});
@@ -1650,20 +1657,46 @@ $(function() {
 	$("#messages").mousemove(function(e) {
 		prevX = currX
 		prevY = currY
-		currX = e.clientX - canvas.offsetLeft;
-		currY = e.clientY - canvas.offsetTop;
+		currX = e.clientX/canvas.width;
+		currY = e.clientY/canvas.height;
 		draw()
     });
 	
 	function draw() {
-	if(flag){
-		CLIENT.updateDraw(pos = {
-			prevX : prevX,
-			prevY : prevY,
-			currX : currX,
-			currY : currY
-		});
+    	if(flag){
+    		CLIENT.updateDraw(pos = {
+    			prevX : prevX,
+    			prevY : prevY,
+    			currX : currX,
+    			currY : currY
+    		});
+    	}
 	}
-	}
-	
+
+	setInterval(function(){
+        var oldest = new Date().getTime()-60000;
+        var change = false;
+        while(lines.length>0 && lines[0].time<oldest){
+            lines.splice(0, 1);
+            change = true;
+        }
+        if(lines.length || change){
+            console.log("test")
+            //Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.width = 1;
+            canvas.width = $(window).width();
+            canvas.height = $('#messages').outerHeight();
+            var now = new Date().getTime()
+            $.each(lines, function(index, data){
+                var alpha = 1-((now-data.time)-50000)/10000
+                ctx.strokeStyle = 'rgba(0,0,0,'+alpha+')';
+                ctx.beginPath();
+                ctx.moveTo(data.prevX*canvas.width, data.prevY*canvas.height);
+                ctx.lineTo(data.currX*canvas.width, data.currY*canvas.height);
+                ctx.stroke();
+                ctx.closePath();
+            });
+        }
+    },50);
 });
