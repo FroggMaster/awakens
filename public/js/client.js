@@ -1640,13 +1640,13 @@ $(function() {
 	currY = 0
 	flag = false
 	
-	$("#draw").mousedown(function() {
+	$("#messages").mousedown(function() {
 		flag = true
 	});
-	$("#draw").mouseup(function() {
+	$("#messages").mouseup(function() {
 		flag = false;
 	});
-	$("#draw").mousemove(function(e) {
+	$("#messages").mousemove(function(e) {
 		prevX = currX
 		prevY = currY
 		currX = e.clientX - canvas.offsetLeft;
