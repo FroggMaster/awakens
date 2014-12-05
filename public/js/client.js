@@ -1294,7 +1294,7 @@ $(function() {
         var shim = $('<div class="shim"></div>').on('selectstart', function(e) {
             e.preventDefault();
         });
-        var msgel = $('#messages').css('margin-right', -getScrollBarWidth()).css('overflowY', 'hidden');
+        var msgel = $('#messages').css('margin-right', -getScrollBarWidth()).css('overflowY', 'auto');
         $('#vertical-scroll-bar .handle').on('mousedown touchstart', function(start) {
             var top = msgel.prop('scrollTop');
             shim.appendTo('body');
