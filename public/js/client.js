@@ -1129,7 +1129,7 @@ parser = {
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
-        str = str.replace(/(\/\?)([^\|]+)\| ([^\|]+)\|?/gi, '<div><a target="_blank" href="http://$2">$3</a></div>');
+        str = str.replace(/(\/\?)([^\|]+)\| ([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
         // filters
         /*
          * str = str.replace(/(roody poo)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c
