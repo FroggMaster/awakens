@@ -1685,15 +1685,13 @@ $(function() {
             change = true;
         }
         if(lines.length || change){
-            console.log("test")
-            //Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             canvas.width = 1;
             canvas.width = $(window).width();
             canvas.height = $('#messages').outerHeight();
             var now = new Date().getTime()
             $.each(lines, function(index, data){
-                var alpha = 1-((now-data.time)-50000)/10000
+                var alpha = 1-((now-data.time)-((data.ttl || 60000) - (data.fade || 20000)))/(data.fade || 20000)
                 ctx.strokeStyle = 'rgba(0,0,0,'+alpha+')';
                 ctx.beginPath();
                 ctx.moveTo(data.prevX*canvas.width, data.prevY*canvas.height);
@@ -1702,5 +1700,5 @@ $(function() {
                 ctx.closePath();
             });
         }
-    },500);
+    },100);
 });
