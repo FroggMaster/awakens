@@ -62,10 +62,6 @@ function createChannel(io, channelName) {
 	user.name = nick.nick
 	});
 	
-	socket.on('draw', function(data){
-		roomEmit('draw',data);
-	});
-	
         socket.on('disconnect', function() {
             try {
                 if (user.nick) {
