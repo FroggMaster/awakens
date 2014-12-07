@@ -339,10 +339,8 @@ $(function() {
 
         updateMousePosition : function(position) {
             socket.emit('updateMousePosition', position);
-        },
-		updateDraw : function(pos) {
-			socket.emit('draw',pos)
-		}
+        }
+        
     }));
 });
 
