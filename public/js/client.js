@@ -7,7 +7,6 @@ var HighlightName;
 // ------------------------------------------------------------------
 
 ONLINE = new Backbone.Collection();
-lines = []
 
 $(function() {
     var socket = io('/' + window.channel);
@@ -154,17 +153,6 @@ $(function() {
     socket.on('updateMousePosition', function(msg) {
         CLIENT.trigger('updateMousePosition', msg);
     });
-	
-	socket.on('draw', function(data) {
-        data.time = new Date().getTime()
-        ctx.strokeStyle = 'rgba(0,0,0,1)';
-		ctx.beginPath();
-		ctx.moveTo(data.prevX*canvas.width, data.prevY*canvas.height);
-		ctx.lineTo(data.currX*canvas.width, data.currY*canvas.height);
-		ctx.stroke();
-		ctx.closePath();
-        lines.push(data);
-	});
 	
     /**
      * @inner
@@ -1597,14 +1585,11 @@ function video(event, type, input) {
 
 $(function() {
     var position = null, x, y;
-    $("body").mousemove(function(e) {
-        x = e.clientX / $(window).outerWidth();
-        y = e.clientY / $("#messages").outerHeight();
+    $(window).mousemove(function(e) {
+        x = e.clientX / $(window).width();
+        y = e.clientY / $(window).height();
     });
-    $("body").mouseout(function(){
-        x = -1;
-        y = -1;
-    })
+
     setInterval(function() {
         if (!position || position.x != x || position.y != y) {
             CLIENT.updateMousePosition(position = {
@@ -1619,7 +1604,7 @@ $(function() {
             var user = ONLINE.get(msg.id);
             if (user === undefined) return;
             var nick = $('<span class="nick"></span>').text(user.get('nick'));
-            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('#mice');
+            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
             el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
             user.on('change:nick', function(m, newNick) {
                 nick.text(newNick);
