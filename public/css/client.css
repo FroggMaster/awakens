@@ -596,7 +596,7 @@ z-index:5;
 
 .mouseCursor {
 	opacity : .5;
-	position: absolute;
+	position: fixed;
 	z-index: 1;
 }
 
