@@ -1617,6 +1617,7 @@ $(function() {
         var el = $('#cursor-' + msg.id);
         if (el.length == 0) {
             var user = ONLINE.get(msg.id);
+            if (user === undefined) return;
             var nick = $('<span class="nick"></span>').text(user.get('nick'));
             el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('#mice');
             el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
