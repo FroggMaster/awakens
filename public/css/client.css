@@ -558,6 +558,17 @@ opacity: 1.0;
     font-weight: bold;
     margin-bottom:5px;
 }
+#X{
+position: absolute;
+right: 5px;
+top: 5px;
+color: white;
+font-weight: bold;
+}
+
+#X:hover{
+color:red;
+}
 
 /*\
 |*|
