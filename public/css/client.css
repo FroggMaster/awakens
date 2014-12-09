@@ -489,6 +489,11 @@ z-index:5;
 	cursor:default;
 	background-color:#171717;
     z-index: 2;
+	opacity: 0.5;
+}
+
+.menu-container:hover {
+opacity: 1.0;
 }
 
 .menu-container .footer{

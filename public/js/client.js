@@ -441,7 +441,7 @@ $(function() {
 
 $(function() {
     function updateCount() {
-        $('#online-users .menu').text('Menu (' + ONLINE.size() + ')');
+        $('#online-users .category').text('Online (' + ONLINE.size() + ')');
     }
     ONLINE.on('add', function(user) {
         var li = $('<li></li>').attr({
