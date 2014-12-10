@@ -65,26 +65,6 @@ $(function() {
         });
     });
 
-    socket.on('c_nick', function(info) {
-        
-		CLIENT.show({
-        type : 'general-message',
-        message : info.id + ' is now known as ' + info.nick
-        });
-		if(info.id == CLIENT.get('nick')){
-		CLIENT.name = info.nick
-		socket.emit('update_nick', {
-            nick : info.nick,
-        });
-		} else if (info.id == CLIENT.name){
-		CLIENT.name = info.nick
-		socket.emit('update_nick', {
-            nick : info.nick,
-        });
-		}
-		
-    });
-
     socket.on('update', function(info) {
 	CLIENT.set(info);
     });
@@ -161,7 +141,7 @@ $(function() {
      * @param {Array.<string>} expect
      */
     function parseParams(name, input, expect) {
-        if (name == 'pm' || name == 'c_nick') {
+        if (name == 'pm') {
             var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -169,24 +149,22 @@ $(function() {
                 return {
                     nick : nick,
                     message : message,
-		    c_nick : message
                 };	
             }
         } else if(name == 'toggle'){
         	toggled(input)
         } else if(name == 'block'){
-		blocked(input)
-	} else if(name == 'unblock') {
-		unblocked(input)
-	} else if (name == 'kick' || name == "ban" || name == "channel_ban") {
+			blocked(input)
+		} else if(name == 'unblock') {
+			unblocked(input)
+		} else if (name == 'kick' || name == "ban" || name == "channel_ban") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
                 return {
                     nick : nick,
-                    message : message,
-        	    c_nick : message
+                    message : message
                 };  
             }
         } else {
@@ -484,6 +462,9 @@ $(function() {
         message.type = message.type || 'system-message';
         var el = buildMessage(message);
         switch (message.type) {
+			case 'embed-message':
+			appendMessage(el);
+			break
         /*
          * case 'personal-message': PM.show(message, el); break;
          */
@@ -526,6 +507,7 @@ $(function() {
             }
         }
         if (message.message) {
+		console.log(message)
             var parsed;
             switch (message.type) {
             case 'escaped-message':
@@ -539,19 +521,19 @@ $(function() {
             case 'elbot-response':
                 parsed = message.message;
                 break;
-	    case 'general-message':
-		parsed = parser.parse(message.message);
-		break;
-	    case 'note-message':
-		parsed = parser.parse(message.message);
-		break;	
-	case 'anon-message':
-		if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
-			parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
-		} else {
-			parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
-		}
-		break
+			case 'general-message':
+				parsed = parser.parse(message.message);
+				break;
+			case 'note-message':
+				parsed = parser.parse(message.message);
+				break;	
+			case 'anon-message':
+				if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
+					parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
+				} else {
+					parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
+				}
+				break
             default:
                 parsed = parser.parseLinks(message.message);
                 break;
@@ -925,10 +907,6 @@ $(function() {
         elbot : {
             params : [ 'message$' ]
         },
-	c_nick : {
-	    role : 'super',
-	    params : [ 'nick|c_nick' ]
-	},
 	anon : {
 	    params : [ 'message$' ]
 	},
@@ -1116,6 +1094,8 @@ parser = {
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         str = str.replace(/(\/\?)([^\|]+)\| ([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
+		//embed
+		str = str.replace(/EMBED\+\+\+(\S*) (.*)/i, '$1');
         // filters
         /*
          * str = str.replace(/(roody poo)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c
@@ -1205,7 +1185,7 @@ parser = {
                 }
             }
         
-
+		
         str = str.replace(/<a [^>]*href="[^"]*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*liveleak.com\/ll_embed\?f=(\w+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'liveleak\', \'$1\')" class="show-video">[video]</a>');
@@ -1497,6 +1477,8 @@ function video(event, type, input) {
         break;
     case 'ustream':
         embed = '<iframe src="//www.ustream.tv/embed/' + input + '?v=3&amp;wmode=direct" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+	case 'embed':
+		embed = '<iframe width="100%" height="100%" src="' + input + '" frameborder="0" allowfullscreen></iframe>';
         break;
     }
     var videoOverlay = $('.video-overlay');

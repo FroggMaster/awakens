@@ -393,8 +393,8 @@ color:white;
     src: url(fonts/BlackWidow.ttf);
 }
 @font-face {
-    font-family: "ScreamAgain";
-    src: url(fonts/ScreamAgain.ttf);
+    font-family: "sleek";
+    src: url(fonts/sleek.ttf);
 }
 @font-face {
     font-family: "OctoberCrow";
@@ -613,7 +613,7 @@ color:red;
 .mouseCursor {
 	opacity : .5;
 	position: fixed;
-	z-index: 1;
+	z-index: 0;
 }
 
 .mouseCursor .nick {
