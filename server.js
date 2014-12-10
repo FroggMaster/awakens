@@ -58,10 +58,6 @@ function createChannel(io, channelName) {
 
         log.info('New connection');
 	
-	socket.on('update_nick', function(nick){
-	user.name = nick.nick
-	});
-	
         socket.on('disconnect', function() {
             try {
                 if (user.nick) {
@@ -499,26 +495,6 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-		c_nick : {
-			role : 'super',
-			params : [ 'nick', 'c_nick' ],
-			handler : function(dao, dbuser, params) {
-				dao.findUser(params.c_nick).then(function(Nbuser) {
-						
-					if (Nbuser == null) {
-						dao.createUser(params.c_nick, user.remote_addr)
-					} 
-					dao.findUser(params.nick).then(function(dbuser) {
-						
-					roomEmit('c_nick', {
-                        		  id : params.nick,
-                        		  nick : params.c_nick
-						});
-							
-					})
-				});
-			}
-		},
 		anon : {
 		params : [ 'message' ],
         		  handler : function(dao, dbuser, params) {
@@ -541,8 +517,8 @@ function createChannel(io, channelName) {
 				
 					user.part = message
 					socketEmit(socket, 'update', {
-                			       part : user.part
-                			});
+						part : user.part
+                	});
 					
 					return $.Deferred().resolve(true);
 				}
@@ -621,27 +597,7 @@ function createChannel(io, channelName) {
                             } else {
                                 errorMessage(msgs.muted);
                             }
-                        } else {
-                            if (dbuser.get('access_level') <= 3) {
-				if(user.name == undefined){
-					roomEmit('message', {
-						nick : user.nick,
-						flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
-						type : 'chat-message',
-						message : message.substring(0, settings.limits.message)
-					});
-					} else{
-						roomEmit('message', {
-						nick : user.name,
-						flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
-						type : 'chat-message',
-						message : message.substring(0, settings.limits.message)
-					});									
-					}
-                            } else {
-                                errorMessage(msgs.muted);
-                            }
-                        }
+                        } 
                         }).always(function() {
                             done.resolve(true);
                         });
