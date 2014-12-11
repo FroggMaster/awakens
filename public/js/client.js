@@ -157,6 +157,8 @@ $(function() {
 			blocked(input)
 		} else if(name == 'unblock') {
 			unblocked(input)
+		} else if(name == 'embed'){
+			CLIENT.submit('EMBED+++' + input)
 		} else if (name == 'kick' || name == "ban" || name == "channel_ban") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
@@ -462,9 +464,6 @@ $(function() {
         message.type = message.type || 'system-message';
         var el = buildMessage(message);
         switch (message.type) {
-			case 'embed-message':
-			appendMessage(el);
-			break
         /*
          * case 'personal-message': PM.show(message, el); break;
          */
@@ -507,7 +506,6 @@ $(function() {
             }
         }
         if (message.message) {
-		console.log(message)
             var parsed;
             switch (message.type) {
             case 'escaped-message':
@@ -932,7 +930,8 @@ $(function() {
 	},
 	msg : {
 		 params : [ 'message$' ]
-	}
+	},
+	embed : function(){}
     };
 
     COMMANDS.colour = COMMANDS.color;
@@ -1095,7 +1094,7 @@ parser = {
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         str = str.replace(/(\/\?)([^\|]+)\| ([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
 		//embed
-		str = str.replace(/EMBED\+\+\+(\S*) (.*)/i, '$1');
+		str = str.replace(/EMBED\+\+\+(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         // filters
         /*
          * str = str.replace(/(roody poo)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c
@@ -1152,8 +1151,6 @@ parser = {
          * str = str.replace(/(edgy)+?/gi, '<div>&#35;cb0b0be&#35;971717d&#35;632323g&#35;2f2f2fy</div>');
          */
         // endfilters
-        nohtml = str.replace(/<\/?[^>]+(>|$)/g, "");
-	nohtml = nohtml.replace('/+','');
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
