@@ -174,7 +174,7 @@ function createChannel(io, channelName) {
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
-				var role = ['god','super','admin','mod','basic','mute','sub'];
+		    var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(params.message.trim())
                         msg+=": "+params.message.trim();
     				dao.findUser(user.nick).then(function(admin){
@@ -228,57 +228,57 @@ function createChannel(io, channelName) {
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     var user = indexOf(params.nick);
-					var role = ['god','super','admin','mod','basic','mute','sub'];
+		    var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(user != -1){
                         user = channel.online[user]
-						dao.findUser(params.nick).then(function(admin){
-						if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
-						if(!params.message.trim()){
-							socketEmit(user.socket, 'message', {
-								type : 'error-message',
-								message : msgs.get("kicked",dbuser.get('nick'))
-							});
-							user.socket.disconnect();
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,5);
-						}else{
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),5);
-							socketEmit(user.socket, 'message', {
-								type : 'error-message',
-								message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
-							});
-							user.socket.disconnect();
-                				}
-					} else if(dbuser.get('access_level') < admin.get('access_level')){
-						if(!params.message.trim()){
-							socketEmit(user.socket, 'message', {
-								type : 'error-message',
-								message : msgs.get("kicked",dbuser.get('nick'))
-							});
-							user.socket.disconnect();
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,5);
-						}else{
-							broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),5);
-							socketEmit(user.socket, 'message', {
-								type : 'error-message',
-								message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
-							});
-							user.socket.disconnect();
-						}
-					} else {
-					  errorMessage('You may not kick admins');
+			dao.findUser(params.nick).then(function(admin){
+				if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
+					if(!params.message.trim()){
+						socketEmit(user.socket, 'message', {
+							type : 'error-message',
+							message : msgs.get("kicked",dbuser.get('nick'))
+						});
+						user.socket.disconnect();
+						broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,5);
+					}else{
+						broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),5);
+						socketEmit(user.socket, 'message', {
+							type : 'error-message',
+							message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
+						});
+						user.socket.disconnect();
+                			}
+				} else if(dbuser.get('access_level') < admin.get('access_level')){
+					if(!params.message.trim()){
+						socketEmit(user.socket, 'message', {
+							type : 'error-message',
+							message : msgs.get("kicked",dbuser.get('nick'))
+						});
+						user.socket.disconnect();
+						broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick,5);
+					}else{
+						broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+params.message.trim(),5);
+						socketEmit(user.socket, 'message', {
+							type : 'error-message',
+							message : msgs.get("kicked_reason",params.message.trim(),dbuser.get('nick'))
+						});
+						user.socket.disconnect();
 					}
-					})
-				} else{
-					errorMessage(params.nick  +' is not online');
+				} else {
+				  errorMessage('You may not kick admins');
 				}
-				}
+				})
+			} else{
+				errorMessage(params.nick  +' is not online');
+			}
+		}
             },
             access : {
-				role : 'super',
+		role : 'super',
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
-				role = params.role;
-				if(role == 'god' ||  role == 'super' || role == 'admin' || role == 'mod' || role == 'basic' || role == 'sub'){
+		role = params.role;
+		if(role == 'god' ||  role == 'super' || role == 'admin' || role == 'mod' || role == 'basic' || role == 'mute' || role == 'sub'){
                     var done = $.Deferred();
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser) {
@@ -328,7 +328,7 @@ function createChannel(io, channelName) {
                 }
             },
             find_ip : {
-				role : 'super',
+		role : 'super',
                 params : [ 'remote_addr' ],
                 handler : function(dao, dbuser, params) {
                     return dao.find_ip(params.remote_addr).then(function(nicks) {
@@ -342,7 +342,7 @@ function createChannel(io, channelName) {
                 }
             },
             note : {
-		role : 'admin',
+		role : 'super',
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
@@ -355,7 +355,7 @@ function createChannel(io, channelName) {
                 }
             },
             topic : {
-				role : 'mod',
+		role : 'mod',
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message);
@@ -391,13 +391,13 @@ function createChannel(io, channelName) {
                 }
             },
             refresh_client : {
-				role : 'super',
+		role : 'super',
                 handler : function(dao, dbuser, params) {
                     roomEmit('refresh');
                 }
             },
             theme : {
-				role : 'admin',
+		role : 'admin',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
                     var theme_style = params.theme_style.substring(0, settings.limits.message)
@@ -420,7 +420,7 @@ function createChannel(io, channelName) {
                 }
             },
             reset_user : {
-				role : 'super',
+		role : 'super',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(user) {
@@ -442,7 +442,7 @@ function createChannel(io, channelName) {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message;
-					var role = ['god','super','admin','mod','basic','mute','sub'];
+		    var role = ['god','super','admin','mod','basic','mute','sub'];
                     if (message) {
                         if (role.indexOf(dbuser.get('role')) <= 5) {
                             var al = role.indexOf(dbuser.get('role'));
