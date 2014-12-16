@@ -801,7 +801,7 @@ $(function() {
             params : [ 'topic$' ]
         },
         note : {
-	    role : 'admin',
+	    role : 'super',
             params : [ 'message$' ]
         },
         clear : function() {
