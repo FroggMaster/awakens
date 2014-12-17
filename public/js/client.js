@@ -3,7 +3,7 @@ var BLACKLIST = [ 'wrdp.info', 'puu.sh' ];
 var HighlightName;
 
 // ------------------------------------------------------------------
-// Client test
+// Client
 // ------------------------------------------------------------------
 
 ONLINE = new Backbone.Collection();
