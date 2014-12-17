@@ -499,7 +499,7 @@ $(function() {
                     parser.getAllFonts(message.flair);
                 }
             }
-			$('<span class="hat"></span>').appendTo(content);
+	    $('<span class="hat"></span>').appendTo(content);
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(parsedFlair).appendTo(content);
             } else {
