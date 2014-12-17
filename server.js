@@ -593,7 +593,8 @@ function createChannel(io, channelName) {
                                     nick : user.nick,
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
-                                    message : message.substring(0, settings.limits.message)
+                                    message : message.substring(0, settings.limits.message),
+                                    hat : hat
                                 });
                             } else {
                                 errorMessage(msgs.muted);
