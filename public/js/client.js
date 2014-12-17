@@ -97,7 +97,7 @@ $(function() {
 
     socket.on('connect', function() {
         if (!first) {
-            //window.location.reload();
+            window.location.reload();
         }
         socket.emit('join', {
             nick : CLIENT.get('nick'),
