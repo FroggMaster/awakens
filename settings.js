@@ -102,9 +102,9 @@ module.exports = {
     },
 
     registrationEmail : {
-        from : 'Chat Server <donotreply@spooks.me>',
+        from : 'Chat Server|No-reply <thisspoopsme@gmail.com>',
         subject : 'Registering Chat Nickname',
-        text : 'You are registering the nickname {0}.\r\nTo verify your account, all you have to do is type out the following: /verify {1}'
+        text : 'You are registering the nickname {0}.\r\nTo verify your account, all you have to do is type out the following: /verify <password> {1}'
     },
 
     limits : {
@@ -114,12 +114,12 @@ module.exports = {
         part : 140
     },
 
-    // emailServer : {
-    // user : "username",
-    // password : "password",
-    // host : "smtp.your-email.com",
-    // ssl : true
-    // },
+    emailServer : {
+    user : "thisspoopsme@gmail.com",
+    password : "askkryforpassword",
+    host : "smtp.gmail.com",
+    ssl : true
+    },
 
     msgs : {
         get : function(key) {
@@ -153,7 +153,7 @@ module.exports = {
         change_password_login : 'You must register before you can change the password',
         alreadyBeingUsed : 'That nick is already being used by someone else',
         verified : 'You have verified the nick',
-        registered : 'You have registered the nick',
+        registered : 'You have registered the nick, Please check your email',
         registeredAndVerified : 'Your nick was registered. Please verify the nick by typing /verify (your password here)',
         unregistered : 'You have unregistered the nick',
         banlist : 'Globally banned: {0}',
