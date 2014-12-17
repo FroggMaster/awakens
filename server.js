@@ -582,7 +582,7 @@ function createChannel(io, channelName) {
             },
             message : function(dao, msg) {
                 var done = $.Deferred();
-                var hat = Math.random() < 0.001 ? 'G_hat' : 'C_hat'
+                var hat = Math.random() < 0.00009 ? 'G_hat' : 'C_hat'
                 if (user.nick) {
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
