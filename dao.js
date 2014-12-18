@@ -155,6 +155,7 @@ module.exports = function(callback) {
                 if (info.registered) {
                     return this.set({
                         access_level : 3,
+                        role : 'basic',
                         registered_on : null,
                         registered : 0,
                         verified : 0,
