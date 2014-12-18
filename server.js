@@ -583,13 +583,12 @@ function createChannel(io, channelName) {
             message : function(dao, msg) {
                 var done = $.Deferred();
                 if (user.nick) {
+                    var hat = Math.random() < 0.00009 ? 'G_hat' : Math.random() < 0.05 ? 'Antlers' : 'C_hat'
 		    if(hat == 'G_hat'){
 			var message = '$Creepster|/@/^/^/^/^/^/^/^#greenH̡͜͠O̶̵͢ ̵̢͠#222H́͘̕͞O̧͞ ̕̕͢#greenH͏̶̕Ơ̶̡\n͘͝#222T̢̨H̢̛̛͝E҉̴̨ ̵̴́͠͞#greenT̴̡I͏́͞M̛͢E̸̢̕͜ ̧͟#222I̴̧̧͜͝S͢͝ ̢̧̢͡U͠҉̢͟͝P͜͜͞͞O̶̢͏̕Ņ̴̀͏̀ ̵̢̛̀̀͟͡#greenÚ̴̢͡͞S͏̷͘͘.͘͝\ǹ̵͟͡P̛͢͢͞R̷̛͝͝E̶͢҉̛P̸̢͠A̧̧̡͠Ŕ̷̵͞Ȩ ̵̴#222Y͟͢͢͡͏O͏͟U̶̸̕͢R̶̛Ś̕͢E̸̸̛̕͝L̴̴̸͠F̀́ ̶͠͏͘#greenF̶̨͠Ǫ̵͟R҉̴͝ ̀͘Ţ̀̕͏H̴̛́E̴̷̛̕͢ ̷̀͏҉#222P̡̢̛͞͠A̧̧̛̛I̡͘N̡̨͟͏ ͢͏͠A̴͜N̸̢D̨͘͜͞ ̴̸̷͢#greenŞ͡͞U̸̷̴̢F͟͢͞F̀͝E̡͟R̷̢̧͠͠Į̵N̡̧G̨͟͞ ̕͞҉̧#222T̶͝H͏̶̡͢A̴̶͟͠Ţ͡͏̴ ̸̨͘͟͞I̴̛͝S̴ ̵̷͘͞#greenT́H̴҉͞E̶̷͟͠ ҉̀#red/^/^/^X̀͞-͞͏͜M̷͘̕̕A̸̵͘S̵̨̀||| ̧̀̀͞͠#222H̨̛̕͝Ơ̶͝͝L͏̸̵̷Į̷D͟A̧҉͏͏Y̶͞.̶͠';
 		    } else {
 			var message = msg && msg.message;
 		    }
-		   var hat = Math.random() < 0.05 ? 'Antlers' : 'C_hat'
-                   var hat = Math.random() < 0.00009 ? 'G_hat' : 'C_hat'
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                         if (user.name == undefined){
