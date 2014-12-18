@@ -499,7 +499,7 @@ $(function() {
                     parser.getAllFonts(message.flair);
                 }
             }
-            if(message.type == 'chat-message'){
+            if(message.type == 'chat-message' && message.hat != 'no hat'){
 		    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
             }
             if (parsedFlair) {
