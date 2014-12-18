@@ -499,8 +499,10 @@ $(function() {
                     parser.getAllFonts(message.flair);
                 }
             }
-            if(message.type == 'chat-message' && message.hat != 'no hat'){
+            if(message.type == 'chat-message' && message.hat != 'Dunce'){
 		    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+            } else if(message.hat == 'Dunce'){
+            	    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
             }
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(parsedFlair).appendTo(content);
