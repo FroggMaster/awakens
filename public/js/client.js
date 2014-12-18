@@ -505,7 +505,9 @@ $(function() {
             	$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
             } else if(message.hat == 'Crown'){
 		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
-	    } else{
+	    } else if(message.hat == 'Antlers'){
+		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
+	    }else{
 	    	$('<span class="hat"></span>').appendTo(content);
 	    }
             if (parsedFlair) {
