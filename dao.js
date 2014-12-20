@@ -388,8 +388,7 @@ module.exports = function(callback) {
             var params = [ channel, remote_addr, vHost ];
             if (nick) {
                 sql += '(banned=? or banned=?)';
-                params.push(nick);
-				params.push(vHost);
+                params.push(nick, vHost);
             } else {
                 sql += 'banned=?';
             }
