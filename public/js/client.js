@@ -193,7 +193,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block menu_top menu_left'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -427,11 +427,11 @@ $(function() {
         var li = $('<li></li>').attr({
             id : 'online-' + user.get('id')
         }).appendTo('#online');
-        var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
-        li.append(' ');
         $('<a class="pm_user">pm</a>').appendTo(li).click(function() {
             $('#input-message').focus().val('').val('/pm ' + user.get('nick') + '|');
         });
+        var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
+        li.append(' ');
         user.on('change:nick', function() {
             nick.text(user.get('nick'));
         });
@@ -444,8 +444,13 @@ $(function() {
     ONLINE.on('reset', function() {
         $('#online').html('');
     });
-    $('#online-users').draggable({ containment: '#messages' }).resizable({ handles: "all" });
-	$('.ui-draggable-handle').css('position','absolute');
+    $('#online-users').draggable({
+	containment: '#messages',
+	drag : function(){
+	CLIENT.set('menu_left',$(this).css('left'));
+	CLIENT.set('menu_top',$(this).css('top'));
+    }}).resizable({ handles: "all" });
+    $('.ui-draggable-handle').css('position','absolute');
 });
 
 // ------------------------------------------------------------------
@@ -752,6 +757,12 @@ $(function() {
         help : function() {
              var display = $('.menu-container').css('display') == 'none' ? 'block' : 'none'
 	     $('.menu-container').css('display',display)
+	     
+	     if(CLIENT.get('left') != 'undefined'){
+	     	$('.menu-container').css('left',CLIENT.get('menu_left'));
+	     	$('.menu-container').css('right',CLIENT.get('menu_right'));
+	     }
+	     
             //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
         },
         nick : {
