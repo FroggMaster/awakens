@@ -161,7 +161,7 @@ module.exports = {
         access_granted : 'User {0} now has level {1}',
         whoami : 'You are {0} with role {1} with access_level {2} with ip {3}',
         whois : '{0} has role {1} with access_level {2} with ip {3} and is {4}',
-        whoiss : '{0} has role {1}',
+        whoiss : '{0} has role {1} with vHost {1}',
         user_doesnt_exist : '{0} does not exist',
         find_ip : 'ip {0} uses: {1}',
         find_ip_empty : 'Could not find ip {0}',
@@ -185,7 +185,7 @@ module.exports = {
         temporary_ban : 'You are way too fast, you have been banned for a while, try again later',
         muted : 'You have been muted, please try again later.',
         registeredName : 'That nick is registered',
-	vhosttaken : '{0} has already been taken as a vHost.',
+		vhosttaken : '{0} has already been taken as a vHost.',
     },
 
     names : [ "Arthur", "ARX", "MOS", "RISC iX", "RISC OS", "AmigaOS", "Amiga Unix", "Apple DOS", "Apple Pascal", "ProDOS", "GS/OS", "Apple SOS", "Lisa Workshop", "LisaOS", "Mac OS", "Rhapsody", "NeXTSTEP", "OS X", "IBM AIX", "Newton OS", "iOS", "A/ROSE", "NetBSD", "Atari DOS", "Atari TOS", "XTS400", "BeOS", "UNIX", "MINI-UNIX", "BESYS", "Plan 9", "GCOS", "COS", "MACE", "KronOS", "NOS", "SCOPE", "SPIRO", "AOS", "RDOS", "CTOS", "HeartOS", "CP/M", "MP/M", "FlexOS", "CCI DOS", "Datapac", "DOS Plus", "Novell DOS", "HP-UX", "NonStop", "OS/8", "Ultrix", "Towns OS", "ChromeOS", "Chromium", "Android", "INTEGRITY", "HDOS", "HT-11", "Multics", "iRMX", "BESYS", "CTSS", "OS/360", "LynxOS", "MicroC/OS-III", "Xenix", "MSX-DOS", "MS-DOS", "Windows 1.0", "Windows 2.0", "Windows 3.0", "Windows 3.1", "Windows 3.2", "Windows 95", "Windows 98", "Windows Millenium Edition", "Windows NT 3.1", "Windows NT 3.5", "Windows NT 3.51", "Windows NT 4.0", "Windows 2000", "Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 8.1", "Windows 10", "Windows Phone 8", "Midori", "Netware", "Bada", "Tizen", "PikeOS", "TRS-DOS", "TRON", "EXEC I", "WPS", "Xerox", "Aegis", "Minix", "FreeBSD", "BSD", "PC-DOS", "Solaris", "JarisOS", "Tunis", "ILIOS", "FreeDOS", "Ubuntu", "Mint", "Arch", "Slackware", "Manjaro", "Debian", "Knoppix", "Kubuntu", "Xubuntu", "Lubuntu", "SteamOS", "Fedora", "CentOS", "Mandriva", "Gentoo", "openSUSE", "PClinuxOS", "Atomix" ]
