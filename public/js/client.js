@@ -956,7 +956,7 @@ $(function() {
 		 params : [ 'message$' ]
 	},
 	embed : function(){},
-	vhost : {
+	mask : {
 		params : [ 'vHost' ]
 	}
     };
