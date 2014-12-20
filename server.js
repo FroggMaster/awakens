@@ -319,7 +319,7 @@ function createChannel(io, channelName) {
                             var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                             return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('role'), dbuser.get('access_level'), dbuser.get('remote_addr'), reg));
                         } else if (dbuser && role.indexOf(fuser.get('role')) >= 2) {
-			    return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('role'),dbuser.get('vHost')));
+			    return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('role'), dbuser.get('access_level'), dbuser.get('vHost'), reg));
 			} else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
