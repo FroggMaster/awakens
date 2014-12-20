@@ -193,7 +193,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block menu_top menu_left'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block menu_top menu_left vHost'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -205,7 +205,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors marquee styles bg role part'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors marquee styles bg role part vHost'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -512,10 +512,9 @@ $(function() {
 		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
 	    } else if(message.hat == 'Antlers'){
 		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
-	    } else if(message.hat == 'G_hat'){
+	    }else if(message.hat == 'G_hat'){
 	    	$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-	    }
-	    else{
+	    }else{
 	    	$('<span class="hat"></span>').appendTo(content);
 	    }
             if (parsedFlair) {
@@ -956,7 +955,10 @@ $(function() {
 	msg : {
 		 params : [ 'message$' ]
 	},
-	embed : function(){}
+	embed : function(){},
+	vhost : {
+		params : [ 'vHost' ]
+	}
     };
 
     COMMANDS.colour = COMMANDS.color;

@@ -540,6 +540,22 @@ function createChannel(io, channelName) {
 					msg : message
 				})
 			}
+		},
+		vhost : {
+			params : [ 'vHost' ],
+			handler : function(dao, dbuser, params) {
+				dao.findvHost(params.vHost).then(function(host){
+					if(!host){
+						dbuser.set('vHost', params.vHost).then(function() {
+							socketEmit(socket, 'update', {
+								vHost : params.vHost
+							});
+						});
+					} else {
+						errorMessage(msgs.get('vhosttaken', params.vHost));
+					}
+				})
+			}
 		}
         };
 
@@ -584,7 +600,7 @@ function createChannel(io, channelName) {
                 var done = $.Deferred();
                 if (user.nick) {
                     var hat = Math.random() < 0.001 ? 'Crown' : Math.random() < 0.01 ? 'G_hat' : Math.random() < 0.05 ? 'Antlers' : 'C_hat'
-		    var message = msg && msg.message;
+			var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                         if (user.name == undefined){
@@ -912,6 +928,7 @@ function createChannel(io, channelName) {
                             nick : dbuser.get('nick'),
                             access_level : dbuser.get('access_level'),
                             role : dbuser.get('role'),
+							vHost : dbuser.get('vHost'),
                             password : password || null
                         });
                         if (online) {

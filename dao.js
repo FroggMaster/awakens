@@ -283,6 +283,22 @@ module.exports = function(callback) {
             return $.Deferred().reject('Invalid nick');
         }
     }
+	
+	/**
+    * @inner
+    * @param {string} vHost
+    * @returns {$.Promise<User>}
+    */
+	
+	function findvHost(vHost) {
+		    if (notEmptyString(vHost)) {
+				return one('select * from chat_users where vHost=?', [ vHost ]).then(function(info) {
+					return info ? User(info) : null;
+				});
+			} else {
+				return $.Deferred().reject('Invalid vHost');
+			}
+	}
 
     /**
      * @inner
@@ -353,6 +369,10 @@ module.exports = function(callback) {
         findUser : function(nick) {
             return findUser(nick);
         },
+		
+		findvHost : function(vHost) {
+			return findvHost(vHost);
+		},
 
         /**
          * @param {string} channel
