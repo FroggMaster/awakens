@@ -760,7 +760,7 @@ $(function() {
 	     
 	     if(CLIENT.get('left') != 'undefined'){
 	     	$('.menu-container').css('left',CLIENT.get('menu_left'));
-	     	$('.menu-container').css('right',CLIENT.get('menu_right'));
+	     	$('.menu-container').css('top',CLIENT.get('menu_top'));
 	     }
 	     
             //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
