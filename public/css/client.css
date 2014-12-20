@@ -520,8 +520,12 @@ opacity: 1.0;
 	border: 5px solid #2C2C2C;
 	border-radius:5px;
 	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
-    color: white;
+    	color: white;
 	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKUlEQVQIW2PU1tb+zwAFHz9+ZGCECYA4/Pz8EAEYB6SQUUZG5j9IBgYAUXoO2P/TRPwAAAAASUVORK5CYII=) repeat;
+}
+
+.pm_user{
+margin-right:5px;
 }
 
 /*\
