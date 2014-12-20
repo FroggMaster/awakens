@@ -574,7 +574,11 @@ function createChannel(io, channelName) {
                     if (nick) {
                         var done = $.Deferred();
                         var nick = msg && msg.nick.slice(0,100);
+                        var vHost = 'banned';
 			dao.findUser(nick).then(function(dbuser) {
+			  if(dbuser){
+			     vHost = dbuser.get('vHost');
+			  }
                           dao.isBanned(channelName, nick, user.remote_addr, dbuser.get('vHost')).then(function(isbanned) {
                             if (isbanned && nick != 'InfraRaven' && nick != 'sammich') {
                                 log.debug('Join request, but user is banned');
