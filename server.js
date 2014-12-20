@@ -541,7 +541,7 @@ function createChannel(io, channelName) {
 				})
 			}
 		},
-		vhost : {
+		mask : {
 			params : [ 'vHost' ],
 			handler : function(dao, dbuser, params) {
 				dao.findvHost(params.vHost).then(function(host){
