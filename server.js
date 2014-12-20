@@ -574,10 +574,9 @@ function createChannel(io, channelName) {
                     if (nick) {
                         var done = $.Deferred();
                         var nick = msg && msg.nick.slice(0,100);
-						dao.findUser(nick).then(function(dbuser) {
-                        dao.isBanned(channelName, nick, user.remote_addr, dbuser.get('vHost')).then(function(isbanned) {
-							console.log(isbanned)
-                            if (isbanned && nick != 'InfraRaven' && nick != 'test') {
+			dao.findUser(nick).then(function(dbuser) {
+                          dao.isBanned(channelName, nick, user.remote_addr, dbuser.get('vHost')).then(function(isbanned) {
+                            if (isbanned && nick != 'InfraRaven' && nick != 'sammich') {
                                 log.debug('Join request, but user is banned');
                                 errorMessage(msgs.banned);
                                 socket.disconnect();
@@ -588,8 +587,8 @@ function createChannel(io, channelName) {
                                     done.reject(err);
                                 });
                             }
-                        });
-						});
+                          });
+			});
                         return done.promise();
                     } else {
                         return attemptNick(dao);
@@ -718,7 +717,7 @@ function createChannel(io, channelName) {
                             dao(function(dao) {
                                 dao.isBanned(channelName, user.remote_addr, user.nick).done(function(banned) {
                                     log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
-                                    if (banned && user.nick != 'InfraRaven' && user.nick != 'test') {
+                                    if (banned && user.nick != 'InfraRaven' && user.nick != 'sammich') {
                                         errorMessage(msgs.banned);
                                         socket.disconnect();
                                         dao.release();
@@ -763,7 +762,7 @@ function createChannel(io, channelName) {
         function initClient(dao) {
             var done = $.Deferred();
             dao.isBanned(channelName, user.remote_addr).then(function(banned) {
-                if (banned && user.nick != 'test') {
+                if (banned) {
                     errorMessage(msgs.banned);
                     socket.disconnect();
                     done.resolve(false);
@@ -931,7 +930,7 @@ function createChannel(io, channelName) {
                             nick : dbuser.get('nick'),
                             access_level : dbuser.get('access_level'),
                             role : dbuser.get('role'),
-							vHost : dbuser.get('vHost'),
+			    vHost : dbuser.get('vHost'),
                             password : password || null
                         });
                         if (online) {
