@@ -427,7 +427,7 @@ $(function() {
         var li = $('<li></li>').attr({
             id : 'online-' + user.get('id')
         }).appendTo('#online');
-        $( "li" ).dblclick(function(e) {
+        $( "li" ).click(function(e) {
             $('#input-message').focus().val('').val('/pm ' + e.target.innerText + '|');
         });
         var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
