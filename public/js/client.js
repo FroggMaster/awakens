@@ -435,9 +435,9 @@ $(function() {
             id : 'online-' + user.get('id')
         }).appendTo('#online');
         var menu = [
-	   {'Kick':function(menuItem,menu) { CLIENT.submit('/kick ' + CLIENT.submit(this.children[0].textContent); } },
+	   {'Kick':function(menuItem,menu) { CLIENT.submit('/kick ' + CLIENT.submit(this.children[0].textContent)); } },
  	   $.contextMenu.separator,
-	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + CLIENT.submit(this.children[0].textContent); } }
+	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + CLIENT.submit(this.children[0].textContent)); } }
 	];
 	$(function() {
 	   $('li').contextMenu(menu,{theme:'vista'});
