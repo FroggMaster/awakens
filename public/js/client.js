@@ -431,23 +431,44 @@ $(function() {
     }
     
     ONLINE.on('add', function(user) {
-        var li = $('<li></li>').attr({
+        var li = $('<li class="users"></li>').attr({
             id : 'online-' + user.get('id')
         }).appendTo('#online');
-        var menu = [
-            $.contextMenu.separator,
-	   {'Kick':function(menuItem,menu) { CLIENT.submit('/kick ' + this.children[0].innerText); } },
-	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + this.children[0].innerText); } },
-	    $.contextMenu.separator,
-	   {'Block':function(menuItem,menu) { CLIENT.submit('/block ' + this.children[0].innerText); } },
-	   {'UnBlock':function(menuItem,menu) { CLIENT.submit('/unblock ' + this.children[0].innerText); } },
-	   {'Whois':function(menuItem,menu) { CLIENT.submit('/whois ' + this.children[0].innerText); } }
-	];
-	$(function() {
-	   $('li').contextMenu(menu,{theme:'vista'});
-	});
-        $( "li" ).click(function(e) {
-            $('#input-message').focus().val('').val('/pm ' + $.trim(e.target.textContent) + '|');
+		
+		
+		$(function(){
+		$.contextMenu({
+        selector: '.users', 
+        trigger: 'left',
+        items: {
+            "Kick": {
+			name: "Kick",
+			callback: function(){ CLIENT.submit('/kick '+this[0].innerText) }
+			},
+            "Ban": {
+			name: "Ban",
+			callback: function(){ CLIENT.submit('/ban '+this[0].innerText) }
+			},
+			"sep1": "---------",
+            "Block": {
+			name: "Block",
+			callback: function(){ CLIENT.submit('/block '+this[0].innerText) }
+			},
+            "UnBlock": {
+			name: "UnBlock",
+			callback: function(){ CLIENT.submit('/unblock '+this[0].innerText) }
+			},
+            "Whois": {
+			name: "Whois",
+			callback: function(){ CLIENT.submit('/whois '+this[0].innerText) }
+			}
+        }
+		});
+		});
+    
+		
+        $( document ).click(function(e) {
+            //$('#input-message').focus().val('').val('/pm ' + $.trim(e.target.textContent) + '|');
         });
         var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
