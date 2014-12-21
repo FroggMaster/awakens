@@ -439,6 +439,7 @@ $(function() {
 	$(function(){
 	$.contextMenu({
         selector: '.users', 
+        className: 'data-title',
         trigger: 'left',
         items: {
             "PM": {
