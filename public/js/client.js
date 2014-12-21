@@ -435,6 +435,8 @@ $(function() {
             id : 'online-' + user.get('id')
         }).appendTo('#online');
         var menu = [
+           {this.children[0].innerText:function(menuItem,menu) {} },
+            $.contextMenu.separator,
 	   {'Kick':function(menuItem,menu) { CLIENT.submit('/kick ' + this.children[0].innerText); } },
 	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + this.children[0].innerText); } },
 	    $.contextMenu.separator,
