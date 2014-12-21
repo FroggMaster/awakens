@@ -435,15 +435,15 @@ $(function() {
             id : 'online-' + user.get('id')
         }).appendTo('#online');
         var menu = [
-	   {'Kick':function(menuItem,menu) { CLIENT.submit('/kick ' + CLIENT.submit(this.children[0].textContent)); } },
+	   {'Kick':function(menuItem,menu) { CLIENT.submit('/kick ' + $.trim(CLIENT.submit(this.children[0].textContent))); } },
  	   $.contextMenu.separator,
-	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + CLIENT.submit(this.children[0].textContent)); } }
+	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + $.trim(CLIENT.submit(this.children[0].textContent))); } }
 	];
 	$(function() {
 	   $('li').contextMenu(menu,{theme:'vista'});
 	});
         $( "li" ).click(function(e) {
-            $('#input-message').focus().val('').val('/pm ' + e.target.textContent + '|');
+            $('#input-message').focus().val('').val('/pm ' + $.trim(e.target.textContent) + '|');
         });
         var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
