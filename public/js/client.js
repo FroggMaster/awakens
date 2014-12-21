@@ -436,8 +436,11 @@ $(function() {
         }).appendTo('#online');
         var menu = [
 	   {'Kick':function(menuItem,menu) { CLIENT.submit('/kick ' + this.children[0].innerText); } },
- 	   $.contextMenu.separator,
-	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + this.children[0].innerText); } }
+	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + this.children[0].innerText); } },
+	    $.contextMenu.separator,
+	   {'Block':function(menuItem,menu) { CLIENT.submit('/block ' + this.children[0].innerText); } },
+	   {'UnBlock':function(menuItem,menu) { CLIENT.submit('/unblock ' + this.children[0].innerText); } },
+	   {'Whois':function(menuItem,menu) { CLIENT.submit('/whois ' + this.children[0].innerText); } }
 	];
 	$(function() {
 	   $('li').contextMenu(menu,{theme:'vista'});
