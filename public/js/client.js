@@ -469,12 +469,11 @@ $(function() {
 		}
         }
 	});
+	$('li').click(function(e){
+	   $('.data-title').attr('data-menutitle', e.target.innerText);
+	});
 	});
     
-		
-        $( document ).click(function(e) {
-            //$('#input-message').focus().val('').val('/pm ' + $.trim(e.target.textContent) + '|');
-        });
         var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
         user.on('change:nick', function() {
