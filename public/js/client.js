@@ -434,6 +434,14 @@ $(function() {
         var li = $('<li></li>').attr({
             id : 'online-' + user.get('id')
         }).appendTo('#online');
+        var menu = [
+	   {'Kick':function(menuItem,menu) { CLIENT.submit('/kick ' + user.get('nick')); } },
+ 	   $.contextMenu.separator,
+	   {'Ban':function(menuItem,menu) { CLIENT.submit('/ban ' + user.get('nick')); } }
+	];
+	$(function() {
+	   $('li').contextMenu(menu,{theme:'vista'});
+	});
         $( "li" ).click(function(e) {
             $('#input-message').focus().val('').val('/pm ' + e.target.innerHTML + '|');
         });
