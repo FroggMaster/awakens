@@ -436,35 +436,39 @@ $(function() {
         }).appendTo('#online');
 		
 		
-		$(function(){
-		$.contextMenu({
+	$(function(){
+	$.contextMenu({
         selector: '.users', 
         trigger: 'left',
         items: {
+            "PM": {
+		name: "PM",
+		callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].innerText) + '|'); }
+		},
             "Kick": {
-			name: "Kick",
-			callback: function(){ CLIENT.submit('/kick '+this[0].innerText) }
-			},
+		name: "Kick",
+		callback: function(){ CLIENT.submit('/kick '+this[0].innerText) }
+		},
             "Ban": {
-			name: "Ban",
-			callback: function(){ CLIENT.submit('/ban '+this[0].innerText) }
-			},
-			"sep1": "---------",
+		name: "Ban",
+		callback: function(){ CLIENT.submit('/ban '+this[0].innerText) }
+		},
+		"sep1": "---------",
             "Block": {
-			name: "Block",
-			callback: function(){ CLIENT.submit('/block '+this[0].innerText) }
-			},
+		name: "Block",
+		callback: function(){ CLIENT.submit('/block '+this[0].innerText) }
+		},
             "UnBlock": {
-			name: "UnBlock",
-			callback: function(){ CLIENT.submit('/unblock '+this[0].innerText) }
-			},
+		name: "UnBlock",
+		callback: function(){ CLIENT.submit('/unblock '+this[0].innerText) }
+		},
             "Whois": {
-			name: "Whois",
-			callback: function(){ CLIENT.submit('/whois '+this[0].innerText) }
-			}
+		name: "Whois",
+		callback: function(){ CLIENT.submit('/whois '+this[0].innerText) }
+		}
         }
-		});
-		});
+	});
+	});
     
 		
         $( document ).click(function(e) {
