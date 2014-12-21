@@ -445,6 +445,7 @@ $(function() {
 		name: "PM",
 		callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].innerText) + '|'); }
 		},
+		"sep1": "---------",
             "Kick": {
 		name: "Kick",
 		callback: function(){ CLIENT.submit('/kick '+this[0].innerText) }
