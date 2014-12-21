@@ -524,10 +524,6 @@ opacity: 1.0;
 	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKUlEQVQIW2PU1tb+zwAFHz9+ZGCECYA4/Pz8EAEYB6SQUUZG5j9IBgYAUXoO2P/TRPwAAAAASUVORK5CYII=) repeat;
 }
 
-.pm_user{
-margin-right:5px;
-}
-
 /*\
 |*|
 |*| Online User List
@@ -551,6 +547,7 @@ margin-right:5px;
 #online-users li {
     font-weight: bold;
     margin-bottom:5px;
+    text-align: center;
 }
 #X{
 position: absolute;
