@@ -444,34 +444,34 @@ $(function() {
         items: {
             "PM": {
 		name: "PM",
-		callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].innerText) + '|'); }
+		callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
 		},
 		"sep1": "---------",
             "Kick": {
 		name: "Kick",
-		callback: function(){ CLIENT.submit('/kick '+this[0].innerText) }
+		callback: function(){ CLIENT.submit('/kick '+this[0].textContent) }
 		},
             "Ban": {
 		name: "Ban",
-		callback: function(){ CLIENT.submit('/ban '+this[0].innerText) }
+		callback: function(){ CLIENT.submit('/ban '+this[0].textContent) }
 		},
 		"sep2": "---------",
             "Block": {
 		name: "Block",
-		callback: function(){ CLIENT.submit('/block '+this[0].innerText) }
+		callback: function(){ CLIENT.submit('/block '+this[0].textContent) }
 		},
             "UnBlock": {
 		name: "UnBlock",
-		callback: function(){ CLIENT.submit('/unblock '+this[0].innerText) }
+		callback: function(){ CLIENT.submit('/unblock '+this[0].textContent) }
 		},
             "Whois": {
 		name: "Whois",
-		callback: function(){ CLIENT.submit('/whois '+this[0].innerText) }
+		callback: function(){ CLIENT.submit('/whois '+this[0].textContent) }
 		}
         }
 	});
 	$('li').click(function(e){
-	   $('.data-title').attr('data-menutitle', e.target.innerText);
+	   $('.data-title').attr('data-menutitle', e.target.textContent);
 	});
 	});
     
