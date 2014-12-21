@@ -549,6 +549,9 @@ opacity: 1.0;
     margin-bottom:5px;
     text-align: center;
 }
+#online-users li:hover {
+    text-decoration: underline;
+}
 #X{
 position: absolute;
 right: 5px;
