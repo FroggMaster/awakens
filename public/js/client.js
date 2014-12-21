@@ -454,7 +454,7 @@ $(function() {
 		name: "Ban",
 		callback: function(){ CLIENT.submit('/ban '+this[0].innerText) }
 		},
-		"sep1": "---------",
+		"sep2": "---------",
             "Block": {
 		name: "Block",
 		callback: function(){ CLIENT.submit('/block '+this[0].innerText) }
