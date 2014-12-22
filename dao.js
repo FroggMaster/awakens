@@ -385,7 +385,7 @@ module.exports = function(callback) {
                 return $.Deferred().resolve(true).promise();
             }
             var sql = 'select banned from chat_banned where (channel=? or channel is null) and ';
-            var params = [ channel, remote_addr, vHost ];
+            var params = [ channel, remote_addr ];
             if (nick) {
                 sql += '(banned=? or banned=?)';
                 params.push(nick, vHost);
