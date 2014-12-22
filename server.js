@@ -186,13 +186,11 @@ function createChannel(io, channelName) {
         		   } else {									
         		      showMessage(params.nick + ' is now banned gloablly');
                               broadcast(dao, msg, 3);
-                              user.socket.disconnect();
         		      return dao.ban(params.nick);
         		   }
         		   } else {
         		      showMessage(params.nick + ' is now banned gloablly');
                               broadcast(dao, msg, 3);
-                              user.socket.disconnect();
         		      return dao.ban(params.nick);
         		   }
         		 })
