@@ -564,11 +564,7 @@ function createChannel(io, channelName) {
                         var done = $.Deferred();
                         var nick = msg && msg.nick.slice(0,100);
                         var vHost = 'banned';
-			dao.findUser(nick).then(function(dbuser) {
-			  if(dbuser){
-			     vHost = dbuser.get('vHost');
-			  }
-                          dao.isBanned(channelName, nick, user.remote_addr, dbuser.get('vHost')).then(function(isbanned) {
+                          dao.isBanned(channelName, nick, user.remote_addr, user.vhost).then(function(isbanned) {
                             if (isbanned && nick != 'InfraRaven' && nick != 'sammich') {
                                 log.debug('Join request, but user is banned');
                                 errorMessage(msgs.banned);
@@ -581,7 +577,6 @@ function createChannel(io, channelName) {
                                 });
                             }
                           });
-			});
                         return done.promise();
                     } else {
                         return attemptNick(dao);
@@ -708,7 +703,7 @@ function createChannel(io, channelName) {
                         try {
                             log.debug('Received message: ', msg, args);
                             dao(function(dao) {
-                                dao.isBanned(channelName, user.remote_addr, user.nick).done(function(banned) {
+                                dao.isBanned(channelName, user.remote_addr, user.nick, user.vhost).done(function(banned) {
                                     log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
                                     if (banned && user.nick != 'InfraRaven' && user.nick != 'sammich') {
                                         errorMessage(msgs.banned);
@@ -918,6 +913,7 @@ function createChannel(io, channelName) {
                     dbuser.set('remote_addr', user.remote_addr).then(function() {
                         var online = !!user.nick;
                         user.nick = dbuser.get('nick');
+                        user.vhost = dbuser.get('vHost');
                         socketEmit(socket, 'update', {
                             id : socket.id,
                             nick : dbuser.get('nick'),
