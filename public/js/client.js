@@ -1,6 +1,5 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'wrdp.info', 'puu.sh' ];
-var HighlightName;
 
 // ------------------------------------------------------------------
 // Client
@@ -18,7 +17,6 @@ $(function() {
 
     socket.on('join', function(user) {
         ONLINE.add(user);
-        HighlightName = CLIENT.get('nick')
         CLIENT.show({
             type : 'general-message',
             message : user.nick + ' has joined'
@@ -331,6 +329,7 @@ $(function() {
 $(function() {
     var blurred = false;
     var unread = 0;
+	var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
     function updateTitle() {
         var topic = CLIENT.get('topic');
         if (topic) {
@@ -346,11 +345,15 @@ $(function() {
         unread = 0;
     });
     $(window).focus(function() {
+		$("#icon").attr("href","http://spooks.me/icon.ico");
         blurred = false;
         updateTitle();
     });
     CLIENT.on('message', function(message) {
         if (blurred) {
+			if(check.test(message.message)){
+			$("#icon").attr("href","http://spooks.me/icon2.ico");
+			}
             unread++;
             updateTitle();
         }
@@ -523,16 +526,12 @@ $(function() {
         }
     });
     
-    CLIENT.on('change:nick', function() {
-    HighlightName = CLIENT.get('nick')
-    });
-
     function buildMessage(message) {
         var el = $('<div class="message"></div>');
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
         var role = ['god','super','admin','mod','basic','mute','sub'];
-        var check = new RegExp('\\b'+ HighlightName +'\\b',"gi");
+        var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
 	if(check.test(message.message)){
 	el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
 	} else{
