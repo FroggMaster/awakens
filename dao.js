@@ -387,7 +387,7 @@ module.exports = function(callback) {
             var sql = 'select banned from chat_banned where (channel=? or channel is null) and ';
             var params = [ channel, remote_addr ];
             if (nick) {
-                sql += '(banned=? or banned=?)';
+                sql += '(banned=? or banned=? or banned=?)';
                 params.push(nick, vHost);
             } else {
                 sql += 'banned=?';
