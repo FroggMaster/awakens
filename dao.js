@@ -381,7 +381,7 @@ module.exports = function(callback) {
          * @returns {boolean}
          */
         isBanned : function(channel, remote_addr, nick, vHost) {
-            if (this.isFileBanned(remote_addr) || this.isFileBanned(nick)) {
+            if (this.isFileBanned(remote_addr) || this.isFileBanned(nick) || this.isFileBanned(vHost)) {
                 return $.Deferred().resolve(true).promise();
             }
             var sql = 'select banned from chat_banned where (channel=? or channel is null) and ';
