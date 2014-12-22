@@ -175,6 +175,7 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
 		    var role = ['god','super','admin','mod','basic','mute','sub'];
+		    var user = params.nick
                     if(params.message.trim())
                      msg+=": "+params.message.trim();
     		      dao.findUser(user.nick).then(function(admin){
@@ -185,11 +186,13 @@ function createChannel(io, channelName) {
         		   } else {									
         		      showMessage(params.nick + ' is now banned gloablly');
                               broadcast(dao, msg, 3);
+                              user.socket.disconnect();
         		      return dao.ban(params.nick);
         		   }
         		   } else {
         		      showMessage(params.nick + ' is now banned gloablly');
                               broadcast(dao, msg, 3);
+                              user.socket.disconnect();
         		      return dao.ban(params.nick);
         		   }
         		 })
