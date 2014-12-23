@@ -403,8 +403,8 @@ $(function() {
         }
     });
     CLIENT.on('change:theme_style', function(m, theme_style) {
-		if (theme) {
-            $('body').attr("class", theme);
+		if (theme_style) {
+            $('body').attr("class", theme_style);
         } else {
             $('body').attr('class', '');
         }
