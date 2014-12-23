@@ -395,7 +395,7 @@ $(function() {
 
 $(function() {
     CLIENT.on('change:theme', function(m, theme) {
-        if (theme && CLIENT.get('bg') == 'on' && theme_style != 'default') {
+        if (theme && CLIENT.get('bg') == 'on' && theme != 'default') {
             $('#messages').css('background', theme_style);
             CLIENT.set('old', theme_style);
         } else {
