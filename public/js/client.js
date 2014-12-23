@@ -396,10 +396,10 @@ $(function() {
 $(function() {
     CLIENT.on('change:theme', function(m, theme) {
         if (theme && CLIENT.get('bg') == 'on' && theme != 'default') {
-            $('#messages').css('background', theme_style);
-            CLIENT.set('old', theme_style);
+            $('#messages').css('background', theme);
+            CLIENT.set('old', theme);
         } else {
-	    CLIENT.set('old', theme_style);
+	    CLIENT.set('old', theme);
         }
     });
     CLIENT.on('change:theme_style', function(m, theme_style) {
