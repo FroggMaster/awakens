@@ -528,14 +528,17 @@ $(function() {
     
     function buildMessage(message) {
         var el = $('<div class="message"></div>');
+		var sound;
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
         var role = ['god','super','admin','mod','basic','mute','sub'];
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
 	if(check.test(message.message)){
 	el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
+	sound = 'name'
 	} else{
         el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
+		sound = 'message'
 	}
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
@@ -610,6 +613,7 @@ $(function() {
             }
             audio.play();
         }
+		 playAudio(sound);
         return el;
     }
 
@@ -631,7 +635,6 @@ $(function() {
         var containerEl = $('#messages');
         var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
         el.appendTo(containerEl);
-        playAudio('message');
         var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         if (scrolledToBottom && scrollDelta > 0) {
             scrollToBottom();
@@ -1487,7 +1490,8 @@ $(function() {
 
 (function() {
     var SOUNDS = {
-        message : '/audio/Bing.mp3'
+        message : '/audio/Bing.mp3',
+		name : '/audio/Bwoop.wav'
     };
     for ( var sound in SOUNDS) {
         var html = [ '<audio id="', sound, '_audio"><source src="', SOUNDS[sound], '"></source><embed width=0 height=0 src="', SOUNDS[sound], '"></audio>' ].join('');
