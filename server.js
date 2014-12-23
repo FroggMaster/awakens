@@ -393,7 +393,7 @@ function createChannel(io, channelName) {
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
                     var theme_style = params.theme_style.substring(0, settings.limits.message)
-                    return dao.setChannelInfo(channelName, 'theme_style', theme_style).then(function() {
+                    return dao.setChannelInfo(channelName, 'theme', theme_style).then(function() {
                         roomEmit('update', {
                             theme_style : theme_style
                         });

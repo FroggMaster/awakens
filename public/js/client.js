@@ -395,18 +395,18 @@ $(function() {
 
 $(function() {
     CLIENT.on('change:theme', function(m, theme) {
-        if (theme) {
-            $('body').attr("class", theme);
-        } else {
-            $('body').attr('class', '');
-        }
-    });
-    CLIENT.on('change:theme_style', function(m, theme_style) {
         if (theme_style && CLIENT.get('bg') == 'on' && theme_style != 'default') {
             $('#messages').css('background', theme_style);
             CLIENT.set('old', theme_style);
         } else {
 	    CLIENT.set('old', theme_style);
+        }
+    });
+    CLIENT.on('change:theme_style', function(m, theme_style) {
+		if (theme) {
+            $('body').attr("class", theme);
+        } else {
+            $('body').attr('class', '');
         }
     });
     CLIENT.on('change:bg', function(m, bg){
@@ -953,7 +953,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic marquee styles bg part block'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic marquee styles bg part block theme'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
