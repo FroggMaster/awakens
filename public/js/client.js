@@ -913,8 +913,14 @@ $(function() {
             handler : function(params) {
                 if (params.color == 'default' || params.color == 'none') {
                     params.color = null;
+                } else if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(params.color)){
+                    CLIENT.set('color', params.color);
+                } else {
+                    CLIENT.show({
+                        type : 'error-message',
+                        message : 'I don\'t think that is a color.' + 'http://en.wikipedia.org/wiki/Web_colors'
+                    });
                 }
-                CLIENT.set('color', params.color);
             }
         },
         flair : {
