@@ -38,7 +38,11 @@ function createChannel(io, channelName) {
 
 	socket.on('SetPart', function(parts){
 		user.part = parts
-	})
+	});
+	
+	socket.on('custom', function(hat){
+		user.hat = hat
+	});
 	
         var log = {};
         [ 'error', 'info', 'debug' ].forEach(function(lvl) {
@@ -589,7 +593,11 @@ function createChannel(io, channelName) {
             message : function(dao, msg) {
                 var done = $.Deferred();
                 if (user.nick) {
-                    var hat = Math.random() < 0.001 ? 'Crown' : Math.random() < 0.01 ? 'G_hat' : Math.random() < 0.05 ? 'Antlers' : 'C_hat'
+					if(!user.hat){
+						var hat = Math.random() < 0.001 ? 'Crown' : Math.random() < 0.01 ? 'G_hat' : Math.random() < 0.05 ? 'Antlers' : 'C_hat'
+					} else {
+						hat = user.hat
+					}
 			var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
