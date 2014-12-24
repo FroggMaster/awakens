@@ -1125,7 +1125,7 @@ parser = {
         return str;
     },
     isColor : function(str){
-	check = new RegExp("/(^#[0-9A-F]{6})|(^#[0-9A-F]{3})|(#" + this.coloreg + ")","g");
+	check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
 	return check.test(str)
     },
     parse : function(str) {
