@@ -913,7 +913,7 @@ $(function() {
             handler : function(params) {
                 if (params.color == 'default' || params.color == 'none') {
                     params.color = null;
-                } else if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(params.color)){
+                } else if (parser.isColor(params.color)){
                     CLIENT.set('color', params.color);
                 } else {
                     CLIENT.show({
@@ -1123,6 +1123,10 @@ parser = {
             str = str.replace(this.repslsh, escs[i]);
         }
         return str;
+    },
+    isColor : function(str){
+	check = new RegExp("/(^#[0-9A-F]{6})|(^#[0-9A-F]{3})|(#" + this.coloreg + ")","g");
+	return check.test(str)
     },
     parse : function(str) {
         // escaping shit
