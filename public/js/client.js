@@ -918,7 +918,7 @@ $(function() {
                 } else {
                     CLIENT.show({
                         type : 'error-message',
-                        message : 'I don\'t think that is a color. ' + parser.parseLinks('http://en.wikipedia.org/wiki/Web_colors')
+                        message : 'I don\'t think that is a color. http://en.wikipedia.org/wiki/Web_colors'
                     });
                 }
             }
