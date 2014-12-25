@@ -1074,9 +1074,7 @@ parser = {
             this.loadedFonts[family] = true;
             var protocol = 'https:' == document.location.protocol ? 'https' : 'http';
             var url = protocol + '://fonts.googleapis.com/css?family=' + encodeURIComponent(family);
-            if(parser.isValidURL(url)){
         	 $('<link rel="stylesheet" href="' + url + '">').appendTo('head');
-            }
         }
     },
     getAllFonts : function(str) {
@@ -1129,25 +1127,6 @@ parser = {
     isColor : function(str){
 	check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
 	return check.test(str)
-    },
-    isValidURL : function(url) {
-    var encodedURL = encodeURIComponent(url);
-    var isValid = false;
-
-    $.ajax({
-      url: "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodedURL + "%22&format=json",
-      type: "get",
-      async: false,
-      dataType: "json",
-      success: function(data) {
-        isValid = data.query.results != null;
-      },
-      error: function(){
-        isValid = false;
-      }
-    });
-
-    return isValid;
     },
     parse : function(str) {
         // escaping shit
