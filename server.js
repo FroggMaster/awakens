@@ -561,7 +561,15 @@ function createChannel(io, channelName) {
          */
         _.each({
             join : function(dao, msg) {
-                if (!user.nick) {
+		user.tabs = 0
+		if(channel.online.length > 0){
+		   for (i = 0; i < channel.online.length; i++) { 
+		      if(channel.online[i].remote_addr == user.remote_addr){
+		   	user.tabs++
+		       }
+		    }
+		}          
+                if (!user.nick && user.tabs < 3) {
                     var nick = msg && msg.nick;
                     var pwd = msg && msg.password;
                     if (nick) {
@@ -586,6 +594,7 @@ function createChannel(io, channelName) {
                         return attemptNick(dao);
                     }
                 } else {
+                    errorMessage("Too many tabs open!");
                     log.debug('Join request, but user already online');
                     return $.Deferred().resolve(false).promise();
                 }
