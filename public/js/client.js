@@ -1190,7 +1190,7 @@ parser = {
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         if(CLIENT.get('js_links') == 'on'){
-	  str = str.replace(/(\/\?)([^\|]+)\| ([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
+	  str = str.replace(/(\/\?)([^\|]+)\| ([^\|]+)\|?/gi, '<div>$3 <a target="_blank" href="$2">[Run Javascript]</a></div>');
         }
 		//embed
 		str = str.replace(/EMBED\+\+\+(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
