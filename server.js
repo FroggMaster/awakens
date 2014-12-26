@@ -631,7 +631,7 @@ function createChannel(io, channelName) {
                 var done = $.Deferred();
                 if (user.nick) {
 		if(!user.hat){
-			var hat = Math.random() < 0.001 ? 'Crown' : Math.random() < 0.01 ? 'EdgyNewyear' : Math.random() < 0.05 ? 'Dunce' : 'Newyear'
+			var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.01 ? 'EdgyNewyear' : Math.random() < 0.05 ? 'Dunce' : 'Newyear'
 		} else {
 			hat = user.hat
 		}
