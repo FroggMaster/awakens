@@ -37,7 +37,7 @@ body {
 .hat{
 	position: absolute;
 	top:-23px;
-	left:30px;
+	margin-left:-30px;
 	width:50px;
 	height:50px;
 	background-size: 30px 20px;
