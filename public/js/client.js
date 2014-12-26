@@ -1008,12 +1008,12 @@ $(function() {
 	safe : function(){
 		CLIENT.set('bg','off'),
 		CLIENT.set('images','off'),
-		CLIENT.set('mute_speak','off')
+		CLIENT.set('mute_speak','on')
 	},
 	unsafe : function(){
 		CLIENT.set('bg','on'),
 		CLIENT.set('images','on'),
-		CLIENT.set('mute_speak','on')
+		CLIENT.set('mute_speak','off')
 	},
 	msg : {
 		 params : [ 'message$' ]
