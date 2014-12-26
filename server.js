@@ -563,13 +563,13 @@ function createChannel(io, channelName) {
 			      setTimeout(function(){
 			         if(!channel.online[to].alive){
 			            toSocket.disconnect();
-			            showMessage(params.user + ' was a ghost!');
+			            showMessage(params.user + ' was a ghost! ' + Object.keys(io.eio.clients));
 			         } else {
 			            showMessage(params.user + ' isn\'t a ghost.');
 			         }
 			      },1000);
 			   } else {
-                              done.resolve(false, msgs.pmOffline);
+                              errorMessage(params.user + 'isn\t online.');
                 	   }
 			}
 		}
