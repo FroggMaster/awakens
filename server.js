@@ -556,14 +556,21 @@ function createChannel(io, channelName) {
 		ghost : {
 			params : [ 'user' ],
 			handler : function(dao, dbuser, params) {
-				var to = indexOf(params.user);
-				var toSocket = channel.online[to].socket;
-				toSocket.emit('alive');
-				setTimeout(function(){
-				   if(!channel.online[to].alive){
-				      toSocket.disconnect();
-				   }
-				},1000);
+			   var to = indexOf(params.user);
+			   if(to >= 0){
+			      var toSocket = channel.online[to].socket;
+			      toSocket.emit('alive');
+			      setTimeout(function(){
+			         if(!channel.online[to].alive){
+			            toSocket.disconnect();
+			            showMessage(params.user + ' was a ghost!');
+			         } else {
+			            showMessage(params.user + ' isn\'t a ghost.');
+			         }
+			      },1000);
+			   } else {
+                              done.resolve(false, msgs.pmOffline);
+                	   }
 			}
 		}
         };
