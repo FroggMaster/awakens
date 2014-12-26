@@ -562,8 +562,13 @@ function createChannel(io, channelName) {
 			      toSocket.emit('alive');
 			      setTimeout(function(){
 			         if(!channel.online[to].alive){
-			            toSocket.disconnect();
-			            showMessage(params.user + ' was a ghost! ' + Object.keys(io.eio.clients));
+				    roomEmit('left', {
+				       id : toSocket,
+				       nick : channel.online[to].nick,
+				       part : 'i\'m a spooky ghost!'
+				    });
+				    channel.online.splice(to, 1);
+				    toSocket.disconnect();
 			         } else {
 			            showMessage(params.user + ' isn\'t a ghost.');
 			         }
