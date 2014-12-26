@@ -565,9 +565,9 @@ $(function() {
 	    } else if(message.hat == 'G_hat'){
 	    	$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
 	    } else if(message.hat == 'Newyear'){
-		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 35px 30px;top:-26px"></span>').appendTo(content);
+		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
 	    } else if(message.hat == 'EdgyNewyear'){
-		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 35px 30px;top:-26px"></span>').appendTo(content);
+		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
 	    } else{
 	    	$('<span class="hat"></span>').appendTo(content);
 	    }
