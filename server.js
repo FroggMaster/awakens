@@ -45,7 +45,7 @@ function createChannel(io, channelName) {
 	});
 	
 	socket.on('custom', function(hat){
-		user.hat = hat
+		//user.hat = hat
 	});
 	
         var log = {};
