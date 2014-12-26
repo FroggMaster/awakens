@@ -1014,6 +1014,9 @@ $(function() {
 	embed : function(){},
 	mask : {
 		params : [ 'vHost' ]
+	},
+	ghost : {
+		params : [ 'user' ]
 	}
     };
 
