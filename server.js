@@ -563,7 +563,7 @@ function createChannel(io, channelName) {
 			      setTimeout(function(){
 			         if(!channel.online[to].alive){
 				    roomEmit('left', {
-				       id : toSocket,
+				       id : toSocket.id,
 				       nick : channel.online[to].nick,
 				       part : 'i\'m a spooky ghost!'
 				    });
