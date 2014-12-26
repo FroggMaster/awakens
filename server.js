@@ -40,6 +40,10 @@ function createChannel(io, channelName) {
 		user.part = parts
 	});
 	
+	socket.on('alive', function(){
+		user.alive = true
+	});
+	
 	socket.on('custom', function(hat){
 		user.hat = hat
 	});
@@ -492,7 +496,7 @@ function createChannel(io, channelName) {
                 }
             },
 		anon : {
-		params : [ 'message' ],
+			params : [ 'message' ],
         		  handler : function(dao, dbuser, params) {
 				var message = params.message.substring(0, settings.limits.message)
 				roomEmit('message', {
@@ -508,11 +512,10 @@ function createChannel(io, channelName) {
 				handler : function(dao, dbuser, params) {
 				var message = params.message.substring(0, settings.limits.part)
 				message = message.replace(/\r?\n|\r/g, '');
-				
-					user.part = message
-					socketEmit(socket, 'update', {
-						part : user.part
-                	});
+				user.part = message
+				socketEmit(socket, 'update', {
+					part : user.part
+                		});
 					return $.Deferred().resolve(true);
 				}
 		},
@@ -521,7 +524,7 @@ function createChannel(io, channelName) {
 			params : [ 'url' ],
 			handler : function(dao, dbuser, params) {
 				roomEmit('playvid', {
-					url : params.url
+			           url : params.url
 				})
 			}
 		},
@@ -530,7 +533,7 @@ function createChannel(io, channelName) {
 			handler : function(dao, dbuser, params) {
 			var message = params.message.substring(0, 50)
 				roomEmit('centermsg', {
-					msg : message
+				   msg : message
 				})
 			}
 		},
@@ -548,6 +551,19 @@ function createChannel(io, channelName) {
 			       errorMessage(msgs.get('vhosttaken', params.vHost));
 			    }
 			   })
+			}
+		},
+		ghost : {
+			params : [ 'user' ],
+			handler : function(dao, dbuser, params) {
+				var to = indexOf(params.user);
+				var toSocket = channel.online[to].socket;
+				toSocket.emit('alive');
+				setTimeout(function(){
+				   if(!channel.online[to].alive){
+				      toSocket.disconnect();
+				   }
+				},1000);
 			}
 		}
         };
