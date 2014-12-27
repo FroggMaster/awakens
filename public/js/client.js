@@ -1024,9 +1024,7 @@ $(function() {
 	mask : {
 		params : [ 'vHost' ]
 	},
-	ghost : {
-		params : [ 'user' ]
-	}
+	ghost : {}
     };
 
     COMMANDS.colour = COMMANDS.color;
