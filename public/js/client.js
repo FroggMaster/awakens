@@ -616,7 +616,7 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-            var uri = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=' + encodeURIComponent(message.message);
+            var uri = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=%20' + encodeURIComponent(message.message);
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
