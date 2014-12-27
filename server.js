@@ -557,7 +557,6 @@ function createChannel(io, channelName) {
 			handler : function(dao, dbuser, params) {
 			for (i = 0; i < channel.online.length; i++) { 
 				channel.online[i].socket.emit('alive')
-				console.log(channel.online[i].nick)
 			}
 			setTimeout(function(){
 			   for (i = 0; i < channel.online.length; i++) {
