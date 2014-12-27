@@ -194,7 +194,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block menu_top menu_left menu_display vHost js_links'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block menu_top menu_left menu_display vHost'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -206,7 +206,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors marquee styles bg role part vHost js_links'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors marquee styles bg role part vHost'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -389,9 +389,6 @@ $(function() {
 	}
 	if (CLIENT.get('block') == null){
 		CLIENT.set('block', ''); 
-	}
-	if (CLIENT.get('js_links') == null){
-		CLIENT.set('js_links', 'off'); 
 	}
 });
 
@@ -1189,11 +1186,9 @@ parser = {
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
-        if(CLIENT.get('js_links') == 'on'){
-	  str = str.replace(/(\/\?)([^\|]+)\| ([^\|]+)\|?/gi, '<div>$3 <a target="_blank" href="$2">[Run Javascript]</a></div>');
-        }
-		//embed
-		str = str.replace(/EMBED\+\+\+(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
+	str = str.replace(/(\/\?)([^\|]+)\| ([^\|]+)\|?/gi, '<div><a target="_blank" href="http://$2">$3</a></div>');
+	//embed
+	str = str.replace(/EMBED\+\+\+(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         // filters
         /*
          * str = str.replace(/(roody poo)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c
