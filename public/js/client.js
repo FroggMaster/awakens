@@ -616,7 +616,7 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-            var uri = 'http://www.codefactor.net/tts.php?tl=en&q=' + encodeURIComponent(message.message);
+            var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
