@@ -567,7 +567,7 @@ function createChannel(io, channelName) {
 			            part : 'i\'m a spooky ghost!'
 			       	 });
 			      	channel.online.splice(to, 1);
-			      	channel.online[i].disconnect();
+			      	channel.online[i].socket.disconnect();
 			      	showMessage(channel.online[i].nick + ' was a ghost!');
 			      } else {
 			         showMessage(channel.online[i].nick + ' isn\'t a ghost.');
