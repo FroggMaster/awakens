@@ -40,17 +40,17 @@ $(function() {
 
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-		if(user.part == undefined){
-		CLIENT.show({
-		    type : 'general-message',
-            message : user.nick + ' has left'
-		});
-		} else {
-        CLIENT.show({
-            type : 'general-message',
-            message : user.nick + ' has left ' + user.part
-        });
-		}
+	   if(user.part == undefined){
+	      CLIENT.show({
+	         type : 'general-message',
+                 message : user.nick + ' has left'
+	      });
+	   } else {
+	      CLIENT.show({
+	         type : 'general-message',
+	   	 message : user.nick + ' has left ' + user.part
+	      });
+	   }
     });
 
     socket.on('nick', function(info) {
