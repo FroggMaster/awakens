@@ -612,16 +612,6 @@ $(function() {
             }
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
-          if (message.type == 'yoda-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-            var uri = encodeURIComponent(message.message);
-            var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
-            var $audio = $(html).appendTo('body');
-            var audio = $audio[0];
-            audio.onerror = audio.onpause = function(e) {
-                $audio.remove();
-            }
-            audio.play();
-        }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
             var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
@@ -635,9 +625,6 @@ $(function() {
 		 playAudio(sound);
         return el;
     }
-
-
-      
      
     window.scrollToBottom = function() {
         var containerEl = $('#messages');
@@ -999,9 +986,6 @@ $(function() {
             }
         },
         speak : {
-            params : [ 'message$' ]
-        },
-        yoda : {
             params : [ 'message$' ]
         },
         elbot : {
