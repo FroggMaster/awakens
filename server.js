@@ -442,11 +442,12 @@ function createChannel(io, channelName) {
             speak : {
                 params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
-		if(params.voice != 'yoda'){
-		   params.message = params.voice
-		}
                 var message = params.message;
 		var role = ['god','super','admin','mod','basic','mute','sub'];
+		var voices = ['default','yoda','clever','girl'];
+		if(voices.indexOf(params.voice) > 0){
+		   params.message = params.voice
+		};
                 if (message) {
                    if (role.indexOf(dbuser.get('role')) <= 5) {
                    var al = role.indexOf(dbuser.get('role'));
@@ -455,7 +456,7 @@ function createChannel(io, channelName) {
                       t = settings.speak['default'];
                    }
 		   if(params.voice == 'yoda'){
-		   request('http://www.synesthesialabs.net/yodalink.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+		   request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
 		   if (!error && response.statusCode == 200) {
 		      return throttle.on('speak-' + al, t).then(function() {
 		         roomEmit('message', {
