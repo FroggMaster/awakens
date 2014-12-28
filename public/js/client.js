@@ -166,18 +166,17 @@ $(function() {
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
-				console.log(nick,message)
-				if(name == 'speak'){
-					return {
-						voice : nick,
-						message : message
-					};
-				} else {
-					return {
-						nick : nick,
-						message : message
-					};
-				}
+		if(name == 'speak'){
+		   return {
+		      voice : nick,
+		      message : message
+		   }; 
+		} else {
+		   return {
+		      nick : nick,
+		      message : message
+		   };
+		}
             }
         } else {
             var values = input.split(' ');
@@ -622,11 +621,11 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-			if(message.voice == 'yoda'){
-				var uri = message.source
-			} else {
-				var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
-			}
+	    if(message.voice == 'yoda'){
+	       var uri = message.source
+	    } else {
+	       var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
+	    }
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
