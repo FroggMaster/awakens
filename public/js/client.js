@@ -85,7 +85,6 @@ $(function() {
     });
 
     socket.on('message', function(msg) {
-	console.log(msg)
 	if(CLIENT.get('block').indexOf(msg.nick) == -1){
 		CLIENT.show(msg);
 	}
