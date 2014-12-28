@@ -691,7 +691,7 @@ function createChannel(io, channelName) {
             },
             command : function(dao, msg) {
                 var err;
-				var role = ['god','super','admin','mod','basic','mute','sub']
+		var role = ['god','super','admin','mod','basic','mute','sub'];
                 if (user.nick) {
                     var cmd = COMMANDS[msg && msg.name];
                     if (cmd) {
@@ -704,9 +704,8 @@ function createChannel(io, channelName) {
                         }
                         if (valid) {
                             return dao.findUser(user.nick).then(function(dbuser) {
-				status = dbuser.get('role')
-				if(status == 'god' || status == 'super' || status == 'admin' || status == 'mod' || status == 'basic' || status == 'sub'){
-				   if(role.indexOf(dbuser.get('role')) <= role.indexOf(cmd.role)){ //2222 needs 2 or better
+				if(role.indexOf(dbuser.get('role')) >= 0){
+				   if(role.indexOf(dbuser.get('role')) <= role.indexOf(cmd.role)){
 					valid = true
 				   } else {
 					 if(role.indexOf(cmd.role) != -1){
