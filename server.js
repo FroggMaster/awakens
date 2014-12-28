@@ -475,6 +475,60 @@ function createChannel(io, channelName) {
                     return $.Deferred().resolve(true);
                 }
             },
+                      yoda : {
+                params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+                    var message = params.message;
+            var role = ['god','super','admin','mod','basic','mute','sub'];
+                    if (message) {
+                        if (role.indexOf(dbuser.get('role')) <= 5) {
+                            var al = role.indexOf(dbuser.get('role'));
+                            var t = settings.speak[al];
+                            if (t === undefined) {
+                                t = settings.speak['default'];
+                            }
+                            if (t) {
+                                return throttle.on('speak-' + al, t).then(function() {
+
+
+var request = require('request');
+request.get('http://www.synesthesialabs.net/yodalink.php?text=' + encodeURIComponent(message), function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var yoda = body;
+    }
+});
+
+                                    roomEmit('message', {
+                                        nick : dbuser.get('nick'),
+                                        type : 'yoda-message',
+                                        message : yoda.substring(0, settings.limits.spoken)
+                                    });
+                                    return true;
+                                }, function() {
+                                    return $.Deferred().resolve(false, msgs.throttled);
+                                });
+                            } else {
+
+var request = require('request');
+request.get('http://www.synesthesialabs.net/yodalink.php?text=' + encodeURIComponent(message), function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var yoda = body;
+    }
+});
+
+                                roomEmit('message', {
+                                    nick : dbuser.get('nick'),
+                                    type : 'yoda-message',
+                                    message : yoda.substring(0, settings.limits.spoken)
+                                });
+                            }
+                        } else {
+                            return $.Deferred().resolve(false, msgs.muted);
+                        }
+                    }
+                    return $.Deferred().resolve(true);
+                }
+            },
             elbot : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
