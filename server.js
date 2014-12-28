@@ -442,64 +442,64 @@ function createChannel(io, channelName) {
             speak : {
                 params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
-					if(params.voice != 'yoda'){
-						params.message = params.voice
-					}
-                    var message = params.message;
-					var role = ['god','super','admin','mod','basic','mute','sub'];
-                    if (message) {
-                        if (role.indexOf(dbuser.get('role')) <= 5) {
-                            var al = role.indexOf(dbuser.get('role'));
-                            var t = settings.speak[al];
-                            if (t === undefined) {
-                                t = settings.speak['default'];
-                            }
-							if(params.voice == 'yoda'){
-								request('http://www.synesthesialabs.net/yodalink.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
-									if (!error && response.statusCode == 200) {
-										return throttle.on('speak-' + al, t).then(function() {
-											roomEmit('message', {
-												nick : dbuser.get('nick'),
-												type : 'spoken-message',
-												message : message.substring(0, settings.limits.spoken),
-												source : body,
-												voice : params.voice
-											});
-											return true;
-										}, function() {
-											return $.Deferred().resolve(false, msgs.throttled);
-										});
-									}
-								});
-							} else {
-								if (t) {
-									return throttle.on('speak-' + al, t).then(function() {
-										roomEmit('message', {
-											nick : dbuser.get('nick'),
-											type : 'spoken-message',
-											message : message.substring(0, settings.limits.spoken),
-											source : source,
-											voice : params.voice
-										});
-										return true;
-									}, function() {
-										return $.Deferred().resolve(false, msgs.throttled);
-									});
-								} else {
-									roomEmit('message', {
-										nick : dbuser.get('nick'),
-										type : 'spoken-message',
-										message : message.substring(0, settings.limits.spoken),
-										source : source,
-										voice : params.voice
-									});
-								}
-							}
-                        } else {
-                            return $.Deferred().resolve(false, msgs.muted);
-                        }
-                    }
-                    return $.Deferred().resolve(true);
+		if(params.voice != 'yoda'){
+		   params.message = params.voice
+		}
+                var message = params.message;
+		var role = ['god','super','admin','mod','basic','mute','sub'];
+                if (message) {
+                   if (role.indexOf(dbuser.get('role')) <= 5) {
+                   var al = role.indexOf(dbuser.get('role'));
+                   var t = settings.speak[al];
+                   if (t === undefined) {
+                      t = settings.speak['default'];
+                   }
+		   if(params.voice == 'yoda'){
+		   request('http://www.synesthesialabs.net/yodalink.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+		   if (!error && response.statusCode == 200) {
+		      return throttle.on('speak-' + al, t).then(function() {
+		         roomEmit('message', {
+		       	    nick : dbuser.get('nick'),
+		       	    type : 'spoken-message',
+		            message : message.substring(0, settings.limits.spoken),
+		       	    source : body,
+		       	    voice : params.voice
+		         });
+		       	 return true;
+		      }, function() {
+		         return $.Deferred().resolve(false, msgs.throttled);
+		      });
+		   }
+		   });
+		   } else {
+		      if (t) {
+		         return throttle.on('speak-' + al, t).then(function() {
+			 roomEmit('message', {
+			    nick : dbuser.get('nick'),
+			    type : 'spoken-message',
+			    message : message.substring(0, settings.limits.spoken),
+			    source : source,
+			    voice : params.voice
+			 });
+			 return true;
+			 }, function() {
+			 return $.Deferred().resolve(false, msgs.throttled);
+			 });
+		       } else {
+			roomEmit('message', {
+			   nick : dbuser.get('nick'),
+			   type : 'spoken-message',
+			   message : message.substring(0, settings.limits.spoken),
+			   source : source,
+			   voice : params.voice
+			});
+		       }
+		  }
+                  } else {
+                     return $.Deferred().resolve(false, msgs.muted);
+                  }
+                }
+                   return $.Deferred().resolve(true);
                 }
             },
             elbot : {
