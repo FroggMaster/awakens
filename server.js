@@ -2,6 +2,7 @@ var settings = require('./settings');
 var msgs = settings.msgs;
 var dao = require('./dao');
 var throttle = require('./throttle');
+var request = require('request');
 
 var _ = require('underscore');
 var $ = require('jquery-deferred');
@@ -439,10 +440,13 @@ function createChannel(io, channelName) {
                 }
             },
             speak : {
-                params : [ 'message' ],
+                params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
+					if(params.voice != 'yoda'){
+						params.message = params.voice
+					}
                     var message = params.message;
-		    var role = ['god','super','admin','mod','basic','mute','sub'];
+					var role = ['god','super','admin','mod','basic','mute','sub'];
                     if (message) {
                         if (role.indexOf(dbuser.get('role')) <= 5) {
                             var al = role.indexOf(dbuser.get('role'));
@@ -450,24 +454,47 @@ function createChannel(io, channelName) {
                             if (t === undefined) {
                                 t = settings.speak['default'];
                             }
-                            if (t) {
-                                return throttle.on('speak-' + al, t).then(function() {
-                                    roomEmit('message', {
-                                        nick : dbuser.get('nick'),
-                                        type : 'spoken-message',
-                                        message : message.substring(0, settings.limits.spoken)
-                                    });
-                                    return true;
-                                }, function() {
-                                    return $.Deferred().resolve(false, msgs.throttled);
-                                });
-                            } else {
-                                roomEmit('message', {
-                                    nick : dbuser.get('nick'),
-                                    type : 'spoken-message',
-                                    message : message.substring(0, settings.limits.spoken)
-                                });
-                            }
+							if(params.voice == 'yoda'){
+								request('http://www.synesthesialabs.net/yodalink.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+									if (!error && response.statusCode == 200) {
+										return throttle.on('speak-' + al, t).then(function() {
+											roomEmit('message', {
+												nick : dbuser.get('nick'),
+												type : 'spoken-message',
+												message : message.substring(0, settings.limits.spoken),
+												source : body,
+												voice : params.voice
+											});
+											return true;
+										}, function() {
+											return $.Deferred().resolve(false, msgs.throttled);
+										});
+									}
+								});
+							} else {
+								if (t) {
+									return throttle.on('speak-' + al, t).then(function() {
+										roomEmit('message', {
+											nick : dbuser.get('nick'),
+											type : 'spoken-message',
+											message : message.substring(0, settings.limits.spoken),
+											source : source,
+											voice : params.voice
+										});
+										return true;
+									}, function() {
+										return $.Deferred().resolve(false, msgs.throttled);
+									});
+								} else {
+									roomEmit('message', {
+										nick : dbuser.get('nick'),
+										type : 'spoken-message',
+										message : message.substring(0, settings.limits.spoken),
+										source : source,
+										voice : params.voice
+									});
+								}
+							}
                         } else {
                             return $.Deferred().resolve(false, msgs.muted);
                         }
@@ -664,7 +691,7 @@ function createChannel(io, channelName) {
             },
             command : function(dao, msg) {
                 var err;
-		var role = ['god','super','admin','mod','basic','mute','sub']
+				var role = ['god','super','admin','mod','basic','mute','sub']
                 if (user.nick) {
                     var cmd = COMMANDS[msg && msg.name];
                     if (cmd) {

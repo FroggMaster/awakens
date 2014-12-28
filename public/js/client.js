@@ -85,6 +85,7 @@ $(function() {
     });
 
     socket.on('message', function(msg) {
+	console.log(msg)
 	if(CLIENT.get('block').indexOf(msg.nick) == -1){
 		CLIENT.show(msg);
 	}
@@ -160,15 +161,23 @@ $(function() {
 			unblocked(input)
 		} else if(name == 'embed'){
 			CLIENT.submit('EMBED+++' + input)
-		} else if (name == 'kick' || name == "ban" || name == "channel_ban") {
+		} else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
-                return {
-                    nick : nick,
-                    message : message
-                };  
+				console.log(nick,message)
+				if(name == 'speak'){
+					return {
+						voice : nick,
+						message : message
+					};
+				} else {
+					return {
+						nick : nick,
+						message : message
+					};
+				}
             }
         } else {
             var values = input.split(' ');
@@ -613,7 +622,11 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-            var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
+			if(message.voice == 'yoda'){
+				var uri = message.source
+			} else {
+				var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
+			}
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
@@ -986,7 +999,7 @@ $(function() {
             }
         },
         speak : {
-            params : [ 'message$' ]
+            params : [ 'message[|voice]' ]
         },
         elbot : {
             params : [ 'message$' ]
