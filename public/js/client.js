@@ -1,5 +1,5 @@
 var DATE_FORMAT = 'shortTime';
-var BLACKLIST = [ 'wrdp.info', 'puu.sh' ];
+var BLACKLIST = [ 'wrdp.info', 'puu.sh', 'synesthesialabs.net' ];
 
 // ------------------------------------------------------------------
 // Client
