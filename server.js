@@ -478,7 +478,7 @@ function createChannel(io, channelName) {
 			    nick : dbuser.get('nick'),
 			    type : 'spoken-message',
 			    message : message.substring(0, settings.limits.spoken),
-			    source : source,
+			    source : null,
 			    voice : params.voice
 			 });
 			 return true;
@@ -490,7 +490,7 @@ function createChannel(io, channelName) {
 			   nick : dbuser.get('nick'),
 			   type : 'spoken-message',
 			   message : message.substring(0, settings.limits.spoken),
-			   source : source,
+			   source : null,
 			   voice : params.voice
 			});
 		       }
