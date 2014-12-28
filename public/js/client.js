@@ -997,7 +997,7 @@ $(function() {
             }
         },
         speak : {
-            params : [ 'message[|voice]' ]
+            params : [ '[voice|]message' ]
         },
         elbot : {
             params : [ 'message$' ]
