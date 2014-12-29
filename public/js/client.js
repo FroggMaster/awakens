@@ -632,17 +632,10 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-	    if(message.voice == 'yoda'){
+	var voices = ['default','yoda','clever'];
+	    if(voices.indexOf(message.voice) > 0){
 	       var uri = message.source
-	    } 
-   else  if(message.voice == 'clever'){
-           var uri = message.source
-        }
-
-       else  if(message.voice == 'girl'){
-           var uri = message.source
-        }
-        else {
+	    } else {
 	       var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
 	    }
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
