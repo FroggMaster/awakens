@@ -616,6 +616,23 @@ function createChannel(io, channelName) {
                                     done.reject(err);
                                 });
                             }
+							dao.getChannelInfo(channelName).then(function(data){
+							if(!data.role){
+								roles = {"super":[],"admin":[nick],"mod":[]}
+								dao.setChannelInfo(channelName, 'role', JSON.stringify(roles))
+							} else {
+								roles = JSON.parse(data.role);
+								if(roles.super.indexOf(nick)){
+									user.role = 'super'
+								} else if(roles.admin.indexOf(nick)){
+									user.role = 'admin'
+								} else if(roles.mod.indexOf(nick)){
+									user.role = 'mod'
+								} else {
+									user.role = 'basic'
+								}
+							}
+							});
                           });
                         return done.promise();
                     } else {
