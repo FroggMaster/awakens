@@ -1010,7 +1010,7 @@ $(function() {
             }
         },
         speak : {
-            params : [ '[voice|]message' ]
+            params : [ '[dialect voice|]message' ]
         },
         elbot : {
             params : [ 'message$' ]
