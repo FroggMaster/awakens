@@ -442,11 +442,8 @@ function createChannel(io, channelName) {
             speak : {
                 params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
-                var message = params.message;
+                var message = params.voice != 'yoda' ? params.voice : params.message
 		var role = ['god','super','admin','mod','basic','mute','sub'];
-		if(voices.indexOf(params.voice) > 0){
-		   params.message = params.voice
-		};
                 if (message) {
                    if (role.indexOf(dbuser.get('role')) <= 5) {
                    var al = role.indexOf(dbuser.get('role'));
@@ -472,20 +469,7 @@ function createChannel(io, channelName) {
 		   }
 		   });
 		   } else {
-		      if (t) {
-		         return throttle.on('speak-' + al, t).then(function() {
-			 roomEmit('message', {
-			    nick : dbuser.get('nick'),
-			    type : 'spoken-message',
-			    message : message.substring(0, settings.limits.spoken),
-			    source : null,
-			    voice : params.voice
-			 });
-			 return true;
-			 }, function() {
-			 return $.Deferred().resolve(false, msgs.throttled);
-			 });
-		       } else {
+		      return throttle.on('speak-' + al, t).then(function() {
 			roomEmit('message', {
 			   nick : dbuser.get('nick'),
 			   type : 'spoken-message',
@@ -493,7 +477,10 @@ function createChannel(io, channelName) {
 			   source : null,
 			   voice : params.voice
 			});
-		       }
+			return true;
+			}, function() {
+			 return $.Deferred().resolve(false, msgs.throttled);
+			});
 		  }
                   } else {
                      return $.Deferred().resolve(false, msgs.muted);
