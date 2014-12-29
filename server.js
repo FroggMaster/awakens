@@ -454,7 +454,9 @@ function createChannel(io, channelName) {
                       t = settings.speak['default'];
                    }
 		   request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
-		   if (!error && response.statusCode == 200) {
+		      if(voice == 'default') {
+			body = null
+		      };
 		      return throttle.on('speak-' + al, t).then(function() {
 		         roomEmit('message', {
 		       	    nick : dbuser.get('nick'),
@@ -467,7 +469,6 @@ function createChannel(io, channelName) {
 		      }, function() {
 		         return $.Deferred().resolve(false, msgs.throttled);
 		      });
-		   }
 		   });
                   } else {
                      return $.Deferred().resolve(false, msgs.muted);
