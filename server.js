@@ -468,7 +468,48 @@ function createChannel(io, channelName) {
 		      });
 		   }
 		   });
-		   } else {
+		   } 
+
+  else if(params.voice == 'clever'){
+           request('http://2s4.me/speak/cleverspeak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+           if (!error && response.statusCode == 200) {
+              return throttle.on('speak-' + al, t).then(function() {
+                 roomEmit('message', {
+                    nick : dbuser.get('nick'),
+                    type : 'spoken-message',
+                    message : message.substring(0, settings.limits.spoken),
+                    source : body,
+                    voice : params.voice
+                 });
+                 return true;
+              }, function() {
+                 return $.Deferred().resolve(false, msgs.throttled);
+              });
+           }
+           });
+           }
+
+
+
+             else if(params.voice == 'girl'){
+           
+              return throttle.on('speak-' + al, t).then(function() {
+                 roomEmit('message', {
+                    nick : dbuser.get('nick'),
+                    type : 'spoken-message',
+                    message : message.substring(0, settings.limits.spoken),
+                    source : "https://translate.google.de/translate_tts?&tl=en&q=" + encodeURIComponent(params.message),
+                    voice : params.voice
+                 });
+                 return true;
+              }, function() {
+                 return $.Deferred().resolve(false, msgs.throttled);
+              });
+         
+           } 
+
+
+       else {
 		      return throttle.on('speak-' + al, t).then(function() {
 			roomEmit('message', {
 			   nick : dbuser.get('nick'),
