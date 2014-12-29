@@ -444,6 +444,7 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
 		var voices = ['default','yoda','clever'];
                 var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
+                var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default'
 		var role = ['god','super','admin','mod','basic','mute','sub'];
                 if (message) {
                    if (role.indexOf(dbuser.get('role')) <= 5) {
@@ -460,7 +461,7 @@ function createChannel(io, channelName) {
 		       	    type : 'spoken-message',
 		            message : message.substring(0, settings.limits.spoken),
 		       	    source : body,
-		       	    voice : params.voice
+		       	    voice : voice
 		         });
 		       	 return true;
 		      }, function() {
