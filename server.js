@@ -442,16 +442,8 @@ function createChannel(io, channelName) {
             speak : {
                 params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
-                
-
-                if (params.voice != 'yoda' && params.voice != 'girl' && params.voice != 'clever'){
-                    var message = params.voice;
-                }
-                else{
-                    
-                var message = params.message;
-                }
-
+		var voices = ['default','yoda','clever'];
+                var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
 		var role = ['god','super','admin','mod','basic','mute','sub'];
                 if (message) {
                    if (role.indexOf(dbuser.get('role')) <= 5) {
@@ -460,8 +452,8 @@ function createChannel(io, channelName) {
                    if (t === undefined) {
                       t = settings.speak['default'];
                    }
-		   if(params.voice == 'yoda'){
-		   request('http://2s4.me/speak/yodaspeak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+		   if(voices.indexOf(params.voice) > 0){
+		   request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
 		   if (!error && response.statusCode == 200) {
 		      return throttle.on('speak-' + al, t).then(function() {
 		         roomEmit('message', {
@@ -477,48 +469,7 @@ function createChannel(io, channelName) {
 		      });
 		   }
 		   });
-		   } 
-
-  else if(params.voice == 'clever'){
-           request('http://2s4.me/speak/cleverspeak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
-           if (!error && response.statusCode == 200) {
-              return throttle.on('speak-' + al, t).then(function() {
-                 roomEmit('message', {
-                    nick : dbuser.get('nick'),
-                    type : 'spoken-message',
-                    message : message.substring(0, settings.limits.spoken),
-                    source : body,
-                    voice : params.voice
-                 });
-                 return true;
-              }, function() {
-                 return $.Deferred().resolve(false, msgs.throttled);
-              });
-           }
-           });
-           }
-
-
-
-             else if(params.voice == 'girl'){
-           
-              return throttle.on('speak-' + al, t).then(function() {
-                 roomEmit('message', {
-                    nick : dbuser.get('nick'),
-                    type : 'spoken-message',
-                    message : message.substring(0, settings.limits.spoken),
-                    source : "https://translate.google.de/translate_tts?&tl=en&q=" + encodeURIComponent(params.message),
-                    voice : params.voice
-                 });
-                 return true;
-              }, function() {
-                 return $.Deferred().resolve(false, msgs.throttled);
-              });
-         
-           } 
-
-
-       else {
+		   } else {
 		      return throttle.on('speak-' + al, t).then(function() {
 			roomEmit('message', {
 			   nick : dbuser.get('nick'),
