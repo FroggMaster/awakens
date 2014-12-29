@@ -155,12 +155,12 @@ $(function() {
         } else if(name == 'toggle'){
         	toggled(input)
         } else if(name == 'block'){
-			blocked(input)
-		} else if(name == 'unblock') {
-			unblocked(input)
-		} else if(name == 'embed'){
-			CLIENT.submit('EMBED+++' + input)
-		} else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
+		blocked(input)
+	} else if(name == 'unblock') {
+		unblocked(input)
+	} else if(name == 'embed'){
+		CLIENT.submit('EMBED+++' + input)
+	} else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
