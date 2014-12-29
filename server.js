@@ -452,7 +452,6 @@ function createChannel(io, channelName) {
                    if (t === undefined) {
                       t = settings.speak['default'];
                    }
-		   if(voices.indexOf(params.voice) > 0){
 		   request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
 		   if (!error && response.statusCode == 200) {
 		      return throttle.on('speak-' + al, t).then(function() {
@@ -469,20 +468,6 @@ function createChannel(io, channelName) {
 		      });
 		   }
 		   });
-		   } else {
-		      return throttle.on('speak-' + al, t).then(function() {
-			roomEmit('message', {
-			   nick : dbuser.get('nick'),
-			   type : 'spoken-message',
-			   message : message.substring(0, settings.limits.spoken),
-			   source : null,
-			   voice : params.voice
-			});
-			return true;
-			}, function() {
-			 return $.Deferred().resolve(false, msgs.throttled);
-			});
-		  }
                   } else {
                      return $.Deferred().resolve(false, msgs.muted);
                   }
