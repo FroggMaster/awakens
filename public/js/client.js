@@ -1216,22 +1216,22 @@ parser = {
 	//embed
 	str = str.replace(/EMBED\+\+\+(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         // filters
-	str = str.replace(/(flags)+?/gi, '<div>wavey fabrics</div>');
-	str = str.replace(/(flag)+?/gi, '<div>wavey fabric</div>'); 
-	str = str.replace(/(sandwich)+?/gi, '<div>sammich</div>');
-	str = str.replace(/(anon2000)+?/gi, '<div>fagatron2K</div>');
-	str = str.replace(/(kevin)+?/gi, '<div>Keblin</div>'); 
-	str = str.replace(/(778)+?/gi, '<div>787</div>'); 
-	str = str.replace(/(hugewanker)+?/gi, '<div>smallmasturbater</div>'); 
-	str = str.replace(/(wanker)+?/gi, '<div>masturbater</div>'); 
-	str = str.replace(/(krynomore)+?/gi, '<div>KrYsomeMoRe</div>'); 
-	str = str.replace(/(lamp)+?/gi, '<div>light bulb</div>'); 
-	str = str.replace(/(bruno)+?/gi, '<div>02468</div>'); 
-	str = str.replace(/(jezebel)+?/gi, '<div>jezey balls</div>'); 
-	str = str.replace(/(hats)+?/gi, '<div>spooks best feature (hats)</div>'); 
-	str = str.replace(/(misha)+?/gi, '<div>mr. sha</div>'); 
-	str = str.replace(/(Xultra)+?/gi, '<div>Windowsfanboy</div>'); 
-	str = str.replace(/(banana)+?/gi, '<div>curvey yellow fruit</div>'); 
+	str = str.replace(/(flags)+?/gi, '<div>penis</div>');
+	str = str.replace(/(flag)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(sandwich)+?/gi, '<div>penis</div>');
+	str = str.replace(/(anon2000)+?/gi, '<div>penis</div>');
+	str = str.replace(/(kevin)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(778)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(hugewanker)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(wanker)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(krynomore)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(lamp)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(bruno)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(jezebel)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(hats)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(misha)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(Xultra)+?/gi, '<div>penis</div>'); 
+	str = str.replace(/(banana)+?/gi, '<div>penis</div>'); 
         // endfilters
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
