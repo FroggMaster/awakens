@@ -451,9 +451,7 @@ function createChannel(io, channelName) {
                 
                 
                 request('http://2s4.me/speak/dialect.php?dialect=' + dialect + '&text=' + encodeURIComponent(params.message), function (error, response, body) {
-		    if(voice == 'default') {
-			body = null
-		      }; 
+		     
                 
                 var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default';
 		var role = ['god','super','admin','mod','basic','mute','sub'];
