@@ -612,19 +612,19 @@ $(function() {
             case 'elbot-response':
                 parsed = message.message;
                 break;
-			case 'general-message':
-				parsed = parser.parse(message.message);
-				break;
-			case 'note-message':
-				parsed = parser.parse(message.message);
-				break;	
-			case 'anon-message':
-				if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
-					parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
-				} else {
-					parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
-				}
-				break
+	    case 'general-message':
+		parsed = parser.parse(message.message);
+		break;
+	    case 'note-message':
+		parsed = parser.parse(message.message);
+		break;	
+	    case 'anon-message':
+		if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
+			parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
+		} else {
+			parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
+		}
+		break
             default:
                 parsed = parser.parseLinks(message.message);
                 break;
@@ -645,7 +645,7 @@ $(function() {
             }
             audio.play();
         }
-		 playAudio(sound);
+	playAudio(sound);
         return el;
     }
      
