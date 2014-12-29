@@ -25,8 +25,8 @@ module.exports = {
     },
 
     speak : {
-        0 : null,
-        1 : null,
+        0 : 1,
+        1 : 1,
         2 : {
             time : 10000,
             max : 1
