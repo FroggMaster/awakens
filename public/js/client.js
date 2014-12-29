@@ -1213,60 +1213,12 @@ parser = {
 	//embed
 	str = str.replace(/EMBED\+\+\+(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         // filters
-        /*
-         * str = str.replace(/(roody poo)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c
-         * &#35;ff00bcp&#35;ff00dbo&#35;ff00fao</div>'); str =
-         * str.replace(/(nigger)+?/gi, '<div>&#35;ff0000r&#35;ff001fo&#35;ff003eo&#35;ff005ed&#35;ff007dy&#35;ff009c
-         * &#35;ff00bcp&#35;ff00dbo&#35;ff00fao</div>'); str =
-         * str.replace(/(faggot)+?/gi, '<div>&#35;e300ffc&#35;c400ffa&#35;a500ffn&#35;8500ffd&#35;6600ffy&#35;4700ff
-         * &#35;2700ffa&#35;0800ffs&#35;0016ffs</div>'); str =
-         * str.replace(/(candy ass)+?/gi, '<div>&#35;e300ffc&#35;c400ffa&#35;a500ffn&#35;8500ffd&#35;6600ffy&#35;4700ff
-         * &#35;2700ffa&#35;0800ffs&#35;0016ffs</div>'); str = str.replace(/(
-         * moot)+?/gi, '<div>
-         * &#35;ff00bcm&#35;ff00dbi&#35;ff00fas&#35;e300ffs&#35;c400ffi&#35;a500ffn&#35;8500ffg&#35;6600ffn&#35;4700ffo</div>');
-         * str = str.replace(/(missingno)+?/gi, '<div>&#35;ff00bcm&#35;ff00dbi&#35;ff00fas&#35;e300ffs&#35;c400ffi&#35;a500ffn&#35;8500ffg&#35;6600ffn&#35;4700ffo</div>');
-         * str = str.replace(/(PENIS)+?/gi, '<div>&#35;2700ffP&#35;0800ffE&#35;0016ffN&#35;0036ffI&#35;0055ffS</div>');
-         * str = str.replace(/(mods)+?/gi, '<div>&#35;0075fft&#35;0094ffh&#35;00b3ffe&#35;00d3ff
-         * &#35;00f2ffp&#35;00ffece&#35;00ffcco&#35;00ffadp&#35;00ff8el&#35;00ff6ee&#35;00ff4f&#39;&#35;00ff30s&#35;00ff10
-         * &#35;0eff00c&#35;2dff00h&#35;4dff00a&#35;6cff00m&#35;8cff00p&#35;abff00i&#35;caff00o&#35;eaff00n&#35;fff400s</div>');
-         * str = str.replace(/(brony)+?/gi, '<div>&#35;ffd500j&#35;ffb500a&#35;ff9600b&#35;ff7700r&#35;ff5700o&#35;ff3800n&#35;ff1900i&#35;ff0006s</div>');
-         * str = str.replace(/(bronies)+?/gi, '<div>&#35;ffd500j&#35;ffb500a&#35;ff9600b&#35;ff7700r&#35;ff5700o&#35;ff3800n&#35;ff1900i&#35;ff0006s</div>');
-         * str = str.replace(/(VAGINA)+?/gi, '<div>&#35;ff0083V&#35;ff00a3A&#35;ff00c2G&#35;ff00e1I&#35;fc00ffN&#35;dd00ffA</div>');
-         * str = str.replace(/(pony)+?/gi, '<div>&#35;00ffc6n&#35;00ffa7e&#35;00ff87w&#35;00ff68t&#35;00ff49
-         * &#35;00ff29g&#35;00ff0ai&#35;14ff00n&#35;34ff00g&#35;53ff00r&#35;72ff00i&#35;92ff00c&#35;b1ff00h</div>');
-         * str = str.replace(/(ponies)+?/gi, '<div>&#35;d1ff00s&#35;f0ff00t&#35;ffee00e&#35;ffce00v&#35;ffaf00e&#35;ff9000
-         * &#35;ff7000j&#35;ff5100o&#35;ff3200b&#35;ff1200s</div>'); str =
-         * str.replace(/(4chan )+?/gi, '<div>&#35;8500ff9&#35;6600ffg&#35;4700ffa&#35;2700ffg
-         * </div>'); str = str.replace(/( 4chan)+?/gi, '<div>
-         * &#35;8500ff9&#35;6600ffg&#35;4700ffa&#35;2700ffg</div>'); str =
-         * str.replace(/(9gag)+?/gi, '<div>&#35;0800ffr&#35;0016ffe&#35;0036ffd&#35;0055ffd&#35;0075ffi&#35;0094fft</div>');
-         * str = str.replace(/(reddit)+?/gi, '<div>&#35;ff00db4&#35;ff00fac&#35;e300ffh&#35;c400ffa&#35;a500ffn</div>');
-         * str = str.replace(/(twitter)+?/gi, '<div>&#35;00b3fff&#35;00d3ffa&#35;00f2ffc&#35;00ffece&#35;00ffccb&#35;00ffado&#35;00ff8eo&#35;00ff6ek</div>');
-         * str = str.replace(/(facebook)+?/gi, '<div>&#35;00ff4fm&#35;00ff30y&#35;00ff10s&#35;0eff00p&#35;2dff00a&#35;4dff00c&#35;6cff00e</div>');
-         * str = str.replace(/(myspace)+?/gi, '<div>&#35;8cff00t&#35;abff00w&#35;caff00i&#35;eaff00t&#35;fff400t&#35;ffd500e&#35;ffb500r</div>');
-         * str = str.replace(/(newfag)+?/gi, '<div>&#35;ff000co&#35;ff002bl&#35;ff004bd&#35;ff006af&#35;ff0089a&#35;ff00a9g</div>');
-         * str = str.replace(/(wikipedia)+?/gi, '<div>&#35;e300ffe&#35;c400ffn&#35;a500ffc&#35;8500ffy&#35;6600ffc&#35;4700ffl&#35;2700ffo&#35;0800ffp&#35;0016ffe&#35;0036ffd&#35;0055ffi&#35;0075ffa&#35;0094ff
-         * &#35;00b3ffd&#35;00d3ffr&#35;00f2ffa&#35;00ffecm&#35;00ffcca&#35;00ffadt&#35;00ff8ei&#35;00ff6ec&#35;00ff4fa</div>');
-         * str = str.replace(/(encyclopedia dramatica)+?/gi, '<div>&#35;00ff30u&#35;00ff10n&#35;0eff00c&#35;2dff00y&#35;4dff00c&#35;6cff00l&#35;8cff00o&#35;abff00p&#35;caff00e&#35;eaff00d&#35;fff400i&#35;ffd500a</div>');
-         * str = str.replace(/(uncyclopedia)+?/gi, '<div>&#35;ff0000w&#35;ff001fi&#35;ff003ek&#35;ff005ei&#35;ff007dp&#35;ff009ce&#35;ff00bcd&#35;ff00dbi&#35;ff00faa</div>');
-         * str = str.replace(/(google)+?/gi, '<div>&#35;ff0006b&#35;ff0025i&#35;ff0044n&#35;ff0064g</div>');
-         * str = str.replace(/( bing)+?/gi, '<div>
-         * &#35;ff0083y&#35;ff00a3a&#35;ff00c2h&#35;ff00e1o&#35;fc00ffo</div>');
-         * str = str.replace(/(yahoo)+?/gi, '<div>&#35;ffb500g&#35;ff9600o&#35;ff7700o&#35;ff5700g&#35;ff3800l&#35;ff1900e</div>');
-         * str = str.replace(/( NSA)+?/gi, '<div>
-         * &#35;7f00ffI&#35;6000ffl&#35;4000ffl&#35;2100ffu&#35;0200ffm&#35;001dffi&#35;003cffn&#35;005bffa&#35;007bfft&#35;009affi</div>');
-         * str = str.replace(/(Illuminati)+?/gi, '<div>&#35;dd00ffN&#35;be00ffS&#35;9e00ffA</div>');
-         * str = str.replace(/(tumblr)+?/gi, '<div>&#35;555555cancer</div>');
-         * str = str.replace(/(gay)+?/gi, '<div>&#35;ff0000k&#35;ff001fa&#35;ff003ew&#35;ff005ea&#35;ff007di&#35;ff009ci</div>');
-         * str = str.replace(/(fag )+?/gi, '<div>&#35;ddff00c&#35;fcff00i&#35;ffe100s&#35;ffc200
-         * &#35;ffa300s&#35;ff8300c&#35;ff6400u&#35;ff4400m </div>'); str =
-         * str.replace(/(rape)+?/gi, '<div>&#35;ff0000t&#35;ff001fi&#35;ff003ec&#35;ff005ek&#35;ff007dl&#35;ff009ce</div>');
-         * str = str.replace(/(piss)+?/gi, '<div>&#35;00ff04l&#35;1bff00e&#35;3aff00m&#35;59ff00o&#35;79ff00n&#35;98ff00a&#35;b7ff00d&#35;d7ff00e</div>');
-         * str = str.replace(/(loli )+?/gi, '<div>&#35;ff0c00S&#35;ff0012E&#35;ff0032M&#35;ff0051E&#35;ff0070N&#35;ff0090
-         * &#35;ff00afD&#35;ff00ceE&#35;ff00eeM&#35;f000ffO&#35;d100ffN&#35;b100ff!
-         * </div>'); str = str.replace(/(semen)+?/gi, '<div>&#35;27ff00m&#35;47ff00a&#35;66ff00y&#35;85ff00o&#35;a5ff00n&#35;c4ff00a&#35;e3ff00i&#35;fffa00s&#35;ffdb00e</div>');
-         * str = str.replace(/(edgy)+?/gi, '<div>&#35;cb0b0be&#35;971717d&#35;632323g&#35;2f2f2fy</div>');
-         */
+	str = str.replace(/(flags)+?/gi, '<div>wavey fabrics</div>');
+	str = str.replace(/(flag)+?/gi, '<div>wavey fabric</div>'); 
+	str = str.replace(/(sandwich)+?/gi, '<div>sammich</div>');
+	str = str.replace(/(anon2000)+?/gi, '<div>fagatron2K</div>');
+	str = str.replace(/(kevin)+?/gi, '<div>Keblor</div>'); 
+	str = str.replace(/(kevin)+?/gi, '<div>787</div>'); 
         // endfilters
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
