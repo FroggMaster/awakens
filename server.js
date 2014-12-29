@@ -615,6 +615,23 @@ function createChannel(io, channelName) {
                                 }, function(err) {
                                     done.reject(err);
                                 });
+                                dao.getChannelInfo(channelName).then(function(data){
+					if(!data.access){
+						access = {"super":[],"admin":[nick],"mod":[]}
+						dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
+					} else {
+						access = JSON.parse(data.access);
+						if(roles.super.indexOf(nick)){
+							user.role = 'super'
+						} else if(roles.admin.indexOf(nick)){
+							user.role = 'admin'
+						} else if(roles.mod.indexOf(nick)){
+							user.role = 'mod'
+						} else {
+							user.role = 'basic'
+						}
+					}
+				});
                             }
                           });
                         return done.promise();
