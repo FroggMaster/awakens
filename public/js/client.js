@@ -635,10 +635,11 @@ $(function() {
 	    if(message.voice == 'yoda'){
 	       var uri = message.source
 	    } 
-    if(message.voice == 'clever'){
+   else  if(message.voice == 'clever'){
            var uri = message.source
         }
-        if(message.voice == 'girl'){
+
+       else  if(message.voice == 'girl'){
            var uri = message.source
         }
         else {
