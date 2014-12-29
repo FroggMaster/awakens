@@ -1053,8 +1053,10 @@ $(function() {
 toggled = function(att){
 	if (att == 'bg' && CLIENT.get('bg') == 'off'){
       	   $('#messages').css('background', CLIENT.get('old'));
+	}	
+	if(att != 'style' && att != 'font'){
+		CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
 	}
-	CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
 }
 
 blocked = function(att){
