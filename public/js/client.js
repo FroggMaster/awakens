@@ -1231,6 +1231,7 @@ parser = {
 	str = str.replace(/(hats)+?/gi, '<div>spooks best feature (hats)</div>'); 
 	str = str.replace(/(misha)+?/gi, '<div>mr. sha</div>'); 
 	str = str.replace(/(Xultra)+?/gi, '<div>Windowsfanboy</div>'); 
+	str = str.replace(/(banana)+?/gi, '<div>curvey yellow fruit</div>'); 
         // endfilters
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
