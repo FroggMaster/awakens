@@ -1227,6 +1227,9 @@ parser = {
 	str = str.replace(/(krynomore)+?/gi, '<div>KrYsomeMoRe</div>'); 
 	str = str.replace(/(lamp)+?/gi, '<div>light bulb</div>'); 
 	str = str.replace(/(bruno)+?/gi, '<div>02468</div>'); 
+	str = str.replace(/(jezebel)+?/gi, '<div>jezey balls</div>'); 
+	str = str.replace(/(jeze)+?/gi, '<div>jezey</div>'); 
+	str = str.replace(/(jez)+?/gi, '<div>jezey</div>'); 
         // endfilters
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
