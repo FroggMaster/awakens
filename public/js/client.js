@@ -1,5 +1,5 @@
 var DATE_FORMAT = 'shortTime';
-var BLACKLIST = [ 'wrdp.info', 'puu.sh', 'synesthesialabs.net' ];
+var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
 
 // ------------------------------------------------------------------
 // Client
@@ -635,10 +635,11 @@ $(function() {
 	    if(message.voice == 'yoda'){
 	       var uri = message.source
 	    } 
-    if(message.voice == 'clever'){
+   else  if(message.voice == 'clever'){
            var uri = message.source
         }
-        if(message.voice == 'girl'){
+
+       else  if(message.voice == 'girl'){
            var uri = message.source
         }
         else {
