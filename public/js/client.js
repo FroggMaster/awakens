@@ -1221,7 +1221,7 @@ parser = {
 	str = str.replace(/(sandwich)+?/gi, '<div>sammich</div>');
 	str = str.replace(/(anon2000)+?/gi, '<div>fagatron2K</div>');
 	str = str.replace(/(kevin)+?/gi, '<div>Keblor</div>'); 
-	str = str.replace(/(kevin)+?/gi, '<div>787</div>'); 
+	str = str.replace(/(778)+?/gi, '<div>787</div>'); 
         // endfilters
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
