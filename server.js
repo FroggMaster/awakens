@@ -442,7 +442,16 @@ function createChannel(io, channelName) {
             speak : {
                 params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
-                var message = params.voice != 'yoda' ? params.voice : params.message
+                
+
+                if (params.voice != 'yoda' && params.voice != 'girl' && params.voice != 'clever'){
+                    var message = params.voice;
+                }
+                else{
+                    
+                var message = params.message;
+                }
+
 		var role = ['god','super','admin','mod','basic','mute','sub'];
                 if (message) {
                    if (role.indexOf(dbuser.get('role')) <= 5) {
