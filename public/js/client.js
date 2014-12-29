@@ -561,27 +561,37 @@ $(function() {
                     parser.getAllFonts(message.flair);
                 }
             }
-            if(message.type == 'chat-message' && message.hat == 'C_hat'){
-		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-            } else if(message.hat == 'Dunce'){
-            	$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
-            } else if(message.hat == 'Crown'){
-		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
-	    } else if(message.hat == 'Antlers'){
-		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
-	    } else if(message.hat == 'G_hat'){
-	    	$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-	    } else if(message.hat == 'Newyear'){
-		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
-	    } else if(message.hat == 'EdgyNewyear'){
-		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
-	    } else if(message.hat == 'Gold'){
-	    	$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
-	    } else if(message.hat == 'Coin'){
-		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-	    } else{
-	    	$('<span class="hat"></span>').appendTo(content);
-	    }
+		switch(message.hat){
+		case 'C_hat': 
+			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+			break;
+		case 'Dunce':
+            		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
+			break;
+		case 'Crown':
+			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
+			break;
+		case 'Antlers':
+			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
+			break;
+		case 'G_hat':
+			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+			break;
+		case 'Newyear':
+			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
+			break;
+		case 'EdgyNewyear':
+			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
+			break;
+		case 'Gold':
+		    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
+			break;
+		case 'Coin':
+			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+			break;
+		default:
+			$('<span class="hat"></span>').appendTo(content);
+		}
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(parsedFlair).appendTo(content);
             } else {
