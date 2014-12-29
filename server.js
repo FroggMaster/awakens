@@ -444,7 +444,6 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                 var message = params.message;
 		var role = ['god','super','admin','mod','basic','mute','sub'];
-		var voices = ['default','yoda','clever','girl'];
 		if(voices.indexOf(params.voice) > 0){
 		   params.message = params.voice
 		};
@@ -456,7 +455,7 @@ function createChannel(io, channelName) {
                       t = settings.speak['default'];
                    }
 		   if(params.voice == 'yoda'){
-		   request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+		   request('http://2s4.me/speak/yodaspeak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
 		   if (!error && response.statusCode == 200) {
 		      return throttle.on('speak-' + al, t).then(function() {
 		         roomEmit('message', {
