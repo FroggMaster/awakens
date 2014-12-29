@@ -440,20 +440,11 @@ function createChannel(io, channelName) {
                 }
             },
             speak : {
-                params : [ 'message', 'voice', 'dialect' ],
+                params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
 		var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy'];
-                 var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
-                
-                
-                
-                
-                
-                
-                request('http://2s4.me/speak/dialect.php?dialect=' + dialect + '&text=' + encodeURIComponent(params.message), function (error, response, body) {
-		     
-                
-                var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default';
+                var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
+                var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default'
 		var role = ['god','super','admin','mod','basic','mute','sub'];
                 if (message) {
                    if (role.indexOf(dbuser.get('role')) <= 5) {
@@ -462,7 +453,7 @@ function createChannel(io, channelName) {
                    if (t === undefined) {
                       t = settings.speak['default'];
                    }
-		   request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(body), function (error, response, body) {
+		   request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
 		      if(voice == 'default') {
 			body = null
 		      };
