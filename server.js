@@ -442,7 +442,7 @@ function createChannel(io, channelName) {
             speak : {
                 params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
-		var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy'];
+		var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao'];
                 var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
                 var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default'
 		var role = ['god','super','admin','mod','basic','mute','sub'];
