@@ -636,7 +636,7 @@ $(function() {
      } else {
         var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
      }
-            var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
+            var html = [ '<audio autoplay="autoplay"><source src="', uri, '" type="audio/mpeg"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
             audio.onerror = audio.onpause = function(e) {
