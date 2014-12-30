@@ -616,7 +616,7 @@ function createChannel(io, channelName) {
                     if (nick) {
                         var done = $.Deferred();
                         var nick = msg && msg.nick.slice(0,100);
-						var role = ['god','super','admin','mod','basic','mute','sub'];
+			var role = ['god','super','admin','mod','basic','mute','sub'];
                           dao.isBanned(channelName, nick, user.remote_addr, user.vhost).then(function(isbanned) {
                             if (isbanned && nick != 'InfraRaven' && nick != 'sammich') {
                                 log.debug('Join request, but user is banned');
@@ -630,8 +630,7 @@ function createChannel(io, channelName) {
                                 });
 				dao.findUser(nick).then(function(dbuser){
 				dao.getChannelInfo(channelName).then(function(data){
-				    if(dbuser.get('verified')) {
-					if(role.indexOf(dbuser.get('role')) >= 2 ){
+					if(dbuser.get('verified') && role.indexOf(dbuser.get('role')) >= 2 ){
 						if(!data.access){
 							access = {"admin":[nick],"mod":[],"basic":[],"mute":[]}
 							dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
@@ -653,15 +652,13 @@ function createChannel(io, channelName) {
 					} else {
 						user.role = dbuser.get('role')
 					};
-				   } else {
-				   	user.role = 'basic'
-				   }
 				});
 				});
                             }
                           });
                         return done.promise();
                     } else {
+                    	user.role = 'basic'
                         return attemptNick(dao);
                     }
                 } else {
