@@ -630,7 +630,7 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
- var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao'];
+ var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao', 'black'];
      if(voices.indexOf(message.voice) > 0){
         var uri = message.source
      } else {
