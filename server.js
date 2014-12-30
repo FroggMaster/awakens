@@ -327,17 +327,27 @@ function createChannel(io, channelName) {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                 var role = ['god','super','admin','mod','basic','mute','sub'];
-		return dao.findUser(user.nick).then(function(fuser) {
-                    return dao.findUser(params.nick).then(function(dbuser) {
-                    	var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
-                        if (dbuser && role.indexOf(fuser.get('role')) <= 1) {
-                            return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), dbuser.get('role'), dbuser.get('access_level'), dbuser.get('remote_addr'), reg));
-                        } else if (dbuser && role.indexOf(fuser.get('role')) >= 2) {
-			    return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), dbuser.get('role'), dbuser.get('access_level'), dbuser.get('vHost'), reg));
-			} else {
-                            return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
-                        }
-                    });
+		return dao.getChannelInfo(channelName).then(function(channel) {
+		   return dao.findUser(params.nick).then(function(dbuser) {
+		      var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
+		      access = JSON.parse(channel.access);
+		      if(access.admin.indexOf(params.nick) >= 0 ){
+		      	rowl = 'admin'
+		      } else if(access.mod.indexOf(params.nick) >= 0){
+			rowl = 'mod'
+		      } else if(access.basic.indexOf(params.nick) >= 0){
+			rowl = 'basic'
+		      } else if(access.mute.indexOf(params.nick) >= 0){
+			rowl = 'mute'
+		      }
+		      if (dbuser && role.indexOf(user.role) <= 1) {
+			return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), rowl, dbuser.get('access_level'), dbuser.get('remote_addr'), reg));
+		      } else if (dbuser && role.indexOf(user.role) >= 2) {
+			return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), rowl, dbuser.get('access_level'), dbuser.get('vHost'), reg));
+		      } else {
+			return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
+		      }
+		   });
 		});
                 }
             },
