@@ -299,15 +299,15 @@ function createChannel(io, channelName) {
                                 } else {
                                     dao.getChannelInfo(channelName).done(function(info) {
                                         access = JSON.parse(info.access);
-										for (i = 2; i < 5; i++) { 
-										    if(access[role[i]].indexOf(params.nick) != -1 ){
-												remove = access[role[i]].indexOf(params.nick)
-											    access[role[i]].splice(remove, 1);
-										    }
-										}
+                                        for (i = 2; i < 5; i++) { 
+                                            if(access[role[i]].indexOf(params.nick) != -1 ){
+                                                remove = access[role[i]].indexOf(params.nick)
+                                                access[role[i]].splice(remove, 1);
+                                            }
+                                        }
                                         if(access[params.role].indexOf(params.nick) < 0){
-										    var to = indexOf(params.nick);
-											channel.online[to].role = params.role
+                                            var to = indexOf(params.nick);
+                                            channel.online[to].role = params.role
                                             access[params.role].push(params.nick)
                                             dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                                 user.socket.emit('update', {
@@ -343,16 +343,16 @@ function createChannel(io, channelName) {
                     return dao.getChannelInfo(channelName).then(function(channel) {
                         return dao.findUser(params.nick).then(function(dbuser) {
                             var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
-							var rowl;
+                            var rowl;
                             access = JSON.parse(channel.access);
-							for (i = 5; i < 2; i++) { 
-							    if(access[role[i]].indexOf(params.nick) != -1 ){
-								    rowl = role[i]
-							    }
-							}
-							if(rowl == undefined){
-								rowl = dbuser.get('role')
-							}
+                            for (i = 5; i < 2; i++) { 
+                                if(access[role[i]].indexOf(params.nick) != -1 ){
+                                    rowl = role[i]
+                                }
+                            }
+                            if(rowl == undefined){
+                                rowl = dbuser.get('role')
+                            }
                             if (dbuser && role.indexOf(user.role) <= 1) {
                                 return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), rowl, dbuser.get('access_level'), dbuser.get('remote_addr'), reg));
                             } else if (dbuser && role.indexOf(user.role) >= 2) {
