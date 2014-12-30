@@ -275,15 +275,15 @@ function createChannel(io, channelName) {
 		}
             },
             access : {
-				role : 'super',
+		role : 'super',
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
-				var role = ['god','super','admin','mod','basic','mute','sub'];
-				if(role.indexOf(params.role) >= 0){
+		var role = ['god','super','admin','mod','basic','mute','sub'];
+		if(role.indexOf(params.role) >= 0){
                     var done = $.Deferred();
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (dbuser) {
-							if(role.indexOf(params.role) < 2 ) {
+			if(role.indexOf(params.role) < 2 ) {
                             return dbuser.access(params.role, params.access_level).done(function(success) {
                                 if (success) {
                                     channel.online.forEach(function(user) {
@@ -296,19 +296,18 @@ function createChannel(io, channelName) {
                                     });
                                 }
                             });
-							} else {
-								dao.getChannelInfo(channelName).done(function(info) {
-									access = JSON.parse(info.access);
-									if(access[params.role].indexOf(params.nick) < 0){
-										console.log(access[params.role].indexOf(params.nick))
-										access[params.role].push(params.nick)
-										dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
-										showMessage(params.nick + ' now has role ' + params.role)
-									} else {
-										errorMessage(params.nick + ' already has role ' + params.role)
-									}
-								});
-							}
+			} else {
+				dao.getChannelInfo(channelName).done(function(info) {
+				access = JSON.parse(info.access);
+				if(access[params.role].indexOf(params.nick) < 0){
+					access[params.role].push(params.nick)
+					dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
+					showMessage(params.nick + ' now has role ' + params.role)
+				} else {
+					errorMessage(params.nick + ' already has role ' + params.role)
+				}
+				});
+			}
                         } else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
@@ -320,7 +319,7 @@ function createChannel(io, channelName) {
             },
             whoami : {
                 handler : function(dao, dbuser) {
-                    showMessage(msgs.get('whoami', dbuser.get('nick'), dbuser.get('role'),dbuser.get('access_level'), user.remote_addr));
+                    showMessage(msgs.get('whoami', dbuser.get('nick'), user.role,dbuser.get('access_level'), user.remote_addr));
                     return $.Deferred().resolve(true).promise();
                 }
             },
