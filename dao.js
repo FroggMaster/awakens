@@ -8,8 +8,7 @@ var passwordHash = require('password-hash');
 var fs = require('fs');
 var pool = mysql.createPool(settings.db);
 
-function ucwords(string)
-{
+function ucwords(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
