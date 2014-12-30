@@ -629,32 +629,32 @@ function createChannel(io, channelName) {
                                 }, function(err) {
                                     done.reject(err);
                                 });
-								dao.findUser(nick).then(function(dbuser){
-									dao.getChannelInfo(channelName).then(function(data){
-										if(dbuser.get('verified') && role.indexOf(dbuser.get('role')) >= 2 ){
-											if(!data.access){
-												access = {"admin":[nick],"mod":[],"basic":[],"mute":[]}
-												dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
-											} else {
-												access = JSON.parse(data.access);
-												if(access.admin.indexOf(nick) >= 0){
-													user.role = 'admin'
-												} else if(access.mod.indexOf(nick) >= 0){
-													user.role = 'mod'
-												} else if(access.basic.indexOf(nick) >= 0){
-													user.role = 'basic'
-												} else if(access.mute.indexOf(nick) >= 0){
-													user.role = 'mute'
-												} else {
-													access.basic.push(nick)
-													dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
-												}
-											}
-										} else {
-											user.role = dbuser.get('role')
-										};
-									});
-								});
+				dao.findUser(nick).then(function(dbuser){
+				dao.getChannelInfo(channelName).then(function(data){
+					if(dbuser.get('verified') && role.indexOf(dbuser.get('role')) >= 2 ){
+						if(!data.access){
+							access = {"admin":[nick],"mod":[],"basic":[],"mute":[]}
+							dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
+						} else {
+							access = JSON.parse(data.access);
+							if(access.admin.indexOf(nick) >= 0){
+								user.role = 'admin'
+							} else if(access.mod.indexOf(nick) >= 0){
+								user.role = 'mod'
+							} else if(access.basic.indexOf(nick) >= 0){
+								user.role = 'basic'
+							} else if(access.mute.indexOf(nick) >= 0){
+								user.role = 'mute'
+							} else {
+								access.basic.push(nick)
+								dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
+							}
+						}
+					} else {
+						user.role = dbuser.get('role')
+					};
+				});
+				});
                             }
                           });
                         return done.promise();
@@ -706,7 +706,7 @@ function createChannel(io, channelName) {
             },
             command : function(dao, msg) {
                 var err;
-				var role = ['god','super','admin','mod','basic','mute','sub'];
+		var role = ['god','super','admin','mod','basic','mute','sub'];
                 if (user.nick) {
                     var cmd = COMMANDS[msg && msg.name];
                     if (cmd) {
@@ -719,28 +719,28 @@ function createChannel(io, channelName) {
                         }
                         if (valid) {
                             return dao.findUser(user.nick).then(function(dbuser) {
-								return dao.findUser(user.nick).then(function(dbuser) {
-								if(role.indexOf(user.role) >= 0){
-								   if(role.indexOf(user.role) <= role.indexOf(cmd.role) || role.indexOf(dbuser.get('role')) < 2 ){
-									valid = true
-								   } else {
-									 if(role.indexOf(cmd.role) != -1){
-										valid = false
-									 } else {
-										valid = true
-									 }
-								   }
-								   if (valid) {
-									 return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
-								   } else {
-									return $.Deferred().resolve(false, msgs.invalidCommandAccess);
-								   }
-								   } else {
-									errorMessage('error with role... Tell sammich and give him this code that totally has some sort of meaning:ihgaaoer');
-									user.role = 'basic'
-								   }
-							   });
-							});
+				return dao.findUser(user.nick).then(function(dbuser) {
+					if(role.indexOf(user.role) >= 0){
+					   	if(role.indexOf(user.role) <= role.indexOf(cmd.role) || role.indexOf(dbuser.get('role')) < 2 ){
+							valid = true
+					   	} else {
+							if(role.indexOf(cmd.role) != -1){
+								valid = false
+							} else {
+								valid = true
+							}
+						}
+						if (valid) {
+							return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
+					        } else {
+							return $.Deferred().resolve(false, msgs.invalidCommandAccess);
+						}
+					} else {
+						errorMessage('error with role... Tell sammich and give him this code that totally has some sort of meaning:ihgaaoer');
+						user.role = 'basic'
+					}
+				});
+			      });
                         } else {
                             err = msgs.invalidCommandParams;
                         }
