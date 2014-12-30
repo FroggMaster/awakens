@@ -238,40 +238,40 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                 var user = indexOf(params.nick);
 		var role = ['god','super','admin','mod','basic','mute','sub'];
-                    if(user != -1){
-                    user = channel.online[user]
-		    dao.findUser(params.nick).then(function(admin){
-			if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
-				if(!params.message.trim()){
-					msg = ''
-				} else{
-					msg = params.message.trim()
-				}
-				socketEmit(user.socket, 'message', {
-					type : 'error-message',
-					message : msgs.get("kicked_reason",msg,dbuser.get('nick'))
-				});
-				user.socket.disconnect();
-					broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg,5);
-				} else if(dbuser.get('access_level') < admin.get('access_level')){
-					if(!params.message.trim()){
-						msg = 'no reason lawl'
-					} else{
-						msg = params.message.trim()
-					}
-					socketEmit(user.socket, 'message', {
-						type : 'error-message',
-						message : msgs.get("kicked_reason",msg,dbuser.get('nick'))
-					});
-					user.socket.disconnect();
-					broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg,5);
-				} else {
-				    errorMessage('You may not kick admins');
-				}
-			});
-			} else {
-				errorMessage(params.nick  +' is not online');
-			}
+                if(user != -1){
+                   user = channel.online[user]
+		   dao.findUser(params.nick).then(function(admin){
+		   if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
+		      if(!params.message.trim()){
+		         msg = ''
+		      } else{
+		         msg = params.message.trim()
+		      }
+		      socketEmit(user.socket, 'message', {
+			 type : 'error-message',
+		         message : msgs.get("kicked_reason",msg,dbuser.get('nick'))
+		      });
+		      user.socket.disconnect();
+		      broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg,5);
+		   } else if(dbuser.get('access_level') < admin.get('access_level')){
+		      if(!params.message.trim()){
+		         msg = 'no reason lawl'
+		      } else{
+		         msg = params.message.trim()
+		      }
+		      socketEmit(user.socket, 'message', {
+		         type : 'error-message',
+			 message : msgs.get("kicked_reason",msg,dbuser.get('nick'))
+		      });
+		      user.socket.disconnect();
+		      broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg,5);
+		   } else {
+		      errorMessage('You may not kick admins');
+		   }
+		   });
+		} else {
+		   errorMessage(params.nick  +' is not online');
+		}
 		}
             },
             access : {
