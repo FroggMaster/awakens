@@ -300,8 +300,8 @@ function createChannel(io, channelName) {
                                     dao.getChannelInfo(channelName).done(function(info) {
                                         access = JSON.parse(info.access);
                                         if(access[params.role].indexOf(params.nick) < 0){
-										    var to = indexOf(params.nick);
-											channel.online[to].role = params.role
+					    var to = indexOf(params.nick);
+					    channel.online[to].role = params.role
                                             access[params.role].push(params.nick)
                                             dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                                 user.socket.emit('update', {
