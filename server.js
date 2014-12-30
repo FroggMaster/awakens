@@ -522,87 +522,87 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-		anon : {
-			params : [ 'message' ],
-        		  handler : function(dao, dbuser, params) {
-				var message = params.message.substring(0, settings.limits.message)
-				roomEmit('message', {
-					type : 'anon-message',
-					message : message,
-					name : user.nick
-				});
-				return $.Deferred().resolve(true);
-				}
-		},
-		part : {
-			params : [ 'message' ],
-				handler : function(dao, dbuser, params) {
-				var message = params.message.substring(0, settings.limits.part)
-				message = message.replace(/\r?\n|\r/g, '');
-				user.part = message
-				socketEmit(socket, 'update', {
-					part : user.part
-                		});
-					return $.Deferred().resolve(true);
-				}
-		},
-		play : {
-			role : 'super',
-			params : [ 'url' ],
-			handler : function(dao, dbuser, params) {
-				roomEmit('playvid', {
-			           url : params.url
-				})
+	    anon : {
+	        params : [ 'message' ],
+        	handler : function(dao, dbuser, params) {
+		   var message = params.message.substring(0, settings.limits.message)
+		      roomEmit('message', {
+		         type : 'anon-message',
+			 message : message,
+			 name : user.nick
+		      });
+		return $.Deferred().resolve(true);
+		}
+	    },
+	    part : {
+	        params : [ 'message' ],
+	        handler : function(dao, dbuser, params) {
+	           var message = params.message.substring(0, settings.limits.part)
+		   message = message.replace(/\r?\n|\r/g, '');
+		   user.part = message
+		   socketEmit(socket, 'update', {
+		      part : user.part
+                   });
+	         return $.Deferred().resolve(true);
+	        }
+	    },
+	    play : {
+	        role : 'super',
+		params : [ 'url' ],
+		handler : function(dao, dbuser, params) {
+		    roomEmit('playvid', {
+		        url : params.url
+		    })
+		}
+	    },
+	    msg : {
+	        params : [ 'message' ],
+		handler : function(dao, dbuser, params) {
+		    var message = params.message.substring(0, 50)
+		    roomEmit('centermsg', {
+		        msg : message
+		    });
+		}
+	    },
+	    mask : {
+		params : [ 'vHost' ],
+		handler : function(dao, dbuser, params) {
+		    dao.findvHost(params.vHost).then(function(host){
+		        if(!host){
+			    dbuser.set('vHost', params.vHost).then(function() {
+			        socketEmit(socket, 'update', {
+				    vHost : params.vHost
+			        });
+			    });
+			} else {
+			    errorMessage(msgs.get('vhosttaken', params.vHost));
 			}
-		},
-		msg : {
-			params : [ 'message' ],
-			handler : function(dao, dbuser, params) {
-			var message = params.message.substring(0, 50)
-				roomEmit('centermsg', {
-				   msg : message
-				})
-			}
-		},
-		mask : {
-			params : [ 'vHost' ],
-			handler : function(dao, dbuser, params) {
-			   dao.findvHost(params.vHost).then(function(host){
-			    if(!host){
-				dbuser.set('vHost', params.vHost).then(function() {
-				   socketEmit(socket, 'update', {
-				      vHost : params.vHost
-				   });
-				});
-			    } else {
-			       errorMessage(msgs.get('vhosttaken', params.vHost));
-			    }
-			   })
-			}
-		},
-		ghost : {
-			handler : function(dao, dbuser, params) {
-			for (i = 0; i < channel.online.length; i++) { 
-				channel.online[i].socket.emit('alive')
-			}
-			setTimeout(function(){
-			   for (i = 0; i < channel.online.length; i++) {
-			      if(!channel.online[i].alive){
-			         roomEmit('left', {
-			      	    id : channel.online[i].socket.id,
-			      	    nick : channel.online[i].nick,
+		    });
+		}
+	    },
+	    ghost : {
+		handler : function(dao, dbuser, params) {
+		    for (i = 0; i < channel.online.length; i++) { 
+			channel.online[i].socket.emit('alive')
+		    }
+		    setTimeout(function(){
+		        for (i = 0; i < channel.online.length; i++) {
+			    if(!channel.online[i].alive){
+			        roomEmit('left', {
+			       	    id : channel.online[i].socket.id,
+			       	    nick : channel.online[i].nick,
 			            part : 'i\'m a spooky ghost!'
 			       	 });
-			      	channel.online.splice(to, 1);
-			      	channel.online[i].socket.disconnect();
-			      	showMessage(channel.online[i].nick + ' was a ghost!');
-			      } else {
-			         showMessage(channel.online[i].nick + ' isn\'t a ghost.');
-			      }
-				}
-			},1000);
+			       	 channel.online.splice(to, 1);
+			       	 channel.online[i].socket.disconnect();
+			       	 showMessage(channel.online[i].nick + ' was a ghost!');
+			    } else {
+			        showMessage(channel.online[i].nick + ' isn\'t a ghost.');
+			    }
 			}
+		    },1000);
 		}
+	    }
         };
 
         // -----------------------------------------------------------------------------
