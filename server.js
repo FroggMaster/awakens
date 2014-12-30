@@ -339,6 +339,8 @@ function createChannel(io, channelName) {
 			rowl = 'basic'
 		      } else if(access.mute.indexOf(params.nick) >= 0){
 			rowl = 'mute'
+		      } else {
+		      	rowl = dbuser.get('role')
 		      }
 		      if (dbuser && role.indexOf(user.role) <= 1) {
 			return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), rowl, dbuser.get('access_level'), dbuser.get('remote_addr'), reg));
