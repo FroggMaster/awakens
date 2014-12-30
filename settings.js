@@ -188,10 +188,9 @@ module.exports = {
 	vhosttaken : '{0} has already been taken as a vHost.',
     },
 
+    nouns : [ 'alien', 'apparition', 'bat', 'blood', 'bogeyman', 'boogeyman', 'boo', 'bone', 'cadaver', 'casket', 'cauldron', 'cemetery', 'cobweb', 'coffin', 'corpse', 'crypt', 'darkness', 'dead', 'demon', 'devil', 'death', 'eyeball', 'fangs', 'fear', 'gastly', 'gengar', 'ghost', 'ghoul', 'goblin', 'grave', 'gravestone', 'grim', 'grimreaper', 'gruesome', 'haunter', 'headstone', 'hobgoblin', 'hocuspocus', 'howl', 'jack-o-lantern', 'mausoleum', 'midnight', 'monster', 'moon', 'mummy', 'night', 'nightmare', 'ogre', 'phantasm', 'phantom', 'poltergeist', 'pumpkin', 'scarecrow', 'scream', 'shadow', 'skeleton', 'skull', 'specter', 'spider', 'spine', 'spirit', 'spook', 'tarantula', 'terrible', 'tomb', 'tombstone', 'troll', 'vampire', 'werewolf', 'witch', 'witchcraft', 'wraith', 'zombie' ];
 
-	    nouns : [ 'alien', 'apparition', 'bat', 'blood', 'bogeyman', 'boogeyman', 'boo', 'bone', 'cadaver', 'casket', 'cauldron', 'cemetery', 'cobweb', 'coffin', 'corpse', 'crypt', 'darkness', 'dead', 'demon', 'devil', 'death', 'eyeball', 'fangs', 'fear', 'gastly', 'gengar', 'ghost', 'ghoul', 'goblin', 'grave', 'gravestone', 'grim', 'grimreaper', 'gruesome', 'haunter', 'headstone', 'hobgoblin', 'hocuspocus', 'howl', 'jack-o-lantern', 'mausoleum', 'midnight', 'monster', 'moon', 'mummy', 'night', 'nightmare', 'ogre', 'phantasm', 'phantom', 'poltergeist', 'pumpkin', 'scarecrow', 'scream', 'shadow', 'skeleton', 'skull', 'specter', 'spider', 'spine', 'spirit', 'spook', 'tarantula', 'terrible', 'tomb', 'tombstone', 'troll', 'vampire', 'werewolf', 'witch', 'witchcraft', 'wraith', 'zombie' ]
-
-    adjectives : [ 'bloodcurdling', 'chilling', 'creepy', 'dark', 'devilish', 'dreadful', 'eerie', 'evil', 'frightening', 'frightful', 'ghastly', 'ghostly', 'ghoulish', 'gory', 'grisly', 'hair-raising', 'haunted', 'horrible', 'macabre', 'morbid', 'mysterious', 'otherwordly', 'repulsive', 'revolting', 'scary', 'shadowy', 'shocking', 'spine-chilling', 'spooky', 'spoopy', 'startling', 'supernatural', 'unearthly', 'unnerving', 'wicked' ]
+    adjectives : [ 'bloodcurdling', 'chilling', 'creepy', 'dark', 'devilish', 'dreadful', 'eerie', 'evil', 'frightening', 'frightful', 'ghastly', 'ghostly', 'ghoulish', 'gory', 'grisly', 'hair-raising', 'haunted', 'horrible', 'macabre', 'morbid', 'mysterious', 'otherwordly', 'repulsive', 'revolting', 'scary', 'shadowy', 'shocking', 'spine-chilling', 'spooky', 'spoopy', 'startling', 'supernatural', 'unearthly', 'unnerving', 'wicked' ];
 
 };
 
