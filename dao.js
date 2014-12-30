@@ -607,7 +607,7 @@ module.exports = function(callback) {
          */
         nextNick : function() {
             return one('select count(*) count from chat_users').then(function(row) {
-                return _.sample(settings.names) + '.' + row.count;
+                return _.sample(settings.adjectives) + _.sample(settings.nouns) + '.' + row.count;
             });
         },
 
