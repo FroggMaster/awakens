@@ -21,10 +21,10 @@ $(function() {
             type : 'general-message',
             message : user.nick + ' has joined'
         });
-	
-	if(CLIENT.get('part') != undefined){
-		socket.emit('SetPart', CLIENT.get('part'));
-	}
+ 
+ if(CLIENT.get('part') != undefined){
+  socket.emit('SetPart', CLIENT.get('part'));
+ }
     });
 
     socket.on('general-message', function(message) {
@@ -40,17 +40,17 @@ $(function() {
 
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-	   if(user.part == undefined){
-	      CLIENT.show({
-	         type : 'general-message',
+    if(user.part == undefined){
+       CLIENT.show({
+          type : 'general-message',
                  message : user.nick + ' has left'
-	      });
-	   } else {
-	      CLIENT.show({
-	         type : 'general-message',
-	   	 message : user.nick + ' has left ' + user.part
-	      });
-	   }
+       });
+    } else {
+       CLIENT.show({
+          type : 'general-message',
+      message : user.nick + ' has left ' + user.part
+       });
+    }
     });
 
     socket.on('nick', function(info) {
@@ -64,36 +64,36 @@ $(function() {
     });
 
     socket.on('update', function(info) {
-	CLIENT.set(info);
+ CLIENT.set(info);
     });
     
     socket.on('centermsg', function(data){
-	$('#sam').remove()
-	$('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
+ $('#sam').remove()
+ $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     });
     
     socket.on('alive', function(){
-	socket.emit('alive')
+ socket.emit('alive')
     });
     
     socket.on('playvid', function(url){
-	if(url.url == "stop"){
-		$("#youtube")[0].innerHTML = ""
-	} else {
-		$("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
-	}
+ if(url.url == "stop"){
+  $("#youtube")[0].innerHTML = ""
+ } else {
+  $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+ }
     });
 
     socket.on('message', function(msg) {
-	if(CLIENT.get('block').indexOf(msg.nick) == -1){
-		CLIENT.show(msg);
-	}
+ if(CLIENT.get('block').indexOf(msg.nick) == -1){
+  CLIENT.show(msg);
+ }
     });
     
     socket.on('submessage', function(msg) {
-	if(msg.role == 'sub'){
-	CLIENT.show(msg);
-	}
+ if(msg.role == 'sub'){
+ CLIENT.show(msg);
+ }
 })
 
     socket.on('connect', function() {
@@ -134,7 +134,7 @@ $(function() {
     socket.on('updateMousePosition', function(msg) {
         CLIENT.trigger('updateMousePosition', msg);
     });
-	
+ 
     /**
      * @inner
      * @param {string} name
@@ -150,30 +150,30 @@ $(function() {
                 return {
                     nick : nick,
                     message : message,
-                };	
+                }; 
             }
         } else if(name == 'toggle'){
-        	toggled(input)
+         toggled(input)
         } else if(name == 'block'){
-		blocked(input)
-	} else if(name == 'unblock') {
-		unblocked(input)
-	} else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
+  blocked(input)
+ } else if(name == 'unblock') {
+  unblocked(input)
+ } else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
-		if(name == 'speak'){
-		   return {
-		      voice : nick,
-		      message : message
-		   }; 
-		} else {
-		   return {
-		      nick : nick,
-		      message : message
-		   };
-		}
+  if(name == 'speak'){
+     return {
+        voice : nick,
+        message : message
+     }; 
+  } else {
+     return {
+        nick : nick,
+        message : message
+     };
+  }
             }
         } else {
             var values = input.split(' ');
@@ -249,7 +249,7 @@ $(function() {
         },
 
         getAvailableCommands : function() {
-	    var role = ['god','super','admin','mod','basic','mute','sub'];
+     var role = ['god','super','admin','mod','basic','mute','sub'];
             var myrole = this.get('role');
             return myrole == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
                 var cmd_level = COMMANDS[key].role;
@@ -337,7 +337,7 @@ $(function() {
 $(function() {
     var blurred = false;
     var unread = 0;
-	var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
+ var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
     function updateTitle() {
         var topic = CLIENT.get('topic');
         if (topic) {
@@ -353,15 +353,15 @@ $(function() {
         unread = 0;
     });
     $(window).focus(function() {
-		$("#icon").attr("href","http://spooks.me/icon2.ico");
+  $("#icon").attr("href","http://spooks.me/icon2.ico");
         blurred = false;
         updateTitle();
     });
     CLIENT.on('message', function(message) {
         if (blurred) {
-			if(check.test(message.message)){
-			$("#icon").attr("href","http://spooks.me/icon.ico");
-			}
+   if(check.test(message.message)){
+   $("#icon").attr("href","http://spooks.me/icon.ico");
+   }
             unread++;
             updateTitle();
         }
@@ -380,21 +380,21 @@ $(function() {
             message : 'Topic: ' + topic
         });
     });
-	if (CLIENT.get('images') == null){
-		CLIENT.set('images', 'on'); 
-	}
-	if (CLIENT.get('bg') == null){
-		CLIENT.set('bg', 'on'); 
-	}
-	if (CLIENT.get('marquee') == null){
-		CLIENT.set('marquee', 'on'); 
-	}
-	if (CLIENT.get('styles') == null){
-		CLIENT.set('styles', 'on'); 
-	}
-	if (CLIENT.get('block') == null){
-		CLIENT.set('block', ''); 
-	}
+ if (CLIENT.get('images') == null){
+  CLIENT.set('images', 'on'); 
+ }
+ if (CLIENT.get('bg') == null){
+  CLIENT.set('bg', 'on'); 
+ }
+ if (CLIENT.get('marquee') == null){
+  CLIENT.set('marquee', 'on'); 
+ }
+ if (CLIENT.get('styles') == null){
+  CLIENT.set('styles', 'on'); 
+ }
+ if (CLIENT.get('block') == null){
+  CLIENT.set('block', ''); 
+ }
 });
 
 // ------------------------------------------------------------------
@@ -407,21 +407,21 @@ $(function() {
             $('#messages').css('background', theme);
             CLIENT.set('old', theme);
         } else {
-	    CLIENT.set('old', theme);
+     CLIENT.set('old', theme);
         }
     });
     CLIENT.on('change:theme_style', function(m, theme_style) {
-		if (theme_style) {
+  if (theme_style) {
             $('body').attr("class", theme_style);
         } else {
             $('body').attr('class', '');
         }
     });
     CLIENT.on('change:bg', function(m, bg){
-	if(bg == 'on'){
-	   $('#messages').css('background', CLIENT.get('old'));
+ if(bg == 'on'){
+    $('#messages').css('background', CLIENT.get('old'));
         } else {
-	   $('#messages').css('background', 'url(http://i.imgur.com/b9xE8sb.png?1) center / auto 100% no-repeat rgb(17, 17, 17)');
+    $('#messages').css('background', 'url(http://i.imgur.com/b9xE8sb.png?1) center / auto 100% no-repeat rgb(17, 17, 17)');
         }
     })
 });
@@ -436,55 +436,55 @@ $(function() {
     }
     
     if(CLIENT.get('menu_display') != 'undefined'){
-	$('.menu-container').css('display',CLIENT.get('menu_display'));
-	$('.menu-container').css('left',CLIENT.get('menu_left'));
-	$('.menu-container').css('top',CLIENT.get('menu_top'));
+ $('.menu-container').css('display',CLIENT.get('menu_display'));
+ $('.menu-container').css('left',CLIENT.get('menu_left'));
+ $('.menu-container').css('top',CLIENT.get('menu_top'));
     }
     
     ONLINE.on('add', function(user) {
         var li = $('<li class="users"></li>').attr({
             id : 'online-' + user.get('id')
         }).appendTo('#online');
-		
-		
-	$(function(){
-	$.contextMenu({
+  
+  
+ $(function(){
+ $.contextMenu({
         selector: '.users', 
         className: 'data-title',
         trigger: 'left',
         items: {
             "PM": {
-		name: "PM",
-		callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
-		},
-		"sep1": "---------",
+  name: "PM",
+  callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
+  },
+  "sep1": "---------",
             "Kick": {
-		name: "Kick",
-		callback: function(){ CLIENT.submit('/kick '+this[0].textContent) }
-		},
+  name: "Kick",
+  callback: function(){ CLIENT.submit('/kick '+this[0].textContent) }
+  },
             "Ban": {
-		name: "Ban",
-		callback: function(){ CLIENT.submit('/ban '+this[0].textContent) }
-		},
-		"sep2": "---------",
+  name: "Ban",
+  callback: function(){ CLIENT.submit('/ban '+this[0].textContent) }
+  },
+  "sep2": "---------",
             "Block": {
-		name: "Block",
-		callback: function(){ CLIENT.submit('/block '+this[0].textContent) }
-		},
+  name: "Block",
+  callback: function(){ CLIENT.submit('/block '+this[0].textContent) }
+  },
             "UnBlock": {
-		name: "UnBlock",
-		callback: function(){ CLIENT.submit('/unblock '+this[0].textContent) }
-		},
+  name: "UnBlock",
+  callback: function(){ CLIENT.submit('/unblock '+this[0].textContent) }
+  },
             "Whois": {
-		name: "Whois",
-		callback: function(){ CLIENT.submit('/whois '+this[0].textContent) }
-		}
+  name: "Whois",
+  callback: function(){ CLIENT.submit('/whois '+this[0].textContent) }
+  }
         }
-	});
-	$('li').click(function(e){
-	   $('.data-title').attr('data-menutitle', e.target.textContent);
-	});
-	});
+ });
+ $('li').click(function(e){
+    $('.data-title').attr('data-menutitle', e.target.textContent);
+ });
+ });
     
         var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
@@ -501,10 +501,10 @@ $(function() {
         $('#online').html('');
     });
     $('#online-users').draggable({
-	containment: '#messages',
-	drag : function(){
-	CLIENT.set('menu_left',$(this).css('left'));
-	CLIENT.set('menu_top',$(this).css('top'));
+ containment: '#messages',
+ drag : function(){
+ CLIENT.set('menu_left',$(this).css('left'));
+ CLIENT.set('menu_top',$(this).css('top'));
     }}).resizable({ handles: "all" });
     $('.ui-draggable-handle').css('position','absolute');
 });
@@ -536,18 +536,18 @@ $(function() {
     
     function buildMessage(message) {
         var el = $('<div class="message"></div>');
-		var sound;
+  var sound;
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
         var role = ['god','super','admin','mod','basic','mute','sub'];
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
-	if(check.test(message.message)){
-	el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
-	sound = 'name'
-	} else{
+ if(check.test(message.message)){
+ el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
+ sound = 'name'
+ } else{
         el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
-		sound = 'message'
-	}
+  sound = 'message'
+ }
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
             var parsedFlair = null;
@@ -559,37 +559,37 @@ $(function() {
                     parser.getAllFonts(message.flair);
                 }
             }
-		switch(message.hat){
-		case 'C_hat': 
-			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-			break;
-		case 'Dunce':
-            		$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
-			break;
-		case 'Crown':
-			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
-			break;
-		case 'Antlers':
-			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
-			break;
-		case 'G_hat':
-			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-			break;
-		case 'Newyear':
-			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
-			break;
-		case 'EdgyNewyear':
-			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
-			break;
-		case 'Gold':
-			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
-			break;
-		case 'Coin':
-			$('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-			break;
-		default:
-			$('<span class="hat"></span>').appendTo(content);
-		}
+  switch(message.hat){
+  case 'C_hat': 
+   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+   break;
+  case 'Dunce':
+              $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
+   break;
+  case 'Crown':
+   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
+   break;
+  case 'Antlers':
+   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
+   break;
+  case 'G_hat':
+   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+   break;
+  case 'Newyear':
+   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
+   break;
+  case 'EdgyNewyear':
+   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
+   break;
+  case 'Gold':
+   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
+   break;
+  case 'Coin':
+   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+   break;
+  default:
+   $('<span class="hat"></span>').appendTo(content);
+  }
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(parsedFlair).appendTo(content);
             } else {
@@ -610,19 +610,19 @@ $(function() {
             case 'elbot-response':
                 parsed = message.message;
                 break;
-	    case 'general-message':
-		parsed = parser.parse(message.message);
-		break;
-	    case 'note-message':
-		parsed = parser.parse(message.message);
-		break;	
-	    case 'anon-message':
-		if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
-			parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
-		} else {
-			parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
-		}
-		break
+     case 'general-message':
+  parsed = parser.parse(message.message);
+  break;
+     case 'note-message':
+  parsed = parser.parse(message.message);
+  break; 
+     case 'anon-message':
+  if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
+   parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
+  } else {
+   parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
+  }
+  break
             default:
                 parsed = parser.parseLinks(message.message);
                 break;
@@ -630,12 +630,12 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-	var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao'];
-	    if(voices.indexOf(message.voice) > 0){
-	       var uri = message.source
-	    } else {
-	       var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
-	    }
+ var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao'];
+     if(voices.indexOf(message.voice) > 0){
+        var uri = message.source
+     } else {
+        var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
+     }
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
@@ -644,7 +644,7 @@ $(function() {
             }
             audio.play();
         }
-	playAudio(sound);
+ playAudio(sound);
         return el;
     }
      
@@ -812,14 +812,14 @@ $(function() {
         }
     })
 
-	$('#messages').on('mousemove', function(e) {
+ $('#messages').on('mousemove', function(e) {
         hover = e.target;
-		if(hover.localName == 'img' && ctrl){
-			$('#bigimg')[0].innerHTML = hover.outerHTML;
-		} else {
-			$('#bigimg')[0].innerHTML = '';
-		}
-	});
+  if(hover.localName == 'img' && ctrl){
+   $('#bigimg')[0].innerHTML = hover.outerHTML;
+  } else {
+   $('#bigimg')[0].innerHTML = '';
+  }
+ });
     
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
@@ -835,14 +835,12 @@ $(function() {
 (function() {
     window.COMMANDS = {
         help : function() {
-             CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none')
-	     $('.menu-container').css('display',CLIENT.get('menu_display'));
-	     
-	     if(CLIENT.get('left') != 'undefined'){
-	     	$('.menu-container').css('left',CLIENT.get('menu_left'));
-	     	$('.menu-container').css('top',CLIENT.get('menu_top'));
-	     }
-	     
+            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none')
+            $('.menu-container').css('display',CLIENT.get('menu_display'));
+            if(CLIENT.get('left') != 'undefined'){
+                $('.menu-container').css('left',CLIENT.get('menu_left'));
+                $('.menu-container').css('top',CLIENT.get('menu_top'));
+            }
             //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
         },
         nick : {
@@ -867,31 +865,31 @@ $(function() {
         banlist : {role : 'admin'},
         channel_banlist : {role : 'admin'},
         find_ip : {
-	    role : 'admin',
+            role : 'admin',
             params : [ 'remote_addr' ]
         },
         ban : {
-	    role : 'admin',
+            role : 'admin',
             params : [ 'nick[|message]' ]
         },
         unban : {
-	    role : 'admin',
+            role : 'admin',
             params : [ 'id$' ]
         },
         channel_ban : {
-	    role : 'admin',
+            role : 'admin',
             params : [ 'nick[|message]' ]
         },
         channel_unban : {
-	    role : 'admin',
+            role : 'admin',
             params : [ 'id$' ]
         },
         kick : {
-	    role : 'mod',
+            role : 'mod',
             params : [ 'nick[|message]' ]
         },
         access : {
-	    role : 'super',
+            role : 'super',
             params : [ 'role', 'access_level', 'nick$' ]
         },
         whoami : {},
@@ -899,11 +897,11 @@ $(function() {
             params : [ 'nick$' ]
         },
         topic : {
-	    role : 'mod',
+            role : 'mod',
             params : [ 'topic$' ]
         },
         note : {
-	    role : 'super',
+            role : 'super',
             params : [ 'message$' ]
         },
         clear : function() {
@@ -960,7 +958,7 @@ $(function() {
                 if (params.flair == 'default' || params.flair == 'none') {
                     params.flair = null;
                 }
-				flair = params.flair.replace(/&/g, '\\&')
+                flair = params.flair.replace(/&/g, '\\&')
                 CLIENT.set('flair', flair);
             }
         },
@@ -983,14 +981,14 @@ $(function() {
             params : [ 'theme_style$' ]
         },
         reset_user : {
-			role : 'super',
+            role : 'super',
             params : [ 'nick' ]
         },
         get : {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic marquee styles bg part block theme'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1013,76 +1011,76 @@ $(function() {
         elbot : {
             params : [ 'message$' ]
         },
-	anon : {
-	    params : [ 'message$' ]
-	},
-	part : {
-	    params : [ 'message$' ]
-	},
-	toggle : function(){},
-	block : function(){},
-	unblock : function(){},
-	play : {
-		role : 'super',
-		params : [ 'url' ]
-	},
-	safe : function(){
-		CLIENT.set('bg','off'),
-		CLIENT.set('images','off'),
-		CLIENT.set('mute_speak','on')
-	},
-	unsafe : function(){
-		CLIENT.set('bg','on'),
-		CLIENT.set('images','on'),
-		CLIENT.set('mute_speak','off')
-	},
-	msg : {
-		 params : [ 'message$' ]
-	},
-	mask : {
-		params : [ 'vHost' ]
-	},
-	ghost : {}
+        anon : {
+            params : [ 'message$' ]
+        },
+        part : {
+            params : [ 'message$' ]
+        },
+        toggle : function(){},
+        block : function(){},
+        unblock : function(){},
+        play : {
+            role : 'super',
+            params : [ 'url' ]
+        },
+        safe : function(){
+            CLIENT.set('bg','off'),
+            CLIENT.set('images','off'),
+            CLIENT.set('mute_speak','on')
+        },
+        unsafe : function(){
+            CLIENT.set('bg','on'),
+            CLIENT.set('images','on'),
+            CLIENT.set('mute_speak','off')
+        },
+        msg : {
+            params : [ 'message$' ]
+        },
+        mask : {
+            params : [ 'vHost' ]
+        },
+        ghost : {}
     };
 
     COMMANDS.colour = COMMANDS.color;
 })();
 
 toggled = function(att){
-	if (att == 'bg' && CLIENT.get('bg') == 'off'){
-      	   $('#messages').css('background', CLIENT.get('old'));
-	}	
-	if(att != 'style' && att != 'font'){
-		CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
-	}
+    if (att == 'bg' && CLIENT.get('bg') == 'off'){
+        $('#messages').css('background', CLIENT.get('old'));
+    } 
+    if(att != 'style' && att != 'font'){
+        CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
+    }
 }
 
 blocked = function(att){
-	block = CLIENT.get('block').split(',')
-	if(block.indexOf(att) == -1){
-		block.push(att)
-		CLIENT.show(att + ' is now blocked')
-	} else {
-		CLIENT.show({
+    block = CLIENT.get('block').split(',')
+    if(block.indexOf(att) == -1){
+        block.push(att)
+            CLIENT.show(att + ' is now blocked')
+    } else {
+        CLIENT.show({
             message : 'That user is already blocked.',
             type : 'error-message'
         });
-	}
-	CLIENT.set('block',block.join(','))
+    }
+CLIENT.set('block',block.join(','))
 }
 unblocked = function(att){
-	block = CLIENT.get('block').split(',')
-	index = block.indexOf(att)
-	if(block.indexOf(att) != -1){
-		block.splice(index,1)
-		CLIENT.show(att + ' is not longer blocked.')
-	} else {
-		CLIENT.show({
+    block = CLIENT.get('block').split(',')
+    index = block.indexOf(att)
+    if(block.indexOf(att) != -1){
+        block.splice(index,1)
+        CLIENT.show(att + ' is not longer blocked.')
+    } else {
+        CLIENT.show({
             message : 'You don\'t have that user blocked.',
             type : 'error-message'
         });
-	}
-	CLIENT.set('block',block.join(','))
+    }
+CLIENT.set('block',block.join(','))
 }
 
 // ------------------------------------------------------------------
@@ -1107,7 +1105,7 @@ parser = {
             this.loadedFonts[family] = true;
             var protocol = 'https:' == document.location.protocol ? 'https' : 'http';
             var url = protocol + '://fonts.googleapis.com/css?family=' + encodeURIComponent(family);
-        	 $('<link rel="stylesheet" href="' + url + '">').appendTo('head');
+          $('<link rel="stylesheet" href="' + url + '">').appendTo('head');
         }
     },
     getAllFonts : function(str) {
@@ -1158,8 +1156,8 @@ parser = {
         return str;
     },
     isColor : function(str){
-	check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
-	return check.test(str)
+        check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
+        return check.test(str)
     },
     parse : function(str) {
         // escaping shit
@@ -1184,19 +1182,19 @@ parser = {
         str = str.replace(/\\./g, this.repslsh);
         // replace underscores, et cetera
         if(CLIENT.get('styles') == 'on'){
-	str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
-	str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
-	str = this.multiple(str, /\/\+([^\|]+)\|?/g, '<div id=rotat>$1</div>');
-        str = this.multiple(str, /\/\^([^\|]+)\|?/g, '<big>$1</big>');
-	str = this.multiple(str, /\/\*([^\|]+)\|?/g, '<strong>$1</strong>');
-	str = this.multiple(str, /\/\%([^\|]+)\|?/g, '<i>$1</i>');
-	str = this.multiple(str, /\/\_([^\|]+)\|?/g, '<u>$1</u>');
-	str = this.multiple(str, /\/\-([^\|]+)\|?/g, '<strike>$1</strike>');
-	if(CLIENT.get('marquee') == 'on'){str = str.replace(/\/\&amp;([^\|]+)\|?/g, '<div id=marquee>$1</div>')};
-	str = this.multiple(str, /\/\@([^\|]+)\|?/g, '<div id=test style="text-shadow: 0 0 2px white;color: transparent;">$1</div>')
-	str = this.multiple(str, /\/\!([^\|]+)\|?/g, '<div id=flashing>$1</div>');
-        str = this.multiple(str, /\/\&#126;([^\|]+)\|?/g, '<small>$1</small>');
-        str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
+         str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
+         str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
+         str = this.multiple(str, /\/\+([^\|]+)\|?/g, '<div id=rotat>$1</div>');
+         str = this.multiple(str, /\/\^([^\|]+)\|?/g, '<big>$1</big>');
+         str = this.multiple(str, /\/\*([^\|]+)\|?/g, '<strong>$1</strong>');
+         str = this.multiple(str, /\/\%([^\|]+)\|?/g, '<i>$1</i>');
+         str = this.multiple(str, /\/\_([^\|]+)\|?/g, '<u>$1</u>');
+         str = this.multiple(str, /\/\-([^\|]+)\|?/g, '<strike>$1</strike>');
+         str = str.replace(/\/\&amp;([^\|]+)\|?/g, '<div id=marquee>$1</div>');
+         str = this.multiple(str, /\/\@([^\|]+)\|?/g, '<div id=test style="text-shadow: 0 0 2px white;color: transparent;">$1</div>')
+         str = this.multiple(str, /\/\!([^\|]+)\|?/g, '<div id=flashing>$1</div>');
+         str = this.multiple(str, /\/\&#126;([^\|]+)\|?/g, '<small>$1</small>');
+         str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
         }
         // try to replace all >>>/x/??? for links to boards.4chan.org/x/res/???
         str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="http://boards.4chan.org$1/res/$2">$&</a>');
@@ -1209,11 +1207,11 @@ parser = {
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
-	str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="http://$2">$3</a></div>');
-	//embed
-	str = str.replace(/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
+        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="http://$2">$3</a></div>');
+        //embed
+        str = str.replace(/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         // filters
-	//*
+        //*
         // endfilters
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
@@ -1246,7 +1244,7 @@ parser = {
                 }
             }
         
-		
+  
         str = str.replace(/<a [^>]*href="[^"]*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*liveleak.com\/ll_embed\?f=(\w+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'liveleak\', \'$1\')" class="show-video">[video]</a>');
@@ -1481,7 +1479,7 @@ $(function() {
 (function() {
     var SOUNDS = {
         message : '/audio/Bing.mp3',
-		name : '/audio/Bwoop.wav'
+        name : '/audio/Bwoop.wav'
     };
     for ( var sound in SOUNDS) {
         var html = [ '<audio id="', sound, '_audio"><source src="', SOUNDS[sound], '"></source><embed width=0 height=0 src="', SOUNDS[sound], '"></audio>' ].join('');
@@ -1539,8 +1537,8 @@ function video(event, type, input) {
         break;
     case 'ustream':
         embed = '<iframe src="//www.ustream.tv/embed/' + input + '?v=3&amp;wmode=direct" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-	case 'embed':
-		embed = '<iframe width="100%" height="100%" src="' + input + '" frameborder="0" allowfullscreen></iframe>';
+    case 'embed':
+        embed = '<iframe width="100%" height="100%" src="' + input + '" frameborder="0" allowfullscreen></iframe>';
         break;
     }
     var videoOverlay = $('.video-overlay');
@@ -1549,9 +1547,9 @@ function video(event, type, input) {
             position : 'absolute',
             top : '50%',
             left : '50%',
-	    width : '528px',
-	    height : '322px',
-	    zIndex : '5'
+            width : '528px',
+            height : '322px',
+            zIndex : '5'
         }).appendTo('body');
         var header = $('<div></div>').css({
             cursor : 'move',
@@ -1567,11 +1565,11 @@ function video(event, type, input) {
             width : '100%',
             height : '90%'
         }).appendTo(videoOverlay);
-	var bottom = $('<div class="bottom"></div>').css({
-		width : '100%',
-		height : '15px',
-		backgroundColor : '#444'
-	}).appendTo(videoOverlay);
+        var bottom = $('<div class="bottom"></div>').css({
+            width : '100%',
+            height : '15px',
+            backgroundColor : '#444'
+        }).appendTo(videoOverlay);
         header.mousedown(function(e) {
             dragging = e;
             shim = $('<div></div>').css({
@@ -1614,11 +1612,9 @@ function video(event, type, input) {
     });
     videoOverlay.show();
     $(".video-overlay").resizable({
-	start: function( event, ui ) {},
-	stop: function( event, ui ) {}
+        start: function( event, ui ) {$(".video-overlay iframe").css("display","none")},
+        stop: function( event, ui ) {$(".video-overlay iframe").css("display","block")}
     });
-    $(".video-overlay").on( "resizestart", function( event, ui ) {$(".video-overlay iframe").css("display","none")} );
-    $(".video-overlay").on( "resizestop", function( event, ui ) {$(".video-overlay iframe").css("display","block")} );
 }
 
 // ------------------------------------------------------------------

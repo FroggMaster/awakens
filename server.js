@@ -301,8 +301,13 @@ function createChannel(io, channelName) {
                                         access = JSON.parse(info.access);
                                         if(access[params.role].indexOf(params.nick) < 0){
                                             access[params.role].push(params.nick)
-                                            dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
-                                            showMessage(params.nick + ' now has role ' + params.role)
+                                            dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
+											    user.socket.emit('update', {
+												    access_level : dbuser.get('access_level'),
+												    role : dbuser.get('role')
+												});
+                                                showMessage(params.nick + ' now has role ' + params.role)
+											});
                                         } else {
                                             errorMessage(params.nick + ' already has role ' + params.role)
                                         }
