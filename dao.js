@@ -8,6 +8,11 @@ var passwordHash = require('password-hash');
 var fs = require('fs');
 var pool = mysql.createPool(settings.db);
 
+function ucwords(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 module.exports = function(callback) {
     var connection = $.Deferred();
 
@@ -607,7 +612,7 @@ module.exports = function(callback) {
          */
         nextNick : function() {
             return one('select count(*) count from chat_users').then(function(row) {
-                return _.sample(settings.adjectives) + _.sample(settings.nouns) + '.' + row.count;
+                return ucwords(_.sample(settings.adjectives)) + ucwords(_.sample(settings.nouns)) + '.' + row.count;
             });
         },
 
