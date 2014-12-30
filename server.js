@@ -730,35 +730,35 @@ function createChannel(io, channelName) {
                             });
                         }
                         if (valid) {
-                            return dao.findUser(user.nick).then(function(dbuser) {
-				return dao.findUser(user.nick).then(function(dbuser) {
-					if(role.indexOf(user.role) >= 0){
-					   	if(role.indexOf(user.role) <= role.indexOf(cmd.role) || role.indexOf(dbuser.get('role')) < 2 ){
-							valid = true
-					   	} else {
-							if(role.indexOf(cmd.role) != -1){
-								valid = false
-							} else {
-								valid = true
-							}
-						}
-						if (valid) {
-							return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
-					        } else {
-							return $.Deferred().resolve(false, msgs.invalidCommandAccess);
-						}
-					} else {
-						errorMessage('error with role... Tell sammich and give him this code that totally has some sort of meaning:ihgaaoer');
-						user.role = 'basic'
-					}
-				});
+                           return dao.findUser(user.nick).then(function(dbuser) {
+			      return dao.findUser(user.nick).then(function(dbuser) {
+			         if(role.indexOf(user.role) >= 0){
+				    if(role.indexOf(user.role) <= role.indexOf(cmd.role) || role.indexOf(dbuser.get('role')) < 2 ){
+				       valid = true
+				    } else {
+				       if(role.indexOf(cmd.role) != -1){
+				          valid = false
+				       } else {
+				          valid = true
+				       }
+				    }
+				    if (valid) {
+				       return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
+				    } else {
+				       return $.Deferred().resolve(false, msgs.invalidCommandAccess);
+				    }
+				 } else {
+				    errorMessage('error with role... Tell sammich and give him this code that totally has some sort of meaning:ihgaaoer');
+				    user.role = 'basic'
+				 }
 			      });
+			   });
                         } else {
                             err = msgs.invalidCommandParams;
                         }
-                    } else {
-                        err = msgs.invalidCommand;
-                    }
+                   } else {
+                      err = msgs.invalidCommand;
+                   }
                 }
                 return $.Deferred().resolve(false, err);
             },
