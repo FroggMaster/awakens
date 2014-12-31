@@ -309,7 +309,7 @@ function createChannel(io, channelName) {
                                             channel.online[to].role = params.role
                                             access[params.role].push(params.nick)
                                             dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
-                                                user.socket.emit('update', {
+                                                channel.online[to].socket.id.emit('update', {
                                                     access_level : dbuser.get('access_level'),
                                                     role : dbuser.get('role')
                                                 });
@@ -344,7 +344,7 @@ function createChannel(io, channelName) {
                             var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                             var rowl;
                             access = JSON.parse(channel.access);
-                            for (i = 5; i < 2; i++) { 
+                            for (i = 5; i > 2; i--) { 
                                 if(access[role[i]].indexOf(params.nick) != -1 ){
                                     rowl = role[i]
                                 }
@@ -658,20 +658,18 @@ function createChannel(io, channelName) {
                                                 dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
 												user.role = "admin"
                                             } else {
-											    console.log('test5')
                                                 access = JSON.parse(data.access);
-												console.log(access)
 												for (i = 5; i > 2; i--) { 
                                                     if(access[role[i]].indexOf(nick) != -1 ){
                                                         user.role = role[i]
 														Nuser = false
                                                     } else {
-													    user.role = 'basic'
-                                                        access.basic.push(nick)
 														Nuser = true
 													}
                                                 }
 												if(Nuser){
+												    user.role = 'basic'
+												    access.basic.push(nick)
 												    dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
 												}
                                             }
