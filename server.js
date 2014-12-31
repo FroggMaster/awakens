@@ -178,7 +178,7 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-            ban : {
+            permaban : {
                 role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
@@ -205,7 +205,7 @@ function createChannel(io, channelName) {
                         });
                 }
             },
-            unban : {
+            unpermaban : {
                 role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
@@ -213,7 +213,7 @@ function createChannel(io, channelName) {
                     return dao.unban(params.id);
                 }
             },
-            channel_ban : {
+            ban : {
                 role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
@@ -221,10 +221,10 @@ function createChannel(io, channelName) {
                     if(params.message.trim())
                         msg+=": "+params.message.trim();
                     broadcastChannel(dao, channel, msg,dbuser.get("access_level"));
-                    return dao.ban(params.id, channelName);
+                    return dao.ban(params.nick, channelName);
                 }
             },
-            channel_unban : {
+            unban : {
                 role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {

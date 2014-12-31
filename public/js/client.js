@@ -868,19 +868,19 @@ $(function() {
             role : 'admin',
             params : [ 'remote_addr' ]
         },
+        permaban : {
+            role : 'admin',
+            params : [ 'nick[|message]' ]
+        },
+        unpermaban : {
+            role : 'admin',
+            params : [ 'id$' ]
+        },
         ban : {
             role : 'admin',
             params : [ 'nick[|message]' ]
         },
         unban : {
-            role : 'admin',
-            params : [ 'id$' ]
-        },
-        channel_ban : {
-            role : 'admin',
-            params : [ 'nick[|message]' ]
-        },
-        channel_unban : {
             role : 'admin',
             params : [ 'id$' ]
         },
