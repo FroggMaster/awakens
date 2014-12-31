@@ -309,9 +309,9 @@ function createChannel(io, channelName) {
                                             channel.online[to].role = params.role
                                             access[params.role].push(params.nick)
                                             dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
-                                                channel.online[to].socket.id.emit('update', {
+                                                channel.online[to].socket.emit('update', {
                                                     access_level : dbuser.get('access_level'),
-                                                    role : dbuser.get('role')
+                                                    role : channel.online[to].role
                                                 });
                                                 showMessage(params.nick + ' now has role ' + params.role)
                                             });
