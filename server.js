@@ -8,7 +8,6 @@ var _ = require('underscore');
 var $ = require('jquery-deferred');
 var express = require('express');
 var fs = require('fs');
-var verifyByEmail = !!settings.emailServer;
 var httpsPort = settings.https && settings.https.port;
 var httpPort = settings.server.port;
 
@@ -135,13 +134,13 @@ function createChannel(io, channelName) {
                 }
             },
             register : {
-                params : [ 'email_address', 'initial_password' ],
+                params : [ 'initial_password' ],
                 handler : function(dao, dbuser, params) {
-                    return dbuser.register(params.email_address, params.initial_password);
+                    return dbuser.register(params.initial_password);
                 }
             },
             verify : {
-                params : verifyByEmail ? [ 'reenter_password', 'verification_code' ] : [ 'reenter_password' ],
+                params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
                         success && socketEmit(socket, 'update', {
@@ -657,20 +656,24 @@ function createChannel(io, channelName) {
                                             if(!data.access){
                                                 access = {"admin":[nick],"mod":[],"basic":[],"mute":[]}
                                                 dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
+												user.role = "admin"
                                             } else {
+											    console.log('test5')
                                                 access = JSON.parse(data.access);
-                                                if(access.admin.indexOf(nick) >= 0){
-                                                    user.role = 'admin'
-                                                } else if(access.mod.indexOf(nick) >= 0){
-                                                    user.role = 'mod'
-                                                } else if(access.basic.indexOf(nick) >= 0){
-                                                    user.role = 'basic'
-                                                } else if(access.mute.indexOf(nick) >= 0){
-                                                    user.role = 'mute'
-                                                } else {
-                                                    access.basic.push(nick)
-                                                    dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
+												console.log(access)
+												for (i = 5; i > 2; i--) { 
+                                                    if(access[role[i]].indexOf(nick) != -1 ){
+                                                        user.role = role[i]
+														Nuser = false
+                                                    } else {
+													    user.role = 'basic'
+                                                        access.basic.push(nick)
+														Nuser = true
+													}
                                                 }
+												if(Nuser){
+												    dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
+												}
                                             }
                                         } else {
                                             user.role = dbuser.get('role')
@@ -1146,8 +1149,7 @@ function initApp(app, server, https) {
                 }
                 var index = fs.readFileSync('index.html').toString();
                 _.each({
-                    channel : channelName,
-                    verifyByEmail : verifyByEmail
+                    channel : channelName
                 }, function(value, key) {
                     index = index.replace('${' + key + '}', value);
                 });
