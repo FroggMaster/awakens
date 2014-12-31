@@ -37,11 +37,11 @@ function createChannel(io, channelName) {
         };
 
     socket.on('SetPart', function(parts){
-        user.part = parts
+        user.part = parts;
     });
  
     socket.on('alive', function(){
-        user.alive = true
+        user.alive = true;
     });
  
     socket.on('custom', function(hat){
@@ -102,7 +102,7 @@ function createChannel(io, channelName) {
             me : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
-                    var message = params.message.substring(0, settings.limits.message)
+                    var message = params.message.substring(0, settings.limits.message);
                     roomEmit('message', {
                         type : 'action-message',
                         message : user.nick + ' ' + params.message
@@ -143,13 +143,13 @@ function createChannel(io, channelName) {
                 params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
-					    room = dbuser.get('nick') + '.spooks.me/'
-						access = {"admin":[dbuser.get('nick')],"mod":[],"basic":[],"mute":[]}
+                        room = dbuser.get('nick') + '.spooks.me/';
+                        access = {"admin":[dbuser.get('nick')],"mod":[],"basic":[],"mute":[]};
                         dao.setChannelInfo(room, 'access', JSON.stringify(access)).then(function(){
                             success && socketEmit(socket, 'update', {
                                 password : params.reenter_password
                             });
-						});
+                        });
                     });
                 }
             },
@@ -191,7 +191,7 @@ function createChannel(io, channelName) {
                         msg+=": "+params.message.trim();
                         dao.findUser(user.nick).then(function(admin){
                             dao.findUser(params.nick).then(function(dbuser){
-                                if(dbuser != null){
+                                if(dbuser !== null){
                                     if(role.indexOf(dbuser.get('role')) <= role.indexOf(admin.get('role'))){
                                         errorMessage('You may not ban admins');
                                     } else {         
@@ -242,13 +242,13 @@ function createChannel(io, channelName) {
                     var user = indexOf(params.nick);
                     var role = ['god','super','admin','mod','basic','mute','sub'];
                     if(user != -1){
-                        user = channel.online[user]
+                        user = channel.online[user];
                         dao.findUser(params.nick).then(function(admin){
                         if(role.indexOf(dbuser.get('role')) < role.indexOf(admin.get('role'))){
                             if(!params.message.trim()){
-                                msg = ''
+                                msg = '';
                             } else{
-                                msg = params.message.trim()
+                                msg = params.message.trim();
                             }
                             socketEmit(user.socket, 'message', {
                                 type : 'error-message',
@@ -258,9 +258,9 @@ function createChannel(io, channelName) {
                             broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg,5);
                         } else if(dbuser.get('access_level') < admin.get('access_level')){
                             if(!params.message.trim()){
-                                msg = 'no reason lawl'
+                                msg = 'no reason lawl';
                             } else{
-                                msg = params.message.trim()
+                                msg = params.message.trim();
                             }
                             socketEmit(user.socket, 'message', {
                                 type : 'error-message',
@@ -304,23 +304,23 @@ function createChannel(io, channelName) {
                                         access = JSON.parse(info.access);
                                         for (i = 2; i < 5; i++) { 
                                             if(access[role[i]].indexOf(params.nick) != -1 ){
-                                                remove = access[role[i]].indexOf(params.nick)
+                                                remove = access[role[i]].indexOf(params.nick);
                                                 access[role[i]].splice(remove, 1);
                                             }
                                         }
                                         if(access[params.role].indexOf(params.nick) < 0){
                                             var to = indexOf(params.nick);
-                                            channel.online[to].role = params.role
-                                            access[params.role].push(params.nick)
+                                            channel.online[to].role = params.role;
+                                            access[params.role].push(params.nick);
                                             dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                                 channel.online[to].socket.emit('update', {
                                                     access_level : dbuser.get('access_level'),
                                                     role : channel.online[to].role
                                                 });
-                                                showMessage(params.nick + ' now has role ' + params.role)
+                                                showMessage(params.nick + ' now has role ' + params.role);
                                             });
                                         } else {
-                                            errorMessage(params.nick + ' already has role ' + params.role)
+                                            errorMessage(params.nick + ' already has role ' + params.role);
                                         }
                                     });
                                 }
@@ -329,7 +329,7 @@ function createChannel(io, channelName) {
                             }
                         });
                     } else {
-                        errorMessage(params.role + ' is a invalid role')
+                        errorMessage(params.role + ' is a invalid role');
                     }
                 }
             },
@@ -350,11 +350,11 @@ function createChannel(io, channelName) {
                             access = JSON.parse(channel.access);
                             for (i = 5; i > 2; i--) { 
                                 if(access[role[i]].indexOf(params.nick) != -1 ){
-                                    rowl = role[i]
+                                    rowl = role[i];
                                 }
                             }
-                            if(rowl == undefined){
-                                rowl = dbuser.get('role')
+                            if(rowl === undefined){
+                                rowl = dbuser.get('role');
                             }
                             if (dbuser && role.indexOf(user.role) <= 1) {
                                 return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), rowl, dbuser.get('access_level'), dbuser.get('remote_addr'), reg));
@@ -440,7 +440,7 @@ function createChannel(io, channelName) {
                 role : 'admin',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
-                    var theme = params.theme_style.substring(0, settings.limits.message)
+                    var theme = params.theme_style.substring(0, settings.limits.message);
                     return dao.setChannelInfo(channelName, 'theme', theme).then(function() {
                         roomEmit('update', {
                             theme : theme
@@ -483,7 +483,7 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao', 'black', 'demon'];
                     var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
-                    var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default'
+                    var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default';
                     var role = ['god','super','admin','mod','basic','mute','sub'];
                     if (message) {
                         if (role.indexOf(dbuser.get('role')) <= 5) {
@@ -494,8 +494,8 @@ function createChannel(io, channelName) {
                             }
                             request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
                                 if(voice == 'default') {
-                                    body = null
-                                };
+                                    body = null;
+                                }
                                 return throttle.on('speak-' + al, t).then(function() {
                                     roomEmit('message', {
                                         nick : dbuser.get('nick'),
@@ -539,7 +539,7 @@ function createChannel(io, channelName) {
             anon : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
-                    var message = params.message.substring(0, settings.limits.message)
+                    var message = params.message.substring(0, settings.limits.message);
                     roomEmit('message', {
                         type : 'anon-message',
                         message : message,
@@ -551,9 +551,9 @@ function createChannel(io, channelName) {
             part : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
-                    var message = params.message.substring(0, settings.limits.part)
+                    var message = params.message.substring(0, settings.limits.part);
                     message = message.replace(/\r?\n|\r/g, '');
-                    user.part = message
+                    user.part = message;
                     socketEmit(socket, 'update', {
                         part : user.part
                     });
@@ -572,7 +572,7 @@ function createChannel(io, channelName) {
             msg : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
-                    var message = params.message.substring(0, 50)
+                    var message = params.message.substring(0, 50);
                     roomEmit('centermsg', {
                         msg : message
                     });
@@ -597,7 +597,7 @@ function createChannel(io, channelName) {
             ghost : {
                 handler : function(dao, dbuser, params) {
                     for (i = 0; i < channel.online.length; i++) { 
-                        channel.online[i].socket.emit('alive')
+                        channel.online[i].socket.emit('alive');
                     }
                     setTimeout(function(){
                         for (i = 0; i < channel.online.length; i++) {
@@ -628,20 +628,19 @@ function createChannel(io, channelName) {
          */
         _.each({
             join : function(dao, msg) {
-                user.tabs = 0
+                user.tabs = 0;
                 if(channel.online.length > 0){
                     for (i = 0; i < channel.online.length; i++) { 
                         if(channel.online[i].remote_addr == user.remote_addr){
-                            user.tabs++
+                            user.tabs++;
                         }
                     }
                 }          
                 if (!user.nick && user.tabs < 3) {
-                    var nick = msg && msg.nick;
+                    var nick = msg && msg.nick.slice(0,100);
                     var pwd = msg && msg.password;
                     if (nick) {
                         var done = $.Deferred();
-                        var nick = msg && msg.nick.slice(0,100);
                         var role = ['god','super','admin','mod','basic','mute','sub'];
                           dao.isBanned(channelName, nick, user.remote_addr, user.vhost).then(function(isbanned) {
                             if (isbanned && nick != 'InfraRaven' && nick != 'sammich') {
@@ -658,33 +657,33 @@ function createChannel(io, channelName) {
                                     dao.getChannelInfo(channelName).then(function(data){
                                         if(dbuser.get('verified') && role.indexOf(dbuser.get('role')) >= 2 ){
                                             if(!data.access){
-												user.role = "basic"
+                                                user.role = "basic";
                                             } else {
                                                 access = JSON.parse(data.access);
-												for (i = 5; i > 2; i--) { 
+                                                for (i = 5; i > 2; i--) { 
                                                     if(access[role[i]].indexOf(nick) != -1 ){
-                                                        user.role = role[i]
-														Nuser = false
+                                                        user.role = role[i];
+                                                        Nuser = false;
                                                     } else {
-														Nuser = true
-													}
+                                                        Nuser = true;
+                                                    }
                                                 }
-												if(Nuser){
-												    user.role = 'basic'
-												    access.basic.push(nick)
-												    dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
-												}
+                                                if(Nuser){
+                                                    user.role = 'basic';
+                                                    access.basic.push(nick);
+                                                    dao.setChannelInfo(channelName, 'access', JSON.stringify(access));
+                                                }
                                             }
                                         } else {
-                                            user.role = dbuser.get('role')
-                                        };
+                                            user.role = dbuser.get('role');
+                                        }
                                     });
                                 });
                             }
                           });
                         return done.promise();
                     } else {
-                        user.role = 'basic'
+                        user.role = 'basic';
                         return attemptNick(dao);
                     }
                 } else {
@@ -696,15 +695,16 @@ function createChannel(io, channelName) {
             message : function(dao, msg) {
                 var done = $.Deferred();
                 if (user.nick) {
+				    var hat;
                     if(!user.hat){
-                        var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : Math.random() < 0.01 ? 'EdgyNewyear' : Math.random() < 0.05 ? 'Dunce' : 'Newyear'
+                        hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : Math.random() < 0.01 ? 'EdgyNewyear' : Math.random() < 0.05 ? 'Dunce' : 'Newyear';
                     } else {
-                        hat = user.hat
+                        hat = user.hat;
                     }
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
-                        if (user.name == undefined){
+                        if (user.name === undefined){
                             if (dbuser.get('access_level') <= 3) {
                                 roomEmit('message', {
                                     nick : user.nick,
@@ -748,12 +748,12 @@ function createChannel(io, channelName) {
                                 return dao.findUser(user.nick).then(function(dbuser) {
                                     if(role.indexOf(user.role) >= 0){
                                         if(role.indexOf(user.role) <= role.indexOf(cmd.role) || role.indexOf(dbuser.get('role')) < 2 ){
-                                            valid = true
+                                            valid = true;
                                         } else {
                                             if(role.indexOf(cmd.role) != -1){
-                                                valid = false
+                                                valid = false;
                                             } else {
-                                                valid = true
+                                                valid = true;
                                             }
                                         }
                                         if (valid) {
@@ -763,7 +763,7 @@ function createChannel(io, channelName) {
                                         }
                                     } else {
                                         errorMessage('error with role... Tell sammich and give him this code that totally has some sort of meaning:ihgaaoer');
-                                        user.role = 'basic'
+                                        user.role = 'basic';
                                     }
                                 });
                             });
@@ -804,7 +804,7 @@ function createChannel(io, channelName) {
                 });
                 $.when.apply($, banned_throttles).done(function() {
                     var throttles = [];
-                    throttles.push(throttle.on(msg + 'Global', throttleProps.global))
+                    throttles.push(throttle.on(msg + 'Global', throttleProps.global));
                     throttles.push(throttle.on(msg + '-' + channelName, throttleProps.channel));
                     throttles.push(throttle.on(msg + '-' + socket.id, throttleProps.user));
                     $.when.apply($, throttles).fail(function() {
@@ -947,19 +947,19 @@ function createChannel(io, channelName) {
 
         function broadcast(dao, message, level) {
             for(var key in channels){
-                broadcastChannel(dao, channels[key], message, level)
+                broadcastChannel(dao, channels[key], message, level);
             }
         }
 
         function broadcastChannel(dao, channel, message, level) {
-            var role = ['god','super','admin','mod','basic','mute','sub']
+            var role = ['god','super','admin','mod','basic','mute','sub'];
             channel.online.forEach(function(user){
                 dao.findUser(user.nick).done(function(dbuser) {
                     if(role.indexOf(dbuser.get("role"))<=level){
                         socketEmit(user.socket, 'general-message', message);
                     }
-                })
-            })
+                });
+            });
         }
 
         /**
