@@ -143,13 +143,13 @@ function createChannel(io, channelName) {
                 params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
-					    room = dbuser.get('nick') + '.spooks.me/'
-						access = {"admin":[dbuser.get('nick')],"mod":[],"basic":[],"mute":[]}
+                        room = dbuser.get('nick') + '.spooks.me/'
+                        access = {"admin":[dbuser.get('nick')],"mod":[],"basic":[],"mute":[]}
                         dao.setChannelInfo(room, 'access', JSON.stringify(access)).then(function(){
                             success && socketEmit(socket, 'update', {
                                 password : params.reenter_password
                             });
-						});
+                        });
                     });
                 }
             },
@@ -658,22 +658,22 @@ function createChannel(io, channelName) {
                                     dao.getChannelInfo(channelName).then(function(data){
                                         if(dbuser.get('verified') && role.indexOf(dbuser.get('role')) >= 2 ){
                                             if(!data.access){
-												user.role = "basic"
+                                                user.role = "basic"
                                             } else {
                                                 access = JSON.parse(data.access);
-												for (i = 5; i > 2; i--) { 
+                                                for (i = 5; i > 2; i--) { 
                                                     if(access[role[i]].indexOf(nick) != -1 ){
                                                         user.role = role[i]
-														Nuser = false
+                                                        Nuser = false
                                                     } else {
-														Nuser = true
-													}
+                                                        Nuser = true
+                                                    }
                                                 }
-												if(Nuser){
-												    user.role = 'basic'
-												    access.basic.push(nick)
-												    dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
-												}
+                                                if(Nuser){
+                                                    user.role = 'basic'
+                                                    access.basic.push(nick)
+                                                    dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
+                                                }
                                             }
                                         } else {
                                             user.role = dbuser.get('role')
