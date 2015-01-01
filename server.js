@@ -347,12 +347,14 @@ function createChannel(io, channelName) {
                         return dao.findUser(params.nick).then(function(dbuser) {
                             var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                             var rowl;
-                            access = JSON.parse(channel.access);
-                            for (i = 5; i > 2; i--) { 
-                                if(access[role[i]].indexOf(params.nick) != -1 ){
-                                    rowl = role[i]
+							if(channel.access){
+                                access = JSON.parse(channel.access);
+                                for (i = 5; i > 2; i--) { 
+                                    if(access[role[i]].indexOf(params.nick) != -1 ){
+                                        rowl = role[i]
+                                    }
                                 }
-                            }
+							}
                             if(rowl == undefined){
                                 rowl = dbuser.get('role')
                             }
