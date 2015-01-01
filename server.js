@@ -143,9 +143,9 @@ function createChannel(io, channelName) {
                 params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
-                        room = dbuser.get('nick') + '.spooks.me/'
+                        chnl = dbuser.get('nick') + '.spooks.me/'
                         access = {"admin":[dbuser.get('nick')],"mod":[],"basic":[],"mute":[]}
-                        dao.setChannelInfo(room, 'access', JSON.stringify(access)).then(function(){
+                        dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
                             success && socketEmit(socket, 'update', {
                                 password : params.reenter_password
                             });
