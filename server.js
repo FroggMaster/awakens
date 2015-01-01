@@ -301,7 +301,6 @@ function createChannel(io, channelName) {
                                     });
                                 } else {
                                     dao.getChannelInfo(channelName).done(function(info) {
-                                        access = JSON.parse(info.access);
                                         for (i = 2; i < 5; i++) { 
                                             if(access[role[i]].indexOf(params.nick) != -1 ){
                                                 remove = access[role[i]].indexOf(params.nick)
@@ -347,14 +346,14 @@ function createChannel(io, channelName) {
                         return dao.findUser(params.nick).then(function(dbuser) {
                             var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                             var rowl;
-							if(channel.access){
+                            if(channel.access){
                                 access = JSON.parse(channel.access);
                                 for (i = 5; i > 2; i--) { 
                                     if(access[role[i]].indexOf(params.nick) != -1 ){
                                         rowl = role[i]
                                     }
                                 }
-							}
+                            }
                             if(rowl == undefined){
                                 rowl = dbuser.get('role')
                             }
@@ -660,22 +659,20 @@ function createChannel(io, channelName) {
                                     dao.getChannelInfo(channelName).then(function(data){
                                         if(dbuser.get('verified') && role.indexOf(dbuser.get('role')) >= 2 ){
                                             if(!data.access){
-                                                user.role = "basic"
-                                            } else {
-                                                access = JSON.parse(data.access);
-                                                for (i = 5; i > 2; i--) { 
-                                                    if(access[role[i]].indexOf(nick) != -1 ){
-                                                        user.role = role[i]
-                                                        Nuser = false
-                                                    } else {
-                                                        Nuser = true
-                                                    }
+                                                data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
+                                            }
+                                            Nuser = true;
+                                            access = JSON.parse(data.access);
+                                            for (i = 5; i > 2; i--) { 
+                                                if(access[role[i]].indexOf(nick) != -1 ){
+                                                    user.role = role[i]
+                                                    Nuser = false
                                                 }
-                                                if(Nuser){
-                                                    user.role = 'basic'
-                                                    access.basic.push(nick)
-                                                    dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
-                                                }
+                                            }
+                                            if(Nuser){
+                                                user.role = 'basic'
+                                                access.basic.push(nick)
+                                                dao.setChannelInfo(channelName, 'access', JSON.stringify(access))
                                             }
                                         } else {
                                             user.role = dbuser.get('role')
