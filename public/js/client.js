@@ -22,9 +22,9 @@ $(function() {
             message : user.nick + ' has joined'
         });
  
- if(CLIENT.get('part') != undefined){
-  socket.emit('SetPart', CLIENT.get('part'));
- }
+    if(CLIENT.get('part') != undefined){
+        socket.emit('SetPart', CLIENT.get('part'));
+    }
     });
 
     socket.on('general-message', function(message) {
@@ -40,17 +40,17 @@ $(function() {
 
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-    if(user.part == undefined){
-       CLIENT.show({
-          type : 'general-message',
-                 message : user.nick + ' has left'
-       });
-    } else {
-       CLIENT.show({
-          type : 'general-message',
-      message : user.nick + ' has left ' + user.part
-       });
-    }
+        if(user.part == undefined){
+            CLIENT.show({
+                type : 'general-message',
+                message : user.nick + ' has left'
+            });
+        } else {
+            CLIENT.show({
+                type : 'general-message',
+                message : user.nick + ' has left ' + user.part
+            });
+        }
     });
 
     socket.on('nick', function(info) {
@@ -64,37 +64,37 @@ $(function() {
     });
 
     socket.on('update', function(info) {
- CLIENT.set(info);
+        CLIENT.set(info);
     });
     
     socket.on('centermsg', function(data){
- $('#sam').remove()
- $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
+        $('#sam').remove()
+        $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     });
     
     socket.on('alive', function(){
- socket.emit('alive')
+        socket.emit('alive')
     });
     
     socket.on('playvid', function(url){
- if(url.url == "stop"){
-  $("#youtube")[0].innerHTML = ""
- } else {
-  $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
- }
+        if(url.url == "stop"){
+            $("#youtube")[0].innerHTML = ""
+        } else {
+            $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+        }
     });
 
     socket.on('message', function(msg) {
- if(CLIENT.get('block').indexOf(msg.nick) == -1){
-  CLIENT.show(msg);
- }
+        if(CLIENT.get('block').indexOf(msg.nick) == -1){
+            CLIENT.show(msg);
+        }
     });
     
     socket.on('submessage', function(msg) {
- if(msg.role == 'sub'){
- CLIENT.show(msg);
- }
-})
+        if(msg.role == 'sub'){
+            CLIENT.show(msg);
+        }
+    });
 
     socket.on('connect', function() {
         if (!first) {
@@ -153,27 +153,27 @@ $(function() {
                 }; 
             }
         } else if(name == 'toggle'){
-         toggled(input)
+            toggled(input)
         } else if(name == 'block'){
-  blocked(input)
- } else if(name == 'unblock') {
-  unblocked(input)
- } else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
+            blocked(input)
+        } else if(name == 'unblock') {
+            unblocked(input)
+        } else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
-  if(name == 'speak'){
-     return {
-        voice : nick,
-        message : message
-     }; 
-  } else {
-     return {
-        nick : nick,
-        message : message
-     };
-  }
+                if(name == 'speak'){
+                    return {
+                        voice : nick,
+                        message : message
+                    }; 
+                } else {
+                    return {
+                        nick : nick,
+                        message : message
+                    };
+                }
             }
         } else {
             var values = input.split(' ');
@@ -199,7 +199,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block menu_top menu_left menu_display vHost'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors styles bg role part block menu_top menu_left menu_display vHost'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -211,7 +211,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors marquee styles bg role part vHost'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors styles bg role part vHost'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -249,7 +249,7 @@ $(function() {
         },
 
         getAvailableCommands : function() {
-     var role = ['god','super','admin','mod','basic','mute','sub'];
+            var role = ['god','super','admin','mod','basic','mute','sub'];
             var myrole = this.get('role');
             return myrole == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
                 var cmd_level = COMMANDS[key].role;
@@ -337,7 +337,7 @@ $(function() {
 $(function() {
     var blurred = false;
     var unread = 0;
- var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
+    var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
     function updateTitle() {
         var topic = CLIENT.get('topic');
         if (topic) {
@@ -353,15 +353,15 @@ $(function() {
         unread = 0;
     });
     $(window).focus(function() {
-  $("#icon").attr("href","http://spooks.me/icon2.ico");
+        $("#icon").attr("href","http://spooks.me/icon2.ico");
         blurred = false;
         updateTitle();
     });
     CLIENT.on('message', function(message) {
         if (blurred) {
-   if(check.test(message.message)){
-   $("#icon").attr("href","http://spooks.me/icon.ico");
-   }
+            if(check.test(message.message)){
+                $("#icon").attr("href","http://spooks.me/icon.ico");
+            }
             unread++;
             updateTitle();
         }
@@ -380,21 +380,18 @@ $(function() {
             message : 'Topic: ' + topic
         });
     });
- if (CLIENT.get('images') == null){
-  CLIENT.set('images', 'on'); 
- }
- if (CLIENT.get('bg') == null){
-  CLIENT.set('bg', 'on'); 
- }
- if (CLIENT.get('marquee') == null){
-  CLIENT.set('marquee', 'on'); 
- }
- if (CLIENT.get('styles') == null){
-  CLIENT.set('styles', 'on'); 
- }
- if (CLIENT.get('block') == null){
-  CLIENT.set('block', ''); 
- }
+    if (CLIENT.get('images') == null){
+        CLIENT.set('images', 'on'); 
+    }
+    if (CLIENT.get('bg') == null){
+        CLIENT.set('bg', 'on'); 
+    }
+    if (CLIENT.get('styles') == null){
+        CLIENT.set('styles', 'on'); 
+    }
+    if (CLIENT.get('block') == null){
+        CLIENT.set('block', ''); 
+    }
 });
 
 // ------------------------------------------------------------------
@@ -407,23 +404,23 @@ $(function() {
             $('#messages').css('background', theme);
             CLIENT.set('old', theme);
         } else {
-     CLIENT.set('old', theme);
+            CLIENT.set('old', theme);
         }
     });
     CLIENT.on('change:theme_style', function(m, theme_style) {
-  if (theme_style) {
+        if (theme_style) {
             $('body').attr("class", theme_style);
         } else {
             $('body').attr('class', '');
         }
     });
     CLIENT.on('change:bg', function(m, bg){
- if(bg == 'on'){
-    $('#messages').css('background', CLIENT.get('old'));
+        if(bg == 'on'){
+            $('#messages').css('background', CLIENT.get('old'));
         } else {
-    $('#messages').css('background', 'url(http://i.imgur.com/b9xE8sb.png?1) center / auto 100% no-repeat rgb(17, 17, 17)');
+            $('#messages').css('background', 'url(http://i.imgur.com/b9xE8sb.png?1) center / auto 100% no-repeat rgb(17, 17, 17)');
         }
-    })
+    });
 });
 
 // ------------------------------------------------------------------
@@ -436,9 +433,9 @@ $(function() {
     }
     
     if(CLIENT.get('menu_display') != 'undefined'){
- $('.menu-container').css('display',CLIENT.get('menu_display'));
- $('.menu-container').css('left',CLIENT.get('menu_left'));
- $('.menu-container').css('top',CLIENT.get('menu_top'));
+        $('.menu-container').css('display',CLIENT.get('menu_display'));
+        $('.menu-container').css('left',CLIENT.get('menu_left'));
+        $('.menu-container').css('top',CLIENT.get('menu_top'));
     }
     
     ONLINE.on('add', function(user) {
@@ -501,11 +498,12 @@ $(function() {
         $('#online').html('');
     });
     $('#online-users').draggable({
- containment: '#messages',
- drag : function(){
- CLIENT.set('menu_left',$(this).css('left'));
- CLIENT.set('menu_top',$(this).css('top'));
-    }}).resizable({ handles: "all" });
+        containment: '#messages',
+        drag : function(){
+            CLIENT.set('menu_left',$(this).css('left'));
+            CLIENT.set('menu_top',$(this).css('top'));
+        }
+	}).resizable({ handles: "all" });
     $('.ui-draggable-handle').css('position','absolute');
 });
 
@@ -536,18 +534,18 @@ $(function() {
     
     function buildMessage(message) {
         var el = $('<div class="message"></div>');
-  var sound;
+        var sound;
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
         var role = ['god','super','admin','mod','basic','mute','sub'];
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
- if(check.test(message.message)){
- el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
- sound = 'name'
- } else{
-        el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
-  sound = 'message'
- }
+        if(check.test(message.message)){
+            el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
+            sound = 'name'
+        } else{
+            el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
+            sound = 'message'
+        }
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
             var parsedFlair = null;
@@ -559,37 +557,37 @@ $(function() {
                     parser.getAllFonts(message.flair);
                 }
             }
-  switch(message.hat){
-  case 'C_hat': 
-   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-   break;
-  case 'Dunce':
-              $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
-   break;
-  case 'Crown':
-   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
-   break;
-  case 'Antlers':
-   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
-   break;
-  case 'G_hat':
-   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-   break;
-  case 'Newyear':
-   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
-   break;
-  case 'EdgyNewyear':
-   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
-   break;
-  case 'Gold':
-   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
-   break;
-  case 'Coin':
-   $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-   break;
-  default:
-   $('<span class="hat"></span>').appendTo(content);
-  }
+            switch(message.hat){
+                case 'C_hat': 
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+                    break;
+                case 'Dunce':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
+                    break;
+                case 'Crown':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
+                    break;
+                case 'Antlers':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
+                    break;
+                case 'G_hat':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+                    break;
+                case 'Newyear':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
+                    break;
+                case 'EdgyNewyear':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
+                    break;
+                case 'Gold':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
+                    break;
+                case 'Coin':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    break;
+                default:
+                    $('<span class="hat"></span>').appendTo(content);
+            }
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(parsedFlair).appendTo(content);
             } else {
@@ -610,19 +608,19 @@ $(function() {
             case 'elbot-response':
                 parsed = message.message;
                 break;
-     case 'general-message':
-  parsed = parser.parse(message.message);
-  break;
-     case 'note-message':
-  parsed = parser.parse(message.message);
-  break; 
-     case 'anon-message':
-  if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
-   parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
-  } else {
-   parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
-  }
-  break
+            case 'general-message':
+                parsed = parser.parse(message.message);
+                break;
+            case 'note-message':
+                parsed = parser.parse(message.message);
+                break; 
+            case 'anon-message':
+                if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
+                    parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
+                } else {
+                    parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
+                }
+                break
             default:
                 parsed = parser.parseLinks(message.message);
                 break;
@@ -630,12 +628,12 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
- var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao', 'black', 'demon'];
-     if(voices.indexOf(message.voice) > 0){
-        var uri = message.source
-     } else {
-        var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
-     }
+            var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao', 'black', 'demon'];
+            if(voices.indexOf(message.voice) > 0){
+                var uri = message.source
+            } else {
+                var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
+            }
             var html = [ '<audio autoplay="autoplay"><source src="', uri, '" type="audio/mpeg"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
@@ -644,7 +642,7 @@ $(function() {
             }
             audio.play();
         }
- playAudio(sound);
+        playAudio(sound);
         return el;
     }
      
