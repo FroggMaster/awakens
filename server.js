@@ -663,7 +663,7 @@ function createChannel(io, channelName) {
                                             }
                                             Nuser = true;
                                             access = JSON.parse(data.access);
-                                            for (i = 5; i > 2; i--) { 
+                                            for (i = 5; i >= 2; i--) { 
                                                 if(access[role[i]].indexOf(nick) != -1 ){
                                                     user.role = role[i]
                                                     Nuser = false
