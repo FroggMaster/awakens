@@ -163,10 +163,17 @@ $(function() {
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
-                return {
-                    nick : nick,
-                    message : message
-                };
+                if(name == 'speak'){
+                    return {
+                        voice : nick,
+                        message : message
+                    }; 
+                } else {
+                    return {
+                        nick : nick,
+                        message : message
+                    };
+                }
             }
         } else {
             var values = input.split(' ');
