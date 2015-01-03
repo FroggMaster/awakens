@@ -158,22 +158,15 @@ $(function() {
             blocked(input)
         } else if(name == 'unblock') {
             unblocked(input)
-        } else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
-                if(name == 'speak'){
-                    return {
-                        voice : nick,
-                        message : message
-                    }; 
-                } else {
-                    return {
-                        nick : nick,
-                        message : message
-                    };
-                }
+                return {
+                    nick : nick,
+                    message : message
+                };
             }
         } else {
             var values = input.split(' ');
@@ -861,7 +854,7 @@ $(function() {
             params : [ 'old_password', 'new_password' ]
         },
         banlist : {role : 'admin'},
-        channel_banlist : {role : 'admin'},
+        permabanlist : {role : 'admin'},
         find_ip : {
             role : 'admin',
             params : [ 'remote_addr' ]
