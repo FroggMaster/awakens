@@ -709,7 +709,7 @@ function createChannel(io, channelName) {
                         if (user.name == undefined){
                             if (dbuser.get('access_level') <= 3) {
                                 roomEmit('message', {
-                                    nick : user.nick,
+                                    nick : dbuser.get('nick'),
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message),
