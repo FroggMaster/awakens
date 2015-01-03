@@ -117,7 +117,7 @@ function createChannel(io, channelName) {
                     var nick = params.nick.substring(0, settings.limits.nick);
                     return dao.findUser(nick).then(function(u) {
                         if (u && u.get('verified')) {
-                            if(user.nick != u.get('nick').toLowerCase()){
+                            if(user.nike != u.get('nick').toLowerCase()){
                                 return attemptNick(dao, nick, params.password);
                             } else {
                                 errorMessage('You\'re already logged in...');
@@ -311,7 +311,7 @@ function createChannel(io, channelName) {
                                             access[params.role].push(params.nick)
                                             dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                                 channel.online.forEach(function(user) {
-                                                    if (user.nick == params.nick.toLowerCase()) {
+                                                    if (user.nike == params.nick.toLowerCase()) {
                                                         user.role = params.role;
                                                         user.socket.emit('update', {
                                                             access_level : dbuser.get('access_level'),
@@ -1026,7 +1026,8 @@ function createChannel(io, channelName) {
                 } else {
                     dbuser.set('remote_addr', user.remote_addr).then(function() {
                         var online = !!user.nick;
-                        user.nick = dbuser.get('nick').toLowerCase();
+                        user.nick = dbuser.get('nick');
+						user.nike = dbuser.get('nick').toLowerCase();
                         user.vhost = dbuser.get('vHost');
                         socketEmit(socket, 'update', {
                             id : socket.id,
