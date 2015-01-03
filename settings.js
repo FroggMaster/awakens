@@ -161,7 +161,7 @@ module.exports = {
         access_granted : 'User {0} now has level {1}',
         whoami : 'You are {0} with role {1} with access_level {2} with ip {3}',
         whois : '{0} has role {1} with access_level {2} with ip {3} and is {4}',
-        whoiss : '{0} has role {1} with access_level {2} with vHost {3} and is {4}',
+        whoiss : '{0} has role {1} with access_level {2} with IP {3} and is {4}',
         user_doesnt_exist : '{0} does not exist',
         find_ip : 'ip {0} uses: {1}',
         find_ip_empty : 'Could not find ip {0}',
@@ -185,7 +185,7 @@ module.exports = {
         temporary_ban : 'You are way too fast, you have been banned for a while, try again later',
         muted : 'You have been muted, please try again later.',
         registeredName : 'That nick is registered',
-	vhosttaken : '{0} has already been taken as a vHost.',
+	vhosttaken : '{0} has already been taken as a mask.',
     },
 
     nouns : [ 'alien', 'apparition', 'bat', 'blood', 'bogeyman', 'boogeyman', 'boo', 'bone', 'cadaver', 'casket', 'cauldron', 'cemetery', 'cobweb', 'coffin', 'corpse', 'crypt', 'darkness', 'dead', 'demon', 'devil', 'death', 'eyeball', 'fangs', 'fear', 'gastly', 'gengar', 'ghost', 'ghoul', 'goblin', 'grave', 'gravestone', 'grim', 'grimreaper', 'gruesome', 'haunter', 'headstone', 'hobgoblin', 'hocuspocus', 'howl', 'jack-o-lantern', 'mausoleum', 'midnight', 'monster', 'moon', 'mummy', 'night', 'nightmare', 'ogre', 'phantasm', 'phantom', 'poltergeist', 'pumpkin', 'scarecrow', 'scream', 'shadow', 'skeleton', 'skull', 'specter', 'spider', 'spine', 'spirit', 'spook', 'tarantula', 'terrible', 'tomb', 'tombstone', 'troll', 'vampire', 'werewolf', 'witch', 'witchcraft', 'wraith', 'zombie' ],
