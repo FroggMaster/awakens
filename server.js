@@ -351,7 +351,7 @@ function createChannel(io, channelName) {
                             var rowl;
                             if(channel.access){
                                 access = JSON.parse(channel.access);
-                                for (i = 5; i > 2; i--) { 
+                                for (i = 5; i >= 2; i--) { 
                                     if(access[role[i]].indexOf(params.nick) != -1 ){
                                         rowl = role[i]
                                     }
