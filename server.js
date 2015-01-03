@@ -301,7 +301,7 @@ function createChannel(io, channelName) {
                                     });
                                 } else {
                                     dao.getChannelInfo(channelName).done(function(info) {
-                                        for (i = 2; i < 5; i++) {
+                                        for (i = 2; i <= 5; i++) {
                                             if(access[role[i]].indexOf(params.nick) != -1 ){
                                                 remove = access[role[i]].indexOf(params.nick)
                                                 access[role[i]].splice(remove, 1);
