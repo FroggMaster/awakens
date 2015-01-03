@@ -20,7 +20,7 @@ module.exports = {
     https : {
         domain : 'this.spooks.me',
         key : './ssl/myserver.key',
-        cert : './ssl/spooks_me.crt',
+        cert : './ssl/this_spooks_me.crt',
         port : 8443
     },
 
