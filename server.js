@@ -1144,7 +1144,7 @@ function initApp(app, server, https) {
             try {
                 var host = req.headers.host;
                 var channelName = channelRegex.exec(req.url)[1];
-                if (host != 'this.spooks.me') {
+                if (host != 'spooks.me') {
                     channelName = host + '/' + channelName;
                 }
                 if (!channels[channelName]) {
