@@ -353,14 +353,14 @@ $(function() {
         unread = 0;
     });
     $(window).focus(function() {
-        $("#icon").attr("href","http://spooks.me/public/img/icon2.ico");
+        $("#icon").attr("href","http://spooks.me/img/icon2.ico");
         blurred = false;
         updateTitle();
     });
     CLIENT.on('message', function(message) {
         if (blurred) {
             if(check.test(message.message)){
-                $("#icon").attr("href","http://spooks.me/public/img/icon.ico");
+                $("#icon").attr("href","http://spooks.me/img/icon.ico");
             }
             unread++;
             updateTitle();
@@ -628,7 +628,7 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-            var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'ayylmao', 'black', 'demon'];
+            var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'alien', 'nigga', 'demon'];
             if(voices.indexOf(message.voice) > 0){
                 var uri = message.source
             } else {
