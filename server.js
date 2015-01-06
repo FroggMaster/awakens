@@ -1165,8 +1165,8 @@ function initApp(app, server, https) {
 }
 
 (function() {
-    //var httpApp = express();
-    //var httpServer = require('http').Server(httpApp);
+    var httpApp = express();
+    var httpServer = require('http').Server(httpApp);
 
     //if (settings.https) {
         var httpsApp = express();
@@ -1180,7 +1180,7 @@ function initApp(app, server, https) {
         });
     //}
 
-    //initApp(httpApp, httpServer, false);
+    initApp(httpApp, httpServer, false);
    /* httpServer.listen(httpPort, function() {
         console.log('http listening on *:' + httpPort);
     });*/
