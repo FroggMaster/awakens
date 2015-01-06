@@ -1194,11 +1194,11 @@ parser = {
          str = this.multiple(str, /\/\&#126;([^\|]+)\|?/g, '<small>$1</small>');
          str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
         }
-        // try to replace all >>>/x/??? for links to boards.4chan.org/x/res/???
-        str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="http://boards.4chan.org$1/res/$2">$&</a>');
-        // if there's any links leading to boards.4chan.org/?/res/ (nothing
+        // try to replace all >>>/x/??? for links to 8chan.co/x/res/???
+        str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="https://8chan.co$1/res/$2">$&</a>');
+        // if there's any links leading to 8chan.co/?/res/ (nothing
         // after /res/), trim them to just /?/
-        str = str.replace(/http:\/\/boards.4chan.org\/([a-z0-9]+)\/res\/"/gi, "http://boards.4chan.org/$1/\"");
+        str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8chan.co/$1/\"");
         // >>23452345
         str = str.replace(/^(&gt;&gt;.+)$/i, '&#35;992222<del> $1</del>');
         // >implying
