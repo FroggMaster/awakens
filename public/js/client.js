@@ -1205,7 +1205,7 @@ parser = {
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
-        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="http://$2">$3</a></div>');
+        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
         //embed
         str = str.replace(/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         // filters
