@@ -1168,7 +1168,7 @@ function initApp(app, server, https) {
     var httpApp = express();
     var httpServer = require('http').Server(httpApp);
 
-    //if (settings.https) {
+    if (settings.https) {
         var httpsApp = express();
         var httpsServer = require('https').createServer({
             key : fs.readFileSync(settings.https.key),
@@ -1178,10 +1178,10 @@ function initApp(app, server, https) {
         httpsServer.listen(httpsPort, function() {
             console.log('https listening on *:' + httpsPort);
         });
-    //}
+    }
 
     initApp(httpApp, httpServer, false);
-   /* httpServer.listen(httpPort, function() {
+    httpServer.listen(httpPort, function() {
         console.log('http listening on *:' + httpPort);
-    });*/
+    });
 })();
