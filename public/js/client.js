@@ -1203,6 +1203,7 @@ parser = {
         str = str.replace(/^(&gt;&gt;.+)$/i, '&#35;992222<del> $1</del>');
         // >implying
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
+        str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
