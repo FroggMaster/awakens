@@ -1131,7 +1131,7 @@ function initApp(app, server, https) {
         var httpsDomain = settings.https && settings.https.domain;
         var allHttps = !httpsDomain && settings.https && !https;
         var onHttpDomain = httpsDomain && https != (httpsDomain == domain);
-        if (allHttps || onHttpDomain) {
+        if (false) {
             console.log('redirect', allHttps, onHttpDomain);
             if (https) {
                 var port = httpsPort == 80 ? '' : ':' + httpPort;
