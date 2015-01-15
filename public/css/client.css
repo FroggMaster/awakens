@@ -474,7 +474,7 @@ opacity: 1.0;
 	overflow-x:hidden;
 	height:100%;
 	width:100%;
-	bottom: 20px;
+	bottom: -20px;
 }
 
 .menu-container .help {
