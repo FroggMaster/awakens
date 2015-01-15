@@ -473,9 +473,8 @@ a:hover {
 	overflow-y:auto;
 	overflow-x:hidden;
 	width: 100%;
+	height: auto;
 	bottom: 20px;
-	margin: 0;
-	padding: 0;
 }
 
 .menu-container .help {
