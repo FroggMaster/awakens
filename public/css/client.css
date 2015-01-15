@@ -509,14 +509,13 @@ opacity: 1.0;
 	font-size: 1.4em;
 	font-weight: bold;
 	text-align: center;
-	margin:5px;
+	margin:15px;
 	border-bottom: 1px solid lightgrey;
 }
 
 #online-users ul {
 	list-style: none;
 	margin: 0;
-	margin-right: 30px;
 }
 
 #online-users li {
