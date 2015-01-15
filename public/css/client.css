@@ -465,7 +465,7 @@ opacity: 1.0;
 	width:100%;
 	bottom:0;
 	text-align:center;
-	margin-bottom:10px;
+	margin-bottom:5px;
 	display: inline-block;
 }
 
@@ -521,6 +521,7 @@ opacity: 1.0;
 
 #online-users li {
 	font-weight: bold;
+	margin-bottom:5px;
 	text-align: center;
 }
 #online-users li:hover {
