@@ -521,7 +521,6 @@ opacity: 1.0;
 
 #online-users li {
 	font-weight: bold;
-	margin-bottom:5px;
 	text-align: center;
 }
 #online-users li:hover {
