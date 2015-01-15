@@ -60,39 +60,6 @@ body {
 	background-image: linear-gradient(FF0000, #800000);
 	background-repeat: no-repeat;
 }
-.spooky #messages {
-    background: url('img/2spooky.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.bg #messages {
-    background: url('img/bg.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.bg1 #messages {
-	background: url('img/bg1.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.bg2 #messages {
-	background: url('img/bg2.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.bgxmas #messages {
-	background: url('img/bgxmas.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.original #messages {
-	background: url('img/original.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.spoops #messages {
-	background: url('img/spoops.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.logo #messages {
-    background: url('img/logo.png') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.spooky2 #messages {
-    background: url('img/spooky2.gif') no-repeat center center, url('img/gridbg.png') repeat, url('img/noisebg.gif') repeat #000b11;
-}
-.water #messages {
-    background: url('img/water.gif') repeat center #000b11;
-}
-.balls #messages {
-    background: url('img/balls.gif') repeat center #000b11;
-}
 
 .message{
 position:relative;
@@ -166,7 +133,7 @@ a:hover {
 }
 
 .personal-message .message-content:before {
-	content: '==== ';
+	content: 'Private Message from ';
 }
 
 .error-message {
