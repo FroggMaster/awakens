@@ -472,7 +472,6 @@ opacity: 1.0;
 .menu-container .menu-content {
 	overflow-y:auto;
 	overflow-x:hidden;
-	height:100%;
 	width:100%;
 	bottom: -20px;
 }
