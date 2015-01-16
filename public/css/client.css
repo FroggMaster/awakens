@@ -428,7 +428,7 @@ a:hover {
 	position: absolute;
 	left: 0;
 	width: 100%;
-	background-color: grey;
+	background-color: #3A3A3A;
 	border-radius: 10px;
 	cursor: pointer;
 }
@@ -494,7 +494,7 @@ a:hover {
 	border: 5px solid #2C2C2C;
 	border-radius:5px;
 	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
-		color: white;
+	color: white;
 	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKUlEQVQIW2PU1tb+zwAFHz9+ZGCECYA4/Pz8EAEYB6SQUUZG5j9IBgYAUXoO2P/TRPwAAAAASUVORK5CYII=) repeat;
 }
 
