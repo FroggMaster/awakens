@@ -1206,6 +1206,7 @@ parser = {
         str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
+        var jscheck = "";
         if (str.indexOf("javascript:") > -1) {
         	jscheck = " [javascript]";
         }
