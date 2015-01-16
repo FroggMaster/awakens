@@ -428,8 +428,8 @@ a:hover {
 	position: absolute;
 	left: 0;
 	width: 100%;
-	background: linear-gradient(#5F5F5F, #3A3A3A);
-	border-radius: 5px;
+	background-color: grey;
+	border-radius: 10px;
 	cursor: pointer;
 }
 
