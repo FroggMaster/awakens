@@ -1203,11 +1203,16 @@ parser = {
         str = str.replace(/https:\/\/8ch.net\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
         // >>23452345
         str = str.replace(/^(&gt;&gt;.+)$/i, '&#35;992222<del> $1</del>');
-        // >implying
+        /* this is bruno taking off the old greentext code
+        >implying
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
+        */
+        var greentext = '/(&gt;[^\n]*)/gi';
+        str = str.replace(greentext, '<div>&#35;789922 $1</div>');
+        
         var jscheck = "";
         if (str.indexOf("javascript:") > -1) {
         	jscheck = " [javascript]";
