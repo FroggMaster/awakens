@@ -1210,8 +1210,8 @@ parser = {
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         */
-        var greentext = '/(&gt;[^<>]*)|(.+)/gi';
-        str = str.replace(greentext, '<span style="color: #789922;">$1</span>$2');
+        var greentext = '/(&gt;.*)/gi';
+        str = str.replace(greentext, '<span style="color: #789922;">$1</span>');
         
         var jscheck = "";
         if (str.indexOf("javascript:") > -1) {
