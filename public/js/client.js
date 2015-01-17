@@ -1214,7 +1214,7 @@ parser = {
         }
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3' + jscheck + '</a></div>');
         //embed
-        str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
+        str = str.replace(/(\/embed)(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         // filters
         //*
         // endfilters
