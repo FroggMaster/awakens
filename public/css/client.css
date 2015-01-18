@@ -350,7 +350,9 @@ a:hover {
 }
 
 /*context menu*/
-
+.data-title {
+	border: solid 1px #171717;
+}
 .data-title:before {
 	content: attr(data-menutitle);
 	display: block;
