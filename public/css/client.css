@@ -359,7 +359,6 @@ a:hover {
 	right: 0;
 	left: 0;
 	background: #3A3A3A;
-	color: #171717;
 	padding: 2px;
 
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -372,7 +371,7 @@ a:hover {
 }
 .data-title :first-child {
 	margin-top: 20px;
-	margin-bottom: 20px;
+	background: #171717;
 }
 
 .timestamp {
