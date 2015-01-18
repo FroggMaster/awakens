@@ -377,9 +377,7 @@ a:hover {
 .data-title :first-child {
 	margin-top: 20px;
 	color: #555;
-}
-.data-title LI.separator {
-        border-top: solid 1px #171717;
+	border-top: solid 1px #171717;
 }
 
 .timestamp {
