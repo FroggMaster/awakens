@@ -368,7 +368,7 @@ a:hover {
 }
 .data-title LI {
 	background-color: #171717;
-	border: solid 1px #171717;
+	border: solid 1px #171717 !important;
 }
 .data-title LI.hover, .data-title LI.hover A {
 	color: #FFFFFF;
