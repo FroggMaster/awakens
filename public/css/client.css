@@ -353,7 +353,7 @@ a:hover {
 
 .data-title:before {
 	content: attr(data-menutitle);
-	display: block;
+	display: none;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -361,8 +361,6 @@ a:hover {
 	background: #3A3A3A;
 	padding: 2px;
 	border: solid 1px #171717;
-	padding: 0px;
-        margin: 0px;
 
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
