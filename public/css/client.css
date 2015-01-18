@@ -352,7 +352,7 @@ a:hover {
 /*context menu*/
 
 .data-title {
-	border: solid 1px #171717 !important;
+	border: 0px !important;
 }
 .category { 
 	border: 0px !imporant;
@@ -366,7 +366,7 @@ a:hover {
 	left: 0;
 	background: #3A3A3A;
 	padding: 2px;
-	border: solid 1px #171717;
+	border: 0px;
 
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
@@ -374,7 +374,7 @@ a:hover {
 }
 .data-title LI {
 	background-color: #171717;
-	border: solid 1px #171717;
+	border: 0px;
 }
 .data-title LI.hover, .data-title LI.hover A {
 	color: #FFFFFF;
