@@ -353,7 +353,7 @@ a:hover {
 
 .data-title:before {
 	content: attr(data-menutitle);
-	display: none;
+	display: block;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -373,6 +373,9 @@ a:hover {
 .data-title LI.hover, .data-title LI.hover A {
 	color: #FFFFFF;
 	background-color: #2C2C2C;
+}
+.data-title contextMenu LI.hover.disabled, .contextMenu LI.hover.disabled A {
+        background-color: #171717;
 }
 .data-title :first-child {
 	margin-top: 20px;
