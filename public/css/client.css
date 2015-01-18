@@ -354,6 +354,9 @@ a:hover {
 .data-title {
 	border: solid 1px #171717 !important;
 }
+.category { 
+	border: 0px !imporant;
+}
 .data-title:before {
 	content: attr(data-menutitle);
 	display: block;
