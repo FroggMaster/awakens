@@ -124,7 +124,6 @@ a:hover {
 .general-message .content:before,
 .action-message .content:before {
 	content: '** ';
-	z-index:1;
 }
 
 .spoken-message .message-content:after,
@@ -133,7 +132,6 @@ a:hover {
 .general-message .content:after,
 .action-message .content:after {
 	content: ' **';
-	z-index:1;
 }
 
 .spoken-message .content:before,
