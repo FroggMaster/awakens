@@ -19,7 +19,7 @@ body {
 	height: 30px;
 	display: block;
 	background-color: transparent;
-	border-right: 5px solid #000;
+	padding-right: 5px;
 }
 ::-webkit-scrollbar-track-piece {
 	background-color: #3b3b3b;
