@@ -8,6 +8,7 @@ body {
 	background-image: linear-gradient(#3A3A3A, #292929);
 	background-repeat: no-repeat;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3A3A3A', endColorstr='#ff292929', GradientType=0 );
+	padding-right: 5px;
 }
 
 ::-webkit-scrollbar {
@@ -19,8 +20,6 @@ body {
 	height: 30px;
 	display: block;
 	background-color: transparent;
-	position: absolute;
-	padding-right: 5px;
 }
 ::-webkit-scrollbar-track-piece {
 	background-color: #3b3b3b;
