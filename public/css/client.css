@@ -54,6 +54,9 @@ body {
 	overflow-x: hidden;
 	overflow-y: hidden;
 	height: 1000px;
+	-webkit-user-select: auto;  /* Chrome all / Safari all */
+	-moz-user-select: auto;     /* Firefox all */
+	-ms-user-select: auto;      /* IE 10+ */
 }
 
 .hat{
@@ -85,12 +88,6 @@ body {
 	1px -1px 0 #000,
 	-1px 1px 0 #000,
 	1px 1px 0 #000; 
-}
-
-.row-of-icons {
-  -webkit-user-select: text;  /* Chrome all / Safari all */
-  -moz-user-select: text;     /* Firefox all */
-  -ms-user-select: text;      /* IE 10+ */
 }
 
 /*\
