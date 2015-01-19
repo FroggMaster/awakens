@@ -123,8 +123,6 @@ a:hover {
 .note-message .content:before,
 .general-message .content:before,
 .action-message .content:before {
-	position:relative;
-	z-index:1;
 	content: '** ';
 }
 
@@ -133,8 +131,6 @@ a:hover {
 .note-message .content:after,
 .general-message .content:after,
 .action-message .content:after {
-	position:relative;
-	z-index:1;
 	content: ' **';
 }
 
