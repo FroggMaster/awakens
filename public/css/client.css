@@ -14,28 +14,26 @@ body {
     width: 10px;
     height: 10px;
 }
-
-
 ::-webkit-scrollbar-button:start:decrement,
 ::-webkit-scrollbar-button:end:increment {
     height: 30px;
     display: block;
     background-color: transparent;
 }
-
-
-
 ::-webkit-scrollbar-track-piece {
     background-color: #3b3b3b;
     -webkit-border-radius: 6px;
 }
-
-
 ::-webkit-scrollbar-thumb:vertical {
     height: 50px;
     background-color: #666;
-    border: 1px solid #eee;
+    border: 0;
     -webkit-border-radius: 6px;
+}
+@-moz-document url-prefix() { 
+	body { 
+		right: 0 !important;
+	}
 }
 
 #color{
