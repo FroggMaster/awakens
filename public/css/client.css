@@ -19,6 +19,7 @@ body {
 	height: 30px;
 	display: block;
 	background-color: transparent;
+	position: absolute;
 	padding-right: 5px;
 }
 ::-webkit-scrollbar-track-piece {
