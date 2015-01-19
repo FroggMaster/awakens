@@ -118,7 +118,7 @@ a:hover {
 	color: rgba(255, 145, 164, 1);
 }
  
-.spoken-message .message-content:before,
+#messages  .spoken-message .message-content:before,
 .note-message .content:before,
 .note-message .content:before,
 .general-message .content:before,
@@ -126,7 +126,7 @@ a:hover {
 	content: '** ';
 }
 
-.spoken-message .message-content:after,
+#messages .spoken-message .message-content:after,
 .note-message .content:after,
 .note-message .content:after,
 .general-message .content:after,
