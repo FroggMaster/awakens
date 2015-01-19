@@ -13,13 +13,13 @@ body {
 ::-webkit-scrollbar {
 	width: 10px;
 	height: 10px;
-	border-right: 5px solid #000;
 }
 ::-webkit-scrollbar-button:start:decrement,
 ::-webkit-scrollbar-button:end:increment {
 	height: 30px;
 	display: block;
 	background-color: transparent;
+	border-right: 5px solid #000;
 }
 ::-webkit-scrollbar-track-piece {
 	background-color: #3b3b3b;
@@ -28,7 +28,6 @@ body {
 ::-webkit-scrollbar-thumb:vertical {
 	height: 50px;
 	background-color: #666;
-	border-right: 5px solid #000;
 	-webkit-border-radius: 6px;
 }
 @-moz-document url-prefix() { 
