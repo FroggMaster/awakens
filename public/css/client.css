@@ -87,6 +87,12 @@ body {
 	1px 1px 0 #000; 
 }
 
+.row-of-icons {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+}
+
 /*\
 |*|
 |*| Font Colors
