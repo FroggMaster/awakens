@@ -118,11 +118,11 @@ a:hover {
 	color: rgba(255, 145, 164, 1);
 }
  
-#messages  .spoken-message .message-content:before,
-.note-message .content:before,
-.note-message .content:before,
-.general-message .content:before,
-.action-message .content:before {
+#messages .spoken-message .message-content:before,
+#messages .note-message .content:before,
+#messages .note-message .content:before,
+#messages .general-message .content:before,
+#messages .action-message .content:before {
 	content: '** ';
 }
 
