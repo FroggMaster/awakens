@@ -28,7 +28,6 @@ body {
     height: 50px;
     background-color: #666;
     border: 0;
-    right: 5px;
     -webkit-border-radius: 6px;
 }
 @-moz-document url-prefix() { 
