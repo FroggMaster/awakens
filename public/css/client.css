@@ -7,9 +7,6 @@ body {
 	background-image: -o-linear-gradient(#3A3A3A, #292929);
 	background-image: linear-gradient(#3A3A3A, #292929);
 	background-repeat: no-repeat;
-	-webkit-user-select: auto;  /* Chrome all / Safari all */
-	-moz-user-select: auto;     /* Firefox all */
-	-ms-user-select: auto;      /* IE 10+ */
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3A3A3A', endColorstr='#ff292929', GradientType=0 );
 }
 
@@ -127,6 +124,7 @@ a:hover {
 .general-message .content:before,
 .action-message .content:before {
 	content: '** ';
+	z-index:1;
 }
 
 .spoken-message .message-content:after,
@@ -135,6 +133,7 @@ a:hover {
 .general-message .content:after,
 .action-message .content:after {
 	content: ' **';
+	z-index:1;
 }
 
 .spoken-message .content:before,
