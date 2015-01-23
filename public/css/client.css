@@ -13,6 +13,7 @@ body {
 ::-webkit-scrollbar {
 	width: 10px;
 	height: 10px;
+	left: 98%;
 }
 ::-webkit-scrollbar-button:start:decrement,
 ::-webkit-scrollbar-button:end:increment {
