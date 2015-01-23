@@ -168,7 +168,7 @@ function createChannel(io, channelName) {
                 }
             },
             permabanlist : {
-                role : 'admin',
+                role : 'super',
                 handler : function(dao, dbuser, params) {
                     return dao.banlist().then(function(list) {
                         var msg;
@@ -182,7 +182,7 @@ function createChannel(io, channelName) {
                 }
             },
             permaban : {
-                role : 'admin',
+                role : 'super',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
                     var msg = dbsender.get("nick")+" has banned "+params.nick;
@@ -209,7 +209,7 @@ function createChannel(io, channelName) {
                 }
             },
             unpermaban : {
-                role : 'admin',
+                role : 'super',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
                     broadcast(dao, dbuser.get("nick")+" has unbanned "+params.id,dbuser.get("access_level"));
@@ -441,7 +441,7 @@ function createChannel(io, channelName) {
                 }
             },
             theme : {
-                role : 'admin',
+                role : 'mod',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
                     var theme = params.theme_style.substring(0, settings.limits.message)
@@ -648,7 +648,7 @@ function createChannel(io, channelName) {
                         var nick = msg && msg.nick.slice(0,100);
                         var role = ['god','super','admin','mod','basic','mute','sub'];
                           dao.isBanned(channelName, nick, user.remote_addr, user.vhost).then(function(isbanned) {
-                            if (isbanned && nick != 'InfraRaven' && nick != 'sammich') {
+                            if (isbanned && nick != 'InfraRaven') {
                                 log.debug('Join request, but user is banned');
                                 errorMessage(msgs.banned);
                                 socket.disconnect();
@@ -764,7 +764,7 @@ function createChannel(io, channelName) {
                                             return $.Deferred().resolve(false, msgs.invalidCommandAccess);
                                         }
                                     } else {
-                                        errorMessage('error with role... Tell sammich and give him this code that totally has some sort of meaning:ihgaaoer');
+                                        errorMessage('error with role... Tell a dev and give him this code that totally has some sort of meaning:ihgaaoer');
                                         user.role = 'basic'
                                     }
                                 });
@@ -819,7 +819,7 @@ function createChannel(io, channelName) {
                             dao(function(dao) {
                                 dao.isBanned(channelName, user.remote_addr, user.nick, user.vhost).done(function(banned) {
                                     log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
-                                    if (banned && user.nick != 'InfraRaven' && user.nick != 'sammich') {
+                                    if (banned && user.nick != 'InfraRaven') {
                                         errorMessage(msgs.banned);
                                         socket.disconnect();
                                         dao.release();
