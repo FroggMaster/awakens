@@ -1,4 +1,5 @@
 var settings = require('./settings');
+var email = require('./sendEmail');
 var msgs = settings.msgs;
 var _ = require('underscore');
 var $ = require('jquery-deferred');
@@ -6,10 +7,6 @@ var mysql = require('mysql');
 var passwordHash = require('password-hash');
 var fs = require('fs');
 var pool = mysql.createPool(settings.db);
-
-function ucwords(string){
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
 
 module.exports = function(callback) {
     var connection = $.Deferred();
@@ -77,20 +74,44 @@ module.exports = function(callback) {
             /**
              * Register this user.
              * 
+             * @param {string} email_address
              * @param {string=} initial_password
              * @returns {$.Promise}
              */
-            register : function(initial_password) {
+            register : function(email_address, initial_password) {
                 var err;
-                if (info.registered) {
+                if (!notEmptyString(email_address) || !settings.emailRegex.test(email_address)) {
+                    err = msgs.invalidEmail;
+                } else if (info.registered) {
                     err = msgs.alreadyRegistered;
+                } else if (settings.emailServer) {
+                    var _this = this;
+                    var verification_code = Math.floor(Math.random() * 10000);
+                    var emailContent = _.extend({
+                        to : 'Spooks Chatter <' + email_address + '>'
+                    }, settings.registrationEmail);
+                    var emailParams = {
+                        text : [ this.get('nick'), verification_code ]
+                    };
+                    return email.send(emailContent, emailParams).then(function() {
+                        return _this.set({
+                            registered : 1,
+                            email_address : email_address,
+                            verification_code : verification_code,
+                            pw_hash : passwordHash.generate(initial_password)
+                        }).then(function() {
+                            return $.Deferred().resolve(true, msgs.registered);
+                        });
+                    });
+                } else {
+                    return this.set({
+                        registered : 1,
+                        email_address : email_address,
+                        pw_hash : passwordHash.generate(initial_password)
+                    }).then(function() {
+                        return $.Deferred().resolve(true, msgs.registeredAndVerified);
+                    });
                 }
-                return this.set({
-                    registered : 1,
-                    pw_hash : passwordHash.generate(initial_password)
-                }).then(function() {
-                    return $.Deferred().resolve(true, msgs.registeredAndVerified);
-                });
                 return $.Deferred().resolve(false, err);
             },
 
@@ -107,6 +128,8 @@ module.exports = function(callback) {
                     err = msgs.notRegistered;
                 } else if (info.verified) {
                     err = msgs.alreadyVerified;
+                } else if (settings.emailServer && info.verification_code != verification_code) {
+                    err = msgs.invalidCode;
                 } else if (!this.verifyPassword(password)) {
                     err = msgs.enterSamePassword;
                 } else if (!notEmptyString(password)) {
@@ -114,6 +137,7 @@ module.exports = function(callback) {
                 } else {
                     return this.set({
                         verified : 1,
+                        verification_code : null,
                         pw_hash : passwordHash.generate(password)
                     }).then(function() {
                         return $.Deferred().resolve(true, msgs.verified);
@@ -135,6 +159,8 @@ module.exports = function(callback) {
                         registered_on : null,
                         registered : 0,
                         verified : 0,
+                        verification_code : null,
+                        email_address : null,
                         pw_hash : null
                     }).then(function() {
                         return $.Deferred().resolve(true, msgs.unregistered);
@@ -355,13 +381,13 @@ module.exports = function(callback) {
          * @returns {boolean}
          */
         isBanned : function(channel, remote_addr, nick, vHost) {
-            if (this.isFileBanned(remote_addr) || this.isFileBanned(nick) || this.isFileBanned(vHost)) {
+            if (this.isFileBanned(remote_addr) || this.isFileBanned(nick)) {
                 return $.Deferred().resolve(true).promise();
             }
             var sql = 'select banned from chat_banned where (channel=? or channel is null) and ';
-            var params = [ channel, remote_addr ];
+            var params = [ channel, remote_addr, vHost ];
             if (nick) {
-                sql += '(banned=? or banned=? or banned=?)';
+                sql += '(banned=? or banned=?)';
                 params.push(nick, vHost);
             } else {
                 sql += 'banned=?';
@@ -581,7 +607,7 @@ module.exports = function(callback) {
          */
         nextNick : function() {
             return one('select count(*) count from chat_users').then(function(row) {
-                return ucwords(_.sample(settings.adjectives)) + ucwords(_.sample(settings.nouns)) + '.' + row.count;
+                return _.sample(settings.names) + '.' + row.count;
             });
         },
 
