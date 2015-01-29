@@ -1,7 +1,7 @@
 {
     "db" : {
-        "user" : "zak",
-        "password" : "computers"
+        "user" : "root",
+        "password" : "HiThereChatty"
     },
     "log" : {
         "error" : true,
@@ -11,6 +11,6 @@
     },
     "https" : true,
     "server" : {
-        "port" : 1337
+        "port" : 80
     }
 }
