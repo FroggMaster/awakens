@@ -1,5 +1,5 @@
 var DATE_FORMAT = 'shortTime';
-var BLACKLIST = [ 'noblacklists.atthistime' ];
+var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
 var HighlightName;
 
 // ------------------------------------------------------------------
