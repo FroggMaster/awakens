@@ -455,8 +455,8 @@ z-index:5;
 .menu-container {
     position: absolute;
 	display:none;
-	min-width: 175px;
-	min-height: 300px;
+	min-width: 10px;
+	min-height: 30px;
 	height:300px;
 	width: 175px;
 	cursor:default;
@@ -524,7 +524,6 @@ opacity: 1.0;
 #online-users ul {
     list-style: none;
     margin: 0;
-    margin-right: 30px;
 }
 
 #online-users li {
