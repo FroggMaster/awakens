@@ -797,10 +797,10 @@ $(function() {
         },
         unregister : {},
         register : {
-            params : [ 'initial_password' ]
+            params : [ 'initial_password', 'email_address' ]
         },
         verify : {
-            params : [ 'reenter_password', 'verification_code' ] : [ 'reenter_password' ]
+            params : verifyByEmail ? [ 'reenter_password', 'verification_code' ] : [ 'reenter_password' ]
         },
         change_password : {
             params : [ 'old_password', 'new_password' ]
