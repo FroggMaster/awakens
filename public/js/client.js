@@ -1458,7 +1458,8 @@ $(function() {
 
 (function() {
     var SOUNDS = {
-        message : '/audio/Bing.mp3'
+        message : '/audio/Bing.mp3',
+        name : '/audio/Bwoop.wav'
     };
     for ( var sound in SOUNDS) {
         var html = [ '<audio id="', sound, '_audio"><source src="', SOUNDS[sound], '"></source><embed width=0 height=0 src="', SOUNDS[sound], '"></audio>' ].join('');
