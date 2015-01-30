@@ -776,12 +776,14 @@ $(function() {
 (function() {
     window.COMMANDS = {
         help : function() {
-            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none')
-            $('.menu-container').css('display',CLIENT.get('menu_display'));
-            if(CLIENT.get('left') != 'undefined'){
-                $('.menu-container').css('left',CLIENT.get('menu_left'));
-                $('.menu-container').css('top',CLIENT.get('menu_top'));
-            }
+             CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none')
+	     $('.menu-container').css('display',CLIENT.get('menu_display'));
+	     
+	     if(CLIENT.get('left') != 'undefined'){
+	     	$('.menu-container').css('left',CLIENT.get('menu_left'));
+	     	$('.menu-container').css('top',CLIENT.get('menu_top'));
+	     }
+	     
             //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
         },
         nick : {
@@ -795,7 +797,7 @@ $(function() {
         },
         unregister : {},
         register : {
-            params : [ 'initial_password' ]
+            params : [ 'initial_password']
         },
         verify : {
             params : [ 'reenter_password' ]
@@ -804,33 +806,33 @@ $(function() {
             params : [ 'old_password', 'new_password' ]
         },
         banlist : {role : 'admin'},
-        permabanlist : {role : 'admin'},
+        channel_banlist : {role : 'admin'},
         find_ip : {
-            role : 'admin',
+	    role : 'admin',
             params : [ 'remote_addr' ]
         },
-        permaban : {
-            role : 'admin',
-            params : [ 'nick[|message]' ]
-        },
-        unpermaban : {
-            role : 'admin',
-            params : [ 'id$' ]
-        },
         ban : {
-            role : 'admin',
+	    role : 'admin',
             params : [ 'nick[|message]' ]
         },
         unban : {
-            role : 'admin',
+	    role : 'admin',
+            params : [ 'id$' ]
+        },
+        channel_ban : {
+	    role : 'admin',
+            params : [ 'nick[|message]' ]
+        },
+        channel_unban : {
+	    role : 'admin',
             params : [ 'id$' ]
         },
         kick : {
-            role : 'mod',
+	    role : 'mod',
             params : [ 'nick[|message]' ]
         },
         access : {
-            role : 'super',
+	    role : 'super',
             params : [ 'role', 'access_level', 'nick$' ]
         },
         whoami : {},
@@ -838,11 +840,11 @@ $(function() {
             params : [ 'nick$' ]
         },
         topic : {
-            role : 'mod',
+	    role : 'mod',
             params : [ 'topic$' ]
         },
         note : {
-            role : 'super',
+	    role : 'super',
             params : [ 'message$' ]
         },
         clear : function() {
@@ -883,14 +885,8 @@ $(function() {
             handler : function(params) {
                 if (params.color == 'default' || params.color == 'none') {
                     params.color = null;
-                } else if (parser.isColor(params.color)){
-                    CLIENT.set('color', params.color);
-                } else {
-                    CLIENT.show({
-                        type : 'error-message',
-                        message : 'I don\'t think that is a color. http://en.wikipedia.org/wiki/Web_colors'
-                    });
                 }
+                CLIENT.set('color', params.color);
             }
         },
         flair : {
@@ -899,7 +895,7 @@ $(function() {
                 if (params.flair == 'default' || params.flair == 'none') {
                     params.flair = null;
                 }
-                flair = params.flair.replace(/&/g, '\\&')
+				flair = params.flair.replace(/&/g, '\\&')
                 CLIENT.set('flair', flair);
             }
         },
@@ -922,14 +918,14 @@ $(function() {
             params : [ 'theme_style$' ]
         },
         reset_user : {
-            role : 'super',
+			role : 'super',
             params : [ 'nick' ]
         },
         get : {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic marquee styles bg part block'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -947,83 +943,79 @@ $(function() {
             }
         },
         speak : {
-            params : [ '[voice|]message' ]
+            params : [ 'message$' ]
         },
         elbot : {
             params : [ 'message$' ]
         },
-        anon : {
-            params : [ 'message$' ]
-        },
-        part : {
-            params : [ 'message$' ]
-        },
-        toggle : function(){},
-        block : function(){},
-        unblock : function(){},
-        play : {
-            role : 'super',
-            params : [ 'url' ]
-        },
-        safe : function(){
-            CLIENT.set('bg','off'),
-            CLIENT.set('images','off'),
-            CLIENT.set('mute_speak','on')
-            CLIENT.set('styles','off')
-        },
-        unsafe : function(){
-            CLIENT.set('bg','on'),
-            CLIENT.set('images','on'),
-            CLIENT.set('mute_speak','off')
-            CLIENT.set('styles','on')
-        },
-        msg : {
-            params : [ 'message$' ]
-        },
-        mask : {
-            params : [ 'vHost' ]
-        },
-        ghost : {}
+	anon : {
+	    params : [ 'message$' ]
+	},
+	part : {
+	    params : [ 'message$' ]
+	},
+	toggle : function(){},
+	block : function(){},
+	unblock : function(){},
+	play : {
+		role : 'super',
+		params : [ 'url' ]
+	},
+	safe : function(){
+		CLIENT.set('bg','off'),
+		CLIENT.set('images','off'),
+		CLIENT.set('mute_speak','off')
+	},
+	unsafe : function(){
+		CLIENT.set('bg','on'),
+		CLIENT.set('images','on'),
+		CLIENT.set('mute_speak','on')
+	},
+	msg : {
+		 params : [ 'message$' ]
+	},
+	embed : function(){},
+	mask : {
+		params : [ 'vHost' ]
+	}
     };
 
     COMMANDS.colour = COMMANDS.color;
 })();
 
 toggled = function(att){
-    if (att == 'bg' && CLIENT.get('bg') == 'off'){
-        $('#messages').css('background', CLIENT.get('old'));
-    } 
-    if(att != 'style' && att != 'font'){
-        CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
-    }
+	if (att == 'bg' && CLIENT.get('bg') == 'off'){
+      	   $('#messages').css('background', CLIENT.get('old'));
+	}
+	CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
 }
 
 blocked = function(att){
-    block = CLIENT.get('block').split(',')
-    if(block.indexOf(att) == -1){
-        block.push(att)
-            CLIENT.show(att + ' is now blocked')
-    } else {
-        CLIENT.show({
+	block = CLIENT.get('block').split(',')
+	if(block.indexOf(att) == -1){
+		block.push(att)
+		CLIENT.show(att + ' is now blocked')
+	} else {
+		CLIENT.show({
             message : 'That user is already blocked.',
             type : 'error-message'
         });
-    }
-CLIENT.set('block',block.join(','))
+	}
+	CLIENT.set('block',block.join(','))
 }
 unblocked = function(att){
-    block = CLIENT.get('block').split(',')
-    index = block.indexOf(att)
-    if(block.indexOf(att) != -1){
-        block.splice(index,1)
-        CLIENT.show(att + ' is not longer blocked.')
-    } else {
-        CLIENT.show({
+	block = CLIENT.get('block').split(',')
+	index = block.indexOf(att)
+	if(block.indexOf(att) != -1){
+		block.splice(index,1)
+		CLIENT.show(att + ' is not longer blocked.')
+	} else {
+		CLIENT.show({
             message : 'You don\'t have that user blocked.',
             type : 'error-message'
         });
-    }
-CLIENT.set('block',block.join(','))
+	}
+	CLIENT.set('block',block.join(','))
 }
 
 // ------------------------------------------------------------------
