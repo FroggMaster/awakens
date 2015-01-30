@@ -34,7 +34,7 @@ body {
 }
 @-moz-document url-prefix() { 
 	body { 
-		right: 5 !important;
+		right: 0 !important;
 	}
 }
 
@@ -474,7 +474,6 @@ a:hover {
 	font-size: 1.4em;
 	font-weight: bold;
 	text-align: center;
-	margin:15px;
 	border-bottom: 1px solid lightgrey;
 }
 
