@@ -1,5 +1,6 @@
 var DATE_FORMAT = 'shortTime';
-var BLACKLIST = [ 'bruno.sucks', 'donkey.dong']
+var BLACKLIST = [ 'wrdp.info', 'puu.sh' ];
+var HighlightName;
 
 // ------------------------------------------------------------------
 // Client
@@ -17,14 +18,15 @@ $(function() {
 
     socket.on('join', function(user) {
         ONLINE.add(user);
+        HighlightName = CLIENT.get('nick')
         CLIENT.show({
             type : 'general-message',
             message : user.nick + ' has joined'
         });
- 
-    if(CLIENT.get('part') != undefined){
-        socket.emit('SetPart', CLIENT.get('part'));
-    }
+	
+	if(CLIENT.get('part') != undefined){
+		socket.emit('SetPart', CLIENT.get('part'));
+	}
     });
 
     socket.on('general-message', function(message) {
@@ -40,17 +42,17 @@ $(function() {
 
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-        if(user.part == undefined){
-            CLIENT.show({
-                type : 'general-message',
-                message : user.nick + ' has left'
-            });
-        } else {
-            CLIENT.show({
-                type : 'general-message',
-                message : user.nick + ' has left ' + user.part
-            });
-        }
+		if(user.part == undefined){
+		CLIENT.show({
+		    type : 'general-message',
+            message : user.nick + ' has left'
+		});
+		} else {
+        CLIENT.show({
+            type : 'general-message',
+            message : user.nick + ' has left ' + user.part
+        });
+		}
     });
 
     socket.on('nick', function(info) {
@@ -64,41 +66,38 @@ $(function() {
     });
 
     socket.on('update', function(info) {
-        CLIENT.set(info);
+	CLIENT.set(info);
     });
     
-    socket.on('centermsg', function(data){
-        $('#sam').remove()
-        $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
-    });
-    
-    socket.on('alive', function(){
-        socket.emit('alive')
-    });
-    
+    	socket.on('centermsg', function(data){
+		$('#sam').remove()
+		
+		$('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
+	})	
+	
     socket.on('playvid', function(url){
-        if(url.url == "stop" || mute == 'on'){
-            $("#youtube")[0].innerHTML = ""
-        } else {
-            $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
-        }
+	if(url.url == "stop"){
+		$("#youtube")[0].innerHTML = ""
+	} else {
+		$("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+	}
     });
 
     socket.on('message', function(msg) {
-        if(CLIENT.get('block').indexOf(msg.nick) == -1){
-            CLIENT.show(msg);
-        }
+	if(CLIENT.get('block').indexOf(msg.nick) == -1){
+		CLIENT.show(msg);
+	}
     });
     
     socket.on('submessage', function(msg) {
-        if(msg.role == 'sub'){
-            CLIENT.show(msg);
-        }
-    });
+	if(msg.role == 'sub'){
+	CLIENT.show(msg);
+	}
+})
 
     socket.on('connect', function() {
         if (!first) {
-            //window.location.reload();
+            window.location.reload();
         }
         socket.emit('join', {
             nick : CLIENT.get('nick'),
@@ -134,7 +133,7 @@ $(function() {
     socket.on('updateMousePosition', function(msg) {
         CLIENT.trigger('updateMousePosition', msg);
     });
- 
+	
     /**
      * @inner
      * @param {string} name
@@ -150,30 +149,25 @@ $(function() {
                 return {
                     nick : nick,
                     message : message,
-                }; 
+                };	
             }
         } else if(name == 'toggle'){
-            toggled(input)
+        	toggled(input)
         } else if(name == 'block'){
-            blocked(input)
-        } else if(name == 'unblock') {
-            unblocked(input)
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
+			blocked(input)
+		} else if(name == 'unblock') {
+			unblocked(input)
+		} else if(name == 'embed'){
+			CLIENT.submit('EMBED+++' + input)
+		} else if (name == 'kick' || name == "ban" || name == "channel_ban") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
-                if(name == 'speak'){
-                    return {
-                        voice : nick,
-                        message : message
-                    }; 
-                } else {
-                    return {
-                        nick : nick,
-                        message : message
-                    };
-                }
+                return {
+                    nick : nick,
+                    message : message
+                };  
             }
         } else {
             var values = input.split(' ');
@@ -199,7 +193,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors styles bg role part block menu_top menu_left menu_display vHost'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors marquee styles bg role part block menu_top menu_left menu_display vHost'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -211,7 +205,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors styles bg role part vHost'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors marquee styles bg role part vHost'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -249,7 +243,7 @@ $(function() {
         },
 
         getAvailableCommands : function() {
-            var role = ['god','super','admin','mod','basic','mute','sub'];
+	    var role = ['god','super','admin','mod','basic','mute','sub'];
             var myrole = this.get('role');
             return myrole == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
                 var cmd_level = COMMANDS[key].role;
