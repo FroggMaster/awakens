@@ -438,7 +438,7 @@ a:hover {
 .menu-container .menu-content {
 	overflow-y:auto;
 	overflow-x:hidden;
-	height:70%;
+	height:80%;
 	width:100%;
 }
 
@@ -474,6 +474,8 @@ a:hover {
 	font-size: 1.4em;
 	font-weight: bold;
 	text-align: center;
+	left: 0;
+	margin: 15px;
 	border-bottom: 1px solid lightgrey;
 }
 
