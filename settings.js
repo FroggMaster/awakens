@@ -18,15 +18,15 @@ module.exports = {
     },
 
     https : {
-        domain : 'this.spooks.me',
-        key : './ssl/localhost.key',
-        cert : './ssl/localhost.crt',
+        domain : 'spooks.me',
+        key : './ssl/myserver.key',
+        cert : './ssl/server.crt',
         port : 8443
     },
 
     speak : {
-        0 : null,
-        1 : null,
+        0 : 1,
+        1 : 1,
         2 : {
             time : 10000,
             max : 1
@@ -161,7 +161,7 @@ module.exports = {
         access_granted : 'User {0} now has level {1}',
         whoami : 'You are {0} with role {1} with access_level {2} with ip {3}',
         whois : '{0} has role {1} with access_level {2} with ip {3} and is {4}',
-        whoiss : '{0} has role {1} with access_level {2} with vHost {3} and is {4}',
+        whoiss : '{0} has role {1} with access_level {2} with IP {3} and is {4}',
         user_doesnt_exist : '{0} does not exist',
         find_ip : 'ip {0} uses: {1}',
         find_ip_empty : 'Could not find ip {0}',
@@ -185,10 +185,13 @@ module.exports = {
         temporary_ban : 'You are way too fast, you have been banned for a while, try again later',
         muted : 'You have been muted, please try again later.',
         registeredName : 'That nick is registered',
-	vhosttaken : '{0} has already been taken as a vHost.',
+	vhosttaken : '{0} has already been taken as a mask.',
     },
 
-    names : [ "Arthur", "ARX", "MOS", "RISC iX", "RISC OS", "AmigaOS", "Amiga Unix", "Apple DOS", "Apple Pascal", "ProDOS", "GS/OS", "Apple SOS", "Lisa Workshop", "LisaOS", "Mac OS", "Rhapsody", "NeXTSTEP", "OS X", "IBM AIX", "Newton OS", "iOS", "A/ROSE", "NetBSD", "Atari DOS", "Atari TOS", "XTS400", "BeOS", "UNIX", "MINI-UNIX", "BESYS", "Plan 9", "GCOS", "COS", "MACE", "KronOS", "NOS", "SCOPE", "SPIRO", "AOS", "RDOS", "CTOS", "HeartOS", "CP/M", "MP/M", "FlexOS", "CCI DOS", "Datapac", "DOS Plus", "Novell DOS", "HP-UX", "NonStop", "OS/8", "Ultrix", "Towns OS", "ChromeOS", "Chromium", "Android", "INTEGRITY", "HDOS", "HT-11", "Multics", "iRMX", "BESYS", "CTSS", "OS/360", "LynxOS", "MicroC/OS-III", "Xenix", "MSX-DOS", "MS-DOS", "Windows 1.0", "Windows 2.0", "Windows 3.0", "Windows 3.1", "Windows 3.2", "Windows 95", "Windows 98", "Windows Millenium Edition", "Windows NT 3.1", "Windows NT 3.5", "Windows NT 3.51", "Windows NT 4.0", "Windows 2000", "Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 8.1", "Windows 10", "Windows Phone 8", "Midori", "Netware", "Bada", "Tizen", "PikeOS", "TRS-DOS", "TRON", "EXEC I", "WPS", "Xerox", "Aegis", "Minix", "FreeBSD", "BSD", "PC-DOS", "Solaris", "JarisOS", "Tunis", "ILIOS", "FreeDOS", "Ubuntu", "Mint", "Arch", "Slackware", "Manjaro", "Debian", "Knoppix", "Kubuntu", "Xubuntu", "Lubuntu", "SteamOS", "Fedora", "CentOS", "Mandriva", "Gentoo", "openSUSE", "PClinuxOS", "Atomix" ]
+    nouns : [ 'alien', 'apparition', 'bat', 'blood', 'bogeyman', 'boogeyman', 'boo', 'bone', 'cadaver', 'casket', 'cauldron', 'cemetery', 'cobweb', 'coffin', 'corpse', 'crypt', 'darkness', 'dead', 'demon', 'devil', 'death', 'eyeball', 'fangs', 'fear', 'gastly', 'gengar', 'ghost', 'ghoul', 'goblin', 'grave', 'gravestone', 'grim', 'grimreaper', 'gruesome', 'haunter', 'headstone', 'hobgoblin', 'hocuspocus', 'howl', 'jack-o-lantern', 'mausoleum', 'midnight', 'monster', 'moon', 'mummy', 'night', 'nightmare', 'ogre', 'phantasm', 'phantom', 'poltergeist', 'pumpkin', 'scarecrow', 'scream', 'shadow', 'skeleton', 'skull', 'specter', 'spider', 'spine', 'spirit', 'spook', 'tarantula', 'tomb', 'tombstone', 'troll', 'vampire', 'werewolf', 'witch', 'witchcraft', 'wraith', 'zombie' ],
+
+    adjectives : [ 'bloodcurdling', 'chilling', 'creepy', 'dark', 'devilish', 'dreadful', 'eerie', 'evil', 'frightening', 'frightful', 'ghastly', 'ghostly', 'ghoulish', 'gory', 'grisly', 'hair-raising', 'haunted', 'horrible', 'macabre', 'morbid', 'mysterious', 'otherwordly', 'repulsive', 'revolting', 'scary', 'shadowy', 'shocking', 'spine-chilling', 'spooky', 'spoopy', 'startling', 'supernatural', 'terrible', 'unearthly', 'unnerving', 'wicked' ],
+
 };
 
 _.each(settings, function(setting, key) {
