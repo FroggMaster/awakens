@@ -1,15 +1,13 @@
 body {
 	background-color: #3A3A3A;
 	overflow: hidden;
-	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3A3A3A),
-		to(#292929) );
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3A3A3A), to(#292929) );
 	background-image: -webkit-linear-gradient(#3A3A3A, #292929);
 	background-image: -moz-linear-gradient(top, #3A3A3A, #292929);
 	background-image: -o-linear-gradient(#3A3A3A, #292929);
 	background-image: linear-gradient(#3A3A3A, #292929);
 	background-repeat: no-repeat;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3A3A3A',
-		endColorstr='#ff292929', GradientType=0 );
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3A3A3A', endColorstr='#ff292929', GradientType=0 );
 }
 
 ::-webkit-scrollbar {
@@ -45,7 +43,7 @@ body {
 	width:400px;
 	height:200px;
 	border-style: solid;
-		border-width: 5px;
+	border-width: 5px;
 	background-color:blue;
 }
 
@@ -62,7 +60,7 @@ body {
 .hat{
 	position: absolute;
 	top:-23px;
-	left:30px;
+	margin-left:-30px;
 	width:50px;
 	height:50px;
 	background-size: 30px 20px;
@@ -148,7 +146,7 @@ a:hover {
 }
 
 .personal-message .message-content:before {
-	content: '==== ';
+	content: 'Private Message from ';
 }
 
 .error-message {
@@ -158,7 +156,6 @@ a:hover {
 
 .message .nick {
 	color: #6464C0;
-	font-weight: bold;
 }
 
 .elbot-message,
@@ -377,6 +374,46 @@ a:hover {
 	src: url(fonts/misha-font.ttf);
 }
 
+/*context menu*/
+
+.data-title {
+	border: 0px !important;
+}
+.category { 
+	border: 0px !imporant;
+}
+.data-title:before {
+	content: attr(data-menutitle);
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background: #3A3A3A;
+	padding: 2px;
+	border: 0px;
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+}
+.data-title LI {
+	background-color: #171717;
+	border: 0px;
+}
+.data-title LI.hover, .data-title LI.hover A {
+	color: #FFFFFF;
+	background-color: #2C2C2C;
+}
+.data-title contextMenu LI.hover.disabled, .contextMenu LI.hover.disabled A {
+        background-color: #171717;
+}
+.data-title :first-child {
+	margin-top: 20px;
+	color: #555;
+}
+
 .timestamp {
 	padding-left: .4em;
 	font-size: .8em;
@@ -412,8 +449,8 @@ a:hover {
 .menu-container {
 	position: absolute;
 	display:none;
-	min-width: 10px;
-	min-height: 30px;
+	min-width: 175px;
+	min-height: 300px;
 	height:300px;
 	width: 175px;
 	cursor:default;
@@ -431,15 +468,25 @@ a:hover {
 	width:100%;
 	bottom:0;
 	text-align:center;
-	margin-bottom:10px;
+	margin-bottom:5px;
+	display: inline-block;
+}
+
+.footer {
+	position: absolute;
+	width:100%;
+	height: 27px;
+	bottom:0;
+	text-align:center;
+	margin-bottom:5px;
 	display: inline-block;
 }
 
 .menu-container .menu-content {
 	overflow-y:auto;
 	overflow-x:hidden;
-	height:80%;
-	width:100%;
+	width: 100%;
+	height: 80%;
 }
 
 .menu-container .help {
@@ -474,26 +521,23 @@ a:hover {
 	font-size: 1.4em;
 	font-weight: bold;
 	text-align: center;
-	left: 0;
-	margin: 15px;
-	border-bottom: 1px solid lightgrey;
+	margin: 0;
+	padding: 0;
 }
 
 #online-users ul {
 	list-style: none;
 	margin: 0;
-	left: 0;
+	padding: 0;
 }
 
 #online-users li {
 	font-weight: bold;
 	margin-bottom:5px;
-	left: 0;
 	text-align: center;
 }
 #online-users li:hover {
 	text-decoration: underline;
-	left: 0;
 }
 #X{
 	position: absolute;
