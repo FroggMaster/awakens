@@ -482,15 +482,18 @@ a:hover {
 #online-users ul {
 	list-style: none;
 	margin: 0;
+	left: 0;
 }
 
 #online-users li {
 	font-weight: bold;
 	margin-bottom:5px;
+	left: 0;
 	text-align: center;
 }
 #online-users li:hover {
 	text-decoration: underline;
+	left: 0;
 }
 #X{
 	position: absolute;
