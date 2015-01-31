@@ -1040,7 +1040,7 @@ parser = {
             this.loadedFonts[family] = true;
             var protocol = 'https:' == document.location.protocol ? 'https' : 'http';
             var url = protocol + '://fonts.googleapis.com/css?family=' + encodeURIComponent(family);
-          $('<link rel="stylesheet" href="' + url + '">').appendTo('head');
+            $('<link rel="stylesheet" href="' + url + '">').appendTo('head');
         }
     },
     getAllFonts : function(str) {
@@ -1054,47 +1054,6 @@ parser = {
         return $('<span>' + parsed + '</span>').text();
     },
     parseLinks : function(str) {
-        // escaping shit
-        str = str.replace(/&/gi, '&amp;');
-        str = str.replace(/>/gi, '&gt;');
-        str = str.replace(/</gi, '&lt;');
-        str = str.replace(/\n/g, '\\n');
-        str = str.replace(/\\\\n/g, this.repslsh);
-        str = str.replace(/\\n/g, '<br />');
-        str = str.replace(this.repslsh, '\\\\n');
-        // remove my replacement characters. they are not fscking allowed. lol.
-        str = str.replace(RegExp(this.replink, 'g'), '');
-        str = str.replace(RegExp(this.repslsh, 'g'), '');
-        // replace links
-        var links = str.match(this.linkreg);
-        str = str.replace(this.linkreg, '$1' + this.replink);
-        var escs = str.match(/\\./g);
-        str = str.replace(/\\./g, this.repslsh);
-        // replace escapes
-        for (i in escs) {
-            str = str.replace(this.repslsh, escs[i][1]);
-        }
-        // replace links
-        for (i in links) {
-            var link = links[i];
-            if (links[i][0] != 'h' && links[i][0] != 'f')
-                link = links[i].replace(/^(.)(.+)$/, '$2');
-            str = str.replace(this.replink, '<a target="_blank" href="' + link + '">' + link + '</a>');
-        }
-        // change spaces to &nbsp;
-        escs = str.match(/<[^>]+?>/gi);
-        str = str.replace(/<[^>]+?>/gi, this.repslsh);
-        str = str.replace(/\s{2}/gi, ' &nbsp;');
-        for (i in escs) {
-            str = str.replace(this.repslsh, escs[i]);
-        }
-        return str;
-    },
-    isColor : function(str){
-        check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
-        return check.test(str)
-    },
-    parse : function(str) {
         // escaping shit
         str = str.replace(/&/gi, '&amp;');
         str = str.replace(/>/gi, '&gt;');
