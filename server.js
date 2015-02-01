@@ -438,41 +438,55 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-            speak : {
-                params : [ 'message' ],
+   speak : {
+                params : [ 'message', 'voice' ],
                 handler : function(dao, dbuser, params) {
-                    var message = params.message;
-		    var role = ['god','super','admin','mod','basic','mute','sub'];
-                    if (message) {
-                        if (role.indexOf(dbuser.get('role')) <= 5) {
-                            var al = role.indexOf(dbuser.get('role'));
-                            var t = settings.speak[al];
-                            if (t === undefined) {
-                                t = settings.speak['default'];
-                            }
-                            if (t) {
-                                return throttle.on('speak-' + al, t).then(function() {
-                                    roomEmit('message', {
-                                        nick : dbuser.get('nick'),
-                                        type : 'spoken-message',
-                                        message : message.substring(0, settings.limits.spoken)
-                                    });
-                                    return true;
-                                }, function() {
-                                    return $.Deferred().resolve(false, msgs.throttled);
-                                });
-                            } else {
-                                roomEmit('message', {
-                                    nick : dbuser.get('nick'),
-                                    type : 'spoken-message',
-                                    message : message.substring(0, settings.limits.spoken)
-                                });
-                            }
-                        } else {
-                            return $.Deferred().resolve(false, msgs.muted);
-                        }
-                    }
-                    return $.Deferred().resolve(true);
+		var voices = ['default','yoda','clever'];
+                var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
+		var role = ['god','super','admin','mod','basic','mute','sub'];
+                if (message) {
+                   if (role.indexOf(dbuser.get('role')) <= 5) {
+                   var al = role.indexOf(dbuser.get('role'));
+                   var t = settings.speak[al];
+                   if (t === undefined) {
+                      t = settings.speak['default'];
+                   }
+		   if(voices.indexOf(params.voice) > 0){
+		   request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+		   if (!error && response.statusCode == 200) {
+		      return throttle.on('speak-' + al, t).then(function() {
+		         roomEmit('message', {
+		       	    nick : dbuser.get('nick'),
+		       	    type : 'spoken-message',
+		            message : message.substring(0, settings.limits.spoken),
+		       	    source : body,
+		       	    voice : params.voice
+		         });
+		       	 return true;
+		      }, function() {
+		         return $.Deferred().resolve(false, msgs.throttled);
+		      });
+		   }
+		   });
+		   } else {
+		      return throttle.on('speak-' + al, t).then(function() {
+			roomEmit('message', {
+			   nick : dbuser.get('nick'),
+			   type : 'spoken-message',
+			   message : message.substring(0, settings.limits.spoken),
+			   source : null,
+			   voice : params.voice
+			});
+			return true;
+			}, function() {
+			 return $.Deferred().resolve(false, msgs.throttled);
+			});
+		  }
+                  } else {
+                     return $.Deferred().resolve(false, msgs.muted);
+                  }
+                }
+                   return $.Deferred().resolve(true);
                 }
             },
             elbot : {
