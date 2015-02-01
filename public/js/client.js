@@ -159,17 +159,25 @@ $(function() {
 			unblocked(input)
 		} else if(name == 'embed'){
 			CLIENT.submit('EMBED+++' + input)
-		} else if (name == 'kick' || name == "ban" || name == "channel_ban") {
+		} else if (name == 'kick' || name == "ban" || name == "channel_ban" || name == 'speak') {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
                 var message = pm[2]  || " ";
-                return {
-                    nick : nick,
-                    message : message
-                };  
+		if(name == 'speak'){
+		   return {
+		      voice : nick,
+		      message : message
+		   }; 
+		} else {
+		   return {
+		      nick : nick,
+		      message : message
+		   };
+		}
             }
-        } else {
+        
+        else {
             var values = input.split(' ');
             if (values[0] == '') {
                 values.shift();
@@ -575,8 +583,13 @@ $(function() {
             }
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
-        if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-            var uri = 'http://www.codefactor.net/tts.php?tl=en&q=' + encodeURIComponent(message.message);
+      if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
+	var voices = ['default','yoda','clever'];
+	    if(voices.indexOf(message.voice) > 0){
+	       var uri = message.source
+	    } else {
+	       var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
+	    }
             var html = [ '<audio><source src="', uri, '"></source><embed src="', uri, '"></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
@@ -585,6 +598,7 @@ $(function() {
             }
             audio.play();
         }
+	playAudio(sound);
         return el;
     }
 
@@ -942,8 +956,8 @@ $(function() {
                 }
             }
         },
-        speak : {
-            params : [ 'message$' ]
+         speak : {
+            params : [ '[voice|]message' ]
         },
         elbot : {
             params : [ 'message$' ]
