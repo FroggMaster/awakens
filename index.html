@@ -17,13 +17,15 @@
         <link rel="apple-touch-startup-image" sizes="640x1136" href="img/splash_640x1136.png" />
         <link rel="apple-touch-startup-image" sizes="640x960" href="img/splash_640x960.png" />
         <link rel="apple-touch-startup-image" sizes="768x1024" href="img/splash_768x1024.png" />
+	<link id="icon" rel="shortcut icon" href="img/icon2.ico">
         <link rel="stylesheet" href="/css/normalize.css">
         <link rel="stylesheet" href="/css/client.css">
         <link rel="stylesheet" href="/vendor/jquery-ui-1.11.0/jquery-ui.min.css">
-      	<link rel="stylesheet" href="http://www.javascripttoolbox.com/lib/contextmenu/jquery.contextmenu.css">
+      	<link rel="stylesheet" href="/vendor/jquery.contextMenu.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/0.9.5/emojify-emoticons.min.css" />
     </head>
     <body>
-        <script>window.channel="${channel}";window.verifyByEmail=${verifyByEmail};</script>
+        <script>window.channel="${channel}";</script>
         <div id="online-users" class="menu-container">
                 <div class="category">Online</div><div id="X" onclick="$(this).parent().hide()">X</div>
 		<div class="menu-content"><ul id="online"></ul></div>
@@ -39,12 +41,14 @@
         <script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+        <script src="/vendor/underscore-min.js"></script>
+        <script src="/vendor/backbone-min.js"></script>
         <script src="/vendor/jquery.contextmenu.js"></script>
+        <script src="/vendor/jquery.ui.position.js"></script>
         <script src="/vendor/dateFormat.js"></script>
         <script src="/js/game.js"></script>
         <script src="/js/client.js"></script>
         <script src="/js/playingCards.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/0.9.5/emojify.min.js"></script>
     </body>
 </html>
