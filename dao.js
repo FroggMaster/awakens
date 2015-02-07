@@ -375,12 +375,12 @@ module.exports = function(callback) {
          * @returns {Array.<string>}
          */
         getFileBanList : function() {
-            var banned = fs.readFileSync('banned.txt');
+            /*var banned = fs.readFileSync('banned.txt');
             if (banned) {
                 return _.filter(banned.toString().split(/[\s,\n\r]+/), function(id) {
                     return id.length > 0;
                 });
-            }
+            }*/
             return [];
         },
 
