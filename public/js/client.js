@@ -273,7 +273,6 @@ $(function() {
                             if (handler) {
                                 handler(params);
                             } else {
-							console.log(name,JSON.stringify(params))
                                 socket.emit('command', {
                                     name : name,
                                     params : params
@@ -1259,9 +1258,6 @@ parser = {
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i]);
         }
-		
-		str = emojify.replace(str)
-		
         return str;
     }
 };
