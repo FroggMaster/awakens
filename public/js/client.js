@@ -1026,13 +1026,11 @@ $(function() {
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
             CLIENT.set('mute_speak','on')
-            CLIENT.set('styles','off')
         },
         unsafe : function(){
             CLIENT.set('bg','on'),
             CLIENT.set('images','on'),
             CLIENT.set('mute_speak','off')
-            CLIENT.set('styles','on')
         },
         msg : {
             params : [ 'message$' ]
@@ -1210,7 +1208,7 @@ parser = {
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
         //embed
-        str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
+        str = str.replace(/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         // filters
         //*
         // endfilters
