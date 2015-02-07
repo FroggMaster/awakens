@@ -1027,11 +1027,13 @@ $(function() {
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
             CLIENT.set('mute_speak','on')
+            CLIENT.set('styles','off')
         },
         unsafe : function(){
             CLIENT.set('bg','on'),
             CLIENT.set('images','on'),
             CLIENT.set('mute_speak','off')
+            CLIENT.set('styles','on')
         },
         msg : {
             params : [ 'message$' ]
