@@ -1164,19 +1164,12 @@ function initApp(app, server, https) {
         var onHttpDomain = httpsDomain && https != (httpsDomain == domain);
         if (allHttps || onHttpDomain) {
             console.log('redirect', allHttps, onHttpDomain);
-            /*if (https) {
+            if (https) {
                 var port = httpsPort == 80 ? '' : ':' + httpPort;
                 res.redirect('http://' + domain + port + req.url);
             } else {
                 var port = httpsPort == 443 ? '' : ':' + httpsPort;
                 res.redirect('https://' + domain + port + req.url);
-            }*/
-            if(httpsDomain){
-            	var port = httpsPort == 443 ? '' : ':' + httpsPort;
-            	res.redirect('https://' + domain + port + req.url);
-            } else {
-            	var port = httpsPort == 80 ? '' : ':' + httpPort;
-            	res.redirect('http://' + domain + port + req.url);
             }
         } else {
             try {
