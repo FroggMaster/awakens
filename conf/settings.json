@@ -3,12 +3,6 @@
         "user" : "root",
         "password" : "HiThereChatty"
     },
-    "log" : {
-        "error" : true,
-        "info" : true,
-        "debug" : true,
-        "db" : true
-    },
     "https" : true,
     "server" : {
         "port" : 80
