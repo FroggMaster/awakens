@@ -185,7 +185,8 @@ module.exports = {
         temporary_ban : 'You are way too fast, you have been banned for a while, try again later',
         muted : 'You have been muted, please try again later.',
         registeredName : 'That nick is registered',
-	vhosttaken : '{0} has already been taken as a mask.',
+        vhosttaken : '{0} has already been taken as a mask.',
+        InvalidCharacters : 'Name contained invalid character(s)'
     },
 
     nouns : [ 'alien', 'apparition', 'bat', 'blood', 'bogeyman', 'boogeyman', 'boo', 'bone', 'cadaver', 'casket', 'cauldron', 'cemetery', 'cobweb', 'coffin', 'corpse', 'crypt', 'darkness', 'dead', 'demon', 'devil', 'death', 'eyeball', 'fangs', 'fear', 'gastly', 'gengar', 'ghost', 'ghoul', 'goblin', 'grave', 'gravestone', 'grim', 'grimreaper', 'gruesome', 'haunter', 'headstone', 'hobgoblin', 'hocuspocus', 'howl', 'jack-o-lantern', 'mausoleum', 'midnight', 'monster', 'moon', 'mummy', 'night', 'nightmare', 'ogre', 'phantasm', 'phantom', 'poltergeist', 'pumpkin', 'scarecrow', 'scream', 'shadow', 'skeleton', 'skull', 'specter', 'spider', 'spine', 'spirit', 'spook', 'tarantula', 'tomb', 'tombstone', 'troll', 'vampire', 'werewolf', 'witch', 'witchcraft', 'wraith', 'zombie' ],

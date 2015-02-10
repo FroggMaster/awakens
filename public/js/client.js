@@ -89,12 +89,6 @@ $(function() {
             CLIENT.show(msg);
         }
     });
-    
-    socket.on('submessage', function(msg) {
-        if(msg.role == 'sub'){
-            CLIENT.show(msg);
-        }
-    });
 
     socket.on('connect', function() {
         if (!first) {
@@ -199,7 +193,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors styles bg role part block menu_top menu_left menu_display vHost'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors styles bg role part block menu_top menu_left menu_display mask'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -211,7 +205,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors styles bg role part vHost'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors styles bg role part mask'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -249,7 +243,7 @@ $(function() {
         },
 
         getAvailableCommands : function() {
-            var role = ['god','super','admin','mod','basic','mute','sub'];
+            var role = ['god','super','admin','mod','basic','mute'];
             var myrole = this.get('role');
             return myrole == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
                 var cmd_level = COMMANDS[key].role;
@@ -444,44 +438,44 @@ $(function() {
         }).appendTo('#online');
   
   
- $(function(){
- $.contextMenu({
+    $(function(){
+    $.contextMenu({
         selector: '.users', 
         className: 'data-title',
         trigger: 'left',
         items: {
             "PM": {
-  name: "PM",
-  callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
-  },
-  "sep1": "---------",
+                name: "PM",
+                callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
+            },
+            "sep1": "---------",
             "Kick": {
-  name: "Kick",
-  callback: function(){ CLIENT.submit('/kick '+this[0].textContent) }
-  },
+                name: "Kick",
+                callback: function(){ CLIENT.submit('/kick '+ $.trim(this[0].textContent)) }
+            },
             "Ban": {
-  name: "Ban",
-  callback: function(){ CLIENT.submit('/ban '+this[0].textContent) }
-  },
-  "sep2": "---------",
+                name: "Ban",
+                callback: function(){ CLIENT.submit('/ban '+ $trim(this[0].textContent)) }
+            },
+            "sep2": "---------",
             "Block": {
-  name: "Block",
-  callback: function(){ CLIENT.submit('/block '+this[0].textContent) }
-  },
+                name: "Block",
+                callback: function(){ CLIENT.submit('/block '+this[0].textContent) }
+            },
             "UnBlock": {
-  name: "UnBlock",
-  callback: function(){ CLIENT.submit('/unblock '+this[0].textContent) }
-  },
+                name: "UnBlock",
+                callback: function(){ CLIENT.submit('/unblock '+this[0].textContent) }
+            },
             "Whois": {
-  name: "Whois",
-  callback: function(){ CLIENT.submit('/whois '+this[0].textContent) }
-  }
+                name: "Whois",
+                callback: function(){ CLIENT.submit('/whois '+$.trim(this[0].textContent)) }
+            }
         }
- });
- $('li').click(function(e){
-    $('.data-title').attr('data-menutitle', e.target.textContent);
- });
- });
+    });
+    $('li').click(function(e){
+        $('.data-title').attr('data-menutitle', e.target.textContent);
+    });
+    });
     
         var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
@@ -537,7 +531,7 @@ $(function() {
         var sound;
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
-        var role = ['god','super','admin','mod','basic','mute','sub'];
+        var role = ['god','super','admin','mod','basic','mute'];
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
         if(check.test(message.message)){
             el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
@@ -585,13 +579,11 @@ $(function() {
                 case 'Coin':
                     $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
-                default:
-                    $('<span class="hat"></span>').appendTo(content);
             }
             if (parsedFlair) {
-                $('<span class="nick"></span>').html(parsedFlair).appendTo(content);
+                $('<span class="nick"></span>').html(parsedFlair + ':').appendTo(content);
             } else {
-                $('<span class="nick"></span>').text(message.nick).appendTo(content);
+                $('<span class="nick"></span>').text(message.nick + ':').appendTo(content);
             }
         }
         if (message.message) {
@@ -986,7 +978,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';

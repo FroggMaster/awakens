@@ -205,7 +205,7 @@ a:hover {
 }
 
 .message .nick:after {
-	content: ': ';
+	content: ' ';
 }
 
 .spoken-message .nick:after {
