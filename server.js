@@ -1159,7 +1159,7 @@ function initApp(app, server, https) {
     var channelRegex = /^\/(\w*\/?)$/;
     app.get(channelRegex, function(req, res) {
         var domain = /^([^:]+)(?::\d+|)$/.exec(req.get('host'))[1];
-        var httpsDomain = settings.https && settings.https.domain;
+        var httpsDomain = settings.https;
         var allHttps = !httpsDomain && settings.https && !https;
         var onHttpDomain = httpsDomain && https != (httpsDomain == domain);
         if (allHttps || onHttpDomain) {
