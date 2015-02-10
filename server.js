@@ -1180,8 +1180,7 @@ function initApp(app, server, https) {
                 if (host != 'spooks.me') {
                     channelName = host + '/' + channelName;
                 }
-                console.log(channel1.exec(channelName)[1])
-                console.log(channel2.exec(channelName)[1])
+                channelName = channel1.exec(channelName)[1]+channel2.exec(channelName)[1]
                 if (!channels[channelName]) {
                     channels[channelName] = createChannel(io, channelName);
                 }
