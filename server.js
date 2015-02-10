@@ -1159,9 +1159,9 @@ function initApp(app, server, https) {
     var channelRegex = /^\/(\w*\/?)$/;
     app.get(channelRegex, function(req, res) {
         var domain = /^([^:]+)(?::\d+|)$/.exec(req.get('host'))[1];
-        var httpsDomain = settings.https;
+        var httpsDomain = settings.https && settings.https.domain;
         var allHttps = !httpsDomain && settings.https && !https;
-        var onHttpDomain = httpsDomain && https != (httpsDomain == domain);
+        var onHttpDomain = !httpsDomain && https != (httpsDomain == domain);
         if (allHttps || onHttpDomain) {
             console.log('redirect', allHttps, onHttpDomain);
             if (https) {
