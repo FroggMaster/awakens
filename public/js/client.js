@@ -2,7 +2,7 @@ var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
 
 // ------------------------------------------------------------------
-// Client test
+// Client
 // ------------------------------------------------------------------
 
 ONLINE = new Backbone.Collection();
