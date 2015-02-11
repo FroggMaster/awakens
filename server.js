@@ -1157,8 +1157,6 @@ function initApp(app, server, https) {
     var io = require('socket.io')(server);
     channels = {};
     var channelRegex = /^\/(\w*\/?)$/;
-    var channel1 = /([^\.]+)/;
-    var channel2 = /([^\/]*$)/;
     app.get(channelRegex, function(req, res) {
         var domain = /^([^:]+)(?::\d+|)$/.exec(req.get('host'))[1];
         var httpsDomain = settings.https && settings.https.domain;
@@ -1180,7 +1178,6 @@ function initApp(app, server, https) {
                 if (host != 'spooks.me') {
                     channelName = host + '/' + channelName;
                 }
-                channelName = channel1.exec(channelName)[1]+channel2.exec(channelName)[1]
                 if (!channels[channelName]) {
                     channels[channelName] = createChannel(io, channelName);
                 }
