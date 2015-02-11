@@ -245,7 +245,7 @@ function createChannel(io, channelName) {
                         dao.findUser(params.nick).then(function(admin){
                             dao.getChannelInfo(channelName).done(function(info) {
                                 access = JSON.parse(info.access);
-                                fuser = GetInfo(admin.get('nick'), dbuser)
+                                fuser = GetInfo(admin.get('nick'), admin)
                                 if(roles.indexOf(user.role) < roles.indexOf(fuser.role)){
                                     if(!params.message.trim()){
                                         msg = ''
