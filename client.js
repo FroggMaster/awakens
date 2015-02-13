@@ -602,8 +602,9 @@ $(function() {
                 break;
             case 'personal-message':
             case 'chat-message':
+            	parsed = parser.block(message.message);
                 parser.getAllFonts(message.message);
-                parsed = parser.parse(message.message);
+                parsed = parser.parse(parsed);
                 break;
             case 'elbot-response':
                 parsed = message.message;
@@ -1156,6 +1157,11 @@ parser = {
     isColor : function(str){
         check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
         return check.test(str)
+    },
+    block : function(str){
+        b = str.indexOf(' ');
+        str = str.slice(0,b) + '/#' + str.slice(b,str.length);
+        return str
     },
     parse : function(str) {
         // escaping shit
