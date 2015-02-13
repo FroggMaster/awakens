@@ -85,9 +85,7 @@ $(function() {
     });
 
     socket.on('message', function(msg) {
-        if(CLIENT.get('block').indexOf(msg.nick) == -1){
-            CLIENT.show(msg);
-        }
+        CLIENT.show(msg);
     });
     
     socket.on('submessage', function(msg) {
