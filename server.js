@@ -668,7 +668,8 @@ function createChannel(io, channelName) {
                 var done = $.Deferred();
                 if (user.nick) {
                     if(!user.hat){
-                        var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
+                        //Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
+                        var hat = Math.random() < 0.05 ? 'Rose2' : Math.random() < 0.01 ? 'roseblack' : Math.random() < 0.14 ? 'HeartBlue' : Math.random() < 0.14 ? 'HeartCyan' : Math.random() < 0.14 ? 'HeartGreen' : Math.random() < 0.14 ? 'HeartOrange' : Math.random() < 0.14 ? 'HeartPink' : Math.random() < 0.14 ? 'HeartPurple' : Math.random() < 0.14 ? 'HeartYellow' : 'HeartYellow'
                     } else {
                         hat = user.hat
                     }

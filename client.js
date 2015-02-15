@@ -85,7 +85,9 @@ $(function() {
     });
 
     socket.on('message', function(msg) {
-        CLIENT.show(msg);
+        if(CLIENT.get('block').indexOf(msg.nick) == -1){
+            CLIENT.show(msg);
+        }
     });
     
     socket.on('submessage', function(msg) {
@@ -600,9 +602,8 @@ $(function() {
                 break;
             case 'personal-message':
             case 'chat-message':
-            	parsed = parser.block(message.message);
                 parser.getAllFonts(message.message);
-                parsed = parser.parse(parsed);
+                parsed = parser.parse(message.message);
                 break;
             case 'elbot-response':
                 parsed = message.message;
@@ -1155,11 +1156,6 @@ parser = {
     isColor : function(str){
         check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
         return check.test(str)
-    },
-    block : function(str){
-        b = str.indexOf(' ');
-        str = str.slice(0,b) + '/#' + str.slice(b,str.length);
-        return str
     },
     parse : function(str) {
         // escaping shit

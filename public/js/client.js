@@ -304,6 +304,13 @@ $(function() {
                 var color = this.get('color');
                 var font = this.get('font');
                 if (style) {
+                    style = style.replace(/\/\+/g, '');
+                    if(style.split('/^').length > 4){
+                        amount = style.split('/^').length;
+                        for (i = 0; i < amount - 4; i++) {
+                            style = style.replace(/\/\^/i, '');
+                        }
+                    }
                     input = style + input;
                 }
                 input = ' ' + input;
@@ -577,6 +584,33 @@ $(function() {
                     $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
                     break;
                 case 'Coin':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    break;
+                case 'Rose2':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);               
+                    break;
+                case 'roseblack':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 50px;"></span>').appendTo(content);
+                    break;
+                case 'HeartBlue':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    break;
+                case 'HeartCyan':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    break;
+                case 'HeartGreen':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    break;
+                case 'HeartOrange':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    break;
+                case 'HeartPink':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    break;
+                case 'HeartPurple':
+                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    break;
+                case 'HeartYellow':
                     $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
             }
@@ -913,7 +947,7 @@ $(function() {
             params : [ 'style' ],
             handler : function(params) {
                 if (params.style == 'default' || params.style == 'none') {
-                    params.style = null;
+                    style = null;
                 }
                 CLIENT.set('style', params.style);
             }
@@ -1169,7 +1203,7 @@ parser = {
         var links = str.match(this.linkreg);
         str = str.replace(this.linkreg, '$1' + this.replink);
         var escs = str.match(/\\./g);
-        str = str.replace(/\\./g, this.repslsh);
+        // str = str.replace(/\\./g, this.repslsh);
         // replace underscores, et cetera
         if(CLIENT.get('styles') == 'on'){
          str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
@@ -1201,9 +1235,7 @@ parser = {
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
         //embed
         str = str.replace(/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
-        // filters
-        //*
-        // endfilters
+        //colors
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
@@ -1211,6 +1243,14 @@ parser = {
         str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: $1;">$2</span>');
         str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: $1;">$2</span>');
         str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$1\'">$2</span>');
+        // filters
+        //original = ['you','matter','think','care','about','this','for','shit','nigger','nothing','out of','doesn\'t','doesnt','my','ask','question','you are','nice','trying to','black','rose','no ','fag ','faggot','what','too ','to ','guy','white','yes','mom','ing ','with','th','are ']
+        //replace = ['u','matta','be thinkin','give a fuck','bout','dis','fo','shiznit','nigga','nuttin','outa','don\'t','dont','muh','axe','queshon','yo ass is','dank','tryna','nigga','flowa','naw ','homo ','homo','whut','2 ','2 ','nigga','cracka','ye','mama','in ','wit','d','r ']
+        //for (i = 0; i < original.length; i++) { 
+        //   if(str.indexOf(original[i]) != -1){
+        //        str = str.replace(original[i],replace[i])
+        //   }
+        //}
         // replace escapes
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i][1]);
