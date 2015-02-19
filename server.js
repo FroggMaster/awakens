@@ -36,7 +36,7 @@ function createChannel(io, channelName) {
             remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
-
+    
     socket.on('SetPart', function(parts){
         user.part = parts
     });
@@ -66,7 +66,7 @@ function createChannel(io, channelName) {
         });
 
         log.info('New connection');
- 
+        
         socket.on('disconnect', function() {
             try {
                 if (user.nick) {
@@ -615,6 +615,19 @@ function createChannel(io, channelName) {
                         }
                     },1000);
                 }
+            },
+            pinch : {
+                params : [ 'nick' ],
+                handler : function(dao, dbuser, params) {
+                    var to = indexOf(params.nick);
+                    if (to >= 0) {
+                        console.log(channel.online[to])
+                        var toSocket = channel.online[to].socket;
+                        socketEmit(toSocket, 'pinch');
+                    } else {
+                        errorMessage("User isn't online.");
+                    }
+                }
             }
         };
 
@@ -634,7 +647,7 @@ function createChannel(io, channelName) {
                             user.tabs++
                         }
                     }
-                }          
+                }
                 if (!user.nick && user.tabs < 3) {
                     var nick = msg && msg.nick;
                     var pwd = msg && msg.password;
@@ -666,10 +679,11 @@ function createChannel(io, channelName) {
             },
             message : function(dao, msg) {
                 var done = $.Deferred();
+                var id
                 if (user.nick) {
                     if(!user.hat){
                         //Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
-                        var hat = Math.random() < 0.05 ? 'Rose2' : Math.random() < 0.01 ? 'roseblack' : Math.random() < 0.14 ? 'HeartBlue' : Math.random() < 0.14 ? 'HeartCyan' : Math.random() < 0.14 ? 'HeartGreen' : Math.random() < 0.14 ? 'HeartOrange' : Math.random() < 0.14 ? 'HeartPink' : Math.random() < 0.14 ? 'HeartPurple' : Math.random() < 0.14 ? 'HeartYellow' : 'HeartYellow'
+                        var hat = Math.random() < 0.05 ? 'Rose2' : Math.random() < 0.01 ? 'roseblack' : 'nohat'
                     } else {
                         hat = user.hat
                     }
@@ -1060,7 +1074,7 @@ function createChannel(io, channelName) {
                             socketEmit(socket, 'update', {
                                 id : socket.id,
                                 nick : user.nick,
-                                access_level : dbuser.get('access_level'),
+                                access_level : user.access_level,
                                 role : user.role,
                                 vHost : user.vhost,
                                 password : password || null
@@ -1162,8 +1176,8 @@ function initApp(app, server, https) {
         var domain = /^([^:]+)(?::\d+|)$/.exec(req.get('host'))[1];
         var httpsDomain = settings.https && settings.https.domain;
         var allHttps = !httpsDomain && settings.https && !https;
-        var onHttpDomain = !httpsDomain && https != (httpsDomain == domain);
-        if (allHttps || onHttpDomain) {
+        var onHttpDomain = httpsDomain && https != (httpsDomain == domain);
+        if (false) {
             console.log('redirect', allHttps, onHttpDomain);
             if (https) {
                 var port = httpsPort == 80 ? '' : ':' + httpPort;
@@ -1181,7 +1195,13 @@ function initApp(app, server, https) {
                 }
                 if (!channels[channelName]) {
                     channels[channelName] = createChannel(io, channelName);
+                } else {
+                  /*  if(channels[channelName].online.length == 0){
+                        channels[channelName] = null
+                        channels[channelName] = createChannel(io, channelName);
+                    }*/
                 }
+                console.log(channels[channelName])
                 var index = fs.readFileSync('index.html').toString();
                 _.each({
                     channel : channelName

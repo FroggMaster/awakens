@@ -1,0 +1,549 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'captchagen' ]
+2 info using npm@1.4.14
+3 info using node@v0.10.29
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 verbose readDependencies using package.json deps
+6 verbose cache add [ 'captchagen', null ]
+7 verbose cache add name=undefined spec="captchagen" args=["captchagen",null]
+8 verbose parsed url { protocol: null,
+8 verbose parsed url   slashes: null,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: null,
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: null,
+8 verbose parsed url   hash: null,
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: 'captchagen',
+8 verbose parsed url   path: 'captchagen',
+8 verbose parsed url   href: 'captchagen' }
+9 silly lockFile 4fc9edd3-captchagen captchagen
+10 verbose lock captchagen C:\Users\Ninja\AppData\Roaming\npm-cache\4fc9edd3-captchagen.lock
+11 silly lockFile 4fc9edd3-captchagen captchagen
+12 silly lockFile 4fc9edd3-captchagen captchagen
+13 verbose addNamed [ 'captchagen', '' ]
+14 verbose addNamed [ null, '*' ]
+15 silly lockFile ff5fc4b7-captchagen captchagen@
+16 verbose lock captchagen@ C:\Users\Ninja\AppData\Roaming\npm-cache\ff5fc4b7-captchagen.lock
+17 silly addNameRange { name: 'captchagen', range: '*', hasData: false }
+18 verbose url raw captchagen
+19 verbose url resolving [ 'https://registry.npmjs.org/', './captchagen' ]
+20 verbose url resolved https://registry.npmjs.org/captchagen
+21 info trying registry request attempt 1 at 23:02:51
+22 http GET https://registry.npmjs.org/captchagen
+23 http 200 https://registry.npmjs.org/captchagen
+24 silly registry.get cb [ 200,
+24 silly registry.get   { date: 'Thu, 01 Jan 2015 05:02:49 GMT',
+24 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+24 silly registry.get     etag: '"ER1HXNK3B8XVELJDIKJR47U45"',
+24 silly registry.get     'content-type': 'application/json',
+24 silly registry.get     'cache-control': 'max-age=60',
+24 silly registry.get     'content-length': '16528',
+24 silly registry.get     'accept-ranges': 'bytes',
+24 silly registry.get     via: '1.1 varnish',
+24 silly registry.get     age: '0',
+24 silly registry.get     'x-served-by': 'cache-dfw1833-DFW',
+24 silly registry.get     'x-cache': 'MISS',
+24 silly registry.get     'x-cache-hits': '0',
+24 silly registry.get     'x-timer': 'S1420088569.139761,VS0,VE317',
+24 silly registry.get     vary: 'Accept',
+24 silly registry.get     'keep-alive': 'timeout=10, max=50',
+24 silly registry.get     connection: 'Keep-Alive' } ]
+25 silly addNameRange number 2 { name: 'captchagen', range: '*', hasData: true }
+26 silly addNameRange versions [ 'captchagen', [ '0.0.1', '0.0.2', '1.0.0', '1.1.0' ] ]
+27 verbose addNamed [ 'captchagen', '1.1.0' ]
+28 verbose addNamed [ '1.1.0', '1.1.0' ]
+29 silly lockFile 9a5c24fb-captchagen-1-1-0 captchagen@1.1.0
+30 verbose lock captchagen@1.1.0 C:\Users\Ninja\AppData\Roaming\npm-cache\9a5c24fb-captchagen-1-1-0.lock
+31 silly lockFile 1b244524--captchagen-captchagen-1-1-0-tgz https://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz
+32 verbose lock https://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz C:\Users\Ninja\AppData\Roaming\npm-cache\1b244524--captchagen-captchagen-1-1-0-tgz.lock
+33 verbose addRemoteTarball [ 'https://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz',
+33 verbose addRemoteTarball   'fa7c57c908e19b23d13c5852dcffe32cfefafd1e' ]
+34 info retry fetch attempt 1 at 23:02:52
+35 verbose fetch to= C:\Users\Ninja\AppData\Local\Temp\npm-64788--cZleCy1\registry.npmjs.org\captchagen\-\captchagen-1.1.0.tgz
+36 http GET https://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz
+37 http 200 https://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz
+38 silly lockFile 1b244524--captchagen-captchagen-1-1-0-tgz https://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz
+39 silly lockFile 1b244524--captchagen-captchagen-1-1-0-tgz https://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz
+40 silly lockFile 9a5c24fb-captchagen-1-1-0 captchagen@1.1.0
+41 silly lockFile 9a5c24fb-captchagen-1-1-0 captchagen@1.1.0
+42 silly lockFile ff5fc4b7-captchagen captchagen@
+43 silly lockFile ff5fc4b7-captchagen captchagen@
+44 silly resolved [ { name: 'captchagen',
+44 silly resolved     description: 'Captcha generator',
+44 silly resolved     version: '1.1.0',
+44 silly resolved     homepage: 'http://github.com/wearefractal/captchagen',
+44 silly resolved     repository:
+44 silly resolved      { type: 'git',
+44 silly resolved        url: 'git://github.com/wearefractal/captchagen.git' },
+44 silly resolved     author:
+44 silly resolved      { name: 'Fractal',
+44 silly resolved        email: 'contact@wearefractal.com',
+44 silly resolved        url: 'http://wearefractal.com/' },
+44 silly resolved     main: './index.js',
+44 silly resolved     dependencies: { canvas: '*' },
+44 silly resolved     devDependencies: { mocha: '*', should: '*' },
+44 silly resolved     scripts: { test: 'mocha --reporter spec' },
+44 silly resolved     engines: { node: '>=0.6' },
+44 silly resolved     licenses: [ [Object] ],
+44 silly resolved     readme: '![status](https://secure.travis-ci.org/wearefractal/captchagen.png?branch=master)\n\n## Information\n\n<table>\n<tr> \n<td>Package</td><td>captchagen</td>\n</tr>\n<tr>\n<td>Description</td>\n<td>Captcha image generator</td>\n</tr>\n<tr>\n<td>Node Version</td>\n<td>>= 0.6</td>\n</tr>\n</table>\n\n![example](https://i.cloudup.com/j5gB0Piif2-3000x3000.png)\n\n## Usage\n\n```javascript\nvar captcha = require(\'captchagen\');\n\nvar cap = c.create(opt);\n\n/*\nValid options:\n\nheight, width, text, font\n*/\n\n\ncaptcha.text(); // Returns captcha text (randomly generated by default)\n\ncaptcha.height(); // Returns captcha height (150 by default)\n\ncaptcha.width(); // Returns captcha width (300 by default)\n\ncaptcha.generate(); // Draws the image to the canvas\n\n/* GENERATE BEFORE RUNNING THESE */\n\ncaptcha.uri(cb); // outputs png data-uri. works sync and async (cb is optional)\n\ncaptcha.buffer(cb); // outputs png buffer. works sync and async (cb is optional)\n\ncaptcha.buffer(type); // outputs an image stream. type can be either png or jpeg (png is the default)\n```\n\n## Middleware\n\nThe whole thing is a middleware stack. When you use .create() it uses our default settings which look like this:\n\n```javascript\ncap.use(drawBackground);\ncap.use(drawLines);\ncap.use(drawText);\ncap.use(drawLines);\n```\n\nTo add your own look at the middle folder in lib. You take a canvas in, modify it, and output it again. Simple stuff.\n\n\n## LICENSE\n\n(MIT License)\n\nCopyright (c) 2012 Fractal <contact@wearefractal.com>\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n"Software"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.',
+44 silly resolved     readmeFilename: 'README.md',
+44 silly resolved     bugs: { url: 'https://github.com/wearefractal/captchagen/issues' },
+44 silly resolved     _id: 'captchagen@1.1.0',
+44 silly resolved     dist:
+44 silly resolved      { shasum: 'fa7c57c908e19b23d13c5852dcffe32cfefafd1e',
+44 silly resolved        tarball: 'http://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz' },
+44 silly resolved     _from: 'captchagen@',
+44 silly resolved     _npmVersion: '1.2.30',
+44 silly resolved     _npmUser: { name: 'fractal', email: 'contact@wearefractal.com' },
+44 silly resolved     maintainers: [ [Object] ],
+44 silly resolved     directories: {},
+44 silly resolved     _shasum: 'fa7c57c908e19b23d13c5852dcffe32cfefafd1e',
+44 silly resolved     _resolved: 'https://registry.npmjs.org/captchagen/-/captchagen-1.1.0.tgz' } ]
+45 info install captchagen@1.1.0 into C:\wamp\www\spooks-chatjs-master
+46 info installOne captchagen@1.1.0
+47 info C:\wamp\www\spooks-chatjs-master\node_modules\captchagen unbuild
+48 verbose tar unpack C:\Users\Ninja\AppData\Roaming\npm-cache\captchagen\1.1.0\package.tgz
+49 silly lockFile 015ec0ae-s-master-node-modules-captchagen tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen
+50 verbose lock tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen C:\Users\Ninja\AppData\Roaming\npm-cache\015ec0ae-s-master-node-modules-captchagen.lock
+51 silly lockFile 43e7e03b-che-captchagen-1-1-0-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\captchagen\1.1.0\package.tgz
+52 verbose lock tar://C:\Users\Ninja\AppData\Roaming\npm-cache\captchagen\1.1.0\package.tgz C:\Users\Ninja\AppData\Roaming\npm-cache\43e7e03b-che-captchagen-1-1-0-package-tgz.lock
+53 silly gunzTarPerm modes [ '755', '644' ]
+54 silly gunzTarPerm extractEntry package.json
+55 silly gunzTarPerm extractEntry .npmignore
+56 silly gunzTarPerm extractEntry README.md
+57 silly gunzTarPerm extractEntry LICENSE
+58 silly gunzTarPerm extractEntry index.js
+59 silly gunzTarPerm extractEntry .travis.yml
+60 silly gunzTarPerm extractEntry lib/Captcha.js
+61 silly gunzTarPerm extractEntry lib/generateText.js
+62 silly gunzTarPerm extractEntry lib/getColors.js
+63 silly gunzTarPerm extractEntry lib/getFontRotation.js
+64 silly gunzTarPerm extractEntry lib/getFontSize.js
+65 silly gunzTarPerm extractEntry lib/randomBetween.js
+66 silly gunzTarPerm extractEntry lib/middle/drawBackground.js
+67 silly gunzTarPerm extractEntry lib/middle/drawLines.js
+68 silly gunzTarPerm extractEntry lib/middle/drawText.js
+69 silly gunzTarPerm extractEntry test/captcha.js
+70 silly gunzTarPerm extractEntry test/main.js
+71 silly lockFile 015ec0ae-s-master-node-modules-captchagen tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen
+72 silly lockFile 015ec0ae-s-master-node-modules-captchagen tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen
+73 silly lockFile 43e7e03b-che-captchagen-1-1-0-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\captchagen\1.1.0\package.tgz
+74 silly lockFile 43e7e03b-che-captchagen-1-1-0-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\captchagen\1.1.0\package.tgz
+75 info preinstall captchagen@1.1.0
+76 verbose readDependencies using package.json deps
+77 verbose readDependencies using package.json deps
+78 verbose cache add [ 'canvas@*', null ]
+79 verbose cache add name=undefined spec="canvas@*" args=["canvas@*",null]
+80 verbose parsed url { protocol: null,
+80 verbose parsed url   slashes: null,
+80 verbose parsed url   auth: null,
+80 verbose parsed url   host: null,
+80 verbose parsed url   port: null,
+80 verbose parsed url   hostname: null,
+80 verbose parsed url   hash: null,
+80 verbose parsed url   search: null,
+80 verbose parsed url   query: null,
+80 verbose parsed url   pathname: 'canvas@*',
+80 verbose parsed url   path: 'canvas@*',
+80 verbose parsed url   href: 'canvas@*' }
+81 verbose cache add name="canvas" spec="*" args=["canvas","*"]
+82 verbose parsed url { protocol: null,
+82 verbose parsed url   slashes: null,
+82 verbose parsed url   auth: null,
+82 verbose parsed url   host: null,
+82 verbose parsed url   port: null,
+82 verbose parsed url   hostname: null,
+82 verbose parsed url   hash: null,
+82 verbose parsed url   search: null,
+82 verbose parsed url   query: null,
+82 verbose parsed url   pathname: '*',
+82 verbose parsed url   path: '*',
+82 verbose parsed url   href: '*' }
+83 verbose addNamed [ 'canvas', '*' ]
+84 verbose addNamed [ null, '*' ]
+85 silly lockFile 5098a37a-canvas canvas@*
+86 verbose lock canvas@* C:\Users\Ninja\AppData\Roaming\npm-cache\5098a37a-canvas.lock
+87 silly addNameRange { name: 'canvas', range: '*', hasData: false }
+88 verbose url raw canvas
+89 verbose url resolving [ 'https://registry.npmjs.org/', './canvas' ]
+90 verbose url resolved https://registry.npmjs.org/canvas
+91 info trying registry request attempt 1 at 23:02:53
+92 verbose etag "30RGNMFF04IG85ZLQFF7KWYRT"
+93 http GET https://registry.npmjs.org/canvas
+94 http 304 https://registry.npmjs.org/canvas
+95 silly registry.get cb [ 304,
+95 silly registry.get   { date: 'Thu, 01 Jan 2015 05:02:50 GMT',
+95 silly registry.get     server: 'Apache',
+95 silly registry.get     via: '1.1 varnish',
+95 silly registry.get     'last-modified': 'Thu, 01 Jan 2015 05:02:50 GMT',
+95 silly registry.get     'cache-control': 'max-age=60',
+95 silly registry.get     etag: '"30RGNMFF04IG85ZLQFF7KWYRT"',
+95 silly registry.get     age: '0',
+95 silly registry.get     'x-served-by': 'cache-dfw1827-DFW',
+95 silly registry.get     'x-cache': 'HIT',
+95 silly registry.get     'x-cache-hits': '1',
+95 silly registry.get     'x-timer': 'S1420088570.415243,VS0,VE191',
+95 silly registry.get     vary: 'Accept',
+95 silly registry.get     'content-length': '0',
+95 silly registry.get     'keep-alive': 'timeout=10, max=50',
+95 silly registry.get     connection: 'Keep-Alive' } ]
+96 verbose etag canvas from cache
+97 silly addNameRange number 2 { name: 'canvas', range: '*', hasData: true }
+98 silly addNameRange versions [ 'canvas',
+98 silly addNameRange   [ '0.0.1',
+98 silly addNameRange     '0.0.2',
+98 silly addNameRange     '0.0.3',
+98 silly addNameRange     '0.0.4',
+98 silly addNameRange     '0.0.5',
+98 silly addNameRange     '0.0.6',
+98 silly addNameRange     '0.0.7',
+98 silly addNameRange     '0.0.8',
+98 silly addNameRange     '0.1.0',
+98 silly addNameRange     '0.2.0',
+98 silly addNameRange     '0.2.1',
+98 silly addNameRange     '0.3.0',
+98 silly addNameRange     '0.3.1',
+98 silly addNameRange     '0.3.2',
+98 silly addNameRange     '0.3.3',
+98 silly addNameRange     '0.4.0',
+98 silly addNameRange     '0.4.1',
+98 silly addNameRange     '0.4.2',
+98 silly addNameRange     '0.4.3',
+98 silly addNameRange     '0.5.0',
+98 silly addNameRange     '0.5.1',
+98 silly addNameRange     '0.5.2',
+98 silly addNameRange     '0.5.3',
+98 silly addNameRange     '0.5.4',
+98 silly addNameRange     '0.6.0',
+98 silly addNameRange     '0.7.0',
+98 silly addNameRange     '0.7.1',
+98 silly addNameRange     '0.7.2',
+98 silly addNameRange     '0.7.3',
+98 silly addNameRange     '0.8.0',
+98 silly addNameRange     '0.8.1',
+98 silly addNameRange     '0.8.2',
+98 silly addNameRange     '0.8.3',
+98 silly addNameRange     '0.9.0',
+98 silly addNameRange     '0.10.0',
+98 silly addNameRange     '0.10.1',
+98 silly addNameRange     '0.10.2',
+98 silly addNameRange     '0.10.3',
+98 silly addNameRange     '0.11.0',
+98 silly addNameRange     '0.11.1',
+98 silly addNameRange     '0.11.2',
+98 silly addNameRange     '0.11.3',
+98 silly addNameRange     '0.12.0',
+98 silly addNameRange     '0.12.1',
+98 silly addNameRange     '0.13.0',
+98 silly addNameRange     '0.13.1',
+98 silly addNameRange     '1.0.0',
+98 silly addNameRange     '1.0.1',
+98 silly addNameRange     '1.0.2',
+98 silly addNameRange     '1.0.3',
+98 silly addNameRange     '1.0.4',
+98 silly addNameRange     '1.1.0',
+98 silly addNameRange     '1.1.1',
+98 silly addNameRange     '1.1.2',
+98 silly addNameRange     '1.1.3',
+98 silly addNameRange     '1.1.4',
+98 silly addNameRange     '1.1.5',
+98 silly addNameRange     '1.1.6' ] ]
+99 verbose addNamed [ 'canvas', '1.1.6' ]
+100 verbose addNamed [ '1.1.6', '1.1.6' ]
+101 silly lockFile 4f76786f-canvas-1-1-6 canvas@1.1.6
+102 verbose lock canvas@1.1.6 C:\Users\Ninja\AppData\Roaming\npm-cache\4f76786f-canvas-1-1-6.lock
+103 silly lockFile 4f76786f-canvas-1-1-6 canvas@1.1.6
+104 silly lockFile 4f76786f-canvas-1-1-6 canvas@1.1.6
+105 silly lockFile 5098a37a-canvas canvas@*
+106 silly lockFile 5098a37a-canvas canvas@*
+107 silly resolved [ { name: 'canvas',
+107 silly resolved     description: 'Canvas graphics API backed by Cairo',
+107 silly resolved     version: '1.1.6',
+107 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@learnboost.com' },
+107 silly resolved     contributors: [ [Object], [Object], [Object] ],
+107 silly resolved     keywords:
+107 silly resolved      [ 'canvas',
+107 silly resolved        'graphic',
+107 silly resolved        'graphics',
+107 silly resolved        'pixman',
+107 silly resolved        'cairo',
+107 silly resolved        'image',
+107 silly resolved        'images',
+107 silly resolved        'pdf' ],
+107 silly resolved     homepage: 'https://github.com/learnboost/node-canvas',
+107 silly resolved     repository: { type: 'git', url: 'git://github.com/learnboost/node-canvas' },
+107 silly resolved     scripts: { test: 'make test', install: 'node-gyp rebuild' },
+107 silly resolved     dependencies: { nan: '~1.2.0' },
+107 silly resolved     devDependencies: { express: '3.0', jade: '0.28.1', mocha: '*', should: '*' },
+107 silly resolved     engines: { node: '>= 0.6.0' },
+107 silly resolved     main: './lib/canvas.js',
+107 silly resolved     gypfile: true,
+107 silly resolved     gitHead: '138abe9aa30b75e8406ceddd9177bff20ac44ceb',
+107 silly resolved     bugs: { url: 'https://github.com/learnboost/node-canvas/issues' },
+107 silly resolved     _id: 'canvas@1.1.6',
+107 silly resolved     _shasum: 'd84b088f3bcd3840fe14977cd3625f5fe89f81ee',
+107 silly resolved     _from: 'canvas@*',
+107 silly resolved     _npmVersion: '1.4.21',
+107 silly resolved     _npmUser: { name: 'tootallnate', email: 'nathan@tootallnate.net' },
+107 silly resolved     maintainers: [ [Object], [Object], [Object], [Object] ],
+107 silly resolved     dist:
+107 silly resolved      { shasum: 'd84b088f3bcd3840fe14977cd3625f5fe89f81ee',
+107 silly resolved        tarball: 'http://registry.npmjs.org/canvas/-/canvas-1.1.6.tgz' },
+107 silly resolved     directories: {},
+107 silly resolved     _resolved: 'https://registry.npmjs.org/canvas/-/canvas-1.1.6.tgz',
+107 silly resolved     readme: 'ERROR: No README data found!' } ]
+108 info install canvas@1.1.6 into C:\wamp\www\spooks-chatjs-master\node_modules\captchagen
+109 info installOne canvas@1.1.6
+110 info C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas unbuild
+111 verbose tar unpack C:\Users\Ninja\AppData\Roaming\npm-cache\canvas\1.1.6\package.tgz
+112 silly lockFile 2083fd40-s-captchagen-node-modules-canvas tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas
+113 verbose lock tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas C:\Users\Ninja\AppData\Roaming\npm-cache\2083fd40-s-captchagen-node-modules-canvas.lock
+114 silly lockFile 46ad609f-m-cache-canvas-1-1-6-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\canvas\1.1.6\package.tgz
+115 verbose lock tar://C:\Users\Ninja\AppData\Roaming\npm-cache\canvas\1.1.6\package.tgz C:\Users\Ninja\AppData\Roaming\npm-cache\46ad609f-m-cache-canvas-1-1-6-package-tgz.lock
+116 silly gunzTarPerm modes [ '755', '644' ]
+117 silly gunzTarPerm extractEntry package.json
+118 silly gunzTarPerm extractEntry .npmignore
+119 silly gunzTarPerm extractEntry index.js
+120 silly gunzTarPerm extractEntry History.md
+121 silly gunzTarPerm extractEntry Makefile
+122 silly gunzTarPerm extractEntry Readme.md
+123 silly gunzTarPerm extractEntry binding.gyp
+124 silly gunzTarPerm extractEntry .gitmodules
+125 silly gunzTarPerm extractEntry install
+126 silly gunzTarPerm extractEntry lib/bindings.js
+127 silly gunzTarPerm extractEntry lib/canvas.js
+128 silly gunzTarPerm extractEntry lib/context2d.js
+129 silly gunzTarPerm extractEntry lib/image.js
+130 silly gunzTarPerm extractEntry lib/jpegstream.js
+131 silly gunzTarPerm extractEntry lib/pixelarray.js
+132 silly gunzTarPerm extractEntry lib/pngstream.js
+133 silly gunzTarPerm extractEntry src/Image.h
+134 silly gunzTarPerm extractEntry src/Canvas.cc
+135 silly gunzTarPerm extractEntry src/CanvasGradient.cc
+136 silly gunzTarPerm extractEntry src/CanvasGradient.h
+137 silly gunzTarPerm extractEntry src/CanvasPattern.cc
+138 silly gunzTarPerm extractEntry src/CanvasPattern.h
+139 silly gunzTarPerm extractEntry src/CanvasRenderingContext2d.cc
+140 silly gunzTarPerm extractEntry src/CanvasRenderingContext2d.h
+141 silly gunzTarPerm extractEntry src/FontFace.cc
+142 silly gunzTarPerm extractEntry src/FontFace.h
+143 silly gunzTarPerm extractEntry src/Image.cc
+144 silly gunzTarPerm extractEntry src/Canvas.h
+145 silly gunzTarPerm extractEntry src/ImageData.cc
+146 silly gunzTarPerm extractEntry src/ImageData.h
+147 silly gunzTarPerm extractEntry src/JPEGStream.h
+148 silly gunzTarPerm extractEntry src/PNG.h
+149 silly gunzTarPerm extractEntry src/PixelArray.cc
+150 silly gunzTarPerm extractEntry src/PixelArray.h
+151 silly gunzTarPerm extractEntry src/Point.h
+152 silly gunzTarPerm extractEntry src/closure.h
+153 silly gunzTarPerm extractEntry src/color.cc
+154 silly gunzTarPerm extractEntry src/color.h
+155 silly gunzTarPerm extractEntry src/init.cc
+156 silly gunzTarPerm extractEntry .travis.yml
+157 silly gunzTarPerm extractEntry util/cairo_include.sh
+158 silly gunzTarPerm extractEntry util/has_cairo_freetype.sh
+159 silly gunzTarPerm extractEntry util/has_lib.sh
+160 silly gunzTarPerm extractEntry util/lib_lookup.sh
+161 silly lockFile 2083fd40-s-captchagen-node-modules-canvas tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas
+162 silly lockFile 2083fd40-s-captchagen-node-modules-canvas tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas
+163 silly lockFile 46ad609f-m-cache-canvas-1-1-6-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\canvas\1.1.6\package.tgz
+164 silly lockFile 46ad609f-m-cache-canvas-1-1-6-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\canvas\1.1.6\package.tgz
+165 info preinstall canvas@1.1.6
+166 verbose readDependencies using package.json deps
+167 verbose readDependencies using package.json deps
+168 verbose cache add [ 'nan@~1.2.0', null ]
+169 verbose cache add name=undefined spec="nan@~1.2.0" args=["nan@~1.2.0",null]
+170 verbose parsed url { protocol: null,
+170 verbose parsed url   slashes: null,
+170 verbose parsed url   auth: null,
+170 verbose parsed url   host: null,
+170 verbose parsed url   port: null,
+170 verbose parsed url   hostname: null,
+170 verbose parsed url   hash: null,
+170 verbose parsed url   search: null,
+170 verbose parsed url   query: null,
+170 verbose parsed url   pathname: 'nan@~1.2.0',
+170 verbose parsed url   path: 'nan@~1.2.0',
+170 verbose parsed url   href: 'nan@~1.2.0' }
+171 verbose cache add name="nan" spec="~1.2.0" args=["nan","~1.2.0"]
+172 verbose parsed url { protocol: null,
+172 verbose parsed url   slashes: null,
+172 verbose parsed url   auth: null,
+172 verbose parsed url   host: null,
+172 verbose parsed url   port: null,
+172 verbose parsed url   hostname: null,
+172 verbose parsed url   hash: null,
+172 verbose parsed url   search: null,
+172 verbose parsed url   query: null,
+172 verbose parsed url   pathname: '~1.2.0',
+172 verbose parsed url   path: '~1.2.0',
+172 verbose parsed url   href: '~1.2.0' }
+173 verbose addNamed [ 'nan', '~1.2.0' ]
+174 verbose addNamed [ null, '>=1.2.0-0 <1.3.0-0' ]
+175 silly lockFile 6bb36ab7-nan-1-2-0 nan@~1.2.0
+176 verbose lock nan@~1.2.0 C:\Users\Ninja\AppData\Roaming\npm-cache\6bb36ab7-nan-1-2-0.lock
+177 silly addNameRange { name: 'nan', range: '>=1.2.0-0 <1.3.0-0', hasData: false }
+178 verbose url raw nan
+179 verbose url resolving [ 'https://registry.npmjs.org/', './nan' ]
+180 verbose url resolved https://registry.npmjs.org/nan
+181 info trying registry request attempt 1 at 23:02:53
+182 verbose etag "BASL4AHUZL2X9BYWJN23MGK84"
+183 http GET https://registry.npmjs.org/nan
+184 http 304 https://registry.npmjs.org/nan
+185 silly registry.get cb [ 304,
+185 silly registry.get   { date: 'Thu, 01 Jan 2015 05:02:50 GMT',
+185 silly registry.get     server: 'Apache',
+185 silly registry.get     via: '1.1 varnish',
+185 silly registry.get     'last-modified': 'Thu, 01 Jan 2015 05:02:50 GMT',
+185 silly registry.get     'cache-control': 'max-age=60',
+185 silly registry.get     etag: '"BASL4AHUZL2X9BYWJN23MGK84"',
+185 silly registry.get     age: '14',
+185 silly registry.get     'x-served-by': 'cache-dfw1834-DFW',
+185 silly registry.get     'x-cache': 'HIT',
+185 silly registry.get     'x-cache-hits': '1',
+185 silly registry.get     'x-timer': 'S1420088570.914435,VS0,VE0',
+185 silly registry.get     vary: 'Accept',
+185 silly registry.get     'content-length': '0',
+185 silly registry.get     'keep-alive': 'timeout=10, max=50',
+185 silly registry.get     connection: 'Keep-Alive' } ]
+186 verbose etag nan from cache
+187 silly addNameRange number 2 { name: 'nan', range: '>=1.2.0-0 <1.3.0-0', hasData: true }
+188 silly addNameRange versions [ 'nan',
+188 silly addNameRange   [ '0.3.0-wip',
+188 silly addNameRange     '0.3.0-wip2',
+188 silly addNameRange     '0.3.0',
+188 silly addNameRange     '0.3.1',
+188 silly addNameRange     '0.3.2',
+188 silly addNameRange     '0.4.0',
+188 silly addNameRange     '0.4.1',
+188 silly addNameRange     '0.4.2',
+188 silly addNameRange     '0.4.3',
+188 silly addNameRange     '0.4.4',
+188 silly addNameRange     '0.5.0',
+188 silly addNameRange     '0.5.1',
+188 silly addNameRange     '0.5.2',
+188 silly addNameRange     '0.6.0',
+188 silly addNameRange     '0.7.0',
+188 silly addNameRange     '0.7.1',
+188 silly addNameRange     '0.8.0',
+188 silly addNameRange     '1.0.0',
+188 silly addNameRange     '1.1.0',
+188 silly addNameRange     '1.1.1',
+188 silly addNameRange     '1.1.2',
+188 silly addNameRange     '1.2.0',
+188 silly addNameRange     '1.3.0',
+188 silly addNameRange     '1.4.0',
+188 silly addNameRange     '1.4.1' ] ]
+189 verbose addNamed [ 'nan', '1.2.0' ]
+190 verbose addNamed [ '1.2.0', '1.2.0' ]
+191 silly lockFile 859d0f28-nan-1-2-0 nan@1.2.0
+192 verbose lock nan@1.2.0 C:\Users\Ninja\AppData\Roaming\npm-cache\859d0f28-nan-1-2-0.lock
+193 silly lockFile 859d0f28-nan-1-2-0 nan@1.2.0
+194 silly lockFile 859d0f28-nan-1-2-0 nan@1.2.0
+195 silly lockFile 6bb36ab7-nan-1-2-0 nan@~1.2.0
+196 silly lockFile 6bb36ab7-nan-1-2-0 nan@~1.2.0
+197 silly resolved [ { name: 'nan',
+197 silly resolved     version: '1.2.0',
+197 silly resolved     description: 'Native Abstractions for Node.js: C++ header for Node 0.8->0.12 compatibility',
+197 silly resolved     main: 'include_dirs.js',
+197 silly resolved     repository: { type: 'git', url: 'git://github.com/rvagg/nan.git' },
+197 silly resolved     contributors: [ [Object], [Object], [Object], [Object], [Object], [Object] ],
+197 silly resolved     license: 'MIT',
+197 silly resolved     bugs: { url: 'https://github.com/rvagg/nan/issues' },
+197 silly resolved     homepage: 'https://github.com/rvagg/nan',
+197 silly resolved     _id: 'nan@1.2.0',
+197 silly resolved     dist:
+197 silly resolved      { shasum: '9c4d63ce9e4f8e95de2d574e18f7925554a8a8ef',
+197 silly resolved        tarball: 'http://registry.npmjs.org/nan/-/nan-1.2.0.tgz' },
+197 silly resolved     _from: 'nan@~1.2.0',
+197 silly resolved     _npmVersion: '1.4.3',
+197 silly resolved     _npmUser: { name: 'rvagg', email: 'rod@vagg.org' },
+197 silly resolved     maintainers: [ [Object] ],
+197 silly resolved     directories: {},
+197 silly resolved     _shasum: '9c4d63ce9e4f8e95de2d574e18f7925554a8a8ef',
+197 silly resolved     _resolved: 'https://registry.npmjs.org/nan/-/nan-1.2.0.tgz',
+197 silly resolved     readme: 'ERROR: No README data found!' } ]
+198 info install nan@1.2.0 into C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas
+199 info installOne nan@1.2.0
+200 info C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas\node_modules\nan unbuild
+201 verbose tar unpack C:\Users\Ninja\AppData\Roaming\npm-cache\nan\1.2.0\package.tgz
+202 silly lockFile 087aa6d4--modules-canvas-node-modules-nan tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas\node_modules\nan
+203 verbose lock tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas\node_modules\nan C:\Users\Ninja\AppData\Roaming\npm-cache\087aa6d4--modules-canvas-node-modules-nan.lock
+204 silly lockFile fd02f87f--npm-cache-nan-1-2-0-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\nan\1.2.0\package.tgz
+205 verbose lock tar://C:\Users\Ninja\AppData\Roaming\npm-cache\nan\1.2.0\package.tgz C:\Users\Ninja\AppData\Roaming\npm-cache\fd02f87f--npm-cache-nan-1-2-0-package-tgz.lock
+206 silly gunzTarPerm modes [ '755', '644' ]
+207 silly gunzTarPerm extractEntry package.json
+208 silly gunzTarPerm extractEntry README.md
+209 silly gunzTarPerm extractEntry LICENSE
+210 silly gunzTarPerm extractEntry include_dirs.js
+211 silly gunzTarPerm extractEntry .dntrc
+212 silly gunzTarPerm extractEntry build/config.gypi
+213 silly gunzTarPerm extractEntry nan.h
+214 silly lockFile 087aa6d4--modules-canvas-node-modules-nan tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas\node_modules\nan
+215 silly lockFile 087aa6d4--modules-canvas-node-modules-nan tar://C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas\node_modules\nan
+216 silly lockFile fd02f87f--npm-cache-nan-1-2-0-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\nan\1.2.0\package.tgz
+217 silly lockFile fd02f87f--npm-cache-nan-1-2-0-package-tgz tar://C:\Users\Ninja\AppData\Roaming\npm-cache\nan\1.2.0\package.tgz
+218 info preinstall nan@1.2.0
+219 verbose readDependencies using package.json deps
+220 verbose readDependencies using package.json deps
+221 silly resolved []
+222 verbose about to build C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas\node_modules\nan
+223 info build C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas\node_modules\nan
+224 verbose linkStuff [ false,
+224 verbose linkStuff   false,
+224 verbose linkStuff   false,
+224 verbose linkStuff   'C:\\wamp\\www\\spooks-chatjs-master\\node_modules\\captchagen\\node_modules\\canvas\\node_modules' ]
+225 info linkStuff nan@1.2.0
+226 verbose linkBins nan@1.2.0
+227 verbose linkMans nan@1.2.0
+228 verbose rebuildBundles nan@1.2.0
+229 info install nan@1.2.0
+230 info postinstall nan@1.2.0
+231 verbose about to build C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas
+232 info build C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas
+233 verbose linkStuff [ false,
+233 verbose linkStuff   false,
+233 verbose linkStuff   false,
+233 verbose linkStuff   'C:\\wamp\\www\\spooks-chatjs-master\\node_modules\\captchagen\\node_modules' ]
+234 info linkStuff canvas@1.1.6
+235 verbose linkBins canvas@1.1.6
+236 verbose linkMans canvas@1.1.6
+237 verbose rebuildBundles canvas@1.1.6
+238 verbose rebuildBundles [ 'nan' ]
+239 info install canvas@1.1.6
+240 verbose unsafe-perm in lifecycle true
+241 info canvas@1.1.6 Failed to exec install script
+242 info C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules\canvas unbuild
+243 info preuninstall canvas@1.1.6
+244 info uninstall canvas@1.1.6
+245 verbose false,C:\wamp\www\spooks-chatjs-master\node_modules,C:\wamp\www\spooks-chatjs-master\node_modules\captchagen\node_modules unbuild canvas@1.1.6
+246 info postuninstall canvas@1.1.6
+247 verbose about to build C:\wamp\www\spooks-chatjs-master\node_modules\captchagen
+248 info C:\wamp\www\spooks-chatjs-master\node_modules\captchagen unbuild
+249 info preuninstall captchagen@1.1.0
+250 info uninstall captchagen@1.1.0
+251 verbose true,C:\wamp\www\spooks-chatjs-master\node_modules,C:\wamp\www\spooks-chatjs-master\node_modules unbuild captchagen@1.1.0
+252 info postuninstall captchagen@1.1.0
+253 error canvas@1.1.6 install: `node-gyp rebuild`
+253 error Exit status 1
+254 error Failed at the canvas@1.1.6 install script.
+254 error This is most likely a problem with the canvas package,
+254 error not with npm itself.
+254 error Tell the author that this fails on your system:
+254 error     node-gyp rebuild
+254 error You can get their info via:
+254 error     npm owner ls canvas
+254 error There is likely additional logging output above.
+255 error System Windows_NT 6.1.7601
+256 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "captchagen"
+257 error cwd C:\wamp\www\spooks-chatjs-master
+258 error node -v v0.10.29
+259 error npm -v 1.4.14
+260 error code ELIFECYCLE
+261 verbose exit [ 1, true ]

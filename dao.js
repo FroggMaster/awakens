@@ -431,7 +431,7 @@ module.exports = function(callback) {
                 } else {
                     var sql = 'insert into chat_banned (banned, channel) values (?,';
                     var params = [ banned ];
-                    if (channel != null) {
+                    if (channel != undefined) {
                         params.push(channel);
                         sql += '?)';
                     } else {
@@ -441,7 +441,6 @@ module.exports = function(callback) {
                         result.resolve(true, msgs.get(channel != null ? 'banned_channel' : 'banned_global', banned));
                     }, function(err) {
                         result.reject(err);
-						console.log(sql + banned + channel)
                     });
                 }
             }, function(err) {

@@ -19,7 +19,7 @@ $(function() {
         ONLINE.add(user);
         CLIENT.show({
             type : 'general-message',
-            message : user.nick + ' has joined'
+            message : user.nick + ' has joined '
         });
  
     if(CLIENT.get('part') != undefined){
@@ -43,7 +43,7 @@ $(function() {
         if(user.part == undefined){
             CLIENT.show({
                 type : 'general-message',
-                message : user.nick + ' has left'
+                message : user.nick + ' has left '
             });
         } else {
             CLIENT.show({
@@ -112,6 +112,11 @@ $(function() {
     socket.on('refresh', function() {
         window.location.reload();
     });
+    
+    socket.on('pinch', function(){
+        $('.message').removeClass('shake');
+        setTimeout(function(){ $('.message').addClass('shake'); }, 100);
+    });
 
     socket.on('response', function(msg) {
         var def = msg && requests[msg.id];
@@ -148,11 +153,19 @@ $(function() {
             }
         } else if(name == 'toggle'){
             toggled(input)
-        } else if(name == 'block'){
-            blocked(input)
-        } else if(name == 'unblock') {
-            unblocked(input)
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
+        } else if(name == 'block' || name == 'alert'){
+            if(name == 'block'){
+                add('block',input)
+            } else {
+                add('alert',input)
+            }
+        } else if(name == 'unblock' || name == 'unalert') {
+            if(name == 'unblock'){
+                remove('block',input)
+            } else {
+                remove('alert',input)
+            }
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "pinch") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -193,7 +206,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors styles bg role part block menu_top menu_left menu_display mask'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors styles bg role access_level part block alert menu_top menu_left menu_display mask'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -316,6 +329,8 @@ $(function() {
                 input = ' ' + input;
                 if (color) {
                     input = '#' + color + input + ' ';
+                } else {
+                    input = input + ' ';
                 }
                 if (font) {
                     input = '$' + font + '|' + input;
@@ -393,6 +408,9 @@ $(function() {
     if (CLIENT.get('block') == null){
         CLIENT.set('block', ''); 
     }
+    if (CLIENT.get('alert') == null){
+        CLIENT.set('alert', ''); 
+    }
 });
 
 // ------------------------------------------------------------------
@@ -456,6 +474,11 @@ $(function() {
                 callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
             },
             "sep1": "---------",
+            /*"Pinch": {
+                name: "Pinch",
+                callback: function(){ CLIENT.submit('/Pinch '+ $.trim(this[0].textContent)) }
+            },
+            "sep3": "---------",*/
             "Kick": {
                 name: "Kick",
                 callback: function(){ CLIENT.submit('/kick '+ $.trim(this[0].textContent)) }
@@ -540,7 +563,14 @@ $(function() {
         var time = message.time ? new Date(message.time) : new Date();
         var role = ['god','super','admin','mod','basic','mute'];
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
-        if(check.test(message.message)){
+        var alert = CLIENT.get('alert').split(',');
+        var valid = false;
+        for (i = 1; i < alert.length; i++) { 
+            if(message.message.indexOf(' ' + alert[i] + ' ') != -1){
+                valid = true;
+            }
+        }
+        if(check.test(message.message) || valid){
             el.append($('<div id="highlightname" class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             sound = 'name'
         } else{
@@ -1012,7 +1042,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask alert'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1044,6 +1074,8 @@ $(function() {
         toggle : function(){},
         block : function(){},
         unblock : function(){},
+        alert : function(){},
+        unalert : function(){},
         play : {
             role : 'super',
             params : [ 'url' ]
@@ -1065,6 +1097,9 @@ $(function() {
             params : [ 'vHost' ]
         },
         ghost : {}
+        /*pinch : {
+            params : [ 'nick' ]
+        }*/
     };
 
     COMMANDS.colour = COMMANDS.color;
@@ -1079,32 +1114,32 @@ toggled = function(att){
     }
 }
 
-blocked = function(att){
-    block = CLIENT.get('block').split(',')
-    if(block.indexOf(att) == -1){
-        block.push(att)
-            CLIENT.show(att + ' is now blocked')
+add = function(att,user){
+    block = CLIENT.get(att).split(',')
+    if(block.indexOf(user) == -1){
+        block.push(user)
+            CLIENT.show(user + ' has been added')
     } else {
         CLIENT.show({
-            message : 'That user is already blocked.',
+            message : 'That nick is already added.',
             type : 'error-message'
         });
     }
-CLIENT.set('block',block.join(','))
+CLIENT.set(att,block.join(','))
 }
-unblocked = function(att){
-    block = CLIENT.get('block').split(',')
-    index = block.indexOf(att)
-    if(block.indexOf(att) != -1){
+remove = function(att,user){
+    block = CLIENT.get(att).split(',')
+    index = block.indexOf(user)
+    if(block.indexOf(user) != -1){
         block.splice(index,1)
-        CLIENT.show(att + ' is not longer blocked.')
+        CLIENT.show(user + ' was removed.')
     } else {
         CLIENT.show({
-            message : 'You don\'t have that user blocked.',
+            message : 'You don\'t have that nick added.',
             type : 'error-message'
         });
     }
-CLIENT.set('block',block.join(','))
+CLIENT.set(att,block.join(','))
 }
 
 // ------------------------------------------------------------------
@@ -1203,7 +1238,7 @@ parser = {
         var links = str.match(this.linkreg);
         str = str.replace(this.linkreg, '$1' + this.replink);
         var escs = str.match(/\\./g);
-        // str = str.replace(/\\./g, this.repslsh);
+        str = str.replace(/\\./g, this.repslsh);
         // replace underscores, et cetera
         if(CLIENT.get('styles') == 'on'){
          str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
