@@ -628,7 +628,13 @@ function createChannel(io, channelName) {
             lock : {
                 params : [ 'command', 'role' ],
                 handler : function(dao, dbuser, params) {
-                    command_access[params.command] = params.role
+                    var cmd = COMMANDS[params.command];
+                    if(cmd){
+                        command_access[params.command] = params.role
+                        showMessage(params.command + ' is not locked for ' + params.role + ' and up')
+                    } else {
+                        errorMessage(params.command + ' isn\'t a command');
+                    }
                 }
             },
             pinch : {
