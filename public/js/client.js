@@ -151,8 +151,8 @@ $(function() {
                     message : message,
                 }; 
             }
-        } else if(name == 'toggle'){
-            toggled(input)
+        } else if(name == 'set'){
+            set(input)
         } else if(name == 'block' || name == 'alert'){
             if(name == 'block'){
                 add('block',input)
@@ -918,7 +918,7 @@ $(function() {
         },
         banlist : {role : 'admin'},
         permabanlist : {role : 'admin'},
-        find_ip : {
+        find : {
             role : 'admin',
             params : [ 'remote_addr' ]
         },
@@ -1030,11 +1030,12 @@ $(function() {
         pm : {
             params : [ 'nick|message' ]
         },
-        refresh_client : {role : 'super'},
-        theme : {
+        refresh : {role : 'super'},
+        bg : {
+            role : 'mod',
             params : [ 'theme_style$' ]
         },
-        reset_user : {
+        reset : {
             role : 'super',
             params : [ 'nick' ]
         },
@@ -1042,7 +1043,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask alert'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask alert password'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1071,7 +1072,7 @@ $(function() {
         part : {
             params : [ 'message$' ]
         },
-        toggle : function(){},
+        set : function(){},
         block : function(){},
         unblock : function(){},
         alert : function(){},
@@ -1096,16 +1097,26 @@ $(function() {
         mask : {
             params : [ 'vHost' ]
         },
-        ghost : {}
+        ghost : {role : 'super'},
+        global : {
+            role : 'super',
+            params : [ 'message' ]
+        },
+        lock : {
+            role : 'super',
+            params : [ 'command', 'role' ]
+        }
         /*pinch : {
             params : [ 'nick' ]
         }*/
     };
 
     COMMANDS.colour = COMMANDS.color;
+    COMMANDS.menu = COMMANDS.help;
+    COMMANDS.background = COMMANDS.bg;
 })();
 
-toggled = function(att){
+set = function(att){
     if (att == 'bg' && CLIENT.get('bg') == 'off'){
         $('#messages').css('background', CLIENT.get('old'));
     } 
@@ -1204,7 +1215,7 @@ parser = {
             if (links[i][0] != 'h' && links[i][0] != 'f')
                 link = links[i].replace(/^(.)(.+)$/, '$2');
             str = str.replace(this.replink, '<a target="_blank" href="' + link + '">' + link + '</a>');
-        }
+        } 
         // change spaces to &nbsp;
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
@@ -1267,6 +1278,8 @@ parser = {
         str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
+        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
+        //JS Links
         var jscheck = "";
         if (str.indexOf("javascript:") > -1) {
         	jscheck = " [javascript]";

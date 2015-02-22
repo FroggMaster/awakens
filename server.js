@@ -27,6 +27,7 @@ function createChannel(io, channelName) {
     var elbot = require('./elbot').start();
     var room = io.of('/' + channelName);
     var roles = ['god','super','admin','mod','basic','mute'];
+    var command_access = {};
     var channel = {
         online : []
     };
@@ -196,12 +197,12 @@ function createChannel(io, channelName) {
                                         errorMessage('You may not ban admins');
                                     } else {         
                                         showMessage(params.nick + ' is now banned gloablly');
-                                        broadcast(dao, msg, 3);
+                                        broadcast(dao, msg);
                                         return dao.ban(params.nick);
                                     }
                                 } else {
                                     showMessage(params.nick + ' is now banned gloablly');
-                                    broadcast(dao, msg, 3);
+                                    broadcast(dao, msg);
                                     return dao.ban(params.nick);
                                 }
                             });
@@ -212,7 +213,7 @@ function createChannel(io, channelName) {
                 role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
-                    broadcast(dao, dbuser.get("nick")+" has unbanned "+params.id,dbuser.get("access_level"));
+                    broadcast(dao, dbuser.get("nick")+" has unbanned "+params.id);
                     return dao.unban(params.id);
                 }
             },
@@ -223,7 +224,7 @@ function createChannel(io, channelName) {
                     var msg = dbuser.get("nick")+" has channel banned "+params.nick;
                     if(params.message.trim())
                         msg+=": "+params.message.trim();
-                    broadcastChannel(dao, channel, msg,dbuser.get("access_level"));
+                    broadcastChannel(dao, channel, msg);
                     return dao.ban(params.nick, channelName);
                 }
             },
@@ -231,7 +232,7 @@ function createChannel(io, channelName) {
                 role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
-                    broadcastChannel(dao, channel, dbuser.get("nick")+" has channel unbanned "+params.id,dbuser.get("access_level"));
+                    broadcastChannel(dao, channel, dbuser.get("nick")+" has channel unbanned "+params.id);
                     return dao.unban(params.id, channelName);
                 }
             },
@@ -257,7 +258,7 @@ function createChannel(io, channelName) {
                                         message : msgs.get("kicked_reason",msg,dbuser.get('nick'))
                                     });
                                     kuser.socket.disconnect();
-                                    broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg,5);
+                                    broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg);
                                 } else if(user.access_level < fuser.access_level){
                                     if(!params.message.trim()){
                                         msg = ''
@@ -269,7 +270,7 @@ function createChannel(io, channelName) {
                                         message : msgs.get("kicked_reason",msg,dbuser.get('nick'))
                                     });
                                     kuser.socket.disconnect();
-                                    broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg,5);
+                                    broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg);
                                 } else {
                                     errorMessage('You may not kick admins');
                                 }
@@ -367,7 +368,7 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-            find_ip : {
+            find : {
                 role : 'super',
                 params : [ 'remote_addr' ],
                 handler : function(dao, dbuser, params) {
@@ -430,17 +431,17 @@ function createChannel(io, channelName) {
                     return done.promise();
                 }
             },
-            refresh_client : {
+            refresh : {
                 role : 'super',
                 handler : function(dao, dbuser, params) {
                     roomEmit('refresh');
                 }
             },
-            theme : {
-                role : 'admin',
+            bg : {
+                role : 'mod',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
-                    var theme = params.theme_style.substring(0, settings.limits.message)
+                    var theme = params.theme_style.substring(0, settings.limits.message);
                     return dao.setChannelInfo(channelName, 'theme', theme).then(function() {
                         roomEmit('update', {
                             theme : theme
@@ -459,7 +460,7 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-            reset_user : {
+            reset : {
                 role : 'super',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
@@ -594,6 +595,7 @@ function createChannel(io, channelName) {
                 }
             },
             ghost : {
+                role : 'super',
                 handler : function(dao, dbuser, params) {
                     for (i = 0; i < channel.online.length; i++) { 
                         channel.online[i].socket.emit('alive')
@@ -616,12 +618,24 @@ function createChannel(io, channelName) {
                     },1000);
                 }
             },
+            global : {
+                role : 'super',
+                params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+                    broadcast(dao, params.message)
+                }
+            },
+            lock : {
+                params : [ 'command', 'role' ],
+                handler : function(dao, dbuser, params) {
+                    command_access[params.command] = params.role
+                }
+            },
             pinch : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                     var to = indexOf(params.nick);
                     if (to >= 0) {
-                        console.log(channel.online[to])
                         var toSocket = channel.online[to].socket;
                         socketEmit(toSocket, 'pinch');
                     } else {
@@ -742,7 +756,11 @@ function createChannel(io, channelName) {
                                             }
                                         }
                                         if (valid) {
-                                            return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
+                                            if(!command_access[msg.name] || roles.indexOf(command_access[msg.name]) >= roles.indexOf(user.role)){
+                                                return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
+                                            } else {
+                                                return $.Deferred().resolve(false, msgs.invalidCommandAccess + ' (Locked)');
+                                            }
                                         } else {
                                             return $.Deferred().resolve(false, msgs.invalidCommandAccess);
                                         }
@@ -931,18 +949,16 @@ function createChannel(io, channelName) {
             });
         }
 
-        function broadcast(dao, message, level) {
+        function broadcast(dao, message) {
             for(var key in channels){
-                broadcastChannel(dao, channels[key], message, level)
+                broadcastChannel(dao, channels[key], message)
             }
         }
 
-        function broadcastChannel(dao, channel, message, level) {
+        function broadcastChannel(dao, channel, message) {
             channel.online.forEach(function(user){
                 dao.findUser(user.nick).done(function(dbuser) {
-                    if(roles.indexOf(dbuser.get("role"))<=level){
-                        socketEmit(user.socket, 'general-message', message);
-                    }
+                    socketEmit(user.socket, 'general-message', message);
                 })
             })
         }
@@ -1201,7 +1217,6 @@ function initApp(app, server, https) {
                         channels[channelName] = createChannel(io, channelName);
                     }*/
                 }
-                console.log(channels[channelName])
                 var index = fs.readFileSync('index.html').toString();
                 _.each({
                     channel : channelName
