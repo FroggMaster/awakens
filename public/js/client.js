@@ -182,6 +182,11 @@ $(function() {
                     };
                 }
             }
+        } else if(name == 'global') {
+            var msg = /([\s\S]*)?$/.exec(input);
+            return {
+                message : msg[0]
+            };
         } else {
             var values = input.split(' ');
             if (values[0] == '') {
