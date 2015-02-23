@@ -86,9 +86,9 @@ $(function() {
     
     socket.on('frame', function(url){
         if(url.url == "none"){
-            $("#chatframe").src = ""
+            $("#chatframe").attr('src',"");
         } else {
-            $("#chatframe").src = url.url
+            $("#chatframe").attr('src',url.url);
         }
     });
 
