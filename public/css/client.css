@@ -532,8 +532,8 @@ color:gold;
 	display:none;
 	min-width: 175px;
 	min-height: 300px;
-	height:300px;
-	width: 400px;
+	height:500px;
+	width: 200px;
 	cursor:default;
 	background-color:#171717;
         z-index: 2;
@@ -588,7 +588,7 @@ color:gold;
     font-weight: bold;
     text-align: center;
     margin:15px;
-    border: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
     padding: 5px;
 }
 
@@ -599,26 +599,28 @@ color:gold;
 }
 
 #online-users li {
-    font-weight: bold;
-    margin-bottom:5px;
-    text-align: center;
+	font-weight: bold;
+	margin-bottom:5px;
+	text-align: center;
 }
 #online-users li:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 #X{
-position: absolute;
-right: 5px;
-top: 5px;
-color: white;
-font-weight: bold;
-border-radius: 100%;
-padding: 5px;
-border: 5px solid red;
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	color: white;
+	font-weight: bold;
+	border-radius: 100%;
+	padding: 5px;
+	border: 2px solid red;
+	width: 20px;
+	height: 20px;
 }
 
 #X:hover{
-background-color:red;
+	background-color:red;
 }
 
 /*\
