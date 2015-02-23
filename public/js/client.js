@@ -78,9 +78,17 @@ $(function() {
     
     socket.on('playvid', function(url){
         if(url.url == "stop" || mute == 'on'){
-            $("#youtube")[0].innerHTML = ""
+            $("#youtube").innerHTML = ""
         } else {
-            $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+            $("#youtube").innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+        }
+    });
+    
+    socket.on('frame', function(url){
+        if(url.url == "none"){
+            $("#chatframe").src = ""
+        } else {
+            $("#chatframe").src = url.url
         }
     });
 
