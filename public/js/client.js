@@ -85,7 +85,7 @@ $(function() {
     });
     
     socket.on('frame', function(url){
-        if(url.url == "none"){
+        if(url.url == "none" || CLIENT.get('frame') == 'off'){
             $("#chatframe").attr('src',"");
         } else {
             $("#chatframe").attr('src',url.url);
@@ -219,7 +219,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors styles bg role access_level part block alert menu_top menu_left menu_display mask'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images frame flair cursors styles bg role access_level part block alert menu_top menu_left menu_display mask'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -231,7 +231,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors styles bg role part mask'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak frame images cursors styles bg role part mask'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -411,6 +411,9 @@ $(function() {
     });
     if (CLIENT.get('images') == null){
         CLIENT.set('images', 'on'); 
+    }
+    if (CLIENT.get('frame') == null){
+        CLIENT.set('frame', 'on'); 
     }
     if (CLIENT.get('bg') == null){
         CLIENT.set('bg', 'on'); 
@@ -1103,11 +1106,14 @@ $(function() {
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
             CLIENT.set('mute_speak','on')
+            CLIENT.set('frame','off')
+            
         },
         unsafe : function(){
             CLIENT.set('bg','on'),
             CLIENT.set('images','on'),
             CLIENT.set('mute_speak','off')
+            CLIENT.set('frame','on')
         },
         msg : {
             params : [ 'message$' ]
