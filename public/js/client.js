@@ -971,6 +971,7 @@ $(function() {
             role : 'super',
             params : [ 'message$' ]
         },
+        
         clear : function() {
             $('#messages').html('');
         },
@@ -1092,7 +1093,11 @@ $(function() {
         unalert : function(){},
         play : {
             role : 'super',
-            params : [ 'url' ]
+            params : [ 'url$' ]
+        },
+         frame : {
+            role : 'super',
+            params : [ 'url$' ]
         },
         safe : function(){
             CLIENT.set('bg','off'),
