@@ -569,6 +569,16 @@ function createChannel(io, channelName) {
                     });
                 }
             },
+            
+            frame : {
+                role : 'super',
+                params : [ 'url' ],
+                handler : function(dao, dbuser, params) {
+                    roomEmit('frame', {
+                        url : params.url
+                    });
+                }
+            },
             msg : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
