@@ -78,9 +78,9 @@ $(function() {
     
     socket.on('playvid', function(url){
         if(url.url == "stop" || mute == 'on'){
-            $("#youtube").innerHTML = ""
+            $("#youtube").html = ""
         } else {
-            $("#youtube").innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+            $("#youtube").html = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
         }
     });
     
