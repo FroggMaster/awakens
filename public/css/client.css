@@ -106,6 +106,7 @@ z-index:1;
 
 #messages .timestamp,
 #messages .message-content {
+	pointer-events: auto;
     text-shadow:
     -1px -1px 0 #000,
     1px -1px 0 #000,
@@ -460,6 +461,7 @@ animation: shake .1s;
     display: inline;
 }
 #highlightname.timestamp {
+	pointer-events: auto;
 color:gold;
 }
 
