@@ -26,6 +26,10 @@
     </head>
     <body>
         <script>window.channel="${channel}";</script>
+        <div id="tabbed-menu-cotainer">
+            <div id="tabbed-menu"></div>
+            <div id="user-list" class="online tabbed-list"></div>
+        </div>
         <div id="online-users" class="menu-container">
                 <div class="category">Online</div><div id="X" onclick="$(this).parent().hide()">X</div>
 		<div class="menu-content"><ul id="online"></ul></div>
@@ -33,13 +37,9 @@
         </div>
         <div id="youtube"></div>
         <div id="messages" class="full-height" style="pointer-events: none;"></div>
-        <iframe id="chatframe" style='position: absolute; top: 0px;left: 0px; border: 0; width: 100%; height: 100%' src=''></iframe>
         <div id="input-bar"><div>
-         <textarea id="input-message" type="text" placeholder="Enter chat message. Then press enter to submit" autocomplete="off"></textarea>
-        
+         <textarea id="input-message" type="text" placeholder="Enter chat message. Then press enter to submit" autocomplete="off"></textarea></div>
         <div id="bigimg"></div>
-           
-        </div></div>
         <div id="vertical-scroll-bar" class="full-height"><span class="handle"></span></div>
         <script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

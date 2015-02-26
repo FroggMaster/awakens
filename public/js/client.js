@@ -78,17 +78,9 @@ $(function() {
     
     socket.on('playvid', function(url){
         if(url.url == "stop" || mute == 'on'){
-            $("#youtube").html = ""
+            $("#youtube")[0].innerHTML = ""
         } else {
-            $("#youtube").html = "<iframe width='420' height='345' src='https://www.youtube.com/embed/" + url.url + "?autoplay=1' frameborder='0' allowfullscreen></iframe>"
-        }
-    });
-    
-    socket.on('frame', function(url){
-        if(url.url == "none" || CLIENT.get('frame') == 'off'){
-            $("#chatframe").attr('src',"");
-        } else {
-            $("#chatframe").attr('src',url.url);
+            $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
         }
     });
 
@@ -219,7 +211,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images frame flair cursors styles bg role access_level part block alert menu_top menu_left menu_display mask'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors styles bg role access_level part block alert menu_top menu_left menu_display mask'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -231,7 +223,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak frame images cursors styles bg role part mask'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors styles bg role part mask'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -412,9 +404,6 @@ $(function() {
     if (CLIENT.get('images') == null){
         CLIENT.set('images', 'on'); 
     }
-    if (CLIENT.get('frame') == null){
-        CLIENT.set('frame', 'on'); 
-    }
     if (CLIENT.get('bg') == null){
         CLIENT.set('bg', 'on'); 
     }
@@ -464,8 +453,16 @@ $(function() {
 
 $(function() {
     function updateCount() {
-        $('#online-users .category').text('Online (' + ONLINE.size() + ')');
+        if(CLIENT.get('menu_display') == 'block'){
+            $('#online-users .category').text('Online (' + ONLINE.size() + ')');
+        } else {
+            $('#tabbed-menu').text('Online (' + ONLINE.size() + ')');
+        }
     }
+    
+    $('#tabbed-menu').click(function(){
+        $('#user-list').slideToggle();
+    });
     
     if(CLIENT.get('menu_display') != 'undefined'){
         $('.menu-container').css('display',CLIENT.get('menu_display'));
@@ -475,8 +472,8 @@ $(function() {
     
     ONLINE.on('add', function(user) {
         var li = $('<li class="users"></li>').attr({
-            id : 'online-' + user.get('id')
-        }).appendTo('#online');
+            class : 'online-' + user.get('id')
+        }).appendTo('.online');
   
   
     $(function(){
@@ -528,10 +525,16 @@ $(function() {
         user.on('change:nick', function() {
             nick.text(user.get('nick'));
         });
+        CLIENT.on('change:menu_display', function(e) {
+            if(e.get('menu_display') == 'block'){
+                $('#tabbed-menu').text('');
+            }
+           updateCount();
+        });
         updateCount();
     });
     ONLINE.on('remove', function(user) {
-        $('#online-' + user.get('id')).remove();
+        $('.online-' + user.get('id')).remove();
         updateCount();
     });
     ONLINE.on('reset', function() {
@@ -974,7 +977,6 @@ $(function() {
             role : 'super',
             params : [ 'message$' ]
         },
-        
         clear : function() {
             $('#messages').html('');
         },
@@ -1096,24 +1098,17 @@ $(function() {
         unalert : function(){},
         play : {
             role : 'super',
-            params : [ 'url$' ]
-        },
-         frame : {
-            role : 'super',
-            params : [ 'url$' ]
+            params : [ 'url' ]
         },
         safe : function(){
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
             CLIENT.set('mute_speak','on')
-            CLIENT.set('frame','off')
-            
         },
         unsafe : function(){
             CLIENT.set('bg','on'),
             CLIENT.set('images','on'),
             CLIENT.set('mute_speak','off')
-            CLIENT.set('frame','on')
         },
         msg : {
             params : [ 'message$' ]
@@ -1129,7 +1124,8 @@ $(function() {
         lock : {
             role : 'super',
             params : [ 'command', 'role' ]
-        }
+        },
+        user_list : {}
         /*pinch : {
             params : [ 'nick' ]
         }*/
