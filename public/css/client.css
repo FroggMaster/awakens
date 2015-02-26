@@ -106,7 +106,6 @@ z-index:1;
 
 #messages .timestamp,
 #messages .message-content {
-	pointer-events: auto;
     text-shadow:
     -1px -1px 0 #000,
     1px -1px 0 #000,
@@ -461,7 +460,6 @@ animation: shake .1s;
     display: inline;
 }
 #highlightname.timestamp {
-	pointer-events: auto;
 color:gold;
 }
 
@@ -519,6 +517,50 @@ color:gold;
     cursor: pointer;
 }
 
+/*tabbed menu*/
+
+#tabbed-menu-cotainer{
+    position:absolute;
+    right:0;
+    top:0;
+    height:50px;
+    width:100px;
+    z-index:2;
+}
+
+#tabbed-menu{
+    z-index:1;
+    background-color: #171717;
+	border-radius:5px;
+	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
+    font-size: 1em;
+    line-height:300%;
+    font-weight: bold;
+    text-align: center;
+    color:white;
+    cursor:pointer;
+}
+
+#user-list{
+    position:absolute;
+    right:0;
+    top:40px;
+    color:white;
+    display:none;
+    border-radius:5px;
+}
+
+.tabbed-list{
+    font-size: 1em;
+    text-align:center;
+    list-style-type: none;
+    min-width:120px;
+    padding:10px;
+    background-color:#171717;
+    border-radius:5px;
+    cursor:pointer;
+}
+
 /*\
 |*|
 |*| Menu
@@ -526,20 +568,24 @@ color:gold;
 \*/
 
 .video-overlay{
-        z-index:5;
+z-index:5;
 }
 
 .menu-container {
-        position: absolute;
+    position: absolute;
 	display:none;
 	min-width: 175px;
 	min-height: 300px;
-	height:500px;
-	width: 200px;
+	height:300px;
+	width: 175px;
 	cursor:default;
 	background-color:#171717;
-        z-index: 2;
-	opacity: 1.0;
+    z-index: 2;
+	opacity: 0.5;
+}
+
+.menu-container:hover {
+opacity: 1.0;
 }
 
 .menu-container .footer{
@@ -576,7 +622,8 @@ color:gold;
 	border: 5px solid #2C2C2C;
 	border-radius:5px;
 	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
-    	color: white;
+    color: white;
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKUlEQVQIW2PU1tb+zwAFHz9+ZGCECYA4/Pz8EAEYB6SQUUZG5j9IBgYAUXoO2P/TRPwAAAAASUVORK5CYII=) repeat;
 }
 
 /*\
@@ -591,7 +638,6 @@ color:gold;
     text-align: center;
     margin:15px;
     border-bottom: 1px solid lightgrey;
-    padding: 5px;
 }
 
 #online-users ul {
@@ -601,28 +647,23 @@ color:gold;
 }
 
 #online-users li {
-	font-weight: bold;
-	margin-bottom:5px;
-	text-align: center;
+    font-weight: bold;
+    margin-bottom:5px;
+    text-align: center;
 }
 #online-users li:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 #X{
-	position: absolute;
-	right: 5px;
-	top: 5px;
-	color: white;
-	font-weight: bold;
-	border-radius: 100%;
-	padding: 5px;
-	border: 2px solid red;
-	width: 20px;
-	height: 20px;
+position: absolute;
+right: 5px;
+top: 5px;
+color: white;
+font-weight: bold;
 }
 
 #X:hover{
-	background-color:red;
+color:red;
 }
 
 /*\
