@@ -478,7 +478,7 @@ $(function() {
   
     $(function(){
     $.contextMenu({
-        selector: '.users', 
+        selector: '.online', 
         className: 'data-title',
         trigger: 'left',
         items: {
