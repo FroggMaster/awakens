@@ -77,7 +77,15 @@ $(function() {
     });
     
     socket.on('playvid', function(url){
-        if(url.url == "stop" || mute == 'on'){
+        if(url.url == "stop" || CLIENT.get('mute') == 'on'){
+            $("#youtube")[0].innerHTML = ""
+        } else {
+            $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+        }
+    });
+    
+    socket.on('frame', function(url){
+        if(url == "stop"){
             $("#youtube")[0].innerHTML = ""
         } else {
             $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
@@ -527,7 +535,9 @@ $(function() {
         });
         CLIENT.on('change:menu_display', function(e) {
             if(e.get('menu_display') == 'block'){
-                $('#tabbed-menu').text('');
+                $('#tabbed-menu-cotainer').css( "display", "none" );
+            } else {
+                $('#tabbed-menu-cotainer').css( "display", "block" );
             }
            updateCount();
         });
@@ -1125,7 +1135,11 @@ $(function() {
             role : 'super',
             params : [ 'command', 'role' ]
         },
-        user_list : {}
+        user_list : {},
+        frame : {
+            role : 'super',
+            params : [ 'url' ]
+        }
         /*pinch : {
             params : [ 'nick' ]
         }*/

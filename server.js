@@ -319,11 +319,15 @@ function createChannel(io, channelName) {
                                                     user.access_level = params.access_level;
                                                     user.socket.emit('update', {
                                                         access_level : params.access_level,
-                                                        role : params.role
+                                                        role : params.role,
+                                                        access : JSON.stringify(access)
                                                     });
+                                                    socketEmit(socket, 'update',{
+                                                    access : JSON.stringify(access)
+                                                    });
+                                                    showMessage(params.nick + ' now has role ' + params.role)
                                                 }
                                             });
-                                            showMessage(params.nick + ' now has role ' + params.role)
                                         });
                                     });
                                 }
@@ -569,16 +573,6 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-            
-            frame : {
-                role : 'super',
-                params : [ 'url' ],
-                handler : function(dao, dbuser, params) {
-                    roomEmit('frame', {
-                        url : params.url
-                    });
-                }
-            },
             msg : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
@@ -647,6 +641,12 @@ function createChannel(io, channelName) {
                     }
                 }
             },
+            frame : {
+                params : [ 'url' ],
+                handler : function(dao, dbuser, params) {
+                    roomEmit('frame',params.url);
+                }
+            },
             pinch : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
@@ -712,7 +712,8 @@ function createChannel(io, channelName) {
                 var id
                 if (user.nick) {
                     if(!user.hat){
-                        var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
+                        //Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
+                        var hat = Math.random() < 0.05 ? 'Rose2' : Math.random() < 0.01 ? 'roseblack' : 'nohat'
                     } else {
                         hat = user.hat
                     }
@@ -720,7 +721,7 @@ function createChannel(io, channelName) {
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                         if (user.name == undefined){
-                            if (user.access_level <= 3) {
+                            if (roles.indexOf(user.role) <= 3) {
                                 roomEmit('message', {
                                     nick : dbuser.get('nick'),
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
