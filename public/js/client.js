@@ -160,8 +160,6 @@ $(function() {
                     message : message,
                 }; 
             }
-        } else if(name == 'set'){
-            set(input)
         } else if(name == 'block' || name == 'alert'){
             if(name == 'block'){
                 add('block',input)
@@ -278,7 +276,6 @@ $(function() {
         },
 
         submit : function(input) {
-            var access_level = this.get('access_level');
             var role = this.get('role');
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
@@ -286,7 +283,10 @@ $(function() {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
                     var cmd = COMMANDS[name];
-                    if (cmd && roles.indexOf(role) <= (roles.indexOf(cmd.role) || 5)) {
+                    if(cmd && !cmd.role){
+                        cmd.role = 'basic'
+                    }
+                    if (cmd && roles.indexOf(role) <= (roles.indexOf(cmd.role) || 3)) {
                         var expect = cmd.params || [];
                         var params = parseParams(name, input, expect);
                         if (expect.length == 0 || params) {
@@ -1110,7 +1110,18 @@ $(function() {
         part : {
             params : [ 'message$' ]
         },
-        set : function(){},
+        set : {
+            params : [ 'att' ],
+            handler : function(params) {
+                var att = params.att;
+                if (att == 'bg' && CLIENT.get('bg') == 'off'){
+                    $('#messages').css('background', CLIENT.get('old'));
+                } 
+                if(att != 'style' && att != 'font'){
+                    CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
+                }
+            }
+        },
         block : function(){},
         unblock : function(){},
         alert : function(){},
@@ -1158,15 +1169,6 @@ $(function() {
     COMMANDS.menu = COMMANDS.help;
     COMMANDS.background = COMMANDS.bg;
 })();
-
-set = function(att){
-    if (att == 'bg' && CLIENT.get('bg') == 'off'){
-        $('#messages').css('background', CLIENT.get('old'));
-    } 
-    if(att != 'style' && att != 'font'){
-        CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
-    }
-}
 
 add = function(att,user){
     block = CLIENT.get(att).split(',')
