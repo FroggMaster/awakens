@@ -109,7 +109,6 @@ body {
 .message{
 position:relative;
 z-index:1;
-pointer-events: none;
 }
 
 #messages .timestamp,
@@ -294,6 +293,7 @@ a:hover {
 #messages img {
     max-width: 200px;
     max-height: 200px;
+    pointer-events: none;
 }
 
 #bigimg {
