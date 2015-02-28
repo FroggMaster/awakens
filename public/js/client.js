@@ -86,9 +86,9 @@ $(function() {
     
     socket.on('frame', function(url){
         if(url == "stop"){
-            $("#youtube")[0].innerHTML = ""
+            $("#frame")[0].innerHTML = ""
         } else {
-            $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
+            $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + url +"?autoplay=1&controls=0\" frameborder=\"0\" allowfullscreen></iframe>"
         }
     });
 
