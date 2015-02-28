@@ -712,16 +712,14 @@ function createChannel(io, channelName) {
                 var id
                 if (user.nick) {
                     if(!user.hat){
-                        //Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
-                        var hat = Math.random() < 0.05 ? 'Rose2' : Math.random() < 0.01 ? 'roseblack' : 'nohat'
+                        var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
                     } else {
                         hat = user.hat
                     }
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
-                        if (user.name == undefined){
-                            if (true) {
+                            if (roles.indexOf(user.role) < 5 ) {
                                 roomEmit('message', {
                                     nick : dbuser.get('nick'),
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
@@ -732,7 +730,6 @@ function createChannel(io, channelName) {
                             } else {
                                 errorMessage(msgs.muted);
                             }
-                        } 
                         }).always(function() {
                             done.resolve(true);
                         });

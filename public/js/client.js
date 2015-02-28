@@ -12,6 +12,7 @@ $(function() {
     var first = true;
     var requestId = 0;
     var requests = {};
+    var roles = ['god','super','admin','mod','basic','mute'];
 
     Game.init(socket);
 
@@ -85,10 +86,10 @@ $(function() {
     });
     
     socket.on('frame', function(url){
-        if(url == "stop"){
+        if(url == "none" || CLIENT.get('frame') == 'off'){
             $("#frame")[0].innerHTML = ""
         } else {
-            $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"disable-top-navigation\"></iframe>"
+            $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe>"
         }
     });
 
@@ -219,7 +220,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors styles bg role access_level part block alert menu_top menu_left menu_display mask'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors styles bg role access_level part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -231,7 +232,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors styles bg role part mask'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors styles bg role part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -269,23 +270,23 @@ $(function() {
         },
 
         getAvailableCommands : function() {
-            var role = ['god','super','admin','mod','basic','mute'];
             var myrole = this.get('role');
             return myrole == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
                 var cmd_level = COMMANDS[key].role;
-                return cmd_level == null || role.indexOf(myrole) <= role.indexOf(cmd_level);
+                return cmd_level == null || roles.indexOf(myrole) <= roles.indexOf(cmd_level);
             });
         },
 
         submit : function(input) {
             var access_level = this.get('access_level');
+            var role = this.get('role');
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
                     var cmd = COMMANDS[name];
-                    if (cmd && access_level <= (cmd.access_level || 3)) {
+                    if (cmd && roles.indexOf(role) <= (roles.indexOf(cmd.role) || 5)) {
                         var expect = cmd.params || [];
                         var params = parseParams(name, input, expect);
                         if (expect.length == 0 || params) {
@@ -409,6 +410,11 @@ $(function() {
             message : 'Topic: ' + topic
         });
     });
+    CLIENT.on('change:frame', function(m) {
+        if(CLIENT.get('frame') == 'off'){
+            $('#frame')[0].innerHTML = ""
+        }
+    });
     if (CLIENT.get('images') == null){
         CLIENT.set('images', 'on'); 
     }
@@ -423,6 +429,9 @@ $(function() {
     }
     if (CLIENT.get('alert') == null){
         CLIENT.set('alert', ''); 
+    }
+    if (CLIENT.get('frame') == null){
+        CLIENT.set('frame', 'on'); 
     }
 });
 
@@ -566,7 +575,8 @@ $(function() {
 
 $(function() {
     var animation = null;
-
+    var roles = ['god','super','admin','mod','basic','mute'];
+    
     CLIENT.on('message', function(message) {
         if (typeof message == 'string') {
             message = {
@@ -590,7 +600,6 @@ $(function() {
         var sound;
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
-        var role = ['god','super','admin','mod','basic','mute'];
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
         var alert = CLIENT.get('alert').split(',');
         var valid = false;
@@ -700,7 +709,7 @@ $(function() {
                 parsed = parser.parse(message.message);
                 break; 
             case 'anon-message':
-                if(CLIENT.get('role') == null || role.indexOf(CLIENT.get('role')) >= 2){
+                if(CLIENT.get('role') == null || roles.indexOf(CLIENT.get('role')) >= 2){
                     parsed = parser.parse( '#6464C0' + '/*anon|' + ': ' + message.message);
                 } else {
                     parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
@@ -1072,7 +1081,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask alert password'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask alert password frame'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
