@@ -109,6 +109,7 @@ body {
 .message{
 position:relative;
 z-index:1;
+pointer-events: none;
 }
 
 #messages .timestamp,
