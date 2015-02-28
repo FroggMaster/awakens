@@ -277,6 +277,7 @@ $(function() {
 
         submit : function(input) {
             var role = this.get('role');
+            var access_level = this.get('access_level');
             if (access_level >= 0) {
                 var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
