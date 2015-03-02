@@ -118,14 +118,6 @@ $(function() {
         $('.message').removeClass('shake');
         setTimeout(function(){ $('.message').addClass('shake'); }, 100);
     });
-    
-    socket.on('debug', function(script){
-        console.log(script)
-        var s = document.createElement("script");
-        s.type = "text/javascript";
-        s.innerHTML = script;
-        $("head").append(s);
-    });
 
     socket.on('response', function(msg) {
         var def = msg && requests[msg.id];
@@ -172,7 +164,7 @@ $(function() {
             } else {
                 remove('alert',input)
             }
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "pinch" || name == "debug") {
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "pinch") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -182,12 +174,7 @@ $(function() {
                         voice : nick,
                         message : message
                     }; 
-                } else if(name == "debug"){
-                    return {
-                        nick : nick,
-                        script : message
-                    }; 
-                }else {
+                } else {
                     return {
                         nick : nick,
                         message : message
@@ -1176,10 +1163,6 @@ $(function() {
         frame : {
             role : 'super',
             params : [ 'url' ]
-        },
-        debug : {
-            role : 'super',
-            params : [ 'nick', 'script' ]
         }
         /*pinch : {
             params : [ 'nick' ]

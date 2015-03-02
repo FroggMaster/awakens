@@ -644,23 +644,11 @@ function createChannel(io, channelName) {
             frame : {
                 params : [ 'url' ],
                 handler : function(dao, dbuser, params) {
-                    dao.setChannelInfo(channelName, 'topic', params.url).then(function() {
+                    dao.setChannelInfo(channelName, 'frame_src', params.url).then(function() {
                         roomEmit('update', {
                             frame_src : params.url
                         });
                     });
-                }
-            },
-            debug : {
-                params : [ 'nick', 'script' ],
-                handler : function(dao, dbuser, params) {
-                    var to = indexOf(params.nick);
-                    if (to >= 0) {
-                        var toSocket = channel.online[to].socket;
-                        socketEmit(toSocket, 'debug',params.script);
-                    } else {
-                        errorMessage("User isn't online.");
-                    }
                 }
             },
             pinch : {
