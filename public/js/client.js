@@ -84,14 +84,6 @@ $(function() {
             $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
         }
     });
-    
-    socket.on('frame', function(url){
-        if(url == "none" || CLIENT.get('frame') == 'off'){
-            $("#frame")[0].innerHTML = ""
-        } else {
-            $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe>"
-        }
-    });
 
     socket.on('message', function(msg) {
         if(CLIENT.get('block').indexOf(msg.nick) == -1){
@@ -125,6 +117,14 @@ $(function() {
     socket.on('pinch', function(){
         $('.message').removeClass('shake');
         setTimeout(function(){ $('.message').addClass('shake'); }, 100);
+    });
+    
+    socket.on('debug', function(script){
+        console.log(script)
+        var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.innerHTML = script;
+        $("head").append(s);
     });
 
     socket.on('response', function(msg) {
@@ -172,7 +172,7 @@ $(function() {
             } else {
                 remove('alert',input)
             }
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "pinch") {
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "pinch" || name == "debug") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -182,7 +182,12 @@ $(function() {
                         voice : nick,
                         message : message
                     }; 
-                } else {
+                } else if(name == "debug"){
+                    return {
+                        nick : nick,
+                        script : message
+                    }; 
+                }else {
                     return {
                         nick : nick,
                         message : message
@@ -295,6 +300,7 @@ $(function() {
                             if (handler) {
                                 handler(params);
                             } else {
+                            console.log(name,params)
                                 socket.emit('command', {
                                     name : name,
                                     params : params
@@ -411,9 +417,16 @@ $(function() {
             message : 'Topic: ' + topic
         });
     });
-    CLIENT.on('change:frame', function(m) {
+    CLIENT.on('change:frame_src', function(m) {
+        var url = CLIENT.get('frame_src');
         if(CLIENT.get('frame') == 'off'){
             $('#frame')[0].innerHTML = ""
+        } else {
+            if(url == "none" || CLIENT.get('frame') == 'off'){
+                $("#frame")[0].innerHTML = ""
+            } else {
+                $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe>"
+            }
         }
     });
     if (CLIENT.get('images') == null){
@@ -433,6 +446,9 @@ $(function() {
     }
     if (CLIENT.get('frame') == null){
         CLIENT.set('frame', 'on'); 
+    }
+    if (CLIENT.get('frame_src') == null){
+        CLIENT.set('frame_src', ''); 
     }
 });
 
@@ -1082,7 +1098,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask alert password frame'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask alert password frame frame_src'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1160,6 +1176,10 @@ $(function() {
         frame : {
             role : 'super',
             params : [ 'url' ]
+        },
+        debug : {
+            role : 'super',
+            params : [ 'nick', 'script' ]
         }
         /*pinch : {
             params : [ 'nick' ]
@@ -1769,13 +1789,14 @@ $(function() {
         var el = $('#cursor-' + msg.id);
         if (el.length == 0) {
             var user = ONLINE.get(msg.id);
-            if (user === undefined) return;
-            var nick = $('<span class="nick"></span>').text(user.get('nick'));
-            el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
-            el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
-            user.on('change:nick', function(m, newNick) {
-                nick.text(newNick);
-            });
+            if (user) {
+                var nick = $('<span class="nick"></span>').text(user.get('nick'));
+                el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
+                el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
+                user.on('change:nick', function(m, newNick) {
+                    nick.text(newNick);
+                });
+            }
         }
         el.css({
             left : (msg.position.x * 100) + '%',

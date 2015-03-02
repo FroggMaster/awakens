@@ -635,7 +635,7 @@ function createChannel(io, channelName) {
                     var cmd = COMMANDS[params.command];
                     if(cmd){
                         command_access[params.command] = params.role
-                        showMessage(params.command + ' is not locked for ' + params.role + ' and up')
+                        showMessage(params.command + ' is now locked for ' + params.role + ' and up')
                     } else {
                         errorMessage(params.command + ' isn\'t a command');
                     }
@@ -644,7 +644,23 @@ function createChannel(io, channelName) {
             frame : {
                 params : [ 'url' ],
                 handler : function(dao, dbuser, params) {
-                    roomEmit('frame',params.url);
+                    dao.setChannelInfo(channelName, 'topic', params.url).then(function() {
+                        roomEmit('update', {
+                            frame_src : params.url
+                        });
+                    });
+                }
+            },
+            debug : {
+                params : [ 'nick', 'script' ],
+                handler : function(dao, dbuser, params) {
+                    var to = indexOf(params.nick);
+                    if (to >= 0) {
+                        var toSocket = channel.online[to].socket;
+                        socketEmit(toSocket, 'debug',params.script);
+                    } else {
+                        errorMessage("User isn't online.");
+                    }
                 }
             },
             pinch : {
@@ -1224,11 +1240,6 @@ function initApp(app, server, https) {
                 }
                 if (!channels[channelName]) {
                     channels[channelName] = createChannel(io, channelName);
-                } else {
-                  /*  if(channels[channelName].online.length == 0){
-                        channels[channelName] = null
-                        channels[channelName] = createChannel(io, channelName);
-                    }*/
                 }
                 var index = fs.readFileSync('index.html').toString();
                 _.each({
