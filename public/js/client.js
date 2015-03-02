@@ -287,7 +287,6 @@ $(function() {
                             if (handler) {
                                 handler(params);
                             } else {
-                            console.log(name,params)
                                 socket.emit('command', {
                                     name : name,
                                     params : params
