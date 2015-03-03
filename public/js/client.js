@@ -415,6 +415,11 @@ $(function() {
             }
         }
     });
+    CLIENT.on('change:frame', function(){
+        if(CLIENT.get('frame') == 'off'){
+            $('#frame')[0].innerHTML = ""
+        }
+    });
     if (CLIENT.get('images') == null){
         CLIENT.set('images', 'on'); 
     }
