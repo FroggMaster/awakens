@@ -589,7 +589,7 @@ function createChannel(io, channelName) {
                         if(!host){
                             dbuser.set('vHost', params.vHost).then(function() {
                                 socketEmit(socket, 'update', {
-                                    vHost : params.vHost
+                                    mask : params.vHost
                                 });
                             });
                         } else {
