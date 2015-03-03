@@ -259,7 +259,7 @@ function createChannel(io, channelName) {
                                     });
                                     kuser.socket.disconnect();
                                     broadcastChannel(dao, channel, dbuser.get("nick")+" has kicked "+params.nick+": "+msg);
-                                } else if(user.access_level < fuser.access_level){
+                                } else if(user.role == fuser.role && user.access_level < fuser.access_level){
                                     if(!params.message.trim()){
                                         msg = ''
                                     } else{
@@ -1038,6 +1038,7 @@ function createChannel(io, channelName) {
              */
              
             function ValidName(name) {
+                //[^\x00-z]/.test(nick)
                 var temp = 0,invalid = 0;
                 for (var i = 0; i <= name.length; i++) {
                     temp = name.charCodeAt(i);
@@ -1093,22 +1094,16 @@ function createChannel(io, channelName) {
                     dbuser.set('remote_addr', user.remote_addr).then(function() {
                         if(ValidName(dbuser.get('nick'))) {
                             var online = !!user.nick;
-                            user.role = 'basic';
                             user.nick = dbuser.get('nick');
                             user.vhost = dbuser.get('vHost');     
                             dao.getChannelInfo(channelName).then(function(data){
-                                if(roles.indexOf(dbuser.get('role')) < 2){
-                                    user.role = dbuser.get('role')
-                                    user.access_level = dbuser.get('access_level')
-                                } else {
-                                    if(!data.access){
-                                        data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
-                                        dao.setChannelInfo(channelName, 'access', data.access)
-                                    }
-                                    access = JSON.parse(data.access);
-                                    user.role = GetInfo(user.nick, dbuser).role
-                                    user.access_level = GetInfo(user.nick, dbuser).access_level
+                                if(!data.access){
+                                    data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
+                                    dao.setChannelInfo(channelName, 'access', data.access)
                                 }
+                                access = JSON.parse(data.access);
+                                user.role = GetInfo(user.nick, dbuser).role
+                                user.access_level = GetInfo(user.nick, dbuser).access_level
                                 socketEmit(socket, 'update', {
                                     id : socket.id,
                                     nick : user.nick,
