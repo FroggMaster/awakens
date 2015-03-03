@@ -467,7 +467,7 @@ $(function() {
         if(bg == 'on'){
             $('#messages').css('background', CLIENT.get('old'));
         } else {
-            $('#messages').css('background', 'url(public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
+            $('#messages').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
         }
     });
 });
