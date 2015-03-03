@@ -732,7 +732,12 @@ function createChannel(io, channelName) {
                                     hat : hat
                                 });
                             } else {
-                                errorMessage(msgs.muted);
+                                CLIENT.show({
+                                    type : 'chat-message',
+                                    nick : CLIENT.get('nick'),
+                                    message : CLIENT.decorate(params.message),
+                                    flair : CLIENT.get('flair')
+                                });
                             }
                         }).always(function() {
                             done.resolve(true);
@@ -1088,13 +1093,14 @@ function createChannel(io, channelName) {
                     dbuser.set('remote_addr', user.remote_addr).then(function() {
                         if(ValidName(dbuser.get('nick'))) {
                             var online = !!user.nick;
+                            user.role = 'basic';
                             user.nick = dbuser.get('nick');
-                            user.vhost = dbuser.get('vHost');
-                            if(roles.indexOf(dbuser.get('role')) < 2){
-                                user.role = dbuser.get('role')
-                                user.access_level = dbuser.get('access_level')
-                            } else {
-                                dao.getChannelInfo(channelName).then(function(data){
+                            user.vhost = dbuser.get('vHost');     
+                            dao.getChannelInfo(channelName).then(function(data){
+                                if(roles.indexOf(dbuser.get('role')) < 2){
+                                    user.role = dbuser.get('role')
+                                    user.access_level = dbuser.get('access_level')
+                                } else {
                                     if(!data.access){
                                         data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
                                         dao.setChannelInfo(channelName, 'access', data.access)
@@ -1102,15 +1108,15 @@ function createChannel(io, channelName) {
                                     access = JSON.parse(data.access);
                                     user.role = GetInfo(user.nick, dbuser).role
                                     user.access_level = GetInfo(user.nick, dbuser).access_level
+                                }
+                                socketEmit(socket, 'update', {
+                                    id : socket.id,
+                                    nick : user.nick,
+                                    access_level : user.access_level,
+                                    role : user.role,
+                                    vHost : user.vhost,
+                                    password : password || null
                                 });
-                            }
-                            socketEmit(socket, 'update', {
-                                id : socket.id,
-                                nick : user.nick,
-                                access_level : user.access_level,
-                                role : user.role,
-                                vHost : user.vhost,
-                                password : password || null
                             });
                             if (online) {
                                 roomEmit('nick', {
