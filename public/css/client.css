@@ -114,7 +114,6 @@ z-index:2;
 
 #messages .timestamp,
 #messages .message-content {
-	height:200px !important;
     text-shadow:
     -1px -1px 0 #000,
     1px -1px 0 #000,
@@ -232,9 +231,7 @@ a:hover {
 }
 
 .timestamp {
-	height:200px !important;
     color: #aeaeae;
-  
 }
 
 /*\
