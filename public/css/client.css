@@ -56,9 +56,8 @@ body {
 #frame{
     position: absolute;
     width:100%;
-    height:95%;
+    height:92%;
     z-index:1;
-    border: 5px;
 }
 
 .noScroll #messages {
