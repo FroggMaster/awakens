@@ -1389,11 +1389,13 @@ parser = {
         // filters
         //original = ['you','matter','think','care','about','this','for','shit','nigger','nothing','out of','doesn\'t','doesnt','my','ask','question','you are','nice','trying to','black','rose','no ','fag ','faggot','what','too ','to ','guy','white','yes','mom','ing ','with','th','are ']
         //replace = ['u','matta','be thinkin','give a fuck','bout','dis','fo','shiznit','nigga','nuttin','outa','don\'t','dont','muh','axe','queshon','yo ass is','dank','tryna','nigga','flowa','naw ','homo ','homo','whut','2 ','2 ','nigga','cracka','ye','mama','in ','wit','d','r ']
-        //for (i = 0; i < original.length; i++) { 
-        //   if(str.indexOf(original[i]) != -1){
-        //        str = str.replace(original[i],replace[i])
-        //   }
-        //}
+        original = ['Allahu Akbar']
+        replace = ['America Rules']
+        for (i = 0; i < original.length; i++) { 
+           if(str.indexOf(original[i]) != -1){
+                str = str.replace(original[i],replace[i])
+           }
+        }
         // replace escapes
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i][1]);
