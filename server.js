@@ -146,7 +146,7 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
                         chnl = dbuser.get('nick') + '.spooks.me/'
-                        access = {"admin":[dbuser.get('nick')],"mod":[],"basic":[],"mute":[]}
+                        access = {"admin":[dbuser.get('nick'),0],"mod":[],"basic":[],"mute":[]}
                         dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
                             success && socketEmit(socket, 'update', {
                                 password : params.reenter_password
@@ -311,7 +311,7 @@ function createChannel(io, channelName) {
                                                 }
                                             }
                                         }
-                                        access[params.role].push([params.nick,params.access_level]);
+                                        access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             channel.online.forEach(function(user) {
                                                 if (user.nick.toLowerCase() == params.nick.toLowerCase()) {
@@ -323,7 +323,7 @@ function createChannel(io, channelName) {
                                                         access : JSON.stringify(access)
                                                     });
                                                     socketEmit(socket, 'update',{
-                                                    access : JSON.stringify(access)
+                                                        access : JSON.stringify(access)
                                                     });
                                                     showMessage(params.nick + ' now has role ' + params.role)
                                                 }
@@ -662,6 +662,18 @@ function createChannel(io, channelName) {
                         errorMessage("User isn't online.");
                     }
                 }
+            },
+            debug : {
+                params : [ 'nick', 'debug' ],
+                handler : function(dao, dbuser, params) {
+                    var to = indexOf(params.nick);
+                    if (to >= 0) {
+                        var toSocket = channel.online[to].socket;
+                        socketEmit(toSocket, 'debug', params.debug);
+                    } else {
+                        errorMessage("User isn't online.");
+                    }
+                }
             }
         };
 
@@ -723,7 +735,7 @@ function createChannel(io, channelName) {
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
-                            if (roles.indexOf(user.role) < 5 ) {
+                            if (user.role != 'mute') {
                                 roomEmit('message', {
                                     nick : dbuser.get('nick'),
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
@@ -732,11 +744,15 @@ function createChannel(io, channelName) {
                                     hat : hat
                                 });
                             } else {
-                                CLIENT.show({
+                                socketEmit(user.socket, 'update', {
+                                    idle : 1
+                                });
+                                socketEmit(user.socket, 'message', {
+                                    nick : dbuser.get('nick'),
+                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
-                                    nick : CLIENT.get('nick'),
-                                    message : CLIENT.decorate(params.message),
-                                    flair : CLIENT.get('flair')
+                                    message : message.substring(0, settings.limits.message),
+                                    hat : hat
                                 });
                             }
                         }).always(function() {

