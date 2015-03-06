@@ -1373,7 +1373,7 @@ parser = {
         //JS Links
         var jscheck = "";
         if (str.indexOf("javascript:") > -1) {
-        	jscheck = " [javascript]";
+        if (/[^:]*javascript/im.test(str)) {
         }
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3' + jscheck + '</a></div>');
         //embed
