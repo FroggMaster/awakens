@@ -598,7 +598,7 @@ $(function() {
             CLIENT.set('menu_left',$(this).css('left'));
             CLIENT.set('menu_top',$(this).css('top'));
         }
-	}).resizable({ handles: "all" });
+    }).resizable({ handles: "all" });
     $('.ui-draggable-handle').css('position','absolute');
 });
 
@@ -661,58 +661,58 @@ $(function() {
             }
             switch(message.hat){
                 case 'C_hat': 
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
                     break;
                 case 'Dunce':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
                     break;
                 case 'Crown':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
                     break;
                 case 'Antlers':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
                     break;
                 case 'G_hat':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
                     break;
                 case 'Newyear':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
                     break;
                 case 'EdgyNewyear':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
                     break;
                 case 'Gold':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
                     break;
                 case 'Coin':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
                 case 'Rose2':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);               
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);               
                     break;
                 case 'roseblack':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 50px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 50px;"></span>').appendTo(content);
                     break;
                 case 'HeartBlue':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
                 case 'HeartCyan':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
                 case 'HeartGreen':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
                 case 'HeartOrange':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
                 case 'HeartPink':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
                 case 'HeartPurple':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
                 case 'HeartYellow':
-                    $('<span class="hat" style="background:url(\'css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
                     break;
             }
             if (parsedFlair) {
@@ -1371,10 +1371,7 @@ parser = {
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
         //JS Links
-        var jscheck = "";
-        if (str.indexOf("javascript:") > -1) {
-        if (/[^:]*javascript/im.test(str)) {
-        }
+        var jscheck = /[^:]*javascript/im.test(str) ? "[javascript]" : "";
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3' + jscheck + '</a></div>');
         //embed
         str = str.replace(/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
