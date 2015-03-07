@@ -1369,12 +1369,13 @@ parser = {
         str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
-        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3</a></div>');
-        //JS Links
-        var jscheck = /[^:]*javascript/im.test(str) ? "[javascript]" : "";
-        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, '<div><a target="_blank" href="$2">$3' + jscheck + '</a></div>');
+        //JavaScript links
+        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
+            var jscheck = /[^:]*javascript/im.test(a) ? "[JavaScript]" : "";
+            return '<div>' + b + '<a target="_blank" href="'+a+'">' + jscheck + '</a></div>'
+        });
         //embed
-        str = str.replace(/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
+        str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         //colors
         str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
