@@ -744,7 +744,7 @@ function createChannel(io, channelName) {
                 var id
                 if (user.nick) {
                     if(!user.hat){
-                        var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.8 ? 'Coin' : 'Gold'
+                        var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
                     } else {
                         hat = user.hat
                     }
