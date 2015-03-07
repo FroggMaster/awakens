@@ -659,61 +659,8 @@ $(function() {
                     parser.getAllFonts(message.flair);
                 }
             }
-            switch(message.hat){
-                case 'C_hat': 
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-                    break;
-                case 'Dunce':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;"></span>').appendTo(content);
-                    break;
-                case 'Crown':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;"></span>').appendTo(content);
-                    break;
-                case 'Antlers':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 26px 28px;top:-27px;left:35px;"></span>').appendTo(content);
-                    break;
-                case 'G_hat':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 20px;"></span>').appendTo(content);
-                    break;
-                case 'Newyear':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
-                    break;
-                case 'EdgyNewyear':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 45px;top:-26px"></span>').appendTo(content);
-                    break;
-                case 'Gold':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 25px;top:-26px"></span>').appendTo(content);
-                    break;
-                case 'Coin':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-                    break;
-                case 'Rose2':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);               
-                    break;
-                case 'roseblack':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 50px 50px;"></span>').appendTo(content);
-                    break;
-                case 'HeartBlue':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-                    break;
-                case 'HeartCyan':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-                    break;
-                case 'HeartGreen':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-                    break;
-                case 'HeartOrange':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-                    break;
-                case 'HeartPink':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-                    break;
-                case 'HeartPurple':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-                    break;
-                case 'HeartYellow':
-                    $('<span class="hat" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-                    break;
+            if(message.hat){
+                $('<span class="hat ' + message.hat + '" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
             }
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(parsedFlair + ':').appendTo(content);
