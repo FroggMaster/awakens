@@ -39,15 +39,15 @@ function createChannel(io, channelName) {
         };
     
     socket.on('SetPart', function(parts){
-        user.part = parts
+        //user.part = parts
     });
  
     socket.on('alive', function(){
-        user.alive = true
+        //user.alive = true
     });
  
     socket.on('custom', function(hat){
-        user.hat = hat
+        //user.hat = hat
     });
  
         var log = {};
