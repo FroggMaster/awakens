@@ -802,6 +802,7 @@ function createChannel(io, channelName) {
                                     if(roles.indexOf(user.role) >= 0){
                                         if(roles.indexOf(user.role) <= roles.indexOf(cmd.role)){
                                             valid = true
+                                            console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params)
                                         } else {
                                             if(roles.indexOf(cmd.role) != -1){
                                                 valid = false
