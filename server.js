@@ -39,15 +39,11 @@ function createChannel(io, channelName) {
         };
     
     socket.on('SetPart', function(parts){
-        //user.part = parts
+        user.part = parts.toString();
     });
  
     socket.on('alive', function(){
-        //user.alive = true
-    });
- 
-    socket.on('custom', function(hat){
-        //user.hat = hat
+        user.alive = true
     });
  
         var log = {};
@@ -743,11 +739,7 @@ function createChannel(io, channelName) {
                 var done = $.Deferred();
                 var id
                 if (user.nick) {
-                    if(!user.hat){
-                        var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
-                    } else {
-                        hat = user.hat
-                    }
+                    var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
