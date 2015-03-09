@@ -436,7 +436,7 @@ $(function() {
             if(url == "none" || CLIENT.get('frame') == 'off'){
                 $("#frame")[0].innerHTML = ""
             } else {
-                $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe>"
+                $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin\"></iframe>"
             }
         }
     });
