@@ -659,7 +659,7 @@ $(function() {
                     parser.getAllFonts(message.flair);
                 }
             }
-            if(message.hat != 'nohat'){
+            if(message.hat != 'nohat' && message.type == 'chat-message'){
                 $('<span class="hat ' + message.hat + '" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
             }
             if (parsedFlair) {
