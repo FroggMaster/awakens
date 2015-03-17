@@ -688,12 +688,15 @@ function createChannel(io, channelName) {
                         return (h.charAt(0)=="#") ? h.substring(1,7):h
                     }
                     var to = indexOf(params.nick);
-                    if (to >= 0 && RGB(channel.online[to].color)) {
-                        var toSocket = channel.online[to].socket;
-                        socketEmit(toSocket, 'pinch');
+                    if (to >= 0) {
+                        if(!RGB(channel.online[to].color)){
+                            var toSocket = channel.online[to].socket;
+                            socketEmit(toSocket, 'pinch');
+                        } else {
+                            errorMessage("User has green.")
+                        }
                     } else {
                         errorMessage("User isn't online.");
-                        console.log(RGB(channel.online[to].color))
                     }
                 }
             },

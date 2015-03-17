@@ -537,11 +537,11 @@ $(function() {
                 callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
             },
             "sep1": "---------",
-            /*"Pinch": {
+            "Pinch": {
                 name: "Pinch",
                 callback: function(){ CLIENT.submit('/Pinch '+ $.trim(this[0].textContent)) }
             },
-            "sep3": "---------",*/
+            "sep3": "---------",
             "Kick": {
                 name: "Kick",
                 callback: function(){ CLIENT.submit('/kick '+ $.trim(this[0].textContent)) }
@@ -660,7 +660,7 @@ $(function() {
                 }
             }
             if(message.hat != 'nohat' && message.type == 'chat-message'){
-                $('<span class="hat ' + message.hat + '" style="background:url(\'/css/img/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
+                $('<span class="hat ' + message.hat + '" style="background:url(\'/css/img/hats/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
             }
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(parsedFlair + ':').appendTo(content);
