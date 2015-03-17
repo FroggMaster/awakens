@@ -763,7 +763,7 @@ function createChannel(io, channelName) {
                 var done = $.Deferred();
                 var id;
                 if (user.nick) {
-                    var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
+                    var hat = Math.random() < 0.01 ? 'SPDClover' : Math.random() < 0.33 ? 'SPD1' : Math.random() < 0.33 ? 'SPD2' : Math.random() < 0.33 ? 'SPD3' : 'SPD3';
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
