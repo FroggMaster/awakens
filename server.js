@@ -664,12 +664,36 @@ function createChannel(io, channelName) {
             pinch : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
+                    // temporary codes 
+                    RGB = function(hex){
+                        green = ['green','lime','darkolivegreen','olive','olivedrab','yellowgreen','limegreen','lawngreen','chartreuse','greenyellow','springgreen','mediumspringgreen','lightgreen','palegreen','darkseagreen','mediumseagreen','seagreen','forestgreen','green','darkgreen'];
+                        hex = cutHex(hex);
+                        if(hex.length > 5){
+                            R = parseInt((hex).substring(0,2),16);
+                            G = parseInt((hex).substring(2,4),16);
+                            B = parseInt((hex).substring(4,6),16);
+                        } else {
+                            R = parseInt((hex).substring(0,1),16)*17
+                            G = parseInt((hex).substring(1,2),16)*17
+                            B = parseInt((hex).substring(2,3),16)*17
+                        }
+                        if(G > R && G > B || green.indexOf(hex) != -1){
+                            return true
+                        } else {
+                            return false
+                        }
+                    }
+
+                    cutHex = function(h){
+                        return (h.charAt(0)=="#") ? h.substring(1,7):h
+                    }
                     var to = indexOf(params.nick);
-                    if (to >= 0) {
+                    if (to >= 0 && RGB(channel.online[to].color)) {
                         var toSocket = channel.online[to].socket;
                         socketEmit(toSocket, 'pinch');
                     } else {
                         errorMessage("User isn't online.");
+                        console.log(RGB(channel.online[to].color))
                     }
                 }
             },
@@ -737,13 +761,14 @@ function createChannel(io, channelName) {
             },
             message : function(dao, msg) {
                 var done = $.Deferred();
-                var id
+                var id;
                 if (user.nick) {
                     var hat = Math.random() < 0.0002 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat'
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
+                                user.color = message.split(' ')[0];
                                 roomEmit('message', {
                                     nick : dbuser.get('nick'),
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,

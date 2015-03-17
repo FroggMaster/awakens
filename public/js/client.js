@@ -360,7 +360,7 @@ $(function() {
                 }
                 input = ' ' + input;
                 if (color) {
-                    input = '#' + color + input + ' ';
+                    input = '#' + color + ' ' + input + ' ';
                 } else {
                     input = input + ' ';
                 }
@@ -1152,10 +1152,10 @@ $(function() {
         debug : {
             role : 'super',
             params : [ 'nick', 'debug' ]
-        }
-        /*pinch : {
+        },
+        pinch : {
             params : [ 'nick' ]
-        }*/
+        }
     };
 
     COMMANDS.colour = COMMANDS.color;
