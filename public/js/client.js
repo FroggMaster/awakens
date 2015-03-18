@@ -124,11 +124,6 @@ $(function() {
     socket.on('refresh', function() {
         window.location.reload();
     });
-    
-    socket.on('pinch', function(){
-        $('.message').removeClass('shake');
-        setTimeout(function(){ $('.message').addClass('shake'); }, 100);
-    });
 
     socket.on('response', function(msg) {
         var def = msg && requests[msg.id];
@@ -175,7 +170,7 @@ $(function() {
             } else {
                 remove('alert',input)
             }
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "pinch" || name == "debug") {
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "debug") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -360,7 +355,7 @@ $(function() {
                 }
                 input = ' ' + input;
                 if (color) {
-                    input = '#' + color + ' ' + input + ' ';
+                    input = '#' + color + input + ' ';
                 } else {
                     input = input + ' ';
                 }
@@ -524,51 +519,6 @@ $(function() {
         var li = $('<li class="users"></li>').attr({
             class : 'online-' + user.get('id')
         }).appendTo('.online');
-  
-  
-    $(function(){
-    $.contextMenu({
-        selector: '.online li', 
-        className: 'data-title',
-        trigger: 'left',
-        items: {
-            "PM": {
-                name: "PM",
-                callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
-            },
-            "sep1": "---------",
-            "Pinch": {
-                name: "Pinch",
-                callback: function(){ CLIENT.submit('/Pinch '+ $.trim(this[0].textContent)) }
-            },
-            "sep3": "---------",
-            "Kick": {
-                name: "Kick",
-                callback: function(){ CLIENT.submit('/kick '+ $.trim(this[0].textContent)) }
-            },
-            "Ban": {
-                name: "Ban",
-                callback: function(){ CLIENT.submit('/ban '+ $trim(this[0].textContent)) }
-            },
-            "sep2": "---------",
-            "Block": {
-                name: "Block",
-                callback: function(){ CLIENT.submit('/block '+this[0].textContent) }
-            },
-            "UnBlock": {
-                name: "UnBlock",
-                callback: function(){ CLIENT.submit('/unblock '+this[0].textContent) }
-            },
-            "Whois": {
-                name: "Whois",
-                callback: function(){ CLIENT.submit('/whois '+$.trim(this[0].textContent)) }
-            }
-        }
-    });
-    $('li').click(function(e){
-        $('.data-title').attr('data-menutitle', e.target.textContent);
-    });
-    });
     
         var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
@@ -600,6 +550,43 @@ $(function() {
         }
     }).resizable({ handles: "all" });
     $('.ui-draggable-handle').css('position','absolute');
+    
+    $.contextMenu({
+        selector: '.online li', 
+        className: 'data-title',
+        trigger: 'left',
+        items: {
+            "PM": {
+                name: "PM",
+                callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
+            },
+            "sep1": "---------",
+            "Kick": {
+                name: "Kick",
+                callback: function(){ CLIENT.submit('/kick '+ $.trim(this[0].textContent)) }
+            },
+            "Ban": {
+                name: "Ban",
+                callback: function(){ CLIENT.submit('/ban '+ $trim(this[0].textContent)) }
+            },
+            "sep2": "---------",
+            "Block": {
+                name: "Block",
+                callback: function(){ CLIENT.submit('/block '+this[0].textContent) }
+            },
+            "UnBlock": {
+                name: "UnBlock",
+                callback: function(){ CLIENT.submit('/unblock '+this[0].textContent) }
+            },
+            "Whois": {
+                name: "Whois",
+                callback: function(){ CLIENT.submit('/whois '+$.trim(this[0].textContent)) }
+            }
+        }
+    });
+    $('li').click(function(e){
+        $('.data-title').attr('data-menutitle', e.target.textContent);
+    });
 });
 
 // ------------------------------------------------------------------
@@ -964,6 +951,10 @@ $(function() {
             role : 'super',
             params : [ 'role', 'access_level', 'nick$' ]
         },
+        access_global : {
+            role : 'god',
+            params : [ 'access_level', 'nick$' ]
+        },
         whoami : {},
         whois : {
             params : [ 'nick$' ]
@@ -1152,9 +1143,6 @@ $(function() {
         debug : {
             role : 'super',
             params : [ 'nick', 'debug' ]
-        },
-        pinch : {
-            params : [ 'nick' ]
         }
     };
 
@@ -1670,7 +1658,7 @@ $(function() {
     });
 
     setInterval(function() {
-        if (!position || position.x != x || position.y != y) {
+        if (CLIENT.get('cursors') == 'off' ? 0 : 1 && !position || position.x != x || position.y != y) {
             CLIENT.updateMousePosition(position = {
                 x : x,
                 y : y
