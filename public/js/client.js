@@ -584,7 +584,7 @@ $(function() {
             }
         }
     });
-    $('li').click(function(e){
+    $('.online').click(function(e){
         $('.data-title').attr('data-menutitle', e.target.textContent);
     });
 });
