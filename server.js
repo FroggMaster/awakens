@@ -297,6 +297,7 @@ function createChannel(io, channelName) {
                                     dao.getChannelInfo(channelName).done(function(info) {
                                         for (i = 5; i >= 2; i--) {
                                             for(q = 0; q < access[roles[i]].length; q++){
+                                                access[roles[i]][q].sort();
                                                 if(access[roles[i]][q][0].indexOf(params.nick) != -1 ){
                                                     access[roles[i]].splice(q, 1);
                                                 }
@@ -304,21 +305,21 @@ function createChannel(io, channelName) {
                                         }
                                         access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
-                                            channel.online.forEach(function(user) {
-                                                if (user.nick.toLowerCase() == params.nick.toLowerCase()) {
-                                                    user.role = params.role;
-                                                    user.access_level = params.access_level;
-                                                    user.socket.emit('update', {
-                                                        access_level : params.access_level,
-                                                        role : params.role,
-                                                        access : JSON.stringify(access)
-                                                    });
-                                                    socketEmit(socket, 'update',{
-                                                        access : JSON.stringify(access)
-                                                    });
-                                                    showMessage(params.nick + ' now has role ' + params.role)
-                                                }
+                                            var to = indexOf(params.nick);
+                                            if(to != -1) {
+                                                to.role = params.role;
+                                                to.access_level = params.access_level;
+                                                toSocket = channel.online[to].socket;
+                                                socketEmit(toSocket, 'update',{
+                                                    access_level : params.access_level,
+                                                    role : params.role,
+                                                    access : JSON.stringify(access)
+                                                });
+                                            }
+                                            roomEmit('update',{
+                                                access : JSON.stringify(access)
                                             });
+                                            showMessage(params.nick + ' now has role ' + params.role)
                                         });
                                     });
                                 } else {
