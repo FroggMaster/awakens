@@ -281,7 +281,7 @@ function createChannel(io, channelName) {
                 role : 'super',
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    if(roles.indexOf(params.role) >= 3 && params.access_level >= 0){
+                    if(roles.indexOf(params.role) >= 2 && params.access_level >= 0){
                         var done = $.Deferred();
                         var permit;
                         return dao.findUser(params.nick).then(function(dbuser) {
