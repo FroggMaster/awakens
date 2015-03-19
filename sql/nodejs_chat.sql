@@ -19,8 +19,7 @@ DROP TABLE IF EXISTS `chat_banned`;
 CREATE TABLE `chat_banned` (
   `banned` varchar(200) NOT NULL,
   `channel` varchar(100) DEFAULT NULL,
-  UNIQUE KEY `banned_UNIQUE` (`banned`),
-  UNIQUE KEY `channel_UNIQUE` (`channel`)
+  UNIQUE KEY `banned_UNIQUE` (`banned`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
