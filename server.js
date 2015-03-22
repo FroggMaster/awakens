@@ -461,6 +461,19 @@ function createChannel(io, channelName) {
                     });
                 }
             },
+            theme : {
+                role : 'admin',
+                params : [ 'input_style' ],
+                handler : function(dao, dbuser, params) {
+                    var input = params.input_style.substring(0, settings.limits.message);
+                    return dao.setChannelInfo(channelName, 'chat_style', input).then(function() {
+                        roomEmit('update', {
+                            chat_style : input
+                        });
+                        return true;
+                    });
+                }
+            },
             change_password : {
                 params : [ 'old_password', 'new_password' ],
                 handler : function(dao, dbuser, params) {
@@ -700,7 +713,7 @@ function createChannel(io, channelName) {
                         var done = $.Deferred();
                         var nick = msg && msg.nick.slice(0,100);
                           dao.isBanned(channelName, nick, user.remote_addr, user.vhost).then(function(isbanned) {
-                            if (isbanned && nick != 'InfraRaven' && nick != 'sammich') {
+                            if (isbanned) {
                                 log.debug('Join request, but user is banned');
                                 errorMessage(msgs.banned);
                                 socket.disconnect();

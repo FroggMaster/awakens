@@ -490,6 +490,11 @@ $(function() {
             $('#messages').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
         }
     });
+    // scrollbar and input
+    CLIENT.on('change:chat_style', function(m, style){
+        style = CLIENT.get('chat_style');
+        $('#input-bar').css('background-color', style);
+    });
 });
 
 // ------------------------------------------------------------------
@@ -567,7 +572,7 @@ $(function() {
             },
             "Ban": {
                 name: "Ban",
-                callback: function(){ CLIENT.submit('/ban '+ $trim(this[0].textContent)) }
+                callback: function(){ CLIENT.submit('/ban '+ $.trim(this[0].textContent)) }
             },
             "sep2": "---------",
             "Block": {
@@ -1043,6 +1048,10 @@ $(function() {
         bg : {
             role : 'mod',
             params : [ 'theme_style$' ]
+        },
+        theme : {
+            role : 'admin',
+             params : [ 'input_style' ]
         },
         reset : {
             role : 'super',

@@ -34,17 +34,6 @@ body {
     color:black;
 }
 
-#color{
-	position: fixed;
-	left: 35%;
-	top: 35%;
-	width:400px;
-	height:200px;
-	border-style: solid;
-    border-width: 5px;
-	background-color:blue;
-}
-
 #messages {
     background: #111;
     color: white;
