@@ -545,7 +545,7 @@ $(function() {
         updateCount();
     });
     ONLINE.on('reset', function() {
-        $('#online').html('');
+        $('.online').html('');
     });
     $('#online-users').draggable({
         containment: '#messages',
