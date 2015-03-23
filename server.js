@@ -282,7 +282,6 @@ function createChannel(io, channelName) {
                                     dao.getChannelInfo(channelName).done(function(info) {
                                         for (i = 5; i >= 2; i--) {
                                             for(q = 0; q < access[roles[i]].length; q++){
-                                                access[roles[i]][q].sort();
                                                 if(access[roles[i]][q][0].indexOf(params.nick) != -1 ){
                                                     access[roles[i]].splice(q, 1);
                                                 }
