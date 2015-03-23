@@ -27,9 +27,15 @@ function createChannel(io, channelName) {
     var elbot = require('./elbot').start();
     var room = io.of('/' + channelName);
     var roles = ['god','super','admin','mod','basic','mute'];
-    var command_access = {};
     var channel = {
         online : []
+    };
+    var command_access = {
+        bg : ['mod',0],
+        topic : ['mod',0],
+        theme : ['admin',0],
+        note : ['admin',0],
+        lock  : ['admin',0]
     };
 
     room.on('connection', function(socket) {
@@ -263,7 +269,8 @@ function createChannel(io, channelName) {
                 }
             },
             access : {
-                role : 'super',
+                role : 'admin',
+                access_level : 0,
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
                     if(roles.indexOf(params.role) >= 2 && params.access_level >= 0){
@@ -291,8 +298,8 @@ function createChannel(io, channelName) {
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             var to = indexOf(params.nick);
                                             if(to != -1) {
-                                                to.role = params.role;
-                                                to.access_level = params.access_level;
+                                                channel.online[to].role = params.role;
+                                                channel.online[to].access_level = params.access_level;
                                                 toSocket = channel.online[to].socket;
                                                 socketEmit(toSocket, 'update',{
                                                     access_level : params.access_level,
@@ -393,7 +400,6 @@ function createChannel(io, channelName) {
                 }
             },
             note : {
-                role : 'super',
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
@@ -406,7 +412,6 @@ function createChannel(io, channelName) {
                 }
             },
             topic : {
-            role : 'mod',
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message);
@@ -448,7 +453,6 @@ function createChannel(io, channelName) {
                 }
             },
             bg : {
-                role : 'mod',
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
                     var theme = params.theme_style.substring(0, settings.limits.message);
@@ -461,7 +465,6 @@ function createChannel(io, channelName) {
                 }
             },
             theme : {
-                role : 'admin',
                 params : [ 'input_style' ],
                 handler : function(dao, dbuser, params) {
                     var input = params.input_style.substring(0, settings.limits.message);
@@ -649,13 +652,12 @@ function createChannel(io, channelName) {
                 }
             },
             lock : {
-                role : 'super',
                 params : [ 'command', 'role' ],
                 handler : function(dao, dbuser, params) {
                     var cmd = COMMANDS[params.command];
                     if(cmd){
-                        command_access[params.command] = params.role
-                        showMessage(params.command + ' is now locked for ' + params.role + ' and up')
+                        command_access[params.command] = [params.role,params.access_level]
+                        showMessage(params.command + ' is now locked for ' + params.role + ' ' + params.access_level + ' and up')
                     } else {
                         errorMessage(params.command + ' isn\'t a command');
                     }
@@ -791,21 +793,30 @@ function createChannel(io, channelName) {
                             return dao.findUser(user.nick).then(function(dbuser) {
                                 return dao.findUser(user.nick).then(function(dbuser) {
                                     if(roles.indexOf(user.role) >= 0){
-                                        if(roles.indexOf(user.role) <= roles.indexOf(cmd.role)){
+                                        if(roles.indexOf(user.role) < roles.indexOf(cmd.role)){
                                             valid = true
                                             console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params)
                                         } else {
                                             if(roles.indexOf(cmd.role) != -1){
-                                                valid = false
+                                                if(user.access_level <= cmd.access_level || cmd.access_level == undefined){
+                                                    valid = true
+                                                    console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params)
+                                                } else {
+                                                    valid = false
+                                                }
                                             } else {
                                                 valid = true
                                             }
                                         }
                                         if (valid) {
-                                            if(!command_access[msg.name] || roles.indexOf(command_access[msg.name]) >= roles.indexOf(user.role)){
+                                            if(!command_access[msg.name] || roles.indexOf(command_access[msg.name][0]) > roles.indexOf(user.role)){
                                                 return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
                                             } else {
-                                                return $.Deferred().resolve(false, msgs.invalidCommandAccess + ' (Locked)');
+                                                if(command_access[msg.name][1] >= user.access_level){
+                                                    return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
+                                                } else {
+                                                    return $.Deferred().resolve(false, msgs.invalidCommandAccess + ' (Locked)');
+                                                }
                                             }
                                         } else {
                                             return $.Deferred().resolve(false, msgs.invalidCommandAccess);
@@ -1132,8 +1143,8 @@ function createChannel(io, channelName) {
                                     dao.setChannelInfo(channelName, 'access', data.access)
                                 }
                                 access = JSON.parse(data.access);
-                                user.role = GetInfo(user.nick, dbuser).role
-                                user.access_level = GetInfo(user.nick, dbuser).access_level
+                                user.role = GetInfo(user.nick, dbuser).role;
+                                user.access_level = GetInfo(user.nick, dbuser).access_level;
                                 socketEmit(socket, 'update', {
                                     id : socket.id,
                                     nick : user.nick,

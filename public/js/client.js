@@ -221,7 +221,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors styles bg role access_level part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick password images flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -233,7 +233,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors styles bg role part mask frame'.split(' ').forEach(function(key) {
+            'color font style flair mute mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -953,7 +953,7 @@ $(function() {
             params : [ 'nick[|message]' ]
         },
         access : {
-            role : 'super',
+            role : 'admin',
             params : [ 'role', 'access_level', 'nick$' ]
         },
         access_global : {
@@ -969,7 +969,7 @@ $(function() {
             params : [ 'topic$' ]
         },
         note : {
-            role : 'super',
+            role : 'admin',
             params : [ 'message$' ]
         },
         clear : function() {
@@ -1133,7 +1133,7 @@ $(function() {
         },
         lock : {
             role : 'super',
-            params : [ 'command', 'role' ]
+            params : [ 'command', 'role', 'access_level' ]
         },
         user_list : {
             handler : function() {
