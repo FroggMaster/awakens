@@ -794,17 +794,17 @@ function createChannel(io, channelName) {
                             return dao.findUser(user.nick).then(function(dbuser) {
                                 return dao.findUser(user.nick).then(function(dbuser) {
                                     if(roles.indexOf(user.role) >= 0){
-                                        if(roles.indexOf(user.role) < roles.indexOf(cmd.role)){
-                                            valid = true
-                                            console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params)
+                                        if(cmd.access_level == undefined){
+                                            cmd.access_level = 3
+                                        }
+                                        if(roles.indexOf(user.role) <= roles.indexOf(cmd.role)){
+                                            if(user.access_level <= cmd.access_level){
+                                                valid = true
+                                                console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params)
+                                            }
                                         } else {
                                             if(roles.indexOf(cmd.role) != -1){
-                                                if(user.access_level <= cmd.access_level || cmd.access_level == undefined){
-                                                    valid = true
-                                                    console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params)
-                                                } else {
-                                                    valid = false
-                                                }
+                                                valid = false
                                             } else {
                                                 valid = true
                                             }
