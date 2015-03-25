@@ -137,9 +137,9 @@ $(function() {
         }
     });
 
-    socket.on('updateMousePosition', function(msg) {
+    /*socket.on('updateMousePosition', function(msg) {
         CLIENT.trigger('updateMousePosition', msg);
-    });
+    });*/
  
     /**
      * @inner
@@ -364,11 +364,11 @@ $(function() {
                 }
             }
             return input;
-        },
-
-        updateMousePosition : function(position) {
-            socket.emit('updateMousePosition', position);
         }
+
+        /*updateMousePosition : function(position) {
+            socket.emit('updateMousePosition', position);
+        }*/
         
     }));
 });
@@ -1660,7 +1660,7 @@ function video(event, type, input) {
 // ------------------------------------------------------------------
 
 $(function() {
-    var position = null, x, y;
+    /*var position = null, x, y;
     $(window).mousemove(function(e) {
         x = e.clientX / $(window).width();
         y = e.clientY / $(window).height();
@@ -1702,5 +1702,5 @@ $(function() {
         $('.mouseCursor').css({
             display : cursors == 'off' ? 'none' : 'block'
         })
-    });
+    });*/
 });

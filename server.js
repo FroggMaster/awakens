@@ -836,8 +836,8 @@ function createChannel(io, channelName) {
                    }
                 }
                 return $.Deferred().resolve(false, err);
-            },
-            updateMousePosition : function(dao, position) {
+            }
+           /* updateMousePosition : function(dao, position) {
                 if (position && typeof position.x == 'number' && typeof position.y == 'number') {
                     otherEmit('updateMousePosition', {
                         id : socket.id,
@@ -848,7 +848,7 @@ function createChannel(io, channelName) {
                     });
                 }
                 return $.Deferred().resolve(true);
-            }
+            }*/
         },
   
         /*
