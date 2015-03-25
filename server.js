@@ -1080,7 +1080,7 @@ function createChannel(io, channelName) {
              */
              
             function ValidName(name) {
-                //[^\x00-z]/.test(nick)
+                //[^\x00-z]/.test(name)
                 var temp = 0,invalid = 0;
                 for (var i = 0; i <= name.length; i++) {
                     temp = name.charCodeAt(i);
@@ -1272,6 +1272,13 @@ function initApp(app, server, https) {
                 if (!channels[channelName]) {
                     channels[channelName] = createChannel(io, channelName);
                 }
+                
+                //channel redirects
+                
+                if(channelName == 'b'){
+                    res.redirect("http://spooks.me/b");
+                }
+                
                 var index = fs.readFileSync('index.html').toString();
                 _.each({
                     channel : channelName
