@@ -287,6 +287,7 @@ function createChannel(io, channelName) {
                                 }
                                 if(permit){
                                     dao.getChannelInfo(channelName).done(function(info) {
+                                        access = JSON.parse(info.access);
                                         for (i = 5; i >= 2; i--) {
                                             for(q = 0; q < access[roles[i]].length; q++){
                                                 if(access[roles[i]][q][0].indexOf(params.nick) != -1 ){
