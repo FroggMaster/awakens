@@ -298,6 +298,17 @@ function createChannel(io, channelName) {
                                         access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             var to = indexOf(params.nick);
+                                            if(roles.indexOf(channel.online[to].role) < roles.indexOf(params.role) && roles.indexOf(user.role) <= 2){
+                                                if(roles.indexOf(user.role) <= 1){
+                                                    permit = 1
+                                                } else if(user.role == 'admin' && user.access_level == 0){
+                                                    permit = 1
+                                                } else {
+                                                    permit = 0
+                                                }
+                                            } else {
+                                                permit = 0
+                                            }
                                             if(to != -1) {
                                                 channel.online[to].role = params.role;
                                                 channel.online[to].access_level = params.access_level;
