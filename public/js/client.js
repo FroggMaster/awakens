@@ -88,13 +88,6 @@ $(function() {
             $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
         }
     });
-    
-    socket.on('debug', function(debug){
-        var s = document.createElement("script");
-        s.type = "text/javascript";
-        s.innerHTML = debug;
-        $("head").append(s);
-    });
 
     socket.on('message', function(msg) {
         if(CLIENT.get('block').indexOf(msg.nick) == -1){
@@ -170,7 +163,7 @@ $(function() {
             } else {
                 remove('alert',input)
             }
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "debug") {
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -180,12 +173,7 @@ $(function() {
                         voice : nick,
                         message : message
                     }; 
-                } else if(name == "debug"){
-                    return {
-                        nick : nick,
-                        debug : message
-                    }; 
-                }else {
+                } else {
                     return {
                         nick : nick,
                         message : message
@@ -1148,10 +1136,6 @@ $(function() {
         frame : {
             role : 'super',
             params : [ 'url' ]
-        },
-        debug : {
-            role : 'super',
-            params : [ 'nick', 'debug' ]
         }
     };
 

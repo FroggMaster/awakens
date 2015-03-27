@@ -674,20 +674,6 @@ function createChannel(io, channelName) {
                         });
                     });
                 }
-            },
-            debug : {
-                role : 'super',
-                access_level : 0,
-                params : [ 'nick', 'debug' ],
-                handler : function(dao, dbuser, params) {
-                    var to = indexOf(params.nick);
-                    if (to >= 0) {
-                        var toSocket = channel.online[to].socket;
-                        socketEmit(toSocket, 'debug', params.debug);
-                    } else {
-                        errorMessage("User isn't online.");
-                    }
-                }
             }
         };
 
@@ -743,9 +729,15 @@ function createChannel(io, channelName) {
                 if (user.nick) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
+                    try {
+                        message = decodeURIComponent(escape(message));
+                    } catch(err){
+                        message = 0;
+                    }
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
+                                //temporary solution
                                 roomEmit('message', {
                                     nick : dbuser.get('nick'),
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
@@ -792,42 +784,40 @@ function createChannel(io, channelName) {
                         }
                         if (valid) {
                             return dao.findUser(user.nick).then(function(dbuser) {
-                                return dao.findUser(user.nick).then(function(dbuser) {
-                                    if(roles.indexOf(user.role) >= 0){
-                                        if(cmd.access_level == undefined){
-                                            cmd.access_level = 3
-                                        }
-                                        if(roles.indexOf(user.role) <= roles.indexOf(cmd.role)){
-                                            if(user.access_level <= cmd.access_level){
-                                                valid = true
-                                                console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params)
-                                            }
-                                        } else {
-                                            if(roles.indexOf(cmd.role) != -1){
-                                                valid = false
-                                            } else {
-                                                valid = true
-                                            }
-                                        }
-                                        if (valid) {
-                                            if(!command_access[msg.name] || roles.indexOf(command_access[msg.name][0]) > roles.indexOf(user.role)){
-                                                return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
-                                            } else {
-                                                if(command_access[msg.name][1] >= user.access_level){
-                                                    return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
-                                                } else {
-                                                    return $.Deferred().resolve(false, msgs.invalidCommandAccess + ' (Locked)');
-                                                }
-                                            }
-                                        } else {
-                                            return $.Deferred().resolve(false, msgs.invalidCommandAccess);
+                                if(roles.indexOf(user.role) >= 0){
+                                    if(cmd.access_level == undefined){
+                                        cmd.access_level = 3
+                                    }
+                                    if(roles.indexOf(user.role) <= roles.indexOf(cmd.role)){
+                                        if(user.access_level <= cmd.access_level){
+                                            valid = true
+                                            console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params)
                                         }
                                     } else {
-                                        errorMessage('ERROR');
-                                        console.log('ERROR-ROLE-1')
-                                        user.role = 'basic'
+                                        if(roles.indexOf(cmd.role) != -1){
+                                            valid = false
+                                        } else {
+                                            valid = true
+                                        }
                                     }
-                                });
+                                    if (valid) {
+                                        if(!command_access[msg.name] || roles.indexOf(command_access[msg.name][0]) > roles.indexOf(user.role)){
+                                            return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
+                                        } else {
+                                            if(command_access[msg.name][1] >= user.access_level){
+                                                return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
+                                            } else {
+                                                return $.Deferred().resolve(false, msgs.invalidCommandAccess + ' (Locked)');
+                                            }
+                                        }
+                                    } else {
+                                        return $.Deferred().resolve(false, msgs.invalidCommandAccess);
+                                    }
+                                } else {
+                                    errorMessage('ERROR');
+                                    console.log('ERROR-ROLE-1')
+                                    user.role = 'basic'
+                                }
                             });
                         } else {
                             err = msgs.invalidCommandParams;
