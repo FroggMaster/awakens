@@ -278,9 +278,10 @@ function createChannel(io, channelName) {
                         var permit;
                         return dao.findUser(params.nick).then(function(dbuser) {
                             if (dbuser) {
-                                if(roles.indexOf(params.role) > roles.indexOf(user.role)) {
+                                var stats = GetInfo(params.nick, dbuser);
+                                if(roles.indexOf(stats.role) > roles.indexOf(user.role) && roles.indexOf(params.role) > roles.indexOf(user.role) || roles.indexOf(user.role) <= 1) {
                                     permit = 1
-                                } else if(params.role == user.role && params.access_level > user.access_level) {
+                                } else if(stats.access_level < params.access_level && params.role == user.role && params.access_level > user.access_level) {
                                     permit = 1
                                 } else {
                                     permit = 0
@@ -298,17 +299,6 @@ function createChannel(io, channelName) {
                                         access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             var to = indexOf(params.nick);
-                                            if(roles.indexOf(channel.online[to].role) < roles.indexOf(params.role) && roles.indexOf(user.role) <= 2){
-                                                if(roles.indexOf(user.role) <= 1){
-                                                    permit = 1
-                                                } else if(user.role == 'admin' && user.access_level == 0){
-                                                    permit = 1
-                                                } else {
-                                                    permit = 0
-                                                }
-                                            } else {
-                                                permit = 0
-                                            }
                                             if(to != -1) {
                                                 channel.online[to].role = params.role;
                                                 channel.online[to].access_level = params.access_level;
@@ -318,11 +308,11 @@ function createChannel(io, channelName) {
                                                     role : params.role,
                                                     access : JSON.stringify(access)
                                                 });
+                                                roomEmit('update',{
+                                                    access : JSON.stringify(access)
+                                                });
+                                                showMessage(params.nick + ' now has role ' + params.role)
                                             }
-                                            roomEmit('update',{
-                                                access : JSON.stringify(access)
-                                            });
-                                            showMessage(params.nick + ' now has role ' + params.role)
                                         });
                                     });
                                 } else {
