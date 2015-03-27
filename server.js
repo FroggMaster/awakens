@@ -1278,6 +1278,8 @@ function initApp(app, server, https) {
                 
                 if(channelName == 'b'){
                     res.redirect("http://anon.spooks.me/");
+                } else if(channelName == 'b/'){
+                    res.redirect("http://anon.spooks.me/");
                 }
                 
                 var index = fs.readFileSync('index.html').toString();
