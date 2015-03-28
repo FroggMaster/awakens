@@ -140,7 +140,13 @@ function createChannel(io, channelName) {
             register : {
                 params : [ 'initial_password' ],
                 handler : function(dao, dbuser, params) {
-                    return dbuser.register(params.initial_password);
+                    dao.createUser(user.nick, user.remote_addr).done(function() {
+                        dao.findUser(user.nick).then(function(dbuser){
+                            dbuser.register(params.initial_password).then(function(){
+                                showMessage(msgs.registeredAndVerified)
+                            });
+                        });
+                    });
                 }
             },
             verify : {
@@ -277,11 +283,11 @@ function createChannel(io, channelName) {
                         var done = $.Deferred();
                         var permit;
                         return dao.findUser(params.nick).then(function(dbuser) {
-                            if (dbuser) {
+                            if (dbuser.get('verified')) {
                                 var stats = GetInfo(params.nick, dbuser);
-                                if(roles.indexOf(stats.role) > roles.indexOf(user.role) && roles.indexOf(params.role) > roles.indexOf(user.role) || roles.indexOf(user.role) <= 1) {
+                                if(roles.indexOf(stats.role) > roles.indexOf(user.role) && roles.indexOf(params.role) >= roles.indexOf(user.role) || roles.indexOf(user.role) <= 1) {
                                     permit = 1
-                                } else if(stats.access_level < params.access_level && params.role == user.role && params.access_level > user.access_level) {
+                                } else if(stats.access_level < params.access_level && params.role == user.role && params.access_level > user.access_level || user.access_level == 0) {
                                     permit = 1
                                 } else {
                                     permit = 0
@@ -297,23 +303,25 @@ function createChannel(io, channelName) {
                                             }
                                         }
                                         access[params.role].push([params.nick.toLowerCase(),params.access_level]);
-                                        dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
-                                            var to = indexOf(params.nick);
-                                            if(to != -1) {
-                                                channel.online[to].role = params.role;
-                                                channel.online[to].access_level = params.access_level;
-                                                toSocket = channel.online[to].socket;
-                                                socketEmit(toSocket, 'update',{
-                                                    access_level : params.access_level,
-                                                    role : params.role,
-                                                    access : JSON.stringify(access)
-                                                });
-                                                roomEmit('update',{
-                                                    access : JSON.stringify(access)
-                                                });
-                                                showMessage(params.nick + ' now has role ' + params.role)
-                                            }
-                                        });
+                                        if(params.role != 'basic'){
+                                            dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
+                                                var to = indexOf(params.nick);
+                                                if(to != -1) {
+                                                    channel.online[to].role = params.role;
+                                                    channel.online[to].access_level = params.access_level;
+                                                    toSocket = channel.online[to].socket;
+                                                    socketEmit(toSocket, 'update',{
+                                                        access_level : params.access_level,
+                                                        role : params.role,
+                                                        access : JSON.stringify(access)
+                                                    });
+                                                    roomEmit('update',{
+                                                        access : JSON.stringify(access)
+                                                    });
+                                                    showMessage(params.nick + ' now has role ' + params.role + 'and access_level' + params.access_level)
+                                                }
+                                            });
+                                        }
                                     });
                                 } else {
                                     return $.Deferred().resolve(false, 'Can\'t put someones access above your own.');
@@ -738,9 +746,8 @@ function createChannel(io, channelName) {
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
-                                //temporary solution
                                 roomEmit('message', {
-                                    nick : dbuser.get('nick'),
+                                    nick : user.nick,
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message),
@@ -1107,103 +1114,104 @@ function createChannel(io, channelName) {
             /**
              * @inner
              */
-            function attempt(dbuser, password) {
-                if (indexOf(dbuser.get('nick')) >= 0 && password) {
-                    var osock = channel.online[indexOf(dbuser.get('nick'))].socket;
+            function attempt(nick, password, dbuser) {
+                if (indexOf(nick) >= 0 && password) {
+                    var osock = channel.online[indexOf(nick)].socket;
                     socketEmit(osock, 'message', {
                         type : 'error-message',
                         message : msgs.ghosted
                     });
                     osock.disconnect();
                 }
-                if (indexOf(dbuser.get('nick')) >= 0) {
-                    log.debug('Attempted to nick to ', dbuser.get('nick'), ' but someone else is using that nick right now');
+                if (indexOf(nick) >= 0) {
+                    log.debug('Attempted to nick to ', nick, ' but someone else is using that nick right now');
                     if (user.nick) {
                         done.resolve(false, msgs.alreadyBeingUsed);
                     } else {
                         fallback();
                     }
                 } else {
-                    dbuser.set('remote_addr', user.remote_addr).then(function() {
-                        if(ValidName(dbuser.get('nick'))) {
-                            var online = !!user.nick;
-                            user.nick = dbuser.get('nick');
-                            user.vhost = dbuser.get('vHost');     
-                            dao.getChannelInfo(channelName).then(function(data){
-                                if(!data.access){
-                                    data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
-                                    dao.setChannelInfo(channelName, 'access', data.access)
-                                }
-                                access = JSON.parse(data.access);
-                                user.role = GetInfo(user.nick, dbuser).role;
-                                user.access_level = GetInfo(user.nick, dbuser).access_level;
-                                socketEmit(socket, 'update', {
-                                    id : socket.id,
-                                    nick : user.nick,
-                                    access_level : user.access_level,
-                                    role : user.role,
-                                    vHost : user.vhost,
-                                    password : password || null
-                                });
-                            });
-                            if (online) {
-                                roomEmit('nick', {
-                                    id : socket.id,
-                                    nick : dbuser.get('nick')
-                                });
-                            } else {
-                                channel.online.push(user);
-                                log.debug('Successful join!');
-                                roomEmit('join', {
-                                    id : socket.id,
-                                    nick : dbuser.get('nick')
-                                });
-                            }
-                            done.resolve(true);
-                        } else {
-                            done.resolve(false, msgs.InvalidCharacters);
-                            fallback()
+                    var online = !!user.nick;
+                    user.nick = nick;
+                    dao.getChannelInfo(channelName).then(function(data){
+                        if(!data.access){
+                            data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
+                            dao.setChannelInfo(channelName, 'access', data.access)
                         }
-                    }, function(err) {
-                        done.reject(err);
+                        access = JSON.parse(data.access);
+                        if(dbuser){
+                            user.vhost = dbuser.get('vHost');
+                            stats = GetInfo(user.nick, dbuser);
+                            user.role = stats.role;
+                            user.access_level = stats.access_level;
+                        } else {
+                            user.vhost = user.remote_addr;
+                            user.role = 'basic';
+                            user.access_level = 3;
+                        }
+                        socketEmit(socket, 'update', {
+                            id : socket.id,
+                            nick : user.nick,
+                            access_level : user.access_level,
+                            role : user.role,
+                            vHost : user.vhost,
+                            password : password || null
+                        });
                     });
+                    if (online) {
+                        roomEmit('nick', {
+                            id : socket.id,
+                            nick : user.nick
+                        });
+                    } else {
+                        channel.online.push(user);
+                        log.debug('Successful join!');
+                        roomEmit('join', {
+                            id : socket.id,
+                            nick : user.nick
+                        });
+                    }
+                    done.resolve(true);
                 }
             }
 
             if (nick && typeof nick == 'string') {
-                dao.findUser(nick).then(function(dbuser) {
-                    if (dbuser) {
-                        if (dbuser.get('verified')) {
-                            if (password) {
-                                if (dbuser.verifyPassword(password)) {
-                                    log.debug('Nick password was correct');
-                                    attempt(dbuser, password);
-                                } else {
-                                    log.debug('Nick password was incorrect');
-                                    if (user.nick) {
-                                        done.resolve(false, msgs.invalidLogin);
+                if(ValidName(nick)) {
+                    dao.findUser(nick).then(function(dbuser) {
+                        if (dbuser) {
+                            if (dbuser.get('verified')) {
+                                if (password) {
+                                    if (dbuser.verifyPassword(password)) {
+                                        log.debug('Nick password was correct');
+                                        attempt(nick, password, dbuser);
                                     } else {
-                                        fallback();
+                                        log.debug('Nick password was incorrect');
+                                        if (user.nick) {
+                                            done.resolve(false, msgs.invalidLogin);
+                                        } else {
+                                            fallback();
+                                        }
                                     }
+                                } else if (user.nick) {
+                                    done.resolve(false, msgs.nickVerified);
+                                } else {
+                                    fallback();
                                 }
-                            } else if (user.nick) {
-                                done.resolve(false, msgs.nickVerified);
                             } else {
-                                fallback();
+                                log.debug('Nick was not registered');
+                                attempt(nick);
                             }
                         } else {
-                            log.debug('Nick was not registered');
-                            attempt(dbuser);
+                            log.debug('Nick ', nick, ' does not exist, nicking to a new nick');
+                            attempt(nick);
                         }
-                    } else {
-                        log.debug('Nick ', nick, ' does not exist, creating a new nick');
-                        dao.createUser(nick, user.remote_addr).then(attempt, function(err) {
-                            done.reject(err);
-                        });
-                    }
-                }, function(err) {
-                    done.reject(err);
-                });
+                    }, function(err) {
+                        done.reject(err);
+                    });
+                } else {
+                    done.resolve(false, msgs.InvalidCharacters);
+                    fallback()
+                }
             } else {
                 fallback();
             }

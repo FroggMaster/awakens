@@ -6,6 +6,7 @@ var mysql = require('mysql');
 var passwordHash = require('password-hash');
 var fs = require('fs');
 var pool = mysql.createPool(settings.db);
+var number = 0;
 
 function ucwords(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -88,8 +89,6 @@ module.exports = function(callback) {
                 return this.set({
                     registered : 1,
                     pw_hash : passwordHash.generate(initial_password)
-                }).then(function() {
-                    return $.Deferred().resolve(true, msgs.registeredAndVerified);
                 });
                 return $.Deferred().resolve(false, err);
             },
@@ -581,7 +580,7 @@ module.exports = function(callback) {
          */
         nextNick : function() {
             return one('select count(*) count from chat_users').then(function(row) {
-                return ucwords(_.sample(settings.adjectives)) + ucwords(_.sample(settings.nouns)) + '.' + row.count;
+                return ucwords(_.sample(settings.adjectives)) + ucwords(_.sample(settings.nouns)) + '.' + number++;
             });
         },
 
@@ -589,6 +588,14 @@ module.exports = function(callback) {
             connection.done(function(dbconn) {
                 dbconn.release();
                 settings.log.db && console.log('DB Connection released');
+            });
+        },
+        
+        GetNick : function(vhost){
+            return query('select nick from chat_users where vhost=?', [ vhost ]).then(function(rows) {
+                return rows ? _.map(rows, function(row) {
+                    return row.nick;
+                }) : [];
             });
         }
     };
