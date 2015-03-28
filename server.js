@@ -388,13 +388,13 @@ function createChannel(io, channelName) {
             whois : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    return dao.getChannelInfo(channelName).then(function(channel) {
+                    return dao.getChannelInfo(channelName).then(function(chnl) {
                         return dao.findUser(params.nick).then(function(dbuser) {
+                            var stats = {};
 						    if(dbuser) {
                                 var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
-                                var stats;
-                                if(channel.access){
-                                    access = JSON.parse(channel.access);
+                                if(chnl.access){
+                                    access = JSON.parse(chnl.access);
                                 }
                                 stats = GetInfo(params.nick, dbuser)
                                 if (roles.indexOf(user.role) <= 1) {
@@ -404,6 +404,7 @@ function createChannel(io, channelName) {
                                 }
 							} else if(indexOf(params.nick) != -1) {
                                 to = indexOf(params.nick);
+                                console.log(channel.online[to].role)
                                 stats.role = channel.online[to].role;
                                 stats.access_level = channel.online[to].access_level;
                                 host = channel.online[to].remote_addr;
