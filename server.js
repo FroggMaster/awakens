@@ -408,7 +408,7 @@ function createChannel(io, channelName) {
                                 stats.access_level = channel.online[to].access_level;
                                 host = channel.online[to].remote_addr;
                                 return $.Deferred().resolve(true, msgs.get('whoiss', params.nick, stats.role, stats.access_level, host, 'not registered'));
-                            else {
+                            } else {
                                 return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                             }
                         });
