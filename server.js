@@ -1062,24 +1062,32 @@ function createChannel(io, channelName) {
         
         function GetInfo(nick, dbuser) {
             var rowl,aces;
-            if(roles.indexOf(dbuser.get('role')) < 2){
-                rowl = dbuser.get('role');
-                aces = dbuser.get('access_level');
-            } else {
-                for (i = 5; i >= 2; i--) {
-                    for(q = 0; q < access[roles[i]].length; q++){
-                        if(access[roles[i]][q]){
-                            if(access[roles[i]][q][0].toString().toLowerCase().indexOf(nick.toLowerCase()) != -1 ){
-                                rowl = roles[i]
-                                aces = access[roles[i]][q][1]
+            if(dbuser) {
+                if(roles.indexOf(dbuser.get('role')) < 2){
+                    rowl = dbuser.get('role');
+                    aces = dbuser.get('access_level');
+                } else {
+                    for (i = 5; i >= 2; i--) {
+                        for(q = 0; q < access[roles[i]].length; q++){
+                            if(access[roles[i]][q]){
+                                if(access[roles[i]][q][0].toString().toLowerCase().indexOf(nick.toLowerCase()) != -1 ){
+                                    rowl = roles[i]
+                                    aces = access[roles[i]][q][1]
+                                }
                             }
                         }
                     }
                 }
-                if(!rowl){
-                    rowl = 'basic'
-                    aces = 3
+            }
+            if(!rowl && indexOf(nick) != -1){
+                var t = indexOf(nick);
+                if(channel.online[t].role && channel.online[t].access_level != undefined){
+                    rowl = channel.online[t].role;
+                    aces = channel.online[t].access_level;
                 }
+            } else if (!rowl){
+                rowl = 'basic'
+                aces = 3
             }
             return {"role":rowl,"access_level":aces}
         }
