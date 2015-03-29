@@ -381,7 +381,7 @@ function createChannel(io, channelName) {
             },
             whoami : {
                 handler : function(dao, dbuser) {
-                    showMessage(msgs.get('whoami', dbuser.get('nick'), user.role,user.access_level, user.remote_addr));
+                    showMessage(msgs.get('whoami', user.nick, user.role,user.access_level, user.remote_addr));
                     return $.Deferred().resolve(true).promise();
                 }
             },
@@ -404,7 +404,6 @@ function createChannel(io, channelName) {
                                 }
 							} else if(indexOf(params.nick) != -1) {
                                 to = indexOf(params.nick);
-                                console.log(channel.online[to].role)
                                 stats.role = channel.online[to].role;
                                 stats.access_level = channel.online[to].access_level;
                                 host = channel.online[to].remote_addr;
@@ -1079,15 +1078,15 @@ function createChannel(io, channelName) {
                     }
                 }
             }
-            if(!rowl && indexOf(nick) != -1){
+            if(!rowl){
                 var t = indexOf(nick);
                 if(channel.online[t].role && channel.online[t].access_level != undefined){
                     rowl = channel.online[t].role;
                     aces = channel.online[t].access_level;
+                } else {
+                    rowl = 'basic';
+                    aces = 3;
                 }
-            } else if (!rowl){
-                rowl = 'basic'
-                aces = 3
             }
             return {"role":rowl,"access_level":aces}
         }
