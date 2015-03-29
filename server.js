@@ -305,6 +305,7 @@ function createChannel(io, channelName) {
                                         if(params.role != 'basic'){
                                             access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                         }
+                                        console.log('ACCESS_GIVEN ' + user.nick ' - ' + channelName + ' - ' + params.nick)
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             var to = indexOf(params.nick);
                                             if(to != -1) {
