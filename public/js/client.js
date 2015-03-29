@@ -419,7 +419,7 @@ $(function() {
             if(url == "none" || CLIENT.get('frame') == 'off'){
                 $("#frame")[0].innerHTML = ""
             } else {
-                $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin\"></iframe>"
+                $("#frame")[0].innerHTML = "<iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe>"
             }
         }
     });
@@ -456,12 +456,12 @@ $(function() {
 // ------------------------------------------------------------------
 
 $(function() {
-    CLIENT.on('change:theme', function(m, theme) {
-        if (theme && CLIENT.get('bg') == 'on' && theme != 'default') {
-            $('#messages').css('background', theme);
-            CLIENT.set('old', theme);
+    CLIENT.on('change:background', function(m, background) {
+        if (background && CLIENT.get('bg') == 'on' && background != 'default') {
+            $('#messages').css('background', background);
+            CLIENT.set('old', background);
         } else {
-            CLIENT.set('old', theme);
+            CLIENT.set('old', background);
         }
     });
     CLIENT.on('change:theme_style', function(m, theme_style) {
@@ -1049,7 +1049,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block theme mask alert password frame frame_src'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block background mask alert password frame frame_src'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';

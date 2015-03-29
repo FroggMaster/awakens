@@ -195,20 +195,12 @@ function createChannel(io, channelName) {
                 role : 'super',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
-                    var msg = dbsender.get("nick")+" has banned "+params.nick;
-                    if(params.message.trim())
-                        msg+=": "+params.message.trim();
-                        dao.findUser(user.nick).then(function(admin){
-                            dao.findUser(params.nick).then(function(dbuser){
-                                if(roles.indexOf(dbuser.get('role')) <= roles.indexOf(admin.get('role'))){
-                                    errorMessage('You may not ban admins');
-                                } else {         
-                                    showMessage(params.nick + ' is now banned gloablly');
-                                    broadcast(dao, msg);
-                                    return dao.ban(params.nick);
-                                }
-                            });
-                        });
+                    var stats = GetInfo(params.nick);
+                    if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
+                        return dao.ban(params.nick);
+                    } else {
+                        errorMessage('You may not ban admins');
+                    }
                 }
             },
             unpermaban : {
@@ -257,29 +249,26 @@ function createChannel(io, channelName) {
                     var permit = 0;
                     if(kuser != -1){
                         kuser = channel.online[kuser]
-                            dao.getChannelInfo(channelName).done(function(info) {
-                                dao.findUser(params.nick).done(function(data){
-                                    access = JSON.parse(info.access);
-                                    fuser = GetInfo(params.nick, data, dao);
-                                    if(roles.indexOf(user.role) < roles.indexOf(fuser.role)){
-                                        permit = 1
-                                    } else if(user.role == fuser.role && user.access_level < fuser.access_level){
-                                        permit = 1
-                                    }
-                                    if(permit){
-                                        msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
-                                        reason = msg.length > 0 ? 'kicked_reason' : 'kicked'
-                                        socketEmit(kuser.socket, 'message', {
-                                            type : 'error-message',
-                                            message : msgs.get(reason,msg,user.nick)
-                                        });
-                                        kuser.socket.disconnect();
-                                        broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
-                                    } else {
-                                        errorMessage('You may not kick admins');
-                                    }
+                        dao.findUser(params.nick).done(function(data){
+                            fuser = GetInfo(params.nick, data, dao);
+                            if(roles.indexOf(user.role) < roles.indexOf(fuser.role)){
+                                permit = 1
+                            } else if(user.role == fuser.role && user.access_level < fuser.access_level){
+                                permit = 1
+                            }
+                            if(permit){
+                                msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
+                                reason = msg.length > 0 ? 'kicked_reason' : 'kicked'
+                                socketEmit(kuser.socket, 'message', {
+                                    type : 'error-message',
+                                    message : msgs.get(reason,msg,user.nick)
                                 });
-                            });
+                                kuser.socket.disconnect();
+                                broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
+                            } else {
+                                errorMessage('You may not kick admins');
+                            }
+                        });
                     } else {
                         errorMessage(params.nick  +' is not online');
                     }
@@ -294,15 +283,16 @@ function createChannel(io, channelName) {
                         var done = $.Deferred();
                         var permit;
                         return dao.findUser(params.nick).then(function(dbuser) {
-                            if (dbuser.get('verified')) {
+                            if (dbuser && dbuser.get('verified')) {
                                 var stats = GetInfo(params.nick, dbuser, dao);
-                                if(roles.indexOf(stats.role) > roles.indexOf(user.role) && roles.indexOf(params.role) >= roles.indexOf(user.role) || roles.indexOf(user.role) <= 1) {
-                                    permit = 1
-                                } else if(stats.access_level < params.access_level && params.role == user.role && params.access_level > user.access_level || user.access_level == 0) {
-                                    permit = 1
-                                } else {
+                                if(roles.indexOf(user.role) >= 1 && roles.indexOf(stats.role) < roles.indexOf(user.role) || roles.indexOf(params.role) <= roles.indexOf(user.role)) {
                                     permit = 0
+                                } else if(user.access_level != 0 && stats.access_level > params.access_level || params.role != user.role && params.access_level < user.access_level) {
+                                    permit = 0
+                                } else {
+                                    permit = 1
                                 }
+                                console.log(permit)
                                 if(permit){
                                     dao.getChannelInfo(channelName).done(function(info) {
                                         access = JSON.parse(info.access);
@@ -330,8 +320,8 @@ function createChannel(io, channelName) {
                                                 roomEmit('update',{
                                                     access : JSON.stringify(access)
                                                 });
-                                                showMessage(params.nick + ' now has role ' + params.role + 'and access_level ' + params.access_level)
                                             }
+                                            showMessage(params.nick + ' now has role ' + params.role + ' and access_level ' + params.access_level)
                                         });
                                     });
                                 } else {
@@ -391,7 +381,7 @@ function createChannel(io, channelName) {
                             var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                             stats = GetInfo(params.nick, dbuser, dao)
                             if (roles.indexOf(user.role) <= 1) {
-                                return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'), reg));
+                                return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'),dbuser.get('vHost'), reg));
                             } else if (roles.indexOf(user.role) >= 2) {
                                 return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('vHost'), reg));
                             }
@@ -477,10 +467,10 @@ function createChannel(io, channelName) {
             bg : {
                 params : [ 'theme_style' ],
                 handler : function(dao, dbuser, params) {
-                    var theme = params.theme_style.substring(0, settings.limits.message);
-                    return dao.setChannelInfo(channelName, 'theme', theme).then(function() {
+                    var background = params.theme_style.substring(0, settings.limits.message);
+                    return dao.setChannelInfo(channelName, 'background', background).then(function() {
                         roomEmit('update', {
-                            theme : theme
+                            background : background
                         });
                         return true;
                     });
@@ -1059,7 +1049,7 @@ function createChannel(io, channelName) {
                     aces = dbuser.get('access_level');
                 } else {
                     dao.getChannelInfo(channelName).then(function(channelInfo) {
-                        access = channelInfo.access;
+                        access = JSON.parse(channelInfo.access);
                         for (i = 5; i >= 2; i--) {
                             for(q = 0; q < access[roles[i]].length; q++){
                                 if(access[roles[i]][q]){
@@ -1071,22 +1061,14 @@ function createChannel(io, channelName) {
                             }
                         }
                     });
-                }
-            }
-            if(!rowl){
-                var t = indexOf(nick);
-                if(t != -1){
-                    if(channel.online[t].role && channel.online[t].access_level != undefined){
-                        rowl = channel.online[t].role;
-                        aces = channel.online[t].access_level;
-                    } else {
+                    if(!rowl){
                         rowl = 'basic';
                         aces = 3;
                     }
-                } else {
-                    rowl = 'basic';
-                    aces = 3;
                 }
+            } else {
+                rowl = 'basic';
+                aces = 3;
             }
             return {"role":rowl,"access_level":aces}
         }

@@ -78,8 +78,7 @@ body {
 
 #frame{
     position: absolute;
-    width:99%;
-    height:94%;
+    width:100%;
     z-index:1;
 }
 
@@ -130,6 +129,7 @@ body {
 .message{
 position:relative;
 z-index:2;
+pointer-events: none;
 }
 
 #messages .timestamp,
