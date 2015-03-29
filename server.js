@@ -68,7 +68,7 @@ function createChannel(io, channelName) {
             };
         });
 
-        log.info('New connection');
+        //log.info('New connection');
         
         socket.on('disconnect', function() {
             try {
@@ -85,7 +85,7 @@ function createChannel(io, channelName) {
                         part : user.part
                     });
                 }
-                log.info('Disconnected');
+                //log.info('Disconnected');
             } catch (err) {
                 console.error(err);
             }
@@ -292,7 +292,6 @@ function createChannel(io, channelName) {
                                 } else {
                                     permit = 1
                                 }
-                                console.log(permit)
                                 if(permit){
                                     dao.getChannelInfo(channelName).done(function(info) {
                                         access = JSON.parse(info.access);
