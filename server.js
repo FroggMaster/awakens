@@ -195,12 +195,13 @@ function createChannel(io, channelName) {
                 role : 'super',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
-                    var stats = GetInfo(params.nick);
-                    if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
-                        return dao.ban(params.nick);
-                    } else {
-                        errorMessage('You may not ban admins');
-                    }
+                    dao.findUser(params.nick).then(function(dbuser){
+                        if(roles.indexOf(user.role) <= roles.indexOf(dbuser.get('role'))){
+                            return dao.ban(params.nick);
+                        } else {
+                            errorMessage('You may not ban admins');
+                        }
+                    });
                 }
             },
             unpermaban : {
@@ -215,22 +216,25 @@ function createChannel(io, channelName) {
                 role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-                    var permit = 0;
-                    stats = GetInfo(params.nick);
-                    if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
-                        permit = 1
-                    } else {
-                        permit = 0
-                    }
-                    if(permit){
-                        var msg = user.nick+" has channel banned "+params.nick;
-                        if(params.message.trim())
-                            msg+=": "+params.message.trim();
-                        broadcastChannel(dao, channel, msg);
-                        return dao.ban(params.nick, channelName);
-                    } else {
-                        errorMessage('Can\'t ban user with higher role then your own.');
-                    }
+                    dao.getChannelInfo(channelName).then(function(data){
+                        var permit = 0;
+                        access = JSON.parse(data.access);
+                        stats = GetInfo(params.nick);
+                        if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
+                            permit = 1
+                        } else {
+                            permit = 0
+                        }
+                        if(permit){
+                            var msg = user.nick+" has channel banned "+params.nick;
+                            if(params.message.trim())
+                                msg+=": "+params.message.trim();
+                            broadcastChannel(dao, channel, msg);
+                            return dao.ban(params.nick, channelName);
+                        } else {
+                            errorMessage('Can\'t ban user with higher role then your own.');
+                        }
+                    });
                 }
             },
             unban : {
@@ -249,8 +253,9 @@ function createChannel(io, channelName) {
                     var permit = 0;
                     if(kuser != -1){
                         kuser = channel.online[kuser]
-                        dao.findUser(params.nick).done(function(data){
-                            fuser = GetInfo(params.nick, data, dao);
+                        dao.getChannelInfo(params.nick).done(function(data){
+                            access = JSON.parse(data.access);
+                            fuser = GetInfo(params.nick);
                             if(roles.indexOf(user.role) < roles.indexOf(fuser.role)){
                                 permit = 1
                             } else if(user.role == fuser.role && user.access_level < fuser.access_level){
@@ -281,20 +286,21 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     if(roles.indexOf(params.role) >= 2 && params.access_level >= 0){
                         var done = $.Deferred();
+                        var stats = {};
                         var permit;
                         return dao.findUser(params.nick).then(function(dbuser) {
                             if (dbuser && dbuser.get('verified')) {
-                                var stats = GetInfo(params.nick, dbuser, dao);
-                                if(roles.indexOf(user.role) >= 1 && roles.indexOf(stats.role) < roles.indexOf(user.role) || roles.indexOf(params.role) <= roles.indexOf(user.role)) {
-                                    permit = 0
-                                } else if(user.access_level != 0 && stats.access_level > params.access_level || params.role != user.role && params.access_level < user.access_level) {
-                                    permit = 0
-                                } else {
-                                    permit = 1
-                                }
-                                if(permit){
-                                    dao.getChannelInfo(channelName).done(function(info) {
-                                        access = JSON.parse(info.access);
+                                dao.getChannelInfo(channelName).done(function(info) {
+                                    access = JSON.parse(info.access);
+                                    stats = GetInfo(params.nick);
+                                    if(roles.indexOf(user.role) >= 1 && roles.indexOf(stats.role) < roles.indexOf(user.role) || roles.indexOf(params.role) <= roles.indexOf(user.role)) {
+                                        permit = 0
+                                    } else if(user.access_level != 0 && stats.access_level > params.access_level || params.role != user.role && params.access_level < user.access_level) {
+                                        permit = 0
+                                    } else {
+                                        permit = 1
+                                    }
+                                    if(permit){
                                         for (i = 5; i >= 2; i--) {
                                             for(q = 0; q < access[roles[i]].length; q++){
                                                 if(access[roles[i]][q][0].indexOf(params.nick) != -1 ){
@@ -323,10 +329,10 @@ function createChannel(io, channelName) {
                                             }
                                             showMessage(params.nick + ' now has role ' + params.role + ' and access_level ' + params.access_level)
                                         });
-                                    });
-                                } else {
-                                    return $.Deferred().resolve(false, 'Can\'t put someones access above your own.');
-                                }
+                                    } else {
+                                        return $.Deferred().resolve(false, 'Can\'t put someones access above your own.');
+                                    }
+                                });
                             } else {
                                 return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                             }
@@ -378,13 +384,16 @@ function createChannel(io, channelName) {
                     return dao.findUser(params.nick).then(function(dbuser) {
                         var stats = {};
                         if(dbuser) {
-                            var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
-                            stats = GetInfo(params.nick, dbuser, dao)
-                            if (roles.indexOf(user.role) <= 1) {
-                                return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'),dbuser.get('vHost'), reg));
-                            } else if (roles.indexOf(user.role) >= 2) {
-                                return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('vHost'), reg));
-                            }
+                            dao.getChannelInfo(channelName).done(function(info) {
+                                var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
+                                access = JSON.parse(info.access)
+                                stats = GetInfo(params.nick, dbuser, dao)
+                                if (roles.indexOf(user.role) <= 1) {
+                                    return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'),dbuser.get('vHost'), reg));
+                                } else if (roles.indexOf(user.role) >= 2) {
+                                    return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('vHost'), reg));
+                                }
+                            });
                         } else if(indexOf(params.nick) != -1) {
                             to = indexOf(params.nick);
                             stats.role = channel.online[to].role;
@@ -1041,36 +1050,19 @@ function createChannel(io, channelName) {
          *
          */
         
-        function GetInfo(nick, dbuser, dao) {
+        function GetInfo(nick, dao) {
             var rowl,aces;
-            if(dbuser) {
-                if(roles.indexOf(dbuser.get('role')) < 2){
-                    rowl = dbuser.get('role');
-                    aces = dbuser.get('access_level');
-                } else {
-                    dao.getChannelInfo(channelName).then(function(channelInfo) {
-                        access = JSON.parse(channelInfo.access);
-                        for (i = 5; i >= 2; i--) {
-                            for(q = 0; q < access[roles[i]].length; q++){
-                                if(access[roles[i]][q]){
-                                    if(access[roles[i]][q][0].toString().toLowerCase().indexOf(nick.toLowerCase()) != -1 ){
-                                        rowl = roles[i]
-                                        aces = access[roles[i]][q][1]
-                                    }
-                                }
-                            }
+            for (i = 5; i >= 2; i--) {
+                for(q = 0; q < access[roles[i]].length; q++){
+                    if(access[roles[i]][q]){
+                        if(access[roles[i]][q][0].toString().toLowerCase().indexOf(nick.toLowerCase()) != -1 ){
+                            rowl = roles[i]
+                            aces = access[roles[i]][q][1]
+                            return {"role":rowl,"access_level":aces}
                         }
-                    });
-                    if(!rowl){
-                        rowl = 'basic';
-                        aces = 3;
                     }
                 }
-            } else {
-                rowl = 'basic';
-                aces = 3;
             }
-            return {"role":rowl,"access_level":aces}
         }
         
         /**
@@ -1142,6 +1134,7 @@ function createChannel(io, channelName) {
                     }
                 } else {
                     var online = !!user.nick;
+                    var stats = {};
                     user.nick = nick;
                     dao.getChannelInfo(channelName).then(function(data){
                         if(!data.access){
@@ -1150,8 +1143,13 @@ function createChannel(io, channelName) {
                         }
                         access = JSON.parse(data.access);
                         if(dbuser){
+                            if(roles.indexOf(dbuser.get('role')) <= 1){
+                                stats.role = dbuser.get('role')
+                                stats.access_level = dbuser.get('access_level')
+                            } else {
+                                stats = GetInfo(user.nick);
+                            }
                             user.vhost = dbuser.get('vHost');
-                            stats = GetInfo(user.nick, dbuser, dao);
                             user.role = stats.role;
                             user.access_level = stats.access_level;
                         } else {
