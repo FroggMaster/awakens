@@ -1073,6 +1073,12 @@ function createChannel(io, channelName) {
                         }
                     }
                 }
+                if(!rowl && !aces){
+                    return {
+                        "role":'basic',
+                        "access_level":0
+                    }
+                }
             }
         }
         
@@ -1153,13 +1159,14 @@ function createChannel(io, channelName) {
                             dao.setChannelInfo(channelName, 'access', data.access)
                         }
                         access = JSON.parse(data.access);
+                        stats = GetInfo(user.nick);
                         if(dbuser){
                             if(roles.indexOf(dbuser.get('role')) <= 1){
                                 user.role = dbuser.get('role')
                                 user.access_level = dbuser.get('access_level')
                             } else {
-                                user.role = GetInfo(user.nick).role;
-                                user.access_level = GetInfo(user.nick).access_level;
+                                user.role = stats.role;
+                                user.access_level = stats.access_level
                             }
                             user.vhost = dbuser.get('vHost');
                         } else {
