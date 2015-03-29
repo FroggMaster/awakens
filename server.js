@@ -216,23 +216,29 @@ function createChannel(io, channelName) {
                 role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-                    dao.getChannelInfo(channelName).then(function(data){
-                        var permit = 0;
-                        access = JSON.parse(data.access);
-                        stats = GetInfo(params.nick);
-                        if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
-                            permit = 1
+                    return dao.findUser(params.nick).then(function(dbuser){
+                        if(dbuser){
+                            return dao.getChannelInfo(channelName).then(function(data){
+                                var permit = 0;
+                                access = JSON.parse(data.access);
+                                stats = GetInfo(params.nick);
+                                if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
+                                    permit = 1
+                                } else {
+                                    permit = 0
+                                }
+                                if(permit){
+                                    var msg = user.nick+" has channel banned "+params.nick;
+                                    if(params.message.trim())
+                                        msg+=": "+params.message.trim();
+                                    broadcastChannel(dao, channel, msg);
+                                    return dao.ban(params.nick, channelName);
+                                } else {
+                                    errorMessage('Can\'t ban user with higher role then your own.');
+                                }
+                            });
                         } else {
-                            permit = 0
-                        }
-                        if(permit){
-                            var msg = user.nick+" has channel banned "+params.nick;
-                            if(params.message.trim())
-                                msg+=": "+params.message.trim();
-                            broadcastChannel(dao, channel, msg);
                             return dao.ban(params.nick, channelName);
-                        } else {
-                            errorMessage('Can\'t ban user with higher role then your own.');
                         }
                     });
                 }
@@ -384,14 +390,19 @@ function createChannel(io, channelName) {
                     return dao.findUser(params.nick).then(function(dbuser) {
                         var stats = {};
                         if(dbuser) {
-                            dao.getChannelInfo(channelName).done(function(info) {
+                            return dao.getChannelInfo(channelName).done(function(info) {
                                 var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                                 access = JSON.parse(info.access)
-                                stats = GetInfo(params.nick, dbuser, dao)
+                                if(roles.indexOf(dbuser.get('role')) <= 1){
+                                    stats.role = dbuser.get('role');
+                                    stats.access_level = dbuser.get('access_level');
+                                } else {
+                                    stats = GetInfo(params.nick)
+                                }
                                 if (roles.indexOf(user.role) <= 1) {
-                                    return $.Deferred().resolve(true, msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'),dbuser.get('vHost'), reg));
+                                    showMessage(msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'),dbuser.get('vHost'), reg));
                                 } else if (roles.indexOf(user.role) >= 2) {
-                                    return $.Deferred().resolve(true, msgs.get('whoiss', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('vHost'), reg));
+                                    showMessage(msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'),dbuser.get('vHost'), reg));
                                 }
                             });
                         } else if(indexOf(params.nick) != -1) {
