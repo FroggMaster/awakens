@@ -1155,14 +1155,13 @@ function createChannel(io, channelName) {
                         access = JSON.parse(data.access);
                         if(dbuser){
                             if(roles.indexOf(dbuser.get('role')) <= 1){
-                                stats.role = dbuser.get('role')
-                                stats.access_level = dbuser.get('access_level')
+                                user.role = dbuser.get('role')
+                                user.access_level = dbuser.get('access_level')
                             } else {
-                                stats = GetInfo(user.nick);
+                                user.role = GetInfo(user.nick).role;
+                                user.access_level = GetInfo(user.nick).access_level;
                             }
                             user.vhost = dbuser.get('vHost');
-                            user.role = stats.role;
-                            user.access_level = stats.access_level;
                         } else {
                             user.vhost = user.remote_addr;
                             user.role = 'basic';
