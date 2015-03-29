@@ -1061,7 +1061,7 @@ function createChannel(io, channelName) {
          *
          */
         
-        function GetInfo(nick, dao) {
+        function GetInfo(nick) {
             var rowl,aces;
             for (i = 5; i >= 2; i--) {
                 for(q = 0; q < access[roles[i]].length; q++){
@@ -1069,15 +1069,16 @@ function createChannel(io, channelName) {
                         if(access[roles[i]][q][0].toString().toLowerCase().indexOf(nick.toLowerCase()) != -1 ){
                             rowl = roles[i]
                             aces = access[roles[i]][q][1]
+                            console.log('returning:' + rowl + ' - ' + aces)
                             return {"role":rowl,"access_level":aces}
                         }
                     }
                 }
-                if(!rowl && !aces){
-                    return {
-                        "role":'basic',
-                        "access_level":0
-                    }
+            }
+            if(!rowl && !aces){
+                return {
+                    "role":'basic',
+                    "access_level":3
                 }
             }
         }
@@ -1165,6 +1166,7 @@ function createChannel(io, channelName) {
                                 user.role = dbuser.get('role')
                                 user.access_level = dbuser.get('access_level')
                             } else {
+                                console.log(stats)
                                 user.role = stats.role;
                                 user.access_level = stats.access_level
                             }
