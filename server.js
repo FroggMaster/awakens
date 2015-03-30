@@ -380,9 +380,9 @@ function createChannel(io, channelName) {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        var stats = grab(params.nick);
+                        var stats = grab(params.nick)
                         var reg,mask;
-                        if(grab != -1) {
+                        if(stats != -1) {
                             if(dbuser){
                                 reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                                 mask = (dbuser.get('vHost') ? dbuser.get('vHost') : 'Private');
@@ -391,12 +391,13 @@ function createChannel(io, channelName) {
                                 mask = 'Private'
                             }
                             if (roles.indexOf(user.role) <= 1) {
-                                showMessage(msgs.get('whois', params.nick, stats.role, stats.access_level, stats.remote_addr,user.vHost, reg));
+                                showMessage(msgs.get('whois', params.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
                             } else if (roles.indexOf(user.role) >= 2) {
                                 showMessage(msgs.get('whoiss', params.nick, stats.role, stats.access_level, mask, reg));
                             }
                         } else {
-                            return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
+                            //return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
+                            return $.Deferred().resolve(false, "User not online.");
                         }
                     });
                 }
@@ -1034,7 +1035,7 @@ function createChannel(io, channelName) {
          */
         function indexOf(nick) {
             for ( var i = 0; i < channel.online.length; i++) {
-                if (channel.online[i].nick == nick) {
+                if (channel.online[i].nick.toLowerCase() == nick.toLowerCase()) {
                     return i;
                 }
             }
