@@ -675,7 +675,7 @@ $(function() {
                 if(CLIENT.get('role') == null || roles.indexOf(CLIENT.get('role')) >= 2){
                     parsed = parser.parse( '#6464C0' + 'anon' + ': ' + message.message);
                 } else {
-                    parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
+                    parsed = parser.parse( '#6464C0' + message.name + ': ' + message.message);
                 }
                 break
             default:
