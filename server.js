@@ -30,6 +30,7 @@ function createChannel(io, channelName) {
     var channel = {
         online : []
     };
+    var count = 0;
     var command_access = {
         bg : ['mod',0],
         topic : ['mod',0],
@@ -750,12 +751,14 @@ function createChannel(io, channelName) {
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
+                                count++;
                                 roomEmit('message', {
                                     nick : user.nick,
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
                                     message : message.substring(0, settings.limits.message),
-                                    hat : hat
+                                    hat : hat,
+                                    count : count
                                 });
                             } else {
                                 socketEmit(user.socket, 'update', {
