@@ -381,18 +381,20 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser) {
                         var stats = grab(params.nick);
-                        if(dbuser) {
-                            var reg = (dbuser.get('registered') ? 'registered' : 'not registered');
-                            if (roles.indexOf(user.role) <= 1) {
-                                showMessage(msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'),dbuser.get('vHost'), reg));
-                            } else if (roles.indexOf(user.role) >= 2) {
-                                showMessage(msgs.get('whoiss', dbuser.get('nick'), stats.role, stats.access_level, dbuser.get('remote_addr'), reg));
+                        var reg,mask;
+                        if(grab != -1) {
+                            if(dbuser){
+                                reg = (dbuser.get('registered') ? 'registered' : 'not registered');
+                                mask = (dbuser.get('vHost') ? dbuser.get('vHost') : 'Private');
+                            } else {
+                                reg = 'not registered';
+                                mask = 'Private'
                             }
-                        } else if(indexOf(params.nick) != -1) {
-                            to = indexOf(params.nick);
-                            stats.role = channel.online[to].role;
-                            stats.access_level = channel.online[to].access_level;
-                            return $.Deferred().resolve(true, msgs.get('whoiss', params.nick, stats.role, stats.access_level, 'Private', 'not registered'));
+                            if (roles.indexOf(user.role) <= 1) {
+                                showMessage(msgs.get('whois', params.nick, stats.role, stats.access_level, stats.remote_addr,user.vHost, reg));
+                            } else if (roles.indexOf(user.role) >= 2) {
+                                showMessage(msgs.get('whoiss', params.nick, stats.role, stats.access_level, mask, reg));
+                            }
                         } else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
@@ -1076,10 +1078,9 @@ function createChannel(io, channelName) {
         function grab(nick){
             t = indexOf(nick);
             if(t != -1){
-                return {
-                    "role":channel.online[t].role,
-                    "access_level":channel.online[t].access_level
-                }
+                return channel.online[t]
+            } else{
+                return t;
             }
         }
         
