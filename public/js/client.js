@@ -612,8 +612,7 @@ $(function() {
         var el = $('<div class="message"></div>');
         var sound;
         message.type && el.addClass(message.type);
-        message.count && el.attr('id', "spooky_msg_" + message.count);
-	message.count && el.attr('title',message.count);
+	message.count && el.attr('title', message.count);
         var time = message.time ? new Date(message.time) : new Date();
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
         var alert = CLIENT.get('alert').split(',');
@@ -630,6 +629,8 @@ $(function() {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             sound = 'message'
         }
+        message.count && el.children('.timestamp').attr('id', "spooky_msg_" + message.count);
+	message.count && el.children('.timestamp').attr('onclick',"$('#input-message').val('>>" + message.count + " ');$('#input-message').focus();");
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
             var parsedFlair = null;
@@ -1293,8 +1294,10 @@ parser = {
         // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8chan.co/$1/\"");
         // >>78 quote
-        var scrollHTML = '<a onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27#spooky_msg_$2\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27slow\x27,function(){$(\x27#spooky_msg_$2\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27#spooky_msg_$2\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>$1</u></a>'
-		str = str.replace(/^(&gt;&gt;([0-9]+))/i, scrollHTML);
+        // >>78 quote
+        var scrollHTML = '<a onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27#spooky_msg_$2\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27slow\x27,function(){$(\x27#spooky_msg_$2\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27#spooky_msg_$2\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>$1</u></a>';
+	if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
+		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/i, scrollHTML);
         // >implying
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
