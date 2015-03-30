@@ -78,7 +78,7 @@ body {
 
 #frame{
     position: absolute;
-    width:100%;
+    width:99%;
     z-index:1;
 }
 
