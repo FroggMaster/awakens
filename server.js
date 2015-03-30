@@ -291,7 +291,6 @@ function createChannel(io, channelName) {
                         var permit;
                         return dao.findUser(params.nick).then(function(dbuser) {
                             if (dbuser && dbuser.get('verified')) {
-                                access = JSON.parse(info.access);
                                 stats = grab(params.nick);
                                 if(roles.indexOf(user.role) >= 1 && roles.indexOf(stats.role) < roles.indexOf(user.role) || roles.indexOf(params.role) <= roles.indexOf(user.role)) {
                                     permit = 0
