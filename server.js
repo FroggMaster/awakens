@@ -145,6 +145,7 @@ function createChannel(io, channelName) {
                         dao.findUser(user.nick).then(function(dbuser){
                             dbuser.register(params.initial_password).then(function(){
                                 showMessage(msgs.registeredAndVerified)
+                                console.log(user.nick + ' has been registered')
                             });
                         });
                     });
@@ -292,9 +293,9 @@ function createChannel(io, channelName) {
                         return dao.findUser(params.nick).then(function(dbuser) {
                             if (dbuser && dbuser.get('verified')) {
                                 stats = grab(params.nick);
-                                if(roles.indexOf(user.role) >= 1 && roles.indexOf(stats.role) < roles.indexOf(user.role) || roles.indexOf(params.role) <= roles.indexOf(user.role)) {
+                                if(roles.indexOf(user.role) > 1 && roles.indexOf(stats.role) < roles.indexOf(user.role) || roles.indexOf(params.role) <= roles.indexOf(user.role)) {
                                     permit = 0
-                                } else if(user.access_level != 0 && stats.access_level > params.access_level || params.role != user.role && params.access_level < user.access_level) {
+                                } else if(user.access_level != 0 && roles.indexOf(user.role) > 2 && stats.access_level > params.access_level || params.role != user.role && params.access_level < user.access_level) {
                                     permit = 0
                                 } else {
                                     permit = 1
@@ -382,8 +383,18 @@ function createChannel(io, channelName) {
                     return dao.findUser(params.nick).then(function(dbuser) {
                         var stats = grab(params.nick)
                         var reg,mask;
-                        if(stats != -1) {
+                        if(stats != -1 || dbuser) {
                             if(dbuser){
+                                if(roles.indexOf(dbuser.get('role')) <= 1){
+                                    stats = {
+                                        role : dbuser.get('role'),
+                                        access_level : dbuser.get('access_level'),
+                                    }
+                                } else {
+                                    stats = GetInfo(params.nick);
+                                }
+                                stats.remote_addr = dbuser.get('remote_addr');
+                                stats.vHost = dbuser.get('vHost');
                                 reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                                 mask = (dbuser.get('vHost') ? dbuser.get('vHost') : 'Private');
                             } else {
@@ -396,8 +407,7 @@ function createChannel(io, channelName) {
                                 showMessage(msgs.get('whoiss', params.nick, stats.role, stats.access_level, mask, reg));
                             }
                         } else {
-                            //return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
-                            return $.Deferred().resolve(false, "User not online.");
+                            return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
                     });
                 }
@@ -1056,7 +1066,6 @@ function createChannel(io, channelName) {
                         if(access[roles[i]][q][0].toString().toLowerCase().indexOf(nick.toLowerCase()) != -1 ){
                             rowl = roles[i]
                             aces = access[roles[i]][q][1]
-                            console.log('returning:' + rowl + ' - ' + aces)
                             return {"role":rowl,"access_level":aces}
                         }
                     }
@@ -1172,6 +1181,7 @@ function createChannel(io, channelName) {
                                 user.access_level = stats.access_level
                             }
                             user.vhost = dbuser.get('vHost');
+                            console.log(user.nick + ' joined with ' + user.role + ' - ' + user.access_level)
                         } else {
                             user.vhost = user.remote_addr;
                             user.role = 'basic';
