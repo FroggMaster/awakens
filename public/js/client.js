@@ -614,6 +614,7 @@ $(function() {
         message.type && el.addClass(message.type);
         message.count && el.attr('id', "spooky_msg_" + message.count);
 		message.count && el.attr('title',message.count);
+		message.count && el.attr('onclick',"$('#input-message').val('>>" + message.count + " ');");
         var time = message.time ? new Date(message.time) : new Date();
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
         var alert = CLIENT.get('alert').split(',');
@@ -674,7 +675,7 @@ $(function() {
                 if(CLIENT.get('role') == null || roles.indexOf(CLIENT.get('role')) >= 2){
                     parsed = parser.parse( '#6464C0' + 'anon' + ': ' + message.message);
                 } else {
-                    parsed = parser.parse( '#6464C0' + message.name + ': ' + message.message);
+                    parsed = parser.parse( '#6464C0/*' + message.name + '|: ' + message.message);
                 }
                 break
             default:
