@@ -613,8 +613,7 @@ $(function() {
         var sound;
         message.type && el.addClass(message.type);
         message.count && el.attr('id', "spooky_msg_" + message.count);
-		message.count && el.attr('title',message.count);
-		message.count && el.attr('onclick',"$('#input-message').val('>>" + message.count + " ');");
+	message.count && el.attr('title',message.count);
         var time = message.time ? new Date(message.time) : new Date();
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
         var alert = CLIENT.get('alert').split(',');
