@@ -1305,13 +1305,13 @@ parser = {
         // >
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         //JavaScript links
-        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
+        /*str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
             if(/[^:]*javascript/im.test(a)) {
                 return '<div>' + b + '<a target="_blank" href="'+a+'">' + '[JavaScript]' + '</a></div>'
             } else {
                 return '<div><a target="_blank" href="'+a+'">' + b + '</a></div>'
             }
-        });
+        });*/
         //embed
         str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         //colors
