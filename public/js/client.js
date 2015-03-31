@@ -612,7 +612,6 @@ $(function() {
         var el = $('<div class="message"></div>');
         var sound;
         message.type && el.addClass(message.type);
-	message.count && el.attr('title', message.count);
         var time = message.time ? new Date(message.time) : new Date();
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
         var alert = CLIENT.get('alert').split(',');
@@ -630,7 +629,8 @@ $(function() {
             sound = 'message'
         }
         message.count && el.children('.timestamp').attr('id', "spooky_msg_" + message.count);
-	message.count && el.children('.timestamp').attr('onclick',"$('#input-message').val('>>" + message.count + " ');$('#input-message').focus();");
+	message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); textBox.value = textBox.value + '>>"+message.count+" '; $('#input-message').focus();");
+	message.count && el.children('.timestamp').attr('title', message.count);
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
             var parsedFlair = null;
@@ -1178,7 +1178,8 @@ CLIENT.set(att,block.join(','))
 // ------------------------------------------------------------------
 // Message Parser
 // ------------------------------------------------------------------
-
+var mouseX;
+var mouseY;
 parser = {
     linkreg : /([^A-Za-z0-9,.~\-\/:+%&?@=;_\#]|^)((?:http|ftp)s?:\/\/[A-Za-z0-9,.~\-\/:+%&?@=;_\#]+)/g,
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|azure|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
@@ -1294,10 +1295,10 @@ parser = {
         // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8chan.co/$1/\"");
         // >>78 quote
-        // >>78 quote
-        var scrollHTML = '<a onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27#spooky_msg_$2\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27slow\x27,function(){$(\x27#spooky_msg_$2\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27#spooky_msg_$2\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>$1</u></a>';
+        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27absolute\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27#spooky_msg_'+str2+'\x27).parent().clone(); msgClone.children(\x27.timestamp\x27).attr(\x27id\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}" onmousemove = "$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY});" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27#spooky_msg_'+str2+'\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27#spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27#spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
+	function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
 	if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
-		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/i, scrollHTML);
+		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementById('spooky_msg_'+p2) != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // >implying
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
