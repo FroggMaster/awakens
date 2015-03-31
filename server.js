@@ -314,22 +314,28 @@ function createChannel(io, channelName) {
                                         access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                     }
                                     console.log('ACCESS_GIVEN ' + user.nick + ' - ' + channelName + ' - ' + params.nick)
-                                    dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
-                                        var to = indexOf(params.nick);
-                                        if(to != -1) {
-                                            channel.online[to].role = params.role;
-                                            channel.online[to].access_level = params.access_level;
-                                            toSocket = channel.online[to].socket;
-                                            socketEmit(toSocket, 'update',{
-                                                access_level : params.access_level,
-                                                role : params.role,
-                                                access : JSON.stringify(access)
-                                            });
-                                            roomEmit('update',{
-                                                access : JSON.stringify(access)
-                                            });
+                                    dao.getChannelInfo(channelName).then(function(channelInfo) {
+                                        if(params.role != 'basic'){
+                                            access = JSON.parse(channelInfo.access);
+                                            access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                         }
-                                        showMessage(params.nick + ' now has role ' + params.role + ' and access_level ' + params.access_level)
+                                        dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
+                                            var to = indexOf(params.nick);
+                                            if(to != -1) {
+                                                channel.online[to].role = params.role;
+                                                channel.online[to].access_level = params.access_level;
+                                                toSocket = channel.online[to].socket;
+                                                socketEmit(toSocket, 'update',{
+                                                    access_level : params.access_level,
+                                                    role : params.role,
+                                                    access : JSON.stringify(access)
+                                                });
+                                                roomEmit('update',{
+                                                    access : JSON.stringify(access)
+                                                });
+                                            }
+                                            showMessage(params.nick + ' now has role ' + params.role + ' and access_level ' + params.access_level)
+                                        });
                                     });
                                 } else {
                                     return $.Deferred().resolve(false, 'Can\'t put someones access above your own.');
