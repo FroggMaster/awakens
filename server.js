@@ -289,16 +289,18 @@ function createChannel(io, channelName) {
                     if(roles.indexOf(params.role) >= 2 && params.access_level >= 0){
                         var done = $.Deferred();
                         var stats = {};
-                        var permit;
+                        var permit = 0;
                         return dao.findUser(params.nick).then(function(dbuser) {
                             if (dbuser && dbuser.get('verified')) {
                                 stats = grab(params.nick);
-                                if(roles.indexOf(user.role) > 1 && roles.indexOf(stats.role) < roles.indexOf(user.role) || roles.indexOf(params.role) <= roles.indexOf(user.role)) {
-                                    permit = 0
-                                } else if(user.access_level != 0 && roles.indexOf(user.role) > 2 && stats.access_level > params.access_level || params.role != user.role && params.access_level < user.access_level) {
-                                    permit = 0
-                                } else {
+                                if(roles.indexOf(user.role) <= 1 || user.role == 'admin' && user.access_level == 0){
                                     permit = 1
+                                } else {
+                                    if(roles.indexOf(params.role) >= roles.indexOf(user.role) && roles.indexOf(stats.role) >= roles.indexOf(user.role)){
+                                        if(params.access_level >= user.access_level && stats.access_level >= user.access_level){
+                                            permit = 1
+                                        }
+                                    }
                                 }
                                 if(permit){
                                     for (i = 5; i >= 2; i--) {
