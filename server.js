@@ -500,12 +500,13 @@ function createChannel(io, channelName) {
                 }
             },
             theme : {
-                params : [ 'input_style' ],
+                params : [ 'input_style', 'scrollbar_style' ],
                 handler : function(dao, dbuser, params) {
-                    var input = params.input_style.substring(0, settings.limits.message);
-                    return dao.setChannelInfo(channelName, 'chat_style', input).then(function() {
+                    var input = [params.input_style.substring(0, settings.limits.message), params.scrollbar_style.substring(0, settings.limits.message)];
+                    console.log(input)
+                    return dao.setChannelInfo(channelName, 'chat_style', input.toString()).then(function() {
                         roomEmit('update', {
-                            chat_style : input
+                            chat_style : input.toString()
                         });
                         return true;
                     });

@@ -480,8 +480,10 @@ $(function() {
     });
     // scrollbar and input
     CLIENT.on('change:chat_style', function(m, style){
-        style = CLIENT.get('chat_style');
-        $('#input-bar').css('background-color', style);
+        style = CLIENT.get('chat_style').split(',');
+        $('#input-bar').css('background-color', style[0]);
+        document.styleSheets[1].deleteRule(7)
+        document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",7)
     });
 });
 
@@ -1038,7 +1040,7 @@ $(function() {
         },
         theme : {
             role : 'admin',
-             params : [ 'input_style' ]
+            params : [ 'input_style', 'scrollbar_style' ]
         },
         reset : {
             role : 'super',
