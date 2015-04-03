@@ -44,38 +44,25 @@ function createChannel(io, channelName) {
             remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
-       
-    function checkForLoggers(){
-    var containsNick;
-        if (Object.keys(room.connected).length > channel.online.length){
-            console.log('Loggers detected. Attempting removal...');
-            for (id in room.connected){
-                containsNick = false;
-                for (var i = 0; i < channel.online.length; i++)
-                {
-                    if (id == channel.online[i]['socket']['id'])
-                        containsNick = true;
-                }
-                if (!containsNick)
-                {
-                    var ipAddress = room.connected[id].request.connection.remoteAddress;
-                    room.connected[id].disconnect();
-                    room.emit('message',{
-                        type: 'alert-message',
-                        message: 'External connection has been detected and closed. IP: ' + ipAddress
-                    });
-                }
-            }
-        }
-    }
     
-    socket.on('SetPart', function(parts){
-        user.part = parts.toString();
-    });
- 
-    socket.on('alive', function(){
-        user.alive = true
-    });
+        var zz = [];
+        for (jd in room.connected){
+            zz.push(jd)
+        }
+        if(zz.indexOf(socket.id) != -1){
+            user.join = 1;
+        } else {
+            console.log(user.remote_addr + ' was a logger.')
+            socket.disconnect();
+        }
+    
+        socket.on('SetPart', function(parts){
+            user.part = parts.toString();
+        });
+     
+        socket.on('alive', function(){
+            user.alive = true
+        });
  
         var log = {};
         [ 'error', 'info', 'debug' ].forEach(function(lvl) {
@@ -753,7 +740,7 @@ function createChannel(io, channelName) {
                         }
                     }
                 }
-                if (!user.nick && user.tabs < 3) {
+                if (!user.nick && user.tabs < 3 && user.join) {
                     var nick = msg && msg.nick;
                     var pwd = msg && msg.password;
                     if (nick) {
@@ -1063,10 +1050,7 @@ function createChannel(io, channelName) {
         function broadcastChannel(dao, channel, message) {
             channel.online.forEach(function(user){
                 dao.findUser(user.nick).done(function(dbuser) {
-	            socketEmit(user.socket, 'message', {
-	                type : 'general-message',
-	                message : message
-	            });
+                    socketEmit(user.socket, 'general-message', message);
                 })
             })
         }
@@ -1241,7 +1225,6 @@ function createChannel(io, channelName) {
                             id : socket.id,
                             nick : user.nick
                         });
-                        checkForLoggers();
                     }
                     done.resolve(true);
                 }
