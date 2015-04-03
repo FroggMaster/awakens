@@ -38,8 +38,34 @@ function createChannel(io, channelName) {
         note : ['admin',0],
         lock  : ['admin',0]
     };
+    
+    //security check
+	
+	var socketId;
+	var oldSocketId;
+	var connectionNode = {};
+	
+	io.on('connection',function(socket){
+		if (connectionNode.open == true)
+		{
+			io.sockets.connected[oldSocketId].emit('Unauthorized Connection. Closed.');
+			io.sockets.connected[oldSocketId].disconnect();
+			room.emit('message',{
+				type: 'general-message',
+				message: '#2379DBExternal connection has been detected and closed.'
+			});
+		}
+		else
+		{
+		connectionNode.open = true;
+		}
+		oldSocketId = socketId;
+		socketId = socket.id;
+	});
 
     room.on('connection', function(socket) {
+    connectionNode.open = false;
+    
         var user = {
             remote_addr : socket.request.connection.remoteAddress,
             socket : socket
