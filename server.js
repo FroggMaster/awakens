@@ -1081,9 +1081,11 @@ function createChannel(io, channelName) {
          * @returns {number}
          */
         function indexOf(nick) {
-            for ( var i = 0; i < channel.online.length; i++) {
-                if (channel.online[i].nick.toLowerCase() == nick.toLowerCase()) {
-                    return i;
+            if(nick){
+                for ( var i = 0; i < channel.online.length; i++) {
+                    if (channel.online[i].nick.toLowerCase() == nick.toLowerCase()) {
+                        return i;
+                    }
                 }
             }
             return -1;
