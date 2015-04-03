@@ -491,10 +491,10 @@ function createChannel(io, channelName) {
                     if (to >= 0) {
                         var toSocket = channel.online[to].socket;
                         var message = {
+                            type : 'personal-message',
                             from : socket.id,
                             to : toSocket.id,
                             nick : user.nick,
-                            type : 'personal-message',
                             message : params.message.substring(0, settings.limits.message)
                         };
                         socketEmit(socket, 'message', message);
@@ -584,8 +584,8 @@ function createChannel(io, channelName) {
                                 };
                                 return throttle.on('speak-' + al, t).then(function() {
                                     roomEmit('message', {
-                                        nick : dbuser.get('nick'),
                                         type : 'spoken-message',
+                                        nick : dbuser.get('nick'),
                                         message : message.substring(0, settings.limits.spoken),
                                         source : body,
                                         voice : voice
@@ -606,8 +606,8 @@ function createChannel(io, channelName) {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     roomEmit('message', {
-                        nick : dbuser.get('nick'),
                         type : 'elbot-message',
+                        nick : dbuser.get('nick'),
                         message : params.message
                     });
                     return elbot.then(function(elbot) {
@@ -798,9 +798,9 @@ function createChannel(io, channelName) {
                             if (user.role != 'mute') {
                                 count++;
                                 roomEmit('message', {
-                                    nick : user.nick,
-                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
+                                    nick : user.nick,
+                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : '',
                                     message : message.substring(0, settings.limits.message),
                                     hat : hat,
                                     count : count
@@ -810,9 +810,9 @@ function createChannel(io, channelName) {
                                     idle : 1
                                 });
                                 socketEmit(user.socket, 'message', {
-                                    nick : dbuser.get('nick'),
-                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : null,
                                     type : 'chat-message',
+                                    nick : dbuser.get('nick'),
+                                    flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : '',
                                     message : message.substring(0, settings.limits.message),
                                     hat : hat
                                 });
@@ -1032,10 +1032,7 @@ function createChannel(io, channelName) {
          */
         function handleResponse(success, message) {
             if (message) {
-                socketEmit(socket, 'message', {
-                    type : success ? null : 'error-message',
-                    message : message
-                });
+            	showMessage(message, success ? '' : 'error-message')
             }
         }
 
@@ -1066,7 +1063,10 @@ function createChannel(io, channelName) {
         function broadcastChannel(dao, channel, message) {
             channel.online.forEach(function(user){
                 dao.findUser(user.nick).done(function(dbuser) {
-                    socketEmit(user.socket, 'general-message', message);
+	            socketEmit(user.socket, 'message', {
+	                type : 'general-message',
+	                message : message
+	            });
                 })
             })
         }
