@@ -439,7 +439,8 @@ function createChannel(io, channelName) {
                                 mask = 'Private'
                             }
                             if(!stats.remote_addr){
-                                console.log(stats)
+                                stats.remote_addr = stats.conn.remoteAddress
+                                console.log(user.nick + ' had an IP error.')
                             }
                             if (roles.indexOf(user.role) <= 1) {
                                 showMessage(msgs.get('whois', params.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
