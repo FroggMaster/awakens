@@ -39,30 +39,33 @@ function createChannel(io, channelName) {
         lock  : ['admin',0]
     };
     
-    //security check
-    
-    var roomContains = false;
-    
     room.on('connection', function(socket) {
         var user = {
             remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
-        
-        for (id in io.sockets.connected){
-        roomContains = false;
-        for (jd in room.connected){
-            if (jd == id)
-                roomContains = true;
-        }
-        if (!roomContains)
-        {
-            var ipAddress = io.sockets.connected[id].request.connection.remoteAddress;
-            io.sockets.connected[id].disconnect();
-			room.emit('message',{
-				type: 'general-message',
-				message: '#2379DBExternal connection has been detected and closed. IP: ' + ipAddress
-			});
+       
+    function checkForLoggers(){
+    var containsNick;
+        if (Object.keys(room.connected).length > channel.online.length){
+            console.log('Loggers detected. Attempting removal...');
+            for (id in room.connected){
+                containsNick = false;
+                for (var i = 0; i < channel.online.length; i++)
+                {
+                    if (id == channel.online[i]['socket']['id'])
+                        containsNick = true;
+                }
+                if (!containsNick)
+                {
+                    var ipAddress = room.connected[id].request.connection.remoteAddress;
+                    room.connected[id].disconnect();
+                    room.emit('message',{
+                        type: 'general-message',
+                        message: '#2379DBExternal connection has been detected and closed. IP: ' + ipAddress
+                    });
+                }
+            }
         }
     }
     
@@ -1238,6 +1241,7 @@ function createChannel(io, channelName) {
                             id : socket.id,
                             nick : user.nick
                         });
+                        checkForLoggers();
                     }
                     done.resolve(true);
                 }
