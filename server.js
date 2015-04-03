@@ -44,6 +44,30 @@ function createChannel(io, channelName) {
             remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
+       
+    function checkForLoggers(){
+    var containsNick;
+        if (Object.keys(room.connected).length > channel.online.length){
+            console.log('Loggers detected. Attempting removal...');
+            for (id in room.connected){
+                containsNick = false;
+                for (var i = 0; i < channel.online.length; i++)
+                {
+                    if (id == channel.online[i]['socket']['id'])
+                        containsNick = true;
+                }
+                if (!containsNick)
+                {
+                    var ipAddress = room.connected[id].request.connection.remoteAddress;
+                    room.connected[id].disconnect();
+                    /*room.emit('message',{
+                        type: 'alert-message',
+                        message: 'External connection has been detected and closed. IP: ' + ipAddress
+                    });*/
+                }
+            }
+        }
+    }
     
     socket.on('SetPart', function(parts){
         user.part = parts.toString();
@@ -1217,6 +1241,7 @@ function createChannel(io, channelName) {
                             id : socket.id,
                             nick : user.nick
                         });
+                        checkForLoggers();
                     }
                     done.resolve(true);
                 }
