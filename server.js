@@ -60,10 +60,10 @@ function createChannel(io, channelName) {
                 {
                     var ipAddress = room.connected[id].request.connection.remoteAddress;
                     room.connected[id].disconnect();
-                    /*room.emit('message',{
+                    room.emit('message',{
                         type: 'alert-message',
                         message: 'External connection has been detected and closed. IP: ' + ipAddress
-                    });*/
+                    });
                 }
             }
         }
