@@ -286,13 +286,15 @@ function createChannel(io, channelName) {
                 access_level : 0,
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    if(roles.indexOf(params.role) >= 2 && params.access_level >= 0){
+                    if(roles.indexOf(params.role) >= 2 && params.access_level >= 0 && params.access_level <= 10000){
                         var done = $.Deferred();
-                        var stats = {};
+                        var stats = grab(params.nick);
                         var permit = 0;
                         return dao.findUser(params.nick).then(function(dbuser) {
                             if (dbuser && dbuser.get('verified')) {
-                                stats = grab(params.nick);
+                                if(stats == -1){
+                                    stats = GetInfo(params.nick)
+                                }
                                 if(roles.indexOf(user.role) <= 1 || user.role == 'admin' && user.access_level == 0){
                                     permit = 1
                                 } else {
@@ -303,20 +305,19 @@ function createChannel(io, channelName) {
                                     }
                                 }
                                 if(permit){
-                                    for (i = 5; i >= 2; i--) {
-                                        for(q = 0; q < access[roles[i]].length; q++){
-                                            if(access[roles[i]][q][0].indexOf(params.nick) != -1 ){
-                                                access[roles[i]].splice(q, 1);
-                                            }
-                                        }
-                                    }
-                                    if(params.role != 'basic'){
-                                        access[params.role].push([params.nick.toLowerCase(),params.access_level]);
-                                    }
                                     console.log('ACCESS_GIVEN ' + user.nick + ' - ' + channelName + ' - ' + params.nick)
                                     dao.getChannelInfo(channelName).then(function(channelInfo) {
+                                        access = JSON.parse(channelInfo.access);
+                                        if(stats.role != 'basic'){
+                                            for (i = 5; i >= 2; i--) {
+                                                for(q = 0; q < access[roles[i]].length; q++){
+                                                    if(access[roles[i]][q][0] == params.nick.toLowerCase()){
+                                                        access[roles[i]].splice(q, 1);
+                                                    }
+                                                }
+                                            }
+                                        }
                                         if(params.role != 'basic'){
-                                            access = JSON.parse(channelInfo.access);
                                             access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                         }
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
@@ -503,7 +504,6 @@ function createChannel(io, channelName) {
                 params : [ 'input_style', 'scrollbar_style' ],
                 handler : function(dao, dbuser, params) {
                     var input = [params.input_style.substring(0, settings.limits.message), params.scrollbar_style.substring(0, settings.limits.message)];
-                    console.log(input)
                     return dao.setChannelInfo(channelName, 'chat_style', input.toString()).then(function() {
                         roomEmit('update', {
                             chat_style : input.toString()
@@ -1072,7 +1072,7 @@ function createChannel(io, channelName) {
             for (i = 5; i >= 2; i--) {
                 for(q = 0; q < access[roles[i]].length; q++){
                     if(access[roles[i]][q]){
-                        if(access[roles[i]][q][0].toString().toLowerCase().indexOf(nick.toLowerCase()) != -1 ){
+                        if(access[roles[i]][q][0].toLowerCase() == nick.toLowerCase()){
                             rowl = roles[i]
                             aces = access[roles[i]][q][1]
                             return {"role":rowl,"access_level":aces}
