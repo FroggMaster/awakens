@@ -1054,7 +1054,7 @@ function createChannel(io, channelName) {
          */
         function showMessage(message, type) {
             socketEmit(socket, 'message', {
-                type : type,
+                type : type || 'system-message',
                 message : message
             });
         }
