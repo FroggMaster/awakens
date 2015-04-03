@@ -28,20 +28,6 @@ $(function() {
     }
     });
 
-    socket.on('general-message', function(message) {
-        CLIENT.show({
-            type : 'general-message',
-            message : message
-        });
-    });
-    
-    socket.on('alert-message',function(message){
-        CLIENT.show({
-            type : 'alert-message',
-            message : message
-        });
-    });
-
     socket.on('online', function(users) {
         ONLINE.add(users);
     });

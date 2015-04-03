@@ -438,6 +438,9 @@ function createChannel(io, channelName) {
                                 reg = 'not registered';
                                 mask = 'Private'
                             }
+                            if(!stats.remote_addr){
+                                console.log(stats)
+                            }
                             if (roles.indexOf(user.role) <= 1) {
                                 showMessage(msgs.get('whois', params.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
                             } else if (roles.indexOf(user.role) >= 2) {
@@ -1070,7 +1073,10 @@ function createChannel(io, channelName) {
         function broadcastChannel(dao, channel, message) {
             channel.online.forEach(function(user){
                 dao.findUser(user.nick).done(function(dbuser) {
-                    socketEmit(user.socket, 'general-message', message);
+                    socketEmit(user.socket, 'message', {
+                        type : 'general-message',
+                        message : message
+                    });
                 })
             })
         }
