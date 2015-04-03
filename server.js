@@ -45,16 +45,31 @@ function createChannel(io, channelName) {
             socket : socket
         };
     
-        var zz = [];
-        for (jd in room.connected){
-            zz.push(jd)
+        function checkForLoggers(){
+            var containsNick;
+            if (Object.keys(room.connected).length > channel.online.length){
+                console.log('Loggers detected. Attempting removal...');
+                for (id in room.connected){
+                    containsNick = false;
+                    for (var i = 0; i < channel.online.length; i++){
+                        if (id == channel.online[i]['socket']['id'])
+                            containsNick = true;
+                    }
+                    if (!containsNick){
+                        var ipAddress = room.connected[id].request.connection.remoteAddress;
+                        room.connected[id].disconnect();
+                        console.log(ipAddress + ' wasn\'t connected properly.')
+                    }
+                }
+            }
         }
-        if(zz.indexOf(socket.id) != -1){
-            user.join = 1;
-        } else {
-            console.log(user.remote_addr + ' was a logger.')
-            socket.disconnect();
-        }
+        
+        setTimeout(function(){
+            if(indexOf == -1){
+                console.log(user.remote_addr + ' didn\'t connect properly.')
+                socket.disconnect();
+            }
+        }, 5000);
     
         socket.on('SetPart', function(parts){
             user.part = parts.toString();
@@ -740,9 +755,12 @@ function createChannel(io, channelName) {
                         }
                     }
                 }
-                if (!user.nick && user.tabs < 3 && user.join) {
+                if (!user.nick && user.tabs < 3) {
                     var nick = msg && msg.nick;
                     var pwd = msg && msg.password;
+                    if(!user.remote_addr){
+                        console.log(user.nick + ' - couldn\'t get IP.')
+                    }
                     if (nick) {
                         var done = $.Deferred();
                         var nick = msg && msg.nick.slice(0,100);
@@ -1226,6 +1244,7 @@ function createChannel(io, channelName) {
                             nick : user.nick
                         });
                     }
+                    checkForLoggers();
                     done.resolve(true);
                 }
             }
