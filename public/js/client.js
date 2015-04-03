@@ -34,6 +34,13 @@ $(function() {
             message : message
         });
     });
+    
+    socket.on('alert-message',function(message){
+        CLIENT.show({
+            type : 'alert-message',
+            message : message
+        });
+    });
 
     socket.on('online', function(users) {
         ONLINE.add(users);
@@ -666,6 +673,9 @@ $(function() {
                 parsed = message.message;
                 break;
             case 'general-message':
+                parsed = parser.parse(message.message);
+                break;
+            case 'alert-message':
                 parsed = parser.parse(message.message);
                 break;
             case 'note-message':
