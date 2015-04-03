@@ -170,6 +170,10 @@ a:hover {
 	color: #992222;
 }
 
+.alert-message {
+    color: #2379DB;
+}
+
 .action-message {
     color: rgba(255, 145, 164, 1);
 }
