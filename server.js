@@ -65,9 +65,11 @@ function createChannel(io, channelName) {
         }
         
         setTimeout(function(){
-            if(indexOf == -1){
+            if(indexOf(user.nick) == -1){
                 console.log(user.remote_addr + ' didn\'t connect properly.')
                 socket.disconnect();
+            } else {
+                console.log(user.nick + ' connected properly.')
             }
         }, 5000);
     
