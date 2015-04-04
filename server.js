@@ -150,6 +150,17 @@ function createChannel(io, channelName) {
                     return $.Deferred().resolve(true);
                 }
             },
+            punch : {
+                params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+                    var message = params.message.substring(0, settings.limits.message)
+                    roomEmit('message', {
+                        type : 'passive-message',
+                        message : user.nick + ' has punched ' + message + '.'
+                    });
+                    return $.Deferred().resolve(true);
+                }
+            },
             login : {
                 params : [ 'nick', 'password' ],
                 handler : function(dao, dbuser, params) {
