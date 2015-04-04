@@ -618,7 +618,10 @@ $(function() {
                 valid = true;
             }
         }
-        el.append($('<div id=spooky_msg_' + message.count + ' class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
+        if (message.count)
+            el.append($('<div id=spooky_msg_' + message.count + ' class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
+        else
+            el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
         if(check.test(message.message) || valid){
             message.count && el.children('.timestamp').attr('id', "highlightname");
             sound = 'name'
