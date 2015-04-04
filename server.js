@@ -46,12 +46,10 @@ function createChannel(io, channelName) {
         };
         
         if(!user.remote_addr){
-            user.remote_addr = user.socket.handshake.address
-        }
-        
-        if (user.remote_addr == undefined)
-        {
-            socket.disconnect();
+            user.remote_addr = user.socket.handshake.address;
+            if (!user.remote_addr){
+                socket.disconnect();
+            }
         }
         
         function checkForLoggers(){
