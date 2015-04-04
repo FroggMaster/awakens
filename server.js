@@ -338,7 +338,7 @@ function createChannel(io, channelName) {
                         var stats = grab(params.nick);
                         var permit = 0;
                         return dao.findUser(params.nick).then(function(dbuser) {
-                            if (dbuser && dbuser.get('verified') || params.role == 'mute') {
+                            if (dbuser && dbuser.get('verified') || params.role == 'mute' || stats.role == 'mute') {
                                 if(stats == -1){
                                     stats = GetInfo(params.nick)
                                 }
