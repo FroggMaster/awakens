@@ -903,6 +903,9 @@ $(function() {
         me : {
             params : [ 'message$' ]
         },
+        punch : {
+            params : [ 'message$' ]
+        },
         login : {
             params : [ 'password', 'nick$' ]
         },
