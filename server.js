@@ -297,7 +297,7 @@ function createChannel(io, channelName) {
                             reason = msg.length > 0 ? 'kicked_reason' : 'kicked'
                             socketEmit(kuser.socket, 'message', {
                                 type : 'error-message',
-                                message : msgs.get(reason,msg,user.nick)
+                                message : msgs.get(reason, user.nick, msg)
                             });
                             kuser.socket.disconnect();
                             broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
