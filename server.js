@@ -44,7 +44,11 @@ function createChannel(io, channelName) {
             remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
-    
+        
+        if(!user.remote_addr){
+            user.remote_addr = user.socket.handshake.address
+        }
+        
         function checkForLoggers(){
             var containsNick;
             if (Object.keys(room.connected).length > channel.online.length){
@@ -437,10 +441,6 @@ function createChannel(io, channelName) {
                             } else {
                                 reg = 'not registered';
                                 mask = 'Private'
-                            }
-                            if(!stats.remote_addr){
-                                stats.remote_addr = stats.conn.remoteAddress
-                                console.log(user.nick + ' had an IP error.')
                             }
                             if (roles.indexOf(user.role) <= 1) {
                                 showMessage(msgs.get('whois', params.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
