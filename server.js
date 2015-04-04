@@ -46,8 +46,9 @@ function createChannel(io, channelName) {
         };
         
         if(!user.remote_addr){
-            user.remote_addr = user.socket.handshake.address;
-            if (!user.remote_addr){
+            if (user.socket.handshake.address){
+                user.remote_addr = user.socket.handshake.address;
+            } else {
                 socket.disconnect();
             }
         }
@@ -337,7 +338,7 @@ function createChannel(io, channelName) {
                         var stats = grab(params.nick);
                         var permit = 0;
                         return dao.findUser(params.nick).then(function(dbuser) {
-                            if (dbuser && dbuser.get('verified')) {
+                            if (dbuser && dbuser.get('verified') || params.role == 'mute') {
                                 if(stats == -1){
                                     stats = GetInfo(params.nick)
                                 }
