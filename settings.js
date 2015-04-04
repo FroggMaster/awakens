@@ -108,7 +108,7 @@ module.exports = {
     },
 
     limits : {
-        message : 10000,
+        message : 5000,
         nick : 100,
         spoken : 100,
         part : 140

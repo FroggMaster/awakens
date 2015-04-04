@@ -559,6 +559,10 @@ $(function() {
                 name: "Ban",
                 callback: function(){ CLIENT.submit('/ban '+ $.trim(this[0].textContent)) }
             },
+            "Banip": {
+                name : "Banip",
+                callback: function(){ CLIENT.submit('/banip '+ $.trim(this[0].textContent)) }
+            },
             "sep2": "---------",
             "Block": {
                 name: "Block",
@@ -940,6 +944,10 @@ $(function() {
         unban : {
             role : 'admin',
             params : [ 'id$' ]
+        },
+        banip : {
+            role : 'admin',
+            params : [ 'nick' ]
         },
         kick : {
             role : 'mod',
