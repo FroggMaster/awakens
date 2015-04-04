@@ -297,6 +297,16 @@ function createChannel(io, channelName) {
                     return dao.unban(params.id, channelName);
                 }
             },
+            banip : {
+                role : 'admin',
+                access_level : 0,
+                params : [ 'nick' ],
+                handler : function(dao, dbuser, params) {
+                    var stats = grab(params.nick).remote_addr;
+                    return dao.ban(stats, channelName)
+                    
+                }
+            },
             kick : {
                 role : 'mod',
                 params : [ 'nick', 'message' ],

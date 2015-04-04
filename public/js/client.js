@@ -941,6 +941,10 @@ $(function() {
             role : 'admin',
             params : [ 'id$' ]
         },
+        banip : {
+            role : 'admin',
+            params : [ 'nick' ]
+        },
         kick : {
             role : 'mod',
             params : [ 'nick[|message]' ]
