@@ -49,6 +49,11 @@ function createChannel(io, channelName) {
             user.remote_addr = user.socket.handshake.address
         }
         
+        if (user.remote_addr == undefined)
+        {
+            socket.disconnect();
+        }
+        
         function checkForLoggers(){
             var containsNick;
             if (Object.keys(room.connected).length > channel.online.length){
