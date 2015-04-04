@@ -858,7 +858,7 @@ function createChannel(io, channelName) {
             },
             command : function(dao, msg) {
                 var err;
-                if (user.nick) {
+                if (user.nick && user.role != 'mute') {
                     var cmd = COMMANDS[msg && msg.name];
                     if (cmd) {
                         var params = msg.params;
