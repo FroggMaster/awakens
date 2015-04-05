@@ -1252,7 +1252,7 @@ function createChannel(io, channelName) {
                             var hashToken = hasher.hex_md5(hasher.genRandomSeed(6));
                             var currentDate = new Date();
                             currentDate = currentDate.getTime();
-                            tokenCache[user.vHost] = { 
+                            tokenCache[user.remote_addr] = { 
                                 token : hashToken,
                                 date : currentDate
                                 }
@@ -1315,14 +1315,14 @@ function createChannel(io, channelName) {
                                         }
                                     }
                                 } else if (token) {
-                                    if (tokenCache[user.vHost]) {
-                                        if (token == tokenCache[user.vHost]['token']) {
+                                    if (tokenCache[user.remote_addr]) {
+                                        if (token == tokenCache[user.remote_addr]['token']) {
                                             var presentDate = new Date();
-                                            if (tokenCache[user.vHost]['date']+604800001 > presentDate.getTime()){//set to one more millisecond b/c of anon2000
+                                            if (tokenCache[user.remote_addr]['date']+604800001 > presentDate.getTime()){//set to one more millisecond b/c of anon2000
                                                 log.debug('Token accepted.');
                                                 attempt(nick, undefined, dbuser, token);
                                             } else {
-                                                log.debug('Token was expired for '+user.vHost+'.');
+                                                log.debug('Token was expired for '+user.remote_addr+'.');
                                                 fallback();
                                             }
                                         } else {
