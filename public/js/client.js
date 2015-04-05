@@ -92,9 +92,13 @@ $(function() {
         if (!first) {
             //window.location.reload();
         }
+        if (!CLIENT.get('security')){
+            var backupToken = localStorage['chat-security'];
+            CLIENT.set('security', backupToken);
+        }
         socket.emit('join', {
             nick : CLIENT.get('nick'),
-            password : CLIENT.get('password')
+            security : CLIENT.get('security')
         });
         first = false;
     });
@@ -202,7 +206,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick password images flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick security images flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -1063,7 +1067,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block background mask alert password frame frame_src'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block background mask alert security frame frame_src'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
