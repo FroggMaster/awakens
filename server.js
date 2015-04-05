@@ -58,25 +58,6 @@ function createChannel(io, channelName) {
             socket : socket
         };
         
-        function checkForLoggers(){
-            var containsNick;
-            if (Object.keys(room.connected).length > channel.online.length){
-                console.log('Loggers detected. Attempting removal...');
-                for (id in room.connected){
-                    containsNick = false;
-                    for (var i = 0; i < channel.online.length; i++){
-                        if (id == channel.online[i]['socket']['id'])
-                            containsNick = true;
-                    }
-                    if (!containsNick){
-                        var ipAddress = room.connected[id].request.connection.remoteAddress;
-                        room.connected[id].disconnect();
-                        console.log(ipAddress + ' wasn\'t connected properly.')
-                    }
-                }
-            }
-        }
-        
         setTimeout(function(){
             if(indexOf(user.nick) == -1){
                 console.log(user.remote_addr + ' didn\'t connect properly.')
@@ -1290,7 +1271,6 @@ function createChannel(io, channelName) {
                             nick : user.nick
                         });
                     }
-                    checkForLoggers();
                     done.resolve(true);
                 }
             }
