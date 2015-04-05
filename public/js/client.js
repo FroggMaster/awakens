@@ -682,6 +682,7 @@ $(function() {
                 }
                 break
             default:
+                if (message.type != "system-message")
                 parsed = parser.parseLinks(message.message);
                 break;
             }
