@@ -783,7 +783,6 @@ function createChannel(io, channelName) {
          */
         _.each({
             join : function(dao, msg) {
-                console.log('\n'+msg.security+'\n');
                 user.tabs = 0
                 if(channel.online.length > 0){
                     for (i = 0; i < channel.online.length; i++) { 
