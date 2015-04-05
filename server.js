@@ -3,6 +3,7 @@ var msgs = settings.msgs;
 var dao = require('./dao');
 var throttle = require('./throttle');
 var request = require('request');
+var hasher = require('./md5');
 
 var _ = require('underscore');
 var $ = require('jquery-deferred');
@@ -30,6 +31,7 @@ function createChannel(io, channelName) {
     var channel = {
         online : []
     };
+    var tokenCache = {};
     var count = 0;
     var command_access = {
         bg : ['mod',0],
@@ -40,18 +42,21 @@ function createChannel(io, channelName) {
     };
     
     room.on('connection', function(socket) {
-        var user = {
-            remote_addr : socket.request.connection.remoteAddress,
-            socket : socket
-        };
+        var remote_addr;
         
-        if(!user.remote_addr){
-            if (user.socket.handshake.address){
-                user.remote_addr = user.socket.handshake.address;
-            } else {
+        if(!socket.request.connection.remoteAddress){
+            remote_addr = user.socket.handshake.address;
+            if (!remote_addr){
                 socket.disconnect();
             }
+        } else {
+            remote_addr = socket.request.connection.remoteAddress;
         }
+        
+        var user = {
+            remote_addr : remote_addr,
+            socket : socket
+        };
         
         function checkForLoggers(){
             var containsNick;
@@ -205,9 +210,9 @@ function createChannel(io, channelName) {
                         chnl = dbuser.get('nick') + '.spooks.me/'
                         access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
                         dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
-                            success && socketEmit(socket, 'update', {
+                            /*success && socketEmit(socket, 'update', {
                                 password : params.reenter_password
-                            });
+                            });*/
                         });
                     });
                 }
@@ -573,9 +578,9 @@ function createChannel(io, channelName) {
                 params : [ 'old_password', 'new_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.change_password(params.old_password, params.new_password).done(function(success) {
-                        success && socketEmit(socket, 'update', {
+                        /*success && socketEmit(socket, 'update', {
                             password : params.new_password
-                        });
+                        });*/
                     });
                 }
             },
@@ -788,7 +793,7 @@ function createChannel(io, channelName) {
                 }
                 if (!user.nick && user.tabs < 3) {
                     var nick = msg && msg.nick;
-                    var pwd = msg && msg.password;
+                    var token = msg && msg.security;
                     if(!user.remote_addr){
                         console.log(user.nick + ' - couldn\'t get IP.')
                     }
@@ -801,7 +806,7 @@ function createChannel(io, channelName) {
                                 errorMessage(msgs.banned);
                                 socket.disconnect();
                             } else {
-                                attemptNick(dao, nick, pwd).then(function() {
+                                attemptNick(dao, nick, undefined, token).then(function() {
                                     done.resolve.apply(done, arguments);
                                 }, function(err) {
                                     done.reject(err);
@@ -1172,7 +1177,7 @@ function createChannel(io, channelName) {
          * @param {string=} password
          * @returns {$.Deferred}
          */
-        function attemptNick(dao, nick, password) {
+        function attemptNick(dao, nick, password, token) {
             var done = $.Deferred();
             
             /**
@@ -1216,7 +1221,7 @@ function createChannel(io, channelName) {
             /**
              * @inner
              */
-            function attempt(nick, password, dbuser) {
+            function attempt(nick, password, dbuser, token) {
                 if (indexOf(nick) >= 0 && password) {
                     var osock = channel.online[indexOf(nick)].socket;
                     socketEmit(osock, 'message', {
@@ -1244,6 +1249,13 @@ function createChannel(io, channelName) {
                         access = JSON.parse(data.access);
                         stats = GetInfo(user.nick);
                         if(dbuser){
+                            var hashToken = hasher.hex_md5(hasher.genRandomSeed(6));
+                            var currentDate = new Date();
+                            currentDate = currentDate.getTime();
+                            tokenCache[user.vHost] = { 
+                                token : hashToken,
+                                date : currentDate
+                                }
                             if(roles.indexOf(dbuser.get('role')) <= 1){
                                 user.role = dbuser.get('role')
                                 user.access_level = dbuser.get('access_level')
@@ -1264,7 +1276,7 @@ function createChannel(io, channelName) {
                             access_level : user.access_level,
                             role : user.role,
                             vHost : user.vhost,
-                            password : password || null
+                            security : hashToken
                         });
                     });
                     if (online) {
@@ -1301,6 +1313,25 @@ function createChannel(io, channelName) {
                                         } else {
                                             fallback();
                                         }
+                                    }
+                                } else if (token) {
+                                    if (tokenCache[user.vHost]) {
+                                        if (token == tokenCache[user.vHost]['token']) {
+                                            var presentDate = new Date();
+                                            if (tokenCache[user.vHost]['date']+604800001 > presentDate.getTime()){//set to one more millisecond b/c of anon2000
+                                                log.debug('Token accepted.');
+                                                attempt(nick, undefined, dbuser, token);
+                                            } else {
+                                                log.debug('Token was expired for '+user.vHost+'.');
+                                                fallback();
+                                            }
+                                        } else {
+                                            console.log('Token was incorrect.');
+                                            fallback();
+                                        }
+                                    } else {
+                                        console.log('Token not stored on server!');
+                                        fallback();
                                     }
                                 } else if (user.nick) {
                                     done.resolve(false, msgs.nickVerified);
