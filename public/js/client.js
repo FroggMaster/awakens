@@ -684,9 +684,11 @@ $(function() {
                 } else {
                     parsed = parser.parse( '#6464C0' + message.name + ': ' + message.message);
                 }
-                break
+                break;
+            case 'system-message':
+            	parsed = parser.quickParse(message.message);
+            	break;
             default:
-                if (message.type != "system-message")
                 parsed = parser.parseLinks(message.message);
                 break;
             }
@@ -1376,6 +1378,27 @@ parser = {
         str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
         // change spaces to &nbsp;
+        escs = str.match(/<[^>]+?>/gi);
+        str = str.replace(/<[^>]+?>/gi, this.repslsh);
+        str = str.replace(/\s{2}/gi, ' &nbsp;');
+        for (i in escs) {
+            str = str.replace(this.repslsh, escs[i]);
+        }
+        return str;
+    },
+    quickParse : function(str){
+        // escaping shit
+        str = str.replace(/\n/g, '\\n');
+        str = str.replace(/&/gi, '&amp;');
+        str = str.replace(/>/gi, '&gt;');
+        str = str.replace(/</gi, '&lt;');
+        str = str.replace(/"/gi, '&quot;');
+        str = str.replace(/#/gi, '&#35;');
+        str = str.replace(/'/gi, '&#39;');
+        str = str.replace(/~/gi, '&#126;');
+        str = str.replace(/\\\\n/g, this.repslsh);
+        str = str.replace(/\\n/g, '<br />');
+        str = str.replace(this.repslsh, '\\\\n');
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
         str = str.replace(/\s{2}/gi, ' &nbsp;');
