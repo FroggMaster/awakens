@@ -1151,10 +1151,10 @@ $(function() {
             params : [ 'url' ]
         },
         safe : function(){
+            $('#messages').html(''),
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
-            CLIENT.set('mute_speak','on'),
-            $('#messages').html('')
+            CLIENT.set('mute_speak','on')
         },
         unsafe : function(){
             CLIENT.set('bg','on'),
