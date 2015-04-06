@@ -326,7 +326,7 @@ $(function() {
                         }
                     } else {
                         CLIENT.show({
-                            message : 'Invalid command. Expected: /' + this.getAvailableCommands().join(', /'),
+                            message : 'Invalid command. Use /hlist for a list of commands, or /help to view the menu.',
                             type : 'error-message'
                         });
                     }
@@ -953,6 +953,12 @@ $(function() {
                 $('.menu-container').css('top',CLIENT.get('menu_top'));
             }
             //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
+        },
+        hlist : function() {
+            CLIENT.show({
+                message : CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /')),
+                type : 'system-message'
+            });
         },
         nick : {
             params : [ 'nick$' ]
