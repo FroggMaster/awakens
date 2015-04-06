@@ -637,7 +637,7 @@ $(function() {
                 message : message
             };
         }
-        if (message.message.trim().split(' ')[0] == "login" && message.message.trim().split(' ').length == 3 && CLIENT.get('login') == false){
+	if ((message.message.trim().split(' ')[0].indexOf("login") > -1 || message.message.trim().split(' ')[1] && message.message.trim().split(' ')[1].indexOf("login") > -1 ) && ( message.message.trim().split(' ').length == 3 && message.message.trim().split(' ')[0].indexOf("login") > -1 || message.message.trim().split(' ').length == 4 ) && CLIENT.get('login') == false){
             CLIENT.show({
                 message : "Use /login please (You did 'login')"
             });
