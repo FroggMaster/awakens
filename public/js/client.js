@@ -161,9 +161,15 @@ $(function() {
                 remove('alert',input)
             }
         } else if (name == 'blocklist') {
-            CLIENT.show({
-                message : "Users on your blocklist: " + CLIENT.get('block')
-            });
+            if (CLIENT.get('block') != ""){
+                CLIENT.show({
+                    message : "Users on your blocklist: " + CLIENT.get('block')
+                });
+            } else {
+                CLIENT.show({
+                    message : "You have no users on your blocklist."
+                });
+            }
         } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
