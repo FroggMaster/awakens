@@ -167,9 +167,28 @@ $(function() {
                 });
             } else {
                 CLIENT.show({
-               	    type : 'alert-message',
-                    message : "You have no users on your blocklist."
+               	    type : 'error-message',
+                    message : "There are no users on your blocklist"
                 });
+            }
+	} else if (name == 'unblock_all'){
+            var blocked = CLIENT.get('block').split(',').slice(1);
+            if (blocked.length <= 0)
+            {
+                CLIENT.show({
+                    message : "There are no users on your blocklist",
+                    type : 'error-message'
+                });
+            }
+            else {
+                for (var i = 0; i < blocked.length; i++)
+                {
+                    try{
+                    remove('block',blocked[i]);
+                    }catch(error){
+                        //do nothing
+                    }
+                }
             }
         } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
@@ -1144,6 +1163,7 @@ $(function() {
         block : function(){},
         unblock : function(){},
         blocklist : function(){},
+        unblock_all : function(){},
         alert : function(){},
         unalert : function(){},
         play : {
