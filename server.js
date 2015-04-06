@@ -1242,6 +1242,7 @@ function createChannel(io, channelName) {
                     var online = !!user.nick;
                     var stats = {};
                     user.nick = nick;
+                    user.login = false;
                     dao.getChannelInfo(channelName).then(function(data){
                         if(!data.access){
                             data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
@@ -1265,6 +1266,7 @@ function createChannel(io, channelName) {
                                 user.access_level = stats.access_level
                             }
                             user.vhost = dbuser.get('vHost');
+                            user.login = true;
                             console.log(user.nick + ' joined with ' + user.role + ' - ' + user.access_level)
                         } else {
                             user.vhost = user.remote_addr;
@@ -1277,7 +1279,8 @@ function createChannel(io, channelName) {
                             access_level : user.access_level,
                             role : user.role,
                             vHost : user.vhost,
-                            security : hashToken
+                            security : hashToken,
+                            login : user.login
                         });
                     });
                     if (online) {
