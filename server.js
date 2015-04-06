@@ -281,6 +281,28 @@ function createChannel(io, channelName) {
                     return dao.unban(params.id, channelName);
                 }
             },
+            unban_all : {
+                role : 'god',
+                params : [ 'oath' ],
+                handler : function(dao, dbuser, params) {
+                    if (params.oath == "I confirm this action.") {
+                    return dao.banlist(channelName).then(function(list){
+                            if (list.length > 0){
+                                broadcastChannel(dao, channel, "/*"+dbuser.get("nick")+" has cleared the channel banlist");
+                                for (var i = 0; i < list.length; i++)
+                                {
+                                    dao.unban(list[i], channelName);
+                                }
+                            } else {
+                                errorMessage('There are no users in this channel\'s banlist');
+                            }
+                        }
+                    )
+                    } else {
+                        errorMessage('Please enter the following oath after the command: I confirm this action.');
+                    }
+                }
+            },
             banip : {
                 role : 'admin',
                 access_level : 0,
