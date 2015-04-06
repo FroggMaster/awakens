@@ -963,6 +963,10 @@ $(function() {
             role : 'admin',
             params : [ 'id$' ]
         },
+        unban_all : {
+            role : 'god',
+            params : [ 'oath$' ]
+        },
         banip : {
             role : 'admin',
             params : [ 'nick' ]
