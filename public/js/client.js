@@ -160,6 +160,10 @@ $(function() {
             } else {
                 remove('alert',input)
             }
+        } else if (name == 'blocklist') {
+            CLIENT.show({
+                message : "Users on your blocklist: " + CLIENT.get('block')
+            });
         } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
@@ -1127,6 +1131,7 @@ $(function() {
         },
         block : function(){},
         unblock : function(){},
+        blocklist : function(){},
         alert : function(){},
         unalert : function(){},
         play : {
