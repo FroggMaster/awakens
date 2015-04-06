@@ -513,11 +513,18 @@ $(function() {
         var li = $('<li class="users"></li>').attr({
             class : 'online-' + user.get('id')
         }).appendTo('.online');
-    
-        var nick = $('<span></span>').text(user.get('nick')).appendTo(li);
+        var nick;
+        if (user.get('nick').length > 35)
+            nick = $('<span></span>').text(user.get('nick').substring(0,32)+'...').appendTo(li);
+        else
+            nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
         user.on('change:nick', function() {
-            nick.text(user.get('nick'));
+            console.log('signal received');
+            if (user.get('nick').length > 35)
+                nick.text(user.get('nick').substring(0,32)+'...');
+            else
+                nick.text(user.get('nick'));
         });
         CLIENT.on('change:menu_display', function(e) {
             if(e.get('menu_display') == 'block'){
