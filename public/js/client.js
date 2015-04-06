@@ -524,7 +524,6 @@ $(function() {
             nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
         user.on('change:nick', function() {
-            console.log('signal received');
             if (user.get('nick').length > 35)
                 nick.text(user.get('nick').substring(0,32)+'...');
             else
@@ -615,7 +614,7 @@ $(function() {
         if (message.message.trim().split(' ')[0] == "login" && message.message.trim().split(' ').length == 3 && CLIENT.get('login') == false){
             CLIENT.show({
                 message : "Use /login please (You did 'login')"
-            })
+            });
         } else {
         message.type = message.type || 'system-message';
         var el = buildMessage(message);
