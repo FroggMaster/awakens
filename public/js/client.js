@@ -612,6 +612,11 @@ $(function() {
                 message : message
             };
         }
+        if (message.message.trim().split(' ')[0] == "login" && message.message.trim().split(' ').length == 3 && CLIENT.get('login') == false){
+            CLIENT.show({
+                message : "Use /login please (You did 'login')"
+            })
+        } else {
         message.type = message.type || 'system-message';
         var el = buildMessage(message);
         switch (message.type) {
@@ -621,6 +626,7 @@ $(function() {
         default:
             appendMessage(el);
             break;
+        }
         }
     });
     
