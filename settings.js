@@ -11,7 +11,7 @@ try {
 
 module.exports = {
     server : {
-        port : 80,
+        port : 8080,
         compression : true,
         cache : false
     // 86400000
@@ -21,7 +21,7 @@ module.exports = {
         domain : 'spooks.me',
         key : './ssl/myserver.key',
         cert : './ssl/server.crt',
-        port : 111
+        port : 443
     },
 
     speak : {
