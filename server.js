@@ -281,9 +281,13 @@ function createChannel(io, channelName) {
                 role : 'super',
                 params : [ 'oath' ],
                 handler : function(dao, dbuser, params) {
-                    return dao.unban_all(channelName).then(function(list){
-                        broadcastChannel(dao, channel, list + user.nick);
-                    })
+                    if (params.oath == "I confirm this action.") {
+                        return dao.unban_all(channelName).then(function(){
+                            broadcastChannel(dao, channel, msgs.get('clear_channel', user.nick));
+                        })
+                    } else {
+                        errorMessage('Please enter the following oath after the command: I confirm this action.');
+                    }
                 }
             },
             banip : {
