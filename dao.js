@@ -1,608 +1,210 @@
-var settings = require('./settings');
-var msgs = settings.msgs;
 var _ = require('underscore');
-var $ = require('jquery-deferred');
-var mysql = require('mysql');
-var passwordHash = require('password-hash');
 var fs = require('fs');
-var pool = mysql.createPool(settings.db);
-var number = 0;
+var settings;
 
-function ucwords(string){
-    return string.charAt(0).toUpperCase() + string.slice(1);
+try {
+    var file = fs.readFileSync('./conf/settings.json');
+    settings = JSON.parse(file.toString());
+} catch (e) {
+    throw new Error('Invalid settings: /conf/settings.json invalid or does not exist');
 }
 
-module.exports = function(callback) {
-    var connection = $.Deferred();
+module.exports = {
+    server : {
+        port : 80,
+        compression : true,
+        cache : false
+    // 86400000
+    },
 
-    /**
-     * @inner
-     * @param {Object} info The user info from db
-     * @return {Object}
-     */
-    function User(info) {
-        return {
-            /**
-             * Get a user attribute.
-             * 
-             * @param {string} attr
-             * @returns {*}
-             */
-            get : function(attr) {
-                return info[attr];
-            },
+    https : {
+        domain : 'spooks.me',
+        key : './ssl/myserver.key',
+        cert : './ssl/server.crt',
+        port : 111
+    },
 
-            /**
-             * Set a user attribute.
-             * 
-             * @param {string|Object} values or key
-             * @param {*=} value
-             * @returns {$.Promise}
-             */
-            set : function(values) {
-                if (typeof values == 'string') {
-                    var key = values;
-                    values = {};
-                    values[key] = arguments[1];
-                }
-                var params = [];
-                var setters = [];
-                for ( var key in values) {
-                    var value = values[key];
-                    if (info[key] != value) {
-                        params.push(value);
-                        setters.push(key + '=?');
-                    }
-                }
-                params.push(info.nick);
-                if (setters.length > 0) {
-                    var sql = 'update chat_users set ' + setters.join(', ') + ' where nick=?';
-                    return query(sql, params).then(function() {
-                        return findUser(values.nick || info.nick).then(function(user) {
-                            if (user) {
-                                _.keys(info).forEach(function(key) {
-                                    info[key] = user.get(key);
-                                });
-                                return $.Deferred().resolve();
-                            } else {
-                                // Should never happnen
-                                return $.Deferred().reject('User not found after update!');
-                            }
-                        });
-                    });
-                } else {
-                    return $.Deferred().resolve();
-                }
-            },
-
-            /**
-             * Register this user.
-             * 
-             * @param {string=} initial_password
-             * @returns {$.Promise}
-             */
-            register : function(initial_password) {
-                var err;
-                if (info.registered) {
-                    err = msgs.alreadyRegistered;
-                }
-                return this.set({
-                    registered : 1,
-                    pw_hash : passwordHash.generate(initial_password)
-                });
-                return $.Deferred().resolve(false, err);
-            },
-
-            /**
-             * Verify this user.
-             * 
-             * @param {number} verification_code
-             * @param {string} password
-             * @returns {$.Promise}
-             */
-            verify : function(password, verification_code) {
-                var err;
-                if (!info.registered) {
-                    err = msgs.notRegistered;
-                } else if (info.verified) {
-                    err = msgs.alreadyVerified;
-                } else if (!this.verifyPassword(password)) {
-                    err = msgs.enterSamePassword;
-                } else if (!notEmptyString(password)) {
-                    err = msgs.invalidPassword;
-                } else {
-                    return this.set({
-                        verified : 1,
-                        pw_hash : passwordHash.generate(password)
-                    }).then(function() {
-                        return $.Deferred().resolve(true, msgs.verified);
-                    });
-                }
-                return $.Deferred().resolve(false, err);
-            },
-
-            /**
-             * Unregister this user.
-             * 
-             * @returns {$.Promise}
-             */
-            unregister : function() {
-                if (info.registered) {
-                    return this.set({
-                        access_level : 3,
-                        role : 'basic',
-                        registered_on : null,
-                        registered : 0,
-                        verified : 0,
-                        pw_hash : null
-                    }).then(function() {
-                        return $.Deferred().resolve(true, msgs.unregistered);
-                    });
-                } else {
-                    return $.Deferred().resolve(false, msgs.notRegistered);
-                }
-            },
-
-            /**
-             * Verify the given password.
-             * 
-             * @param {string} password
-             * @returns {boolean}
-             */
-            verifyPassword : function(password) {
-                return info.pw_hash && passwordHash.verify(password, info.pw_hash);
-            },
-
-            /**
-             * Change the password.
-             * 
-             * @return {$.Promise}
-             */
-            change_password : function(old_password, new_password) {
-                var err;
-                if (!this.get('verified')) {
-                    err = msgs.change_password_login;
-                } else if (!this.verifyPassword(old_password)) {
-                    err = msgs.oldPasswordWrong
-                } else {
-                    return this.set({
-                        pw_hash : passwordHash.generate(new_password)
-                    }).then(function() {
-                        return $.Deferred().resolve(true, msgs.change_password);
-                    });
-                }
-                return $.Deferred().resolve(false, err);
-            },
-
-            /**
-             * 
-             * @param {string} access_level
-             * @returns {$.Promise}
-             */
-            access : function(role, access_level) {	
-				this.set('role', role)
-                    access_level = new Number(access_level);
-                    if (!isNaN(access_level) && access_level >= 0 && access_level <= 4) {
-                        access_level = access_level + "";
-                        var nick = this.get('nick');
-                        return this.set('access_level', access_level,'role', role).then(function() {
-                            return $.Deferred().resolve(true, msgs.get('access_granted', nick, role, access_level));
-                        });
-                    } else {
-                        return $.Deferred().resolve(false, msgs.invalidAccess);
-                    } 
-            }
-        };
-    }
-
-    /**
-     * @inner
-     * @param {string} sql
-     * @param {Array.<string>} params
-     * @returns {$.Promise<Array<Object>>}
-     */
-    function query(sql, params) {
-        var rows = $.Deferred();
-        connection.then(function(db) {
-            if (settings.log.db) {
-                console.log('Query request: ' + sql, params);
-            }
-            db.query(sql, params, function(err, dbrows) {
-                try {
-                    if (err) {
-                        if (settings.log.error) {
-                            console.error('Query error: ', err);
-                        }
-                        rows.reject(err);
-                    } else {
-                        if (settings.log.db) {
-                            console.log('Query resolved: ', JSON.stringify(dbrows));
-                        }
-                        rows.resolve(dbrows);
-                    }
-                } catch (err) {
-                    settings.log.error && console.error(err, err.stack);
-                }
-            });
-        }, function(err) {
-            rows.reject(err);
-        });
-        return rows.promise();
-    }
-
-    /**
-     * @inner
-     * @param {string} sql
-     * @param {Array.<string>} params
-     * @returns {$.Promise<Object>}
-     */
-    function one(sql, params) {
-        return query(sql, params).then(function(rows) {
-            return rows && rows.length > 0 ? rows[0] : null;
-        });
-    }
-
-    /**
-     * @inner
-     * @param {string} nick
-     * @returns {$.Promise<User>}
-     */
-    function findUser(nick) {
-        if (notEmptyString(nick)) {
-            return one('select * from chat_users where nick=?', [ nick ]).then(function(info) {
-                return info ? User(info) : null;
-            });
-        } else {
-            return $.Deferred().reject('Invalid nick');
+    speak : {
+        0 : 1,
+        1 : 1,
+        2 : {
+            time : 10000,
+            max : 1
+        },
+        'default' : {
+            time : 20000,
+            max : 1
         }
-    }
-	
-	/**
-    * @inner
-    * @param {string} vHost
-    * @returns {$.Promise<User>}
-    */
-	
-	function findvHost(vHost) {
-		    if (notEmptyString(vHost)) {
-				return one('select * from chat_users where vHost=?', [ vHost ]).then(function(info) {
-					return info ? User(info) : null;
-				});
-			} else {
-				return $.Deferred().reject('Invalid vHost');
-			}
-	}
+    },
 
-    /**
-     * @inner
-     * @param {string} str
-     * @returns {boolean}
-     */
-    function notEmptyString(str) {
-        return typeof str == 'string' && str;
-    }
-
-    pool.getConnection(function(err, dbconn) {
-        if (err) {
-            settings.log.error && console.error('Could not establish connection: ' + err);
-            connection.reject(err);
-        } else if (dbconn) {
-            dbconn.query('use ' + settings.db.schema);
-            try {
-                connection.resolve(dbconn);
-            } catch (err) {
-                settings.log.error && console.error(err, err.stack);
+    throttle : {
+        updateMousePosition : {
+            errorMessage : false,
+            user : {
+                time : 1000,
+                max : 100
+            },
+            channel : {
+                time : 1000,
+                max : 500
+            },
+            global : {
+                time : 1000,
+                max : 1000
+            },
+            banned : {
+                limits : []
             }
-            settings.log.db && console.log('Database connection established');
-        } else {
-            settings.log.error && console.error('No connection');
-            connection.reject('No connection');
+        },
+        'default' : {
+            errorMessage : true,
+            user : {
+                time : 1000,
+                max : 2
+            },
+            channel : {
+                time : 1000,
+                max : 10
+            },
+            global : {
+                time : 1000,
+                max : 20
+            },
+            banned : {
+                limits : [ {
+                    time : 1000,
+                    max : 5
+                }, {
+                    time : 60 * 1000,
+                    max : 20
+                } ],
+                unban : 5 * 60 * 1000
+            }
         }
-    });
+    },
 
-    var dao = {
-        /**
-         * Create a user.
-         * 
-         * @param {string} nick
-         * @param {string} remote_addr
-         * @returns {$.Promise<User>}
-         */
-        createUser : function(nick, remote_addr) {
-            var user = $.Deferred();
-            if (!notEmptyString(nick)) {
-                user.reject('Invalid nick');
-            } else if (!notEmptyString(remote_addr)) {
-                user.reject('Invalid remote_addr');
-            } else {
-                query('insert into chat_users (nick, remote_addr, access_level, role) values(?,?,3,"basic")', [ nick, remote_addr ]).then(function() {
-                    findUser(nick).then(function(fuser) {
-                        if (fuser) {
-                            user.resolve(fuser);
-                        } else {
-                            console.error('User could not be found after creation');
-                            user.reject();
-                        }
-                    }, function(err) {
-                        user.reject(err);
-                    });
-                }, function(err) {
-                    user.reject(err);
-                });
-            }
-            return user.promise();
-        },
+    password : {
+        iterations : 1000
+    },
 
-        /**
-         * Find a user.
-         * 
-         * @param {string} nick
-         * @returns {$.Promise.<User>}
-         */
-        findUser : function(nick) {
-            return findUser(nick);
-        },
-		
-		findvHost : function(vHost) {
-			return findvHost(vHost);
-		},
+    emailRegex : /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/,
 
-        /**
-         * @param {string} channel
-         * @param {string} remote_addr
-         * @param {string=} nick
-         * @returns {boolean}
-         */
-        isBanned : function(channel, remote_addr, nick, vHost) {
-            if (this.isFileBanned(remote_addr) || this.isFileBanned(nick) || this.isFileBanned(vHost)) {
-                return $.Deferred().resolve(true).promise();
-            }
-            var sql = 'select banned from chat_banned where (channel=? or channel is null) and ';
-            var params = [ channel, remote_addr ];
-            if (nick) {
-                sql += '(banned=? or banned=? or banned=?)';
-                params.push(nick, vHost);
-            } else {
-                sql += 'banned=?';
-            }
-            return one(sql, params).then(function(row) {
-                return !!row;
-            });
-        },
+    db : {
+        host : 'localhost',
+        schema : 'nodejs_chat'
+    },
 
-        /**
-         * @returns {Array.<string>}
-         */
-        getFileBanList : function() {
-            /*var banned = fs.readFileSync('banned.txt');
-            if (banned) {
-                return _.filter(banned.toString().split(/[\s,\n\r]+/), function(id) {
-                    return id.length > 0;
-                });
-            }*/
-            return [];
-        },
+    log : {
+        error : true,
+        info : true,
+        debug : false,
+        db : false
+    },
 
-        /**
-         * @param {string} remote_addr
-         * @param {string} nick
-         * @returns {Boolean}
-         */
-        isFileBanned : function(banned_id) {
-            if (banned_id) {
-                var banned = this.getFileBanList();
-                return _.any(banned, function(id) {
-                    return banned_id.indexOf(id) == 0;
-                });
-            }
-            return false;
-        },
+    registrationEmail : {
+        from : 'Chat Server <donotreply@spooks.me>',
+        subject : 'Registering Chat Nickname',
+        text : 'You are registering the nickname {0}.\r\nTo verify your account, all you have to do is type out the following: /verify {1}'
+    },
 
-        /**
-         * @param {string} banned
-         * @param {string} channel
-         * @returns {$.Promise<boolean>}
-         */
-        isChannelBanned : function(banned, channel) {
-            var sql = 'select banned from chat_banned where banned=? and channel';
-            var params = [ banned ];
-            if (channel != null) {
-                sql += '=?';
-                params.push(channel);
-            } else {
-                sql += ' is null';
-            }
-            return one(sql, params).then(function(row) {
-                return !!row;
-            });
-        },
+    limits : {
+        message : 5000,
+        nick : 100,
+        spoken : 100,
+        part : 140
+    },
 
-        /**
-         * @param {string} banned
-         * @param {string=} channel
-         * @returns {$.Promise}
-         */
-        ban : function(banned, channel) {
-            var result = $.Deferred();
-            this.isChannelBanned(banned, channel).then(function(isbanned) {
-                if (isbanned) {
-                    result.resolve(false, msgs.get(channel != null ? 'already_banned_channel' : 'already_banned_global', banned));
-                } else {
-                    var sql = 'insert into chat_banned (banned, channel) values (?,';
-                    var params = [ banned ];
-                    if (channel != undefined) {
-                        params.push(channel);
-                        sql += '?)';
-                    } else {
-                        sql += 'null)';
-                    }
-                    query(sql, params).then(function() {
-                        result.resolve(true, msgs.get(channel != null ? 'banned_channel' : 'banned_global', banned));
-                    }, function(err) {
-                        result.reject(err);
-                    });
+    // emailServer : {
+    // user : "username",
+    // password : "password",
+    // host : "smtp.your-email.com",
+    // ssl : true
+    // },
+
+    msgs : {
+        get : function(key) {
+            var value = this[key];
+            if (value) {
+                for ( var i = 1; i < arguments.length; i++) {
+                    value = value.replace('{' + (i - 1) + '}', arguments[i]);
                 }
-            }, function(err) {
-                result.reject(err);
-            });
-            return result.promise();
-        },
-
-        /**
-         * @param {string} banned
-         * @param {string=} channel
-         * @returns {$.Promise}
-         */
-        unban : function(banned, channel) {
-            var result = $.Deferred();
-            if (this.isFileBanned(banned)) {
-                result.resolve(false, msgs.get('banned_file', banned));
-            } else {
-                this.isChannelBanned(banned, channel).then(function(isbanned) {
-                    if (isbanned) {
-                        var sql = 'delete from chat_banned where banned=? and channel';
-                        var params = [ banned ];
-                        if (channel != null) {
-                            params.push(channel);
-                            sql += '=?';
-                        } else {
-                            sql += ' is null';
-                        }
-                        query(sql, params).then(function() {
-                            result.resolve(true, msgs.get(channel != null ? 'unbanned_channel' : 'unbanned_global', banned));
-                        }, function(err) {
-                            result.reject(err);
-                        });
-                    } else {
-                        result.resolve(false, msgs.get(channel != null ? 'not_banned_channel' : 'not_banned_global', banned));
-                    }
-                }, function(err) {
-                    result.reject(err);
-                });
             }
-            return result.promise();
+            return value;
         },
 
-        /**
-         * @param {string} channel
-         * @returns {$.Promise<Array.<string>>}
-         */
-        banlist : function(channel) {
-            var sql = 'select banned from chat_banned where channel';
-            var params = [];
-            if (channel != null) {
-                params.push(channel);
-                sql += '=?';
-            } else {
-                sql += ' is null';
-            }
-            var _this = this;
-            return query(sql, params).then(function(rows) {
-                var result = rows ? _.map(rows, function(row) {
-                    return row.banned;
-                }) : [];
-                if (channel == null) {
-                    result = result.concat(_.map(_this.getFileBanList(), function(id) {
-                        return id + '.*';
-                    }));
-                }
-                return result;
-            });
-        },
+        banned : 'You are banned.',
+        kicked: 'You have been kicked By: {0}',
+        kicked_reason: 'You have been kicked By: {0}, Reason: {1}',
+        ghosted: 'Someone else logged in using your username.',
+        pmOffline : 'Cannot pm a nick unless they are online.',
+        notRegistered : 'Not registered yet',
+        alreadyRegistered : 'Already registered',
+        alreadyVerified : 'Already verified',
+        invalidCode : 'The verification code provided was incorrect',
+        invalidPassword : 'Invalid password',
+        invalidEmail : 'Invalid email address',
+        invalidAccess : 'Invalid access_level',
+        invalidCommand : 'Invalid command',
+        invalidCommandParams : 'Invalid command parameters',
+        invalidCommandAccess : 'Not permissioned for this command',
+        invalidLogin : 'The password you provided was incorrect',
+        nickVerified : 'The nick has been taken, please use /login instead',
+        nickNotVerified : 'You cannot login to a nick that was not registered or verified',
+        change_password_login : 'You must register before you can change the password',
+        alreadyBeingUsed : 'That nick is already being used by someone else',
+        verified : 'You have verified the nick',
+        registered : 'You have registered the nick',
+        registeredAndVerified : 'Your nick was registered. Please verify the nick by typing /verify (your password here)',
+        unregistered : 'You have unregistered the nick',
+        banlist : 'Globally banned: {0}',
+        channel_banlist : 'Channel banned: {0}',
+        access_granted : 'User {0} now has level {1}',
+        whoami : 'You are {0} with role {1} with access_level {2} with ip {3}',
+        whois : '{0} ({5}),\nRole: {1}\nLevel: {2}\nIP: {3}\nMask: {4}',
+        whoiss : '{0} ({4}),\nRole: {1}\nLevel: {2}\nIP: {3}',
+        user_doesnt_exist : '{0} does not exist',
+        find_ip : 'ip {0} uses: {1}',
+        find_ip_empty : 'Could not find ip {0}',
+        banned_channel : '{0} is now banned on this channel',
+        banned_global : '{0} is now banned globally',
+        unbanned_channel : '{0} is no longer banned on this channel',
+        unbanned_global : '{0} is no longer banned globally',
+        not_banned_channel : '{0} is not banned on this channel',
+        not_banned_global : '{0} is not banned globally',
+        already_banned_channel : '{0} is already banned on this channel',
+        already_banned_global : '{0} is already banned globally',
+        banned_file : '{0} is banned in a file and cannot be unbanned',
+        no_banned_channel : 'There is nothing banned on this channel',
+        no_banned_global : 'There is nothing banned globally',
+        reset_user : '{0} has been reset',
+        change_password : 'You have changed your password',
+        enterSamePassword : 'Please enter the same password that you did when you registered',
+        oldPasswordWrong : 'Your old password is not correct',
+        user_exist_not_registered : '{0} exists but is not registered',
+        throttled : 'Either you are doing that too much, or the site is under too much load',
+        temporary_ban : 'You are way too fast, you have been banned for a while, try again later',
+        muted : 'You have been muted, please try again later.',
+        registeredName : 'That nick is registered',
+        vhosttaken : '{0} has already been taken as a mask.',
+        InvalidCharacters : 'Name contained invalid character(s)',
+        clear_channel : 'banlist cleared by '
+    },
 
-        /**
-         * @param {string} remote_addr
-         * @returns {$.Promise<Array.<string>>}
-         */
-        find_ip : function(remote_addr) {
-            return query('select nick from chat_users where remote_addr=?', [ remote_addr ]).then(function(rows) {
-                return rows ? _.map(rows, function(row) {
-                    return row.nick;
-                }) : [];
-            });
-        },
+    nouns : [ 'alien', 'apparition', 'bat', 'blood', 'bogeyman', 'boogeyman', 'boo', 'bone', 'cadaver', 'casket', 'cauldron', 'cemetery', 'cobweb', 'coffin', 'corpse', 'crypt', 'darkness', 'dead', 'demon', 'devil', 'death', 'eyeball', 'fangs', 'fear', 'gastly', 'gengar', 'ghost', 'ghoul', 'goblin', 'grave', 'gravestone', 'grim', 'grimreaper', 'gruesome', 'haunter', 'headstone', 'hobgoblin', 'hocuspocus', 'howl', 'jack-o-lantern', 'mausoleum', 'midnight', 'monster', 'moon', 'mummy', 'night', 'nightmare', 'ogre', 'phantasm', 'phantom', 'poltergeist', 'pumpkin', 'scarecrow', 'scream', 'shadow', 'skeleton', 'skull', 'specter', 'spider', 'spine', 'spirit', 'spook', 'tarantula', 'tomb', 'tombstone', 'troll', 'vampire', 'werewolf', 'witch', 'witchcraft', 'wraith', 'zombie' ],
 
-        /**
-         * @param {string} channel
-         * @returns {$.Promise<Object>}
-         */
-        getChannelInfo : function(channel) {
-            return query('select info_key, value from chat_channel_info where channel=?', [ channel ]).then(function(rows) {
-                var info = {};
-                rows && rows.forEach(function(row) {
-                    info[row.info_key] = row.value;
-                });
-                return info;
-            });
-        },
+    adjectives : [ 'bloodcurdling', 'chilling', 'creepy', 'dark', 'devilish', 'dreadful', 'eerie', 'evil', 'frightening', 'frightful', 'ghastly', 'ghostly', 'ghoulish', 'gory', 'grisly', 'hair-raising', 'haunted', 'horrible', 'macabre', 'morbid', 'mysterious', 'otherwordly', 'repulsive', 'revolting', 'scary', 'shadowy', 'shocking', 'spine-chilling', 'spooky', 'spoopy', 'startling', 'supernatural', 'terrible', 'unearthly', 'unnerving', 'wicked' ],
 
-        /**
-         * @param {string} channel
-         * @param {Object|string} info or key
-         * @param {string=} value
-         * @return {$.Promise}
-         */
-        setChannelInfo : function(channel, info) {
-            var done = $.Deferred();
-            if (typeof info == 'string') {
-                var key = info;
-                info = {};
-                info[key] = arguments[2];
-            }
-            var dvalues = [];
-            var dparams = [ channel ];
-            var ivalues = [];
-            var iparams = [];
-            _.each(info, function(value, key) {
-                dvalues.push('?');
-                dparams.push(key);
-                iparams.push(channel, key, value);
-                ivalues.push('(?,?,?)');
-            });
-            if (dvalues.length > 0) {
-                query('delete from chat_channel_info where channel=? and info_key in (' + dvalues.join(',') + ')', dparams).then(function() {
-                    query('insert into chat_channel_info (channel,info_key,value) values ' + ivalues.join(' '), iparams).then(function() {
-                        done.resolve();
-                    }, function(err) {
-                        done.reject(err);
-                    });
-                }, function(err) {
-                    done.reject(err);
-                });
-            } else {
-                done.resolve();
-            }
-            return done.promise();
-        },
-
-        /**
-         * @returns {$.Promise<string>}
-         */
-        nextNick : function() {
-            return one('select count(*) count from chat_users').then(function(row) {
-                return ucwords(_.sample(settings.adjectives)) + ucwords(_.sample(settings.nouns)) + '.' + number++;
-            });
-        },
-
-        release : function() {
-            connection.done(function(dbconn) {
-                dbconn.release();
-                settings.log.db && console.log('DB Connection released');
-            });
-        },
-        
-        GetNick : function(vhost){
-            return query('select nick from chat_users where vhost=?', [ vhost ]).then(function(rows) {
-                return rows ? _.map(rows, function(row) {
-                    return row.nick;
-                }) : [];
-            });
-        }
-    };
-
-    if (typeof callback == 'function') {
-        callback(dao);
-    }
-
-    return dao;
 };
+
+_.each(settings, function(setting, key) {
+    var override = module.exports[key];
+    if (override) {
+        if (setting) {
+            _.extend(override, setting);
+        } else {
+            module.exports[key] = null;
+        }
+    } else {
+        module.exports[key] = setting;
+    }
+});
