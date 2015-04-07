@@ -42,19 +42,9 @@ function createChannel(io, channelName) {
     };
     
     room.on('connection', function(socket) {
-        var remote_addr;
-        
-        if(!socket.request.connection.remoteAddress){
-            remote_addr = user.socket.handshake.address;
-            if (!remote_addr){
-                socket.disconnect();
-            }
-        } else {
-            remote_addr = socket.request.connection.remoteAddress;
-        }
         
         var user = {
-            remote_addr : remote_addr,
+            remote_addr : socket.handshake.address,
             socket : socket
         };
         
@@ -189,9 +179,9 @@ function createChannel(io, channelName) {
                         chnl = dbuser.get('nick') + '.spooks.me/'
                         access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
                         dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
-                            /*success && socketEmit(socket, 'update', {
-                                password : params.reenter_password
-                            });*/
+                            success && socketEmit(socket, 'update', {
+                                login : true
+                            });
                         });
                     });
                 }
@@ -250,26 +240,32 @@ function createChannel(io, channelName) {
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser){
-                        if(dbuser){
-                            var permit = 0;
-                            stats = grab(params.nick);
-                            if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
-                                permit = 1
+                        return dao.getChannelInfo(channelName).then(function(info){
+                            if(dbuser){
+                                var permit = 0;
+                                stats = grab(params.nick);
+                                if(stats == -1){
+                                    access = JSON.parse(info.access);
+                                    stats = GetInfo(params.nick);
+                                }
+                                if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
+                                    permit = 1
+                                } else {
+                                    permit = 0
+                                }
+                                if(permit){
+                                    var msg = user.nick+" has channel banned "+params.nick;
+                                    if(params.message.trim())
+                                        msg+=": "+params.message.trim();
+                                    broadcastChannel(dao, channel, msg);
+                                    return dao.ban(params.nick, channelName);
+                                } else {
+                                    errorMessage('Can\'t ban user with higher role then your own.');
+                                }
                             } else {
-                                permit = 0
-                            }
-                            if(permit){
-                                var msg = user.nick+" has channel banned "+params.nick;
-                                if(params.message.trim())
-                                    msg+=": "+params.message.trim();
-                                broadcastChannel(dao, channel, msg);
                                 return dao.ban(params.nick, channelName);
-                            } else {
-                                errorMessage('Can\'t ban user with higher role then your own.');
                             }
-                        } else {
-                            return dao.ban(params.nick, channelName);
-                        }
+                        });
                     });
                 }
             },
@@ -282,25 +278,12 @@ function createChannel(io, channelName) {
                 }
             },
             unban_all : {
-                role : 'god',
+                role : 'super',
                 params : [ 'oath' ],
                 handler : function(dao, dbuser, params) {
-                    if (params.oath == "I confirm this action.") {
-                    return dao.banlist(channelName).then(function(list){
-                            if (list.length > 0){
-                                broadcastChannel(dao, channel, "/*"+dbuser.get("nick")+" has cleared the channel banlist");
-                                for (var i = 0; i < list.length; i++)
-                                {
-                                    dao.unban(list[i], channelName);
-                                }
-                            } else {
-                                errorMessage('There are no users in this channel\'s banlist');
-                            }
-                        }
-                    )
-                    } else {
-                        errorMessage('Please enter the following oath after the command: I confirm this action.');
-                    }
+                    return dao.unban_all(channelName).then(function(list){
+                        broadcastChannel(dao, channel, list + user.nick);
+                    })
                 }
             },
             banip : {
@@ -329,10 +312,9 @@ function createChannel(io, channelName) {
                         }
                         if(permit){
                             msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
-                            reason = msg.length > 0 ? 'kicked_reason' : 'kicked'
                             socketEmit(kuser.socket, 'message', {
                                 type : 'error-message',
-                                message : msgs.get(reason, user.nick, msg)
+                                message : msgs.get(msg.length > 0 ? 'kicked_reason' : 'kicked', user.nick, msg)
                             });
                             kuser.socket.disconnect();
                             broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
