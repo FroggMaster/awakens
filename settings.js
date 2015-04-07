@@ -11,7 +11,7 @@ try {
 
 module.exports = {
     server : {
-        port : 8080,
+        port : 80,
         compression : true,
         cache : false
     // 86400000
@@ -21,7 +21,7 @@ module.exports = {
         domain : 'spooks.me',
         key : './ssl/myserver.key',
         cert : './ssl/server.crt',
-        port : 443
+        port : 111
     },
 
     speak : {
@@ -186,7 +186,8 @@ module.exports = {
         muted : 'You have been muted, please try again later.',
         registeredName : 'That nick is registered',
         vhosttaken : '{0} has already been taken as a mask.',
-        InvalidCharacters : 'Name contained invalid character(s)'
+        InvalidCharacters : 'Name contained invalid character(s)',
+        clear_channel : 'banlist cleared by '
     },
 
     nouns : [ 'alien', 'apparition', 'bat', 'blood', 'bogeyman', 'boogeyman', 'boo', 'bone', 'cadaver', 'casket', 'cauldron', 'cemetery', 'cobweb', 'coffin', 'corpse', 'crypt', 'darkness', 'dead', 'demon', 'devil', 'death', 'eyeball', 'fangs', 'fear', 'gastly', 'gengar', 'ghost', 'ghoul', 'goblin', 'grave', 'gravestone', 'grim', 'grimreaper', 'gruesome', 'haunter', 'headstone', 'hobgoblin', 'hocuspocus', 'howl', 'jack-o-lantern', 'mausoleum', 'midnight', 'monster', 'moon', 'mummy', 'night', 'nightmare', 'ogre', 'phantasm', 'phantom', 'poltergeist', 'pumpkin', 'scarecrow', 'scream', 'shadow', 'skeleton', 'skull', 'specter', 'spider', 'spine', 'spirit', 'spook', 'tarantula', 'tomb', 'tombstone', 'troll', 'vampire', 'werewolf', 'witch', 'witchcraft', 'wraith', 'zombie' ],
