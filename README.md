@@ -8,11 +8,13 @@ A simple Node.JS chat server with some user management and games.
 #Requirements
 1. node.js installed
 2. MySQL server installed and running
+3. npm installed (Sometimes it comes with node)
 
 #Local Installation
 1. Create a database schema called nodejs_chat.
 2. Execute the sql files inside sql/, starting by sql/nodejs_chat.sql on this schema to create the tables.
 3. Rename the conf/settings.local to be conf/settings.json and edit it accordingly so the server can connect to the database.
+4. Run "npm install" and wait for it to complete
 4. Run "node server.js" on command line in the main project folder
 5. To suppress console output, run "node server.js >/dev/null &" instead.
 
