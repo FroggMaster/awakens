@@ -482,7 +482,24 @@ module.exports = function(callback) {
             }
             return result.promise();
         },
-
+        
+        unban_all : function(channel){
+            var result = $.Deferred();
+            var sql = 'delete from chat_banned where channel=?';
+            var params = [];
+            if(channel){
+                params.push(channel)
+            } else {
+                params.push('NULL')
+            }
+            query(sql, params).then(function(){
+                result.resolve(msgs.get('clear_channel'));
+            }, function(err){
+                result.reject(err)
+            });
+            return result.promise();
+        },
+        
         /**
          * @param {string} channel
          * @returns {$.Promise<Array.<string>>}
