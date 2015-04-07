@@ -18,11 +18,11 @@ A simple Node.JS chat server with some user management and games.
 
 All done! To suppress console output, run `node server.js >/dev/null &` instead.
 
-#/dev
+#Developing
 1. Don't commit directly to master! New features and suggestions should be committed directly to the dev branch.
 2. Run your own instance of the chat and never commit untested code unless you're 100% sure it won't break dev.
 3. There's a server running the dev branch available at <http://aws.bruno02468.com/>
-4. Happy hacking!
+4. Happy ~~hacking~~ developing!
 
 #License
 
