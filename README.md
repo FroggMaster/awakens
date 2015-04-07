@@ -1,6 +1,8 @@
 spooks-chatjs
 ================
 
+![Spooks logo variant](http://i.imgur.com/gs3iohM.jpg "Spooks logo")
+
 A simple Node.JS chat server with some user management and games.
 
 #Requirements
