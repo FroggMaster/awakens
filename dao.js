@@ -493,7 +493,7 @@ module.exports = function(callback) {
                 params.push('NULL')
             }
             query(sql, params).then(function(){
-                result.resolve(msgs.get('clear_channel'));
+                result.resolve(true);
             }, function(err){
                 result.reject(err)
             });
