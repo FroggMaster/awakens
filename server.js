@@ -33,7 +33,7 @@ function createChannel(io, channelName) {
     };
     var tokenCache = {};
     var whitelist = {};
-    var whitelistLocked = {};
+    var whitelistLocked = false;
     var count = 0;
     var command_access = {
         bg : ['mod',0],
