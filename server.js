@@ -757,7 +757,7 @@ function createChannel(io, channelName) {
                 params : [ 'ip' ],
                 handler : function(dao, dbuser, params){
                     if (whitelist[params.ip] != undefined){
-                        whitelist[params.ip] = undefined;
+                        delete whitelist[params.ip];
                         socketEmit(socket, 'message', {
                             message : params.ip + ' has been removed'
                         });
