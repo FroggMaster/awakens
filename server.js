@@ -426,7 +426,7 @@ function createChannel(io, channelName) {
                     }
                 }
             },
-            mute_user : function {
+            mute_user : {
                 role : 'super',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params){
