@@ -32,6 +32,8 @@ function createChannel(io, channelName) {
         online : []
     };
     var tokenCache = {};
+    var whitelist = {};
+    var whitelistLocked = {};
     var count = 0;
     var command_access = {
         bg : ['mod',0],
