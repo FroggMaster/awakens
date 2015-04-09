@@ -1172,6 +1172,23 @@ $(function() {
         unblock_all : function(){},
         alert : function(){},
         unalert : function(){},
+        lock_whitelist : {
+            role : 'super'
+        },
+        unlock_whitelist : {
+            role : 'super'
+        },
+        add_whitelist : {
+            role : 'super',
+            params : [ 'ip$' ]
+        },
+        remove_whitelist : {
+            role : 'super',
+            params : [ 'ip$' ]
+        },
+        whitelist : {
+            role : 'admin'
+        },
         play : {
             role : 'super',
             params : [ 'url' ]
