@@ -32,6 +32,8 @@ function createChannel(io, channelName) {
         online : []
     };
     var tokenCache = {};
+    var whitelist = {};
+    var whitelistLocked = false;
     var count = 0;
     var command_access = {
         bg : ['mod',0],
@@ -47,6 +49,22 @@ function createChannel(io, channelName) {
             remote_addr : socket.handshake.address,
             socket : socket
         };
+        
+        function checkForError(){
+            if (whitelist[user.remote_addr] == undefined){
+                socketEmit(socket, 'message',{
+                   type : 'error-message',
+                   message : 'Your IP is not whitelisted, and the room is currently locked.'
+                });
+                socket.disconnect();
+            }
+        }
+        
+        if (!whitelistLocked){
+            if (whitelist[user.remote_addr] == undefined){
+                whitelist[user.remote_addr] = user.remote_addr;
+            }
+        }
         
         setTimeout(function(){
             if(indexOf(user.nick) == -1){
@@ -340,7 +358,7 @@ function createChannel(io, channelName) {
                         var stats = grab(params.nick);
                         var permit = 0;
                         return dao.findUser(params.nick).then(function(dbuser) {
-                            if (dbuser && dbuser.get('verified') || params.role == 'mute' || stats.role == 'mute') {
+                            if (dbuser && dbuser.get('verified')) {
                                 if(stats == -1){
                                     stats = GetInfo(params.nick)
                                 }
@@ -357,12 +375,10 @@ function createChannel(io, channelName) {
                                     console.log('ACCESS_GIVEN ' + user.nick + ' - ' + channelName + ' - ' + params.nick)
                                     dao.getChannelInfo(channelName).then(function(channelInfo) {
                                         access = JSON.parse(channelInfo.access);
-                                        if(stats.role != 'basic'){
-                                            for (i = 5; i >= 2; i--) {
-                                                for(q = 0; q < access[roles[i]].length; q++){
-                                                    if(access[roles[i]][q][0] == params.nick.toLowerCase()){
-                                                        access[roles[i]].splice(q, 1);
-                                                    }
+                                        for (i = 5; i >= 2; i--) {
+                                            for(q = 0; q < access[roles[i]].length; q++){
+                                                if(access[roles[i]][q][0] == params.nick.toLowerCase()){
+                                                    access[roles[i]].splice(q, 1);
                                                 }
                                             }
                                         }
@@ -370,20 +386,19 @@ function createChannel(io, channelName) {
                                             access[params.role].push([params.nick.toLowerCase(),params.access_level]);
                                         }
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
-                                            var to = indexOf(params.nick);
-                                            if(to != -1) {
-                                                channel.online[to].role = params.role;
-                                                channel.online[to].access_level = params.access_level;
-                                                toSocket = channel.online[to].socket;
-                                                socketEmit(toSocket, 'update',{
-                                                    access_level : params.access_level,
-                                                    role : params.role,
-                                                    access : JSON.stringify(access)
-                                                });
-                                                roomEmit('update',{
-                                                    access : JSON.stringify(access)
-                                                });
-                                            }
+                                            channel.online.forEach(function(user) {
+                                                if (user.nick == params.nick.toLowerCase()) {
+                                                    user.role = params.role;
+                                                    user.access_level = params.access_level;
+                                                    user.socket.emit('update', {
+                                                        access_level : dbuser.get('access_level'),
+                                                        role : dbuser.get('role')
+                                                    });
+                                                }
+                                            });
+                                            roomEmit('update',{
+                                                access : JSON.stringify(access)
+                                            });
                                             showMessage(params.nick + ' now has role ' + params.role + ' and access_level ' + params.access_level)
                                         });
                                     });
@@ -429,6 +444,21 @@ function createChannel(io, channelName) {
                     }
                 }
             },
+            mute_user : {
+                role : 'super',
+                params : [ 'nick' ],
+                handler : function(dao, dbuser, params){
+                    var stats = grab(params.nick);
+                    var to = indexOf(params.nick);
+                    if(stats.role != 'mute'){
+                        channel.online[indexOf(params.nick)].role = 'mute';
+                        showMessage(params.nick + ' has been muted.')
+                    } else {
+                        channel.online[indexOf(params.nick)].role = 'basic';
+                        showMessage(params.nick + ' has been unmuted.')
+                    }
+                }
+            },
             whoami : {
                 handler : function(dao, dbuser) {
                     showMessage(msgs.get('whoami', user.nick, user.role,user.access_level, user.remote_addr));
@@ -460,9 +490,9 @@ function createChannel(io, channelName) {
                                 mask = 'Private'
                             }
                             if (roles.indexOf(user.role) <= 1) {
-                                showMessage(msgs.get('whois', params.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
+                                showMessage(msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
                             } else if (roles.indexOf(user.role) >= 2) {
-                                showMessage(msgs.get('whoiss', params.nick, stats.role, stats.access_level, mask, reg));
+                                showMessage(msgs.get('whoiss', dbuser.get('nick'), stats.role, stats.access_level, mask, reg));
                             }
                         } else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
@@ -671,6 +701,96 @@ function createChannel(io, channelName) {
                 return $.Deferred().resolve(true);
                 }
             },
+            lock_whitelist : {
+                role : 'super',
+                handler : function(dao, dbuser, params){
+                    if (whitelistLocked) {
+                        socketEmit(socket, 'message', {
+                            message : 'IP whitelist is already locked',
+                            type : 'error-message'
+                        });
+                    }
+                    else {
+                    whitelistLocked = true;
+                    socketEmit(socket, 'message', {
+                            message : 'IP whitelist has been locked',
+                    });
+                    }
+                }
+            },
+            unlock_whitelist : {
+                role : 'super',
+                handler : function(dao, dbuser, params){
+                    if (!whitelistLocked) {
+                        socketEmit(socket, 'message', {
+                            message : 'IP whitelist is not locked',
+                            type : 'error-message'
+                        });
+                    }
+                    else {
+                    whitelistLocked = false;
+                    socketEmit(socket, 'message', {
+                            message : 'IP whitelist has been unlocked',
+                    });
+                    }
+                }
+            },
+            add_whitelist : {
+                role : 'super',
+                params : [ 'ip' ],
+                handler : function(dao, dbuser, params){
+                    if (whitelist[params.ip] == undefined){
+                        whitelist[params.ip] = params.ip;
+                        socketEmit(socket, 'message', {
+                            message : params.ip + ' has been added'
+                        });
+                    } else {
+                        socketEmit(socket, 'message', {
+                            type : 'error-message',
+                            message : 'That IP/character sequence is already on the list'
+                        });
+                    }
+                }
+            },
+            remove_whitelist : {
+                role : 'super',
+                params : [ 'ip' ],
+                handler : function(dao, dbuser, params){
+                    if (whitelist[params.ip] != undefined){
+                        delete whitelist[params.ip];
+                        socketEmit(socket, 'message', {
+                            message : params.ip + ' has been removed'
+                        });
+                    } else {
+                        socketEmit(socket, 'message', {
+                            type : 'error-message',
+                            message : 'That IP/character sequence is not on the whitelist'
+                        });
+                    }
+                }
+            },
+            whitelist : {
+                role : 'admin',
+                handler : function(dao, dbuser, params){
+                    var resultingString = "IP addresses currently allowed: ";
+                    var totalProperties = 0;
+                    for (var z in whitelist){
+                        resultingString += z + ", ";
+                        totalProperties++;
+                        console.log(totalProperties);
+                    }
+                    if (totalProperties > 0) {
+                        resultingString = resultingString.substring(0,resultingString.length - 2);
+                        socketEmit(socket, 'message', {
+                            message : resultingString
+                        });
+                    } else {
+                        socketEmit(socket, 'message', {
+                            message : 'The whitelist is empty...'
+                        });
+                    }
+                }
+            },
             play : {
                 role : 'super',
                 params : [ 'url' ],
@@ -770,6 +890,7 @@ function createChannel(io, channelName) {
          */
         _.each({
             join : function(dao, msg) {
+                checkForError();
                 user.tabs = 0
                 if(channel.online.length > 0){
                     for (i = 0; i < channel.online.length; i++) { 
@@ -1002,6 +1123,7 @@ function createChannel(io, channelName) {
         function initClient(dao) {
             var done = $.Deferred();
             dao.isBanned(channelName, user.remote_addr).then(function(banned) {
+                checkForError();
                 if (banned) {
                     errorMessage(msgs.banned);
                     socket.disconnect();
