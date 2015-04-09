@@ -48,6 +48,22 @@ function createChannel(io, channelName) {
             socket : socket
         };
         
+        function checkForError(){
+            if (whitelist[user.remote_addr] == undefined){
+                socketEmit(socket, 'message',{
+                   type : 'error-message',
+                   message : 'Your IP is not whitelisted, and the room is currently locked.'
+                });
+                socket.disconnect();
+            }
+        }
+        
+        if (!whitelistLocked){
+            if (whitelist[user.remote_addr] == undefined){
+                whitelist[user.remote_addr] = user.remote_addr;
+            }
+        }
+        
         setTimeout(function(){
             if(indexOf(user.nick) == -1){
                 console.log(user.remote_addr + ' didn\'t connect properly.')
@@ -683,6 +699,96 @@ function createChannel(io, channelName) {
                 return $.Deferred().resolve(true);
                 }
             },
+            lock_whitelist : {
+                role : 'super',
+                handler : function(dao, dbuser, params){
+                    if (whitelistLocked) {
+                        socketEmit(socket, 'message', {
+                            message : 'IP whitelist is already locked',
+                            type : 'error-message'
+                        });
+                    }
+                    else {
+                    whitelistLocked = true;
+                    socketEmit(socket, 'message', {
+                            message : 'IP whitelist has been locked',
+                    });
+                    }
+                }
+            },
+            unlock_whitelist : {
+                role : 'super',
+                handler : function(dao, dbuser, params){
+                    if (!whitelistLocked) {
+                        socketEmit(socket, 'message', {
+                            message : 'IP whitelist is not locked',
+                            type : 'error-message'
+                        });
+                    }
+                    else {
+                    whitelistLocked = false;
+                    socketEmit(socket, 'message', {
+                            message : 'IP whitelist has been unlocked',
+                    });
+                    }
+                }
+            },
+            add_whitelist : {
+                role : 'super',
+                params : [ 'ip' ],
+                handler : function(dao, dbuser, params){
+                    if (whitelist[params.ip] == undefined){
+                        whitelist[params.ip] = params.ip;
+                        socketEmit(socket, 'message', {
+                            message : params.ip + ' has been added'
+                        });
+                    } else {
+                        socketEmit(socket, 'message', {
+                            type : 'error-message',
+                            message : 'That IP/character sequence is already on the list'
+                        });
+                    }
+                }
+            },
+            remove_whitelist : {
+                role : 'super',
+                params : [ 'ip' ],
+                handler : function(dao, dbuser, params){
+                    if (whitelist[params.ip] != undefined){
+                        whitelist[params.ip] = undefined;
+                        socketEmit(socket, 'message', {
+                            message : params.ip + ' has been removed'
+                        });
+                    } else {
+                        socketEmit(socket, 'message', {
+                            type : 'error-message',
+                            message : 'That IP/character sequence is not on the whitelist'
+                        });
+                    }
+                }
+            },
+            whitelist : {
+                role : 'admin',
+                handler : function(dao, dbuser, params){
+                    var resultingString = "IP addresses currently allowed: ";
+                    var totalProperties = 0;
+                    for (var z in whitelist){
+                        resultingString += z + ", ";
+                        totalProperties++;
+                        console.log(totalProperties);
+                    }
+                    if (totalProperties > 0) {
+                        resultingString = resultingString.substring(0,resultingString.length - 2);
+                        socketEmit(socket, 'message', {
+                            message : resultingString
+                        });
+                    } else {
+                        socketEmit(socket, 'message', {
+                            message : 'The whitelist is empty...'
+                        });
+                    }
+                }
+            },
             play : {
                 role : 'super',
                 params : [ 'url' ],
@@ -782,6 +888,7 @@ function createChannel(io, channelName) {
          */
         _.each({
             join : function(dao, msg) {
+                checkForError();
                 user.tabs = 0
                 if(channel.online.length > 0){
                     for (i = 0; i < channel.online.length; i++) { 
@@ -1014,6 +1121,7 @@ function createChannel(io, channelName) {
         function initClient(dao) {
             var done = $.Deferred();
             dao.isBanned(channelName, user.remote_addr).then(function(banned) {
+                checkForError();
                 if (banned) {
                     errorMessage(msgs.banned);
                     socket.disconnect();
