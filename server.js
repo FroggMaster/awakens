@@ -490,9 +490,9 @@ function createChannel(io, channelName) {
                                 mask = 'Private'
                             }
                             if (roles.indexOf(user.role) <= 1) {
-                                showMessage(msgs.get('whois', dbuser.get('nick'), stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
+                                showMessage(msgs.get('whois', stats.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
                             } else if (roles.indexOf(user.role) >= 2) {
-                                showMessage(msgs.get('whoiss', dbuser.get('nick'), stats.role, stats.access_level, mask, reg));
+                                showMessage(msgs.get('whoiss', stats.nick, stats.role, stats.access_level, mask, reg));
                             }
                         } else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
