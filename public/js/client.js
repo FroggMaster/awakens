@@ -167,7 +167,6 @@ $(function() {
                 });
             } else {
                 CLIENT.show({
-               	    type : 'error-message',
                     message : "There are no users on your blocklist"
                 });
             }
