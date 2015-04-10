@@ -509,8 +509,8 @@ $(function() {
         style = CLIENT.get('chat_style').split(',');
         $('#input-bar').css('background-color', style[0]);
         if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-            document.styleSheets[1].deleteRule(7);
-            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",7);
+            document.styleSheets[1].deleteRule(8);
+            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",8);
         }
     });
 });
