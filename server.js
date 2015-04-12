@@ -709,6 +709,21 @@ function createChannel(io, channelName) {
                 return $.Deferred().resolve(true);
                 }
             },
+            afk : {
+                handler : function(dao, dbuser, params) {
+                    if (user.afk == undefined){
+                        user.afk = false;
+                    }
+                    var afkString = " is no longer AFK";
+                    if(user.afk = !user.afk){
+                        afkString = " is now AFK";
+                    } 
+                    roomEmit('message',{
+                        message : user.nick + afkString,
+                        type : "general-message"
+                    });
+                }
+            },
             lock_whitelist : {
                 role : 'super',
                 handler : function(dao, dbuser, params){
