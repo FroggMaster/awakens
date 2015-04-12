@@ -1124,7 +1124,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block background mask alert security frame frame_src'.split(' ');
+                var valid = 'color font style flair mute mute_speak images note topic styles bg part block background mask alert security frame frame_src afk'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1153,6 +1153,7 @@ $(function() {
         part : {
             params : [ 'message$' ]
         },
+        afk : {},
         set : {
             params : [ 'att' ],
             handler : function(params) {
