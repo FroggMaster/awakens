@@ -167,7 +167,6 @@ $(function() {
                 });
             } else {
                 CLIENT.show({
-               	    type : 'error-message',
                     message : "There are no users on your blocklist"
                 });
             }
@@ -510,8 +509,8 @@ $(function() {
         style = CLIENT.get('chat_style').split(',');
         $('#input-bar').css('background-color', style[0]);
         if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-            document.styleSheets[1].deleteRule(7);
-            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",7);
+            document.styleSheets[1].deleteRule(8);
+            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",8);
         }
     });
 });
@@ -1371,6 +1370,7 @@ parser = {
         if(CLIENT.get('styles') == 'on'){
          str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
          str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
+         str = this.multiple(str, /\/\++([^\|]+)\|?/g, '<div id=spinner>$1</div>');
          str = this.multiple(str, /\/\+([^\|]+)\|?/g, '<div id=rotat>$1</div>');
          str = this.multiple(str, /\/\^([^\|]+)\|?/g, '<big>$1</big>');
          str = this.multiple(str, /\/\*([^\|]+)\|?/g, '<strong>$1</strong>');
