@@ -1370,6 +1370,7 @@ parser = {
         if(CLIENT.get('styles') == 'on'){
          str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
          str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
+         str = this.multiple(str, /\/\++([^\|]+)\|?/g, '<div id=spinner>$1</div>');
          str = this.multiple(str, /\/\+([^\|]+)\|?/g, '<div id=rotat>$1</div>');
          str = this.multiple(str, /\/\^([^\|]+)\|?/g, '<big>$1</big>');
          str = this.multiple(str, /\/\*([^\|]+)\|?/g, '<strong>$1</strong>');
