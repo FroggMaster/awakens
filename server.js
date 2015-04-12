@@ -313,8 +313,15 @@ function createChannel(io, channelName) {
                 access_level : 0,
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    var stats = grab(params.nick).remote_addr;
-                    return dao.ban(stats, channelName);
+                    var stats;
+                    if ((stats = grab(params.nick)) != -1) {
+                    return dao.ban(stats.remote_addr, channelName);
+                    } else {
+                        socketEmit(socket,'message',{
+                            message: "That IP is not online",
+                            type: "error-message"
+                        });
+                    }
                     
                 }
             },
