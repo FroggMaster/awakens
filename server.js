@@ -299,16 +299,12 @@ function createChannel(io, channelName) {
                 access_level : 0,
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    var stats;
-                    if ((stats = grab(params.nick)) != -1) {
-                    return dao.ban(stats.remote_addr, channelName);
+                    var stats = grab(params.nick);
+                    if (stats != -1 && roles.indexOf(user.role) < roles.indexOf(stats.role)) {
+                        return dao.ban(stats.remote_addr, channelName);
                     } else {
-                        socketEmit(socket,'message',{
-                            message: "That IP is not online",
-                            type: "error-message"
-                        });
+                        errorMessage('That IP is not online')
                     }
-                    
                 }
             },
             kick : {
@@ -695,21 +691,6 @@ function createChannel(io, channelName) {
                 return $.Deferred().resolve(true);
                 }
             },
-            afk : {
-                handler : function(dao, dbuser, params) {
-                    if (user.afk == undefined){
-                        user.afk = false;
-                    }
-                    var afkString = " is no longer AFK";
-                    if(user.afk = !user.afk){
-                        afkString = " is now AFK";
-                    } 
-                    roomEmit('message',{
-                        message : user.nick + afkString,
-                        type : "general-message"
-                    });
-                }
-            },
             lock_whitelist : {
                 role : 'super',
                 handler : function(dao, dbuser, params){
@@ -889,8 +870,11 @@ function createChannel(io, channelName) {
                     return dao.getChannelInfo(channelName).then(function(data){
                         var nick = msg && msg.nick;
                         var token = msg && msg.security;
-                        var whitelist = JSON.parse(data['whitelist']);
                         var permit = 0;
+                        var whitelist = [nick];
+                        if(data['whitelist']){
+                            whitelist = JSON.parse(data['whitelist']);
+                        }
                         if (nick) {
                             var done = $.Deferred();
                             var nick = msg && msg.nick.slice(0,100);
@@ -904,12 +888,17 @@ function createChannel(io, channelName) {
                                         for (i = 0; i < whitelist.length; i++) {
                                             dao.findUser(whitelist[i]).then(function(dbuser){
                                                 if(user.remote_addr == dbuser.get('remote_addr')){
+                                                    permit = 1
+                                                };
+                                                if(i == whitelist.length && permit){
                                                     attemptNick(dao, nick, undefined, token).then(function() {
                                                         done.resolve.apply(done, arguments);
                                                     }, function(err) {
                                                         done.reject(err);
                                                     });
-                                                };
+                                                } else {
+                                                    errorMessage('Channel is private.')
+                                                }
                                             });
                                         };
                                     } else {
