@@ -677,7 +677,7 @@ $(function() {
             	sound = 'name'
             }
         }
-        message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); textBox.value = textBox.value + '>>"+message.count+" '; $('#input-message').focus();");
+        message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); if (textBox.value == \"\" || textBox.value.substring(textBox.length - 1) == \" \"){textBox.value = textBox.value + '>>"+message.count+" ';}else{textBox.value = textBox.value + ' >>"+message.count+" ';} $('#input-message').focus();");
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
             var parsedFlair = null;
