@@ -904,6 +904,7 @@ $(function() {
         if(e.keyCode == 17 && hover != null){
             if(hover.localName == 'img'){
                 $('#bigimg')[0].innerHTML = hover.outerHTML;
+                $('#bigimg').children().removeAttr('onload');
             }
             ctrl = true;
         }
@@ -920,6 +921,7 @@ $(function() {
         hover = e.target;
   if(hover.localName == 'img' && ctrl){
    $('#bigimg')[0].innerHTML = hover.outerHTML;
+   $('#bigimg').children().removeAttr('onload');
   } else {
    $('#bigimg')[0].innerHTML = '';
   }
