@@ -149,16 +149,22 @@ $(function() {
                 }; 
             }
         } else if(name == 'block' || name == 'alert'){
-            if(name == 'block'){
-                add('block',input)
+            if (input.trim() != ""){
+                add(name,input.trim());
             } else {
-                add('alert',input)
+                CLIENT.show({
+                    message : "Invalid: /"+name+" <nick>",
+                    type : 'error-message'
+                });
             }
         } else if(name == 'unblock' || name == 'unalert') {
-            if(name == 'unblock'){
-                remove('block',input)
+            if (input.trim() != ""){
+                remove(name.substring(2),input.trim());
             } else {
-                remove('alert',input)
+                CLIENT.show({
+                    message : "Invalid: /"+name+" <nick>",
+                    type : 'error-message'
+                });
             }
         } else if (name == 'blocklist') {
             if (CLIENT.get('block') != ""){
@@ -171,24 +177,10 @@ $(function() {
                 });
             }
 	} else if (name == 'unblock_all'){
-            var blocked = CLIENT.get('block').split(',').slice(1);
-            if (blocked.length <= 0)
-            {
-                CLIENT.show({
-                    message : "There are no users on your blocklist",
-                    type : 'error-message'
-                });
-            }
-            else {
-                for (var i = 0; i < blocked.length; i++)
-                {
-                    try{
-                    remove('block',blocked[i]);
-                    }catch(error){
-                        //do nothing
-                    }
-                }
-            }
+            CLIENT.set('block',"");
+            CLIENT.show({
+                    message : "Blocklist has been cleared"
+            });
         } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
@@ -1242,32 +1234,43 @@ $(function() {
     COMMANDS.background = COMMANDS.bg;
 })();
 
+var searchTerm;
 add = function(att,user){
-    block = CLIENT.get(att).split(',')
-    if(block.indexOf(user) == -1){
-        block.push(user)
-            CLIENT.show(user + ' has been added')
+    block = CLIENT.get(att);
+    searchTerm = new RegExp("(^|(?: ))" + user+"($|,+? )","i");
+    if(block.search(searchTerm) == -1){
+        block += ", " + user;
+        while (block[0] == "," | block[0] == " ")
+            block = block.substring(1);
+        CLIENT.show(user + ' has been added');
+        CLIENT.set(att,block);
     } else {
         CLIENT.show({
-            message : 'That nick is already added.',
+            message : 'That nick is already added',
             type : 'error-message'
         });
     }
-CLIENT.set(att,block.join(','))
 }
 remove = function(att,user){
-    block = CLIENT.get(att).split(',')
-    index = block.indexOf(user)
-    if(block.indexOf(user) != -1){
-        block.splice(index,1)
-        CLIENT.show(user + ' was removed.')
+    block = CLIENT.get(att);
+    searchTerm = new RegExp("(^|(?: ))" + user+"($|,+? )","i");
+    index = block.search(searchTerm);
+    if(index != -1){
+        if (block.split(",").length == 1){
+            block = "";
+        } else {
+            block = block.substring(0,index-1) + block.substring(index+user.length+1);
+            while (block[0] == "," | block[0] == " ")
+                block = block.substring(1);
+        }
+        CLIENT.show(user + ' was removed.');
+        CLIENT.set(att,block);
     } else {
         CLIENT.show({
-            message : 'You don\'t have that nick added.',
+            message : 'That nick is not on the list',
             type : 'error-message'
         });
     }
-CLIENT.set(att,block.join(','))
 }
 
 // ------------------------------------------------------------------
