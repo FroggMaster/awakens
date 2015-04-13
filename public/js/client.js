@@ -149,16 +149,22 @@ $(function() {
                 }; 
             }
         } else if(name == 'block' || name == 'alert'){
-            if(name == 'block'){
-                add('block',input)
+            if (input.trim() != ""){
+                add(name,input.trim());
             } else {
-                add('alert',input)
+                CLIENT.show({
+                    message : "Invalid: /"+name+" <nick>",
+                    type : 'error-message'
+                });
             }
         } else if(name == 'unblock' || name == 'unalert') {
-            if(name == 'unblock'){
-                remove('block',input)
+            if (input.trim() != ""){
+                remove(name.substring(2),input.trim());
             } else {
-                remove('alert',input)
+                CLIENT.show({
+                    message : "Invalid: /"+name+" <nick>",
+                    type : 'error-message'
+                });
             }
         } else if (name == 'blocklist') {
             if (CLIENT.get('block') != ""){
@@ -171,24 +177,10 @@ $(function() {
                 });
             }
 	} else if (name == 'unblock_all'){
-            var blocked = CLIENT.get('block').split(',').slice(1);
-            if (blocked.length <= 0)
-            {
-                CLIENT.show({
-                    message : "There are no users on your blocklist",
-                    type : 'error-message'
-                });
-            }
-            else {
-                for (var i = 0; i < blocked.length; i++)
-                {
-                    try{
-                    remove('block',blocked[i]);
-                    }catch(error){
-                        //do nothing
-                    }
-                }
-            }
+            CLIENT.set('block',"");
+            CLIENT.show({
+                    message : "Blocklist has been cleared"
+            });
         } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
@@ -672,10 +664,12 @@ $(function() {
         else
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
         if(check.test(message.message) || valid){
-            message.count && el.children('.timestamp').attr('id', "highlightname");
-            sound = 'name'
+            if (message.nick != message.message.match(check)){
+            	message.count && el.children('.timestamp').attr('id', "highlightname");
+            	sound = 'name'
+            }
         }
-        message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); textBox.value = textBox.value + '>>"+message.count+" '; $('#input-message').focus();");
+        message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); if (textBox.value == \"\" || textBox.value.substring(textBox.length - 1) == \" \"){textBox.value = textBox.value + '>>"+message.count+" ';}else{textBox.value = textBox.value + ' >>"+message.count+" ';} $('#input-message').focus();");
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
             var parsedFlair = null;
@@ -910,6 +904,7 @@ $(function() {
         if(e.keyCode == 17 && hover != null){
             if(hover.localName == 'img'){
                 $('#bigimg')[0].innerHTML = hover.outerHTML;
+                $('#bigimg').children().removeAttr('onload');
             }
             ctrl = true;
         }
@@ -926,6 +921,7 @@ $(function() {
         hover = e.target;
   if(hover.localName == 'img' && ctrl){
    $('#bigimg')[0].innerHTML = hover.outerHTML;
+   $('#bigimg').children().removeAttr('onload');
   } else {
    $('#bigimg')[0].innerHTML = '';
   }
@@ -1153,6 +1149,7 @@ $(function() {
         part : {
             params : [ 'message$' ]
         },
+        afk : {},
         set : {
             params : [ 'att' ],
             handler : function(params) {
@@ -1177,13 +1174,13 @@ $(function() {
         unlock_whitelist : {
             role : 'super'
         },
-        add_whitelist : {
+        invite : {
             role : 'super',
-            params : [ 'ip$' ]
+            params : [ 'nick' ]
         },
-        remove_whitelist : {
+        uninvite : {
             role : 'super',
-            params : [ 'ip$' ]
+            params : [ 'nick' ]
         },
         whitelist : {
             role : 'admin'
@@ -1239,32 +1236,43 @@ $(function() {
     COMMANDS.background = COMMANDS.bg;
 })();
 
+var searchTerm;
 add = function(att,user){
-    block = CLIENT.get(att).split(',')
-    if(block.indexOf(user) == -1){
-        block.push(user)
-            CLIENT.show(user + ' has been added')
+    block = CLIENT.get(att);
+    searchTerm = new RegExp("(^|(?: ))" + user+"($|,+? )","i");
+    if(block.search(searchTerm) == -1){
+        block += ", " + user;
+        while (block[0] == "," | block[0] == " ")
+            block = block.substring(1);
+        CLIENT.show(user + ' has been added');
+        CLIENT.set(att,block);
     } else {
         CLIENT.show({
-            message : 'That nick is already added.',
+            message : 'That nick is already added',
             type : 'error-message'
         });
     }
-CLIENT.set(att,block.join(','))
 }
 remove = function(att,user){
-    block = CLIENT.get(att).split(',')
-    index = block.indexOf(user)
-    if(block.indexOf(user) != -1){
-        block.splice(index,1)
-        CLIENT.show(user + ' was removed.')
+    block = CLIENT.get(att);
+    searchTerm = new RegExp("(^|(?: ))" + user+"($|,+? )","i");
+    index = block.search(searchTerm);
+    if(index != -1){
+        if (block.split(",").length == 1){
+            block = "";
+        } else {
+            block = block.substring(0,index-1) + block.substring(index+user.length+1);
+            while (block[0] == "," | block[0] == " ")
+                block = block.substring(1);
+        }
+        CLIENT.show(user + ' was removed.');
+        CLIENT.set(att,block);
     } else {
         CLIENT.show({
-            message : 'You don\'t have that nick added.',
+            message : 'That nick is not on the list',
             type : 'error-message'
         });
     }
-CLIENT.set(att,block.join(','))
 }
 
 // ------------------------------------------------------------------
@@ -1389,9 +1397,9 @@ parser = {
         // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
         // >>78 quote
-	function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27#spooky_msg_'+str2+'\x27).parent().clone(); msgClone.children(\x27.timestamp\x27).attr(\x27id\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27#spooky_msg_'+str2+'\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27#spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27#spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
-	function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
-	if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
+        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27#spooky_msg_'+str2+'\x27).parent().clone(); msgClone.children(\x27.timestamp\x27).attr(\x27id\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27#spooky_msg_'+str2+'\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27#spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27#spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
+        function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
+        if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
 		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementById('spooky_msg_'+p2) != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // >implying
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
