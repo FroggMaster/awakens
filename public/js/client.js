@@ -672,8 +672,10 @@ $(function() {
         else
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
         if(check.test(message.message) || valid){
-            message.count && el.children('.timestamp').attr('id', "highlightname");
-            sound = 'name'
+            if (message.nick != message.message.match(check)){
+            	message.count && el.children('.timestamp').attr('id', "highlightname");
+            	sound = 'name'
+            }
         }
         message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); textBox.value = textBox.value + '>>"+message.count+" '; $('#input-message').focus();");
         var content = $('<div class="message-content"></div>').appendTo(el);
