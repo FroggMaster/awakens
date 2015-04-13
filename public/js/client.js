@@ -254,16 +254,6 @@ $(function() {
                     this.submit('/echo Now your messages look like this');
                 }, this);
             }, this);
-
-            'access_level'.split(' ').forEach(function(key) {
-                var first = true;
-                this.on('change:' + key, function(m, value) {
-                    if (!first) {
-                        this.show(key + ' changed to: ' + value);
-                    }
-                    first = false;
-                }, this);
-            }, this);
         },
 
         request : function(msg) {
