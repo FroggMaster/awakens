@@ -312,6 +312,11 @@ $(function() {
                         });
                     }
                 } else {
+                    if ((input.split(' ')[0].indexOf("login") > -1 || input.trim().split(' ')[1] && input.trim().split(' ')[1].indexOf("login") > -1 ) && ( input.trim().split(' ').length == 3 && input.trim().split(' ')[0].indexOf("login") > -1 || input.trim().split(' ').length == 4 ) && CLIENT.get('login') == false){
+                        CLIENT.show({
+                            message : "Use /login please (You did 'login')"
+                        });
+                    } else {
                     input = this.decorate(input);
                     if(!CLIENT.get('idle')){
                         socket.emit('message', {
@@ -325,6 +330,7 @@ $(function() {
                             message : input,
                             flair : CLIENT.get('flair')
                         });
+                    }
                     }
                 }
             }
@@ -619,11 +625,6 @@ $(function() {
                 message : message
             };
         }
-	if ((message.message.trim().split(' ')[0].indexOf("login") > -1 || message.message.trim().split(' ')[1] && message.message.trim().split(' ')[1].indexOf("login") > -1 ) && ( message.message.trim().split(' ').length == 3 && message.message.trim().split(' ')[0].indexOf("login") > -1 || message.message.trim().split(' ').length == 4 ) && CLIENT.get('login') == false){
-            CLIENT.show({
-                message : "Use /login please (You did 'login')"
-            });
-        } else {
         message.type = message.type || 'system-message';
         var el = buildMessage(message);
         switch (message.type) {
@@ -633,7 +634,6 @@ $(function() {
         default:
             appendMessage(el);
             break;
-        }
         }
     });
     
