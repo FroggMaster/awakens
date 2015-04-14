@@ -1158,10 +1158,10 @@ $(function() {
         unblock_all : function(){},
         alert : function(){},
         unalert : function(){},
-        lock_whitelist : {
+        private : {
             role : 'super'
         },
-        unlock_whitelist : {
+        public : {
             role : 'super'
         },
         invite : {
