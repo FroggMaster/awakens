@@ -942,6 +942,7 @@ function createChannel(io, channelName) {
                                                     });
                                                 } else {
                                                     errorMessage('Channel is private.')
+                                                    socket.disconnect();
                                                 }
                                             });
                                         };
@@ -960,8 +961,14 @@ function createChannel(io, channelName) {
                                 for (i = 0; i < whitelist.length; i++) {
                                     dao.findUser(whitelist[i]).then(function(dbuser){
                                         if(user.remote_addr == dbuser.get('remote_addr')){
-                                            return attemptNick(dao);
+                                            permit = 1
                                         };
+                                        if(i == whitelist.length && permit){
+                                            return attemptNick(dao);
+                                        } else {
+                                            errorMessage('Channel is private.')
+                                            socket.disconnect();
+                                        }
                                     });
                                 };
                             } else {
