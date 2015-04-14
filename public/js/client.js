@@ -407,7 +407,7 @@ $(function() {
     });
     CLIENT.on('change:notification', function(m, notification) {
         updateTitle();
-        //parser.getAllFonts(notification);
+        parser.getAllFonts(notification);
         CLIENT.show({
             type : 'note-message',
             message : notification
