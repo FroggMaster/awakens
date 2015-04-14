@@ -696,19 +696,31 @@ function createChannel(io, channelName) {
                 return $.Deferred().resolve(true);
                 }
             },
-            lock_whitelist : {
+            private : {
                 role : 'super',
                 handler : function(dao, dbuser, params){
-                    dao.setChannelInfo(channelName, 'private', 1).then(function(){
-                        showMessage('Channel has been made private.')
+                    dao.getChannelInfo(channelName, 'private').then(function(info){
+                        if (info.private == 1){
+                            errorMessage('Channel is already private');
+                        } else {
+                            dao.setChannelInfo(channelName, 'private', 1).then(function(){
+                                showMessage('Channel has been made private');
+                            });
+                        }
                     });
                 }
             },
-            unlock_whitelist : {
+            public : {
                 role : 'super',
                 handler : function(dao, dbuser, params){
-                    dao.setChannelInfo(channelName, 'private', 0).then(function(){
-                        showMessage('Channel has been made public.')
+                    dao.getChannelInfo(channelName, 'private').then(function(info){
+                        if (info.private == 0){
+                            errorMessage('Channel is already public');
+                        } else {
+                            dao.setChannelInfo(channelName, 'private', 0).then(function(){
+                                showMessage('Channel has been made public')
+                            });
+                        }
                     });
                 }
             },
@@ -768,9 +780,9 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params){
                     dao.getChannelInfo(channelName).then(function(info){
                         if(info.whitelist){
-                            showMessage(info.whitelist)
+                            showMessage(info.whitelist);
                         } else {
-                            showMessage('nobody whitelisted on this channel.')
+                            showMessage('Nobody whitelisted on this channel');
                         }
                     });
                 }
