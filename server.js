@@ -114,8 +114,13 @@ function createChannel(io, channelName) {
             nick : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    nick = params.nick.replace(/\s+/g, '');
-                    return attemptNick(dao, nick.substring(0, settings.limits.nick));
+                    if ((nick = params.nick.replace(/\s+/g, '')) != ''){
+                        return attemptNick(dao, nick.substring(0, settings.limits.nick));
+                    }
+                    socketEmit(socket,'message',{
+                        message : 'Invalid: /nick <nick>',
+                        type : 'error-message'
+                    })
                 }
             },
             me : {
