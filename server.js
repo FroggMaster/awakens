@@ -44,10 +44,14 @@ function createChannel(io, channelName) {
     room.on('connection', function(socket) {
         
         var user = {
-            remote_addr : socket.handshake.address,
+            remote_addr : socket.request.connection.remoteAddress,
             socket : socket
         };
-    
+        
+        if(!socket.request.connection.remoteAddress){
+            user.remote_addr = socket.handshake.address;
+        }
+        
         socket.on('SetPart', function(parts){
             user.part = parts.toString();
         });
@@ -182,6 +186,7 @@ function createChannel(io, channelName) {
                             success && socketEmit(socket, 'update', {
                                 login : true
                             });
+                            dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
                         });
                     });
                 }
@@ -218,7 +223,7 @@ function createChannel(io, channelName) {
                 role : 'super',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbsender, params) {
-                    dao.findUser(params.nick).then(function(dbuser){
+                    return dao.findUser(params.nick).then(function(dbuser){
                         if(dbuser){
                             if(roles.indexOf(user.role) <= roles.indexOf(dbuser.get('role'))){
                                 return dao.ban(params.nick);
@@ -380,8 +385,8 @@ function createChannel(io, channelName) {
                                                     user.role = params.role;
                                                     user.access_level = params.access_level;
                                                     user.socket.emit('update', {
-                                                        access_level : dbuser.get('access_level'),
-                                                        role : dbuser.get('role')
+                                                        access_level : user.access_level.toString(),
+                                                        role : user.role
                                                     });
                                                 }
                                             });
@@ -716,14 +721,22 @@ function createChannel(io, channelName) {
                             dao.getChannelInfo(channelName).then(function(info){
                                 if(info.whitelist){
                                     whitelist = JSON.parse(info.whitelist);
-                                    whitelist.push(params.nick)
+                                    if(whitelist.indexOf(params.nick) == -1){
+                                        whitelist.push(params.nick);
+                                        dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(){
+                                            showMessage(params.nick + ' has been invited.')
+                                        });
+                                    } else {
+                                        showMessage(params.nick + ' has already been invited.')
+                                    }
                                 } else {
-                                    whitelist = [params.nick]
+                                    dao.setChannelInfo(channelName, 'whitelist', JSON.stringify([params.nick])).then(function(){
+                                        showMessage(params.nick + ' has been invited.')
+                                    }); 
                                 }
-                                dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(info){
-                                    showMessage(params.nick + ' has been invited.')
-                                });
                             });
+                        } else {
+                            errorMessage('User isn\'t registered.')
                         }
                     });
                 }
@@ -754,7 +767,11 @@ function createChannel(io, channelName) {
                 role : 'admin',
                 handler : function(dao, dbuser, params){
                     dao.getChannelInfo(channelName).then(function(info){
-                        showMessage(info.whitelist)
+                        if(info.whitelist){
+                            showMessage(info.whitelist)
+                        } else {
+                            showMessage('nobody whitelisted on this channel.')
+                        }
                     });
                 }
             },
@@ -1387,7 +1404,7 @@ function createChannel(io, channelName) {
                         socketEmit(socket, 'update', {
                             id : socket.id,
                             nick : user.nick,
-                            access_level : user.access_level,
+                            access_level : user.access_level.toString(),
                             role : user.role,
                             vHost : user.vhost,
                             security : hashToken,
