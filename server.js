@@ -266,7 +266,7 @@ function createChannel(io, channelName) {
                         return dao.getChannelInfo(channelName).then(function(info){
                             if(dbuser){
                                 var permit = 0;
-                                stats = grab(params.nick);
+                                var stats = grab(params.nick);
                                 if(stats == -1){
                                     access = JSON.parse(info.access);
                                     stats = GetInfo(params.nick);
