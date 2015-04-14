@@ -957,6 +957,7 @@ $(function() {
         login : {
             params : [ 'password', 'nick$' ]
         },
+        logout : {},
         unregister : {},
         register : {
             params : [ 'initial_password' ]
