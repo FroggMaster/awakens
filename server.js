@@ -158,6 +158,15 @@ function createChannel(io, channelName) {
                     });
                 }
             },
+            logout : {
+                handler : function(dao, dbuser, params){
+                    if (!user.login){
+                        errorMessage('You are not logged in!');
+                    } else {
+                        return attemptNick(dao);
+                    }
+                }
+            },
             unregister : {
                 handler : function(dao, dbuser, params) {
                     return dbuser.unregister();
