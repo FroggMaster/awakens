@@ -781,6 +781,7 @@ function createChannel(io, channelName) {
                                     dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(info){
                                         showMessage(params.nick + ' has been uninvited.')
                                     });
+                                    indexOf(params.nick) != -1 && socketEmit(channel.online[indexOf(params.nick)].socket,'refresh');
                                 } else {
                                     errorMessage('User wasn\'t invited')
                                 }
