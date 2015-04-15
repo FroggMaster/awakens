@@ -307,7 +307,7 @@ $(function() {
                         }
                     } else {
                         CLIENT.show({
-                            message : 'Invalid command. Use /hlist for a list of commands, or /help to view the menu.',
+                            message : 'Invalid command. Use /help for a list of commands, or /menu to view the user menu',
                             type : 'error-message'
                         });
                     }
@@ -931,18 +931,17 @@ $(function() {
 
 (function() {
     window.COMMANDS = {
-        help : function() {
-            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none')
+        menu : function() {
+            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none');
             $('.menu-container').css('display',CLIENT.get('menu_display'));
             if(CLIENT.get('left') != 'undefined'){
                 $('.menu-container').css('left',CLIENT.get('menu_left'));
                 $('.menu-container').css('top',CLIENT.get('menu_top'));
             }
-            //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
         },
-        hlist : function() {
+        help : function() {
             CLIENT.show({
-                message : CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /')),
+                message : 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /'),
                 type : 'system-message'
             });
         },
@@ -1224,7 +1223,6 @@ $(function() {
     };
 
     COMMANDS.colour = COMMANDS.color;
-    COMMANDS.menu = COMMANDS.help;
     COMMANDS.background = COMMANDS.bg;
 })();
 
