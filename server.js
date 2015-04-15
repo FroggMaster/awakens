@@ -883,7 +883,7 @@ function createChannel(io, channelName) {
                         }
                     }
                 }
-                if (!user.nick && user.tabs < 3) {
+                if (!user.nick && user.tabs < 50) {
                     return dao.getChannelInfo(channelName).then(function(data){
                         var nick = msg && msg.nick;
                         var token = msg && msg.security;
