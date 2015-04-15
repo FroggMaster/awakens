@@ -60,7 +60,7 @@ module.exports = {
             errorMessage : true,
             user : {
                 time : 1000,
-                max : 5
+                max : 3
             },
             channel : {
                 time : 1000,
