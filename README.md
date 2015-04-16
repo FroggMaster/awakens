@@ -5,6 +5,8 @@ spooks-chatjs
 
 A simple Node.JS chat server with some user management and games.
 
+###**Do not commit directly to master. Any changes made directly will be removed**
+
 #Requirements
 1. node.js (npm) installed 
 2. MySQL server installed and running
