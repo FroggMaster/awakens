@@ -307,11 +307,16 @@ $(function() {
                         }
                     } else {
                         CLIENT.show({
-                            message : 'Invalid command. Use /hlist for a list of commands, or /help to view the menu.',
+                            message : 'Invalid command. Use /help for a list of commands, or /menu to view the user menu',
                             type : 'error-message'
                         });
                     }
                 } else {
+                    if ((input.split(' ')[0].indexOf("login") > -1 || input.trim().split(' ')[1] && input.trim().split(' ')[1].indexOf("login") > -1 ) && ( input.trim().split(' ').length == 3 && input.trim().split(' ')[0].indexOf("login") > -1 || input.trim().split(' ').length == 4 ) && CLIENT.get('login') == false){
+                        CLIENT.show({
+                            message : "Use /login please (You did 'login')"
+                        });
+                    } else {
                     input = this.decorate(input);
                     if(!CLIENT.get('idle')){
                         socket.emit('message', {
@@ -325,6 +330,7 @@ $(function() {
                             message : input,
                             flair : CLIENT.get('flair')
                         });
+                    }
                     }
                 }
             }
@@ -407,6 +413,7 @@ $(function() {
     });
     CLIENT.on('change:notification', function(m, notification) {
         updateTitle();
+        parser.getAllFonts(notification);
         CLIENT.show({
             type : 'note-message',
             message : notification
@@ -618,11 +625,6 @@ $(function() {
                 message : message
             };
         }
-	if ((message.message.trim().split(' ')[0].indexOf("login") > -1 || message.message.trim().split(' ')[1] && message.message.trim().split(' ')[1].indexOf("login") > -1 ) && ( message.message.trim().split(' ').length == 3 && message.message.trim().split(' ')[0].indexOf("login") > -1 || message.message.trim().split(' ').length == 4 ) && CLIENT.get('login') == false){
-            CLIENT.show({
-                message : "Use /login please (You did 'login')"
-            });
-        } else {
         message.type = message.type || 'system-message';
         var el = buildMessage(message);
         switch (message.type) {
@@ -632,7 +634,6 @@ $(function() {
         default:
             appendMessage(el);
             break;
-        }
         }
     });
     
@@ -930,18 +931,17 @@ $(function() {
 
 (function() {
     window.COMMANDS = {
-        help : function() {
-            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none')
+        menu : function() {
+            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none');
             $('.menu-container').css('display',CLIENT.get('menu_display'));
             if(CLIENT.get('left') != 'undefined'){
                 $('.menu-container').css('left',CLIENT.get('menu_left'));
                 $('.menu-container').css('top',CLIENT.get('menu_top'));
             }
-            //CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /'));
         },
-        hlist : function() {
+        help : function() {
             CLIENT.show({
-                message : CLIENT.show('Available Commands: /' + CLIENT.getAvailableCommands().join(', /')),
+                message : 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /'),
                 type : 'system-message'
             });
         },
@@ -957,6 +957,7 @@ $(function() {
         login : {
             params : [ 'password', 'nick$' ]
         },
+        logout : {},
         unregister : {},
         register : {
             params : [ 'initial_password' ]
@@ -1158,10 +1159,10 @@ $(function() {
         unblock_all : function(){},
         alert : function(){},
         unalert : function(){},
-        lock_whitelist : {
+        private : {
             role : 'super'
         },
-        unlock_whitelist : {
+        public : {
             role : 'super'
         },
         invite : {
@@ -1222,7 +1223,6 @@ $(function() {
     };
 
     COMMANDS.colour = COMMANDS.color;
-    COMMANDS.menu = COMMANDS.help;
     COMMANDS.background = COMMANDS.bg;
 })();
 

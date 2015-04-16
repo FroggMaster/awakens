@@ -1,3 +1,7 @@
+html {
+    font-family : Droid Sans, sans-serif;
+}
+
 body {
     background-color: #3A3A3A;
     overflow: hidden;
@@ -305,7 +309,7 @@ a:hover {
     padding-left: 3px;
     padding-right: 3px;
     font-size: 14px;
-    font-family: 'Droid Sans', sans-serif;
+    font-family: Droid Sans, sans-serif;
     font-weight: normal;
     box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px
         7px 0px inset;
@@ -381,45 +385,6 @@ cursor:default;
 }
 #spoil:hover{
 color:white;
-}
-
-#spinner {
-    margin: 1em auto;
-    -webkit-perspective: 1200px;
-    -moz-perspective: 1200px;
-    -ms-perspective: 1200px;
-    perspective: 1200px;
-
-  -webkit-animation: spinner linear 30 3s;
-  animation: spinner linear 30 3s;
-
-  -webkit-transform-style: preserve-3d;
-  -moz-transform-style: preserve-3d;
-  -ms-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-}
-
-#spinner:hover {
-  -webkit-animation-play-state: paused;
-  animation-play-state: paused;
-}
-
-@-webkit-keyframes spinner {
-  from { -webkit-transform: rotateY(0deg);    }
-  to   { -webkit-transform: rotateY(-360deg); }
-}
-
-@keyframes spinner {
-  from {
-    -moz-transform: rotateY(0deg);
-    -ms-transform: rotateY(0deg);
-    transform: rotateY(0deg);
-  }
-  to {
-    -moz-transform: rotateY(-360deg);
-    -ms-transform: rotateY(-360deg);
-    transform: rotateY(-360deg);
-  }
 }
 
 #rotat{
@@ -585,7 +550,7 @@ color:gold;
 	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
     font-size: 1em;
     line-height:300%;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
     color:white;
     cursor:pointer;
@@ -684,7 +649,7 @@ opacity: 1.0;
 
 #online-users .category {
     font-size: 1.4em;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
     margin:15px;
     border-bottom: 1px solid lightgrey;

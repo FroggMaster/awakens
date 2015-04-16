@@ -114,8 +114,13 @@ function createChannel(io, channelName) {
             nick : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    nick = params.nick.replace(/\s+/g, '');
-                    return attemptNick(dao, nick.substring(0, settings.limits.nick));
+                    if ((nick = params.nick.replace(/\s+/g, '')) != ''){
+                        return attemptNick(dao, nick.substring(0, settings.limits.nick));
+                    }
+                    socketEmit(socket,'message',{
+                        message : 'Invalid: /nick <nick>',
+                        type : 'error-message'
+                    })
                 }
             },
             me : {
@@ -158,6 +163,15 @@ function createChannel(io, channelName) {
                     });
                 }
             },
+            logout : {
+                handler : function(dao, dbuser, params){
+                    if (!user.login){
+                        errorMessage('You are not logged in!');
+                    } else {
+                        return attemptNick(dao);
+                    }
+                }
+            },
             unregister : {
                 handler : function(dao, dbuser, params) {
                     return dbuser.unregister();
@@ -180,13 +194,16 @@ function createChannel(io, channelName) {
                 params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
-                        chnl = dbuser.get('nick') + '.spooks.me/'
-                        access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
+                        chnl = dbuser.get('nick') + '.spooks.me/';
+                        access = {};
+                        whitelist = {};
+                        access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
+                        whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
                         dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
                             success && socketEmit(socket, 'update', {
                                 login : true
                             });
-                            dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
+                            dao.setChannelInfo(chnl, 'whitelist', whitelist);
                         });
                     });
                 }
@@ -252,7 +269,7 @@ function createChannel(io, channelName) {
                         return dao.getChannelInfo(channelName).then(function(info){
                             if(dbuser){
                                 var permit = 0;
-                                stats = grab(params.nick);
+                                var stats = grab(params.nick);
                                 if(stats == -1){
                                     access = JSON.parse(info.access);
                                     stats = GetInfo(params.nick);
@@ -306,7 +323,7 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     var stats = grab(params.nick);
                     if (stats != -1 && roles.indexOf(user.role) < roles.indexOf(stats.role)) {
-                        return dao.ban(stats.remote_addr, channelName);
+                        return dao.ban(stats.remote_addr, channelName)
                     } else {
                         errorMessage('That IP is not online')
                     }
@@ -369,19 +386,14 @@ function createChannel(io, channelName) {
                                     console.log('ACCESS_GIVEN ' + user.nick + ' - ' + channelName + ' - ' + params.nick)
                                     dao.getChannelInfo(channelName).then(function(channelInfo) {
                                         access = JSON.parse(channelInfo.access);
-                                        for (i = 5; i >= 2; i--) {
-                                            for(q = 0; q < access[roles[i]].length; q++){
-                                                if(access[roles[i]][q][0] == params.nick.toLowerCase()){
-                                                    access[roles[i]].splice(q, 1);
-                                                }
-                                            }
-                                        }
-                                        if(params.role != 'basic'){
-                                            access[params.role].push([params.nick.toLowerCase(),params.access_level]);
+                                        if(params.role == 'basic'){
+                                            delete access[params.nick]
+                                        } else {
+                                            access[params.nick] = {'role':params.role,'access_level':params.access_level};
                                         }
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             channel.online.forEach(function(user) {
-                                                if (user.nick == params.nick.toLowerCase()) {
+                                                if (user.nick == params.nick) {
                                                     user.role = params.role;
                                                     user.access_level = params.access_level;
                                                     user.socket.emit('update', {
@@ -696,19 +708,31 @@ function createChannel(io, channelName) {
                 return $.Deferred().resolve(true);
                 }
             },
-            lock_whitelist : {
+            private : {
                 role : 'super',
                 handler : function(dao, dbuser, params){
-                    dao.setChannelInfo(channelName, 'private', 1).then(function(){
-                        showMessage('Channel has been made private.')
+                    dao.getChannelInfo(channelName, 'private').then(function(info){
+                        if (info.private == 1){
+                            errorMessage('Channel is already private');
+                        } else {
+                            dao.setChannelInfo(channelName, 'private', 1).then(function(){
+                                showMessage('Channel has been made private');
+                            });
+                        }
                     });
                 }
             },
-            unlock_whitelist : {
+            public : {
                 role : 'super',
                 handler : function(dao, dbuser, params){
-                    dao.setChannelInfo(channelName, 'private', 0).then(function(){
-                        showMessage('Channel has been made public.')
+                    dao.getChannelInfo(channelName, 'private').then(function(info){
+                        if (info.private == 0){
+                            errorMessage('Channel is already public');
+                        } else {
+                            dao.setChannelInfo(channelName, 'private', 0).then(function(){
+                                showMessage('Channel has been made public')
+                            });
+                        }
                     });
                 }
             },
@@ -721,8 +745,8 @@ function createChannel(io, channelName) {
                             dao.getChannelInfo(channelName).then(function(info){
                                 if(info.whitelist){
                                     whitelist = JSON.parse(info.whitelist);
-                                    if(whitelist.indexOf(params.nick) == -1){
-                                        whitelist.push(params.nick);
+                                    if(!whitelist[params.nick]){
+                                        whitelist[params.nick] = {remote_addr:dbuser.get('remote_addr')};
                                         dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(){
                                             showMessage(params.nick + ' has been invited.')
                                         });
@@ -730,7 +754,9 @@ function createChannel(io, channelName) {
                                         showMessage(params.nick + ' has already been invited.')
                                     }
                                 } else {
-                                    dao.setChannelInfo(channelName, 'whitelist', JSON.stringify([params.nick])).then(function(){
+                                    whitelist = {};
+                                    whitelist[params.nick] = {'remote_addr':dbuser.get('remote_addr')};
+                                    dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(){
                                         showMessage(params.nick + ' has been invited.')
                                     }); 
                                 }
@@ -749,12 +775,12 @@ function createChannel(io, channelName) {
                         if(dbuser){
                             dao.getChannelInfo(channelName).then(function(info){
                                 whitelist = JSON.parse(info.whitelist);
-                                index = whitelist.indexOf(params.nick);
-                                if(index != -1){
-                                    whitelist.splice(index,1);
+                                if(whitelist[params.nick]){
+                                    delete whitelist[params.nick];
                                     dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(info){
                                         showMessage(params.nick + ' has been uninvited.')
                                     });
+                                    indexOf(params.nick) != -1 && socketEmit(channel.online[indexOf(params.nick)].socket,'refresh');
                                 } else {
                                     errorMessage('User wasn\'t invited')
                                 }
@@ -768,9 +794,10 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params){
                     dao.getChannelInfo(channelName).then(function(info){
                         if(info.whitelist){
-                            showMessage(info.whitelist)
+                            whitelist = JSON.parse(info.whitelist);
+                            showMessage(JSON.stringify(Object.keys(whitelist)));
                         } else {
-                            showMessage('nobody whitelisted on this channel.')
+                            showMessage('Nobody whitelisted on this channel');
                         }
                     });
                 }
@@ -902,22 +929,20 @@ function createChannel(io, channelName) {
                                     socket.disconnect();
                                 } else {
                                     if(data['private'] == 1){
-                                        for (i = 0; i < whitelist.length; i++) {
-                                            dao.findUser(whitelist[i]).then(function(dbuser){
-                                                if(user.remote_addr == dbuser.get('remote_addr')){
-                                                    permit = 1
-                                                };
-                                                if(i == whitelist.length && permit){
-                                                    attemptNick(dao, nick, undefined, token).then(function() {
-                                                        done.resolve.apply(done, arguments);
-                                                    }, function(err) {
-                                                        done.reject(err);
-                                                    });
-                                                } else {
-                                                    errorMessage('Channel is private.')
-                                                }
-                                            });
-                                        };
+                                        ips = [];
+                                        for(var key in whitelist) {
+                                            ips.push(whitelist[key].remote_addr);
+                                        }
+                                        if(ips.indexOf(user.remote_addr) != -1){
+                                            attemptNick(dao, nick, undefined, token).then(function() {
+                                                done.resolve.apply(done, arguments);
+                                            }, function(err) {
+                                                done.reject(err);
+                                            }); 
+                                        }else{
+                                            errorMessage('Channel is private.');
+                                            socket.disconnect()
+                                        }
                                     } else {
                                         attemptNick(dao, nick, undefined, token).then(function() {
                                             done.resolve.apply(done, arguments);
@@ -933,8 +958,14 @@ function createChannel(io, channelName) {
                                 for (i = 0; i < whitelist.length; i++) {
                                     dao.findUser(whitelist[i]).then(function(dbuser){
                                         if(user.remote_addr == dbuser.get('remote_addr')){
-                                            return attemptNick(dao);
+                                            permit = 1
                                         };
+                                        if(i == whitelist.length && permit){
+                                            return attemptNick(dao);
+                                        } else {
+                                            errorMessage('Channel is private.')
+                                            socket.disconnect();
+                                        }
                                     });
                                 };
                             } else {
@@ -1263,22 +1294,15 @@ function createChannel(io, channelName) {
          */
         
         function GetInfo(nick) {
-            var rowl,aces;
-            for (i = 5; i >= 2; i--) {
-                for(q = 0; q < access[roles[i]].length; q++){
-                    if(access[roles[i]][q]){
-                        if(access[roles[i]][q][0].toLowerCase() == nick.toLowerCase()){
-                            rowl = roles[i]
-                            aces = access[roles[i]][q][1]
-                            return {"role":rowl,"access_level":aces}
-                        }
-                    }
-                }
-            }
-            if(!rowl && !aces){
+            if(!access[nick]){
                 return {
                     "role":'basic',
                     "access_level":3
+                }
+            } else {
+                return {
+                    "role":access[nick].role,
+                    "access_level":access[nick].access_level
                 }
             }
         }
@@ -1311,7 +1335,9 @@ function createChannel(io, channelName) {
             /**
              * make sure name is valid
              */
-             
+            
+            
+            
             function ValidName(name) {
                 //[^\x00-z]/.test(name)
                 var temp = 0,invalid = 0;
@@ -1372,7 +1398,7 @@ function createChannel(io, channelName) {
                     user.login = false;
                     dao.getChannelInfo(channelName).then(function(data){
                         if(!data.access){
-                            data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
+                            data.access = '{}'
                             dao.setChannelInfo(channelName, 'access', data.access)
                         }
                         access = JSON.parse(data.access);
