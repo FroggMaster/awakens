@@ -902,15 +902,15 @@ function createChannel(io, channelName) {
          
         _.each({
             join : function(dao, msg) {
-                /*user.tabs = 0
+                user.tabs = 0
                 if(channel.online.length > 0){
                     for (i = 0; i < channel.online.length; i++) { 
                         if(channel.online[i].remote_addr == user.remote_addr){
                             user.tabs++
                         }
                     }
-                }*/
-                if (!user.nick) {
+                }
+                if (!user.nick && user.tabs < 3) {
                     return dao.getChannelInfo(channelName).then(function(data){
                         var nick = msg && msg.nick;
                         var token = msg && msg.security;
