@@ -194,13 +194,15 @@ function createChannel(io, channelName) {
                 params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
                     return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
-                        chnl = dbuser.get('nick') + '.spooks.me/'
-                        access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
+                        chnl = dbuser.get('nick') + '.spooks.me/';
+                        access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]};
+                        whitelist = {};
+                        whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
                         dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
                             success && socketEmit(socket, 'update', {
                                 login : true
                             });
-                            dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
+                            dao.setChannelInfo(chnl, 'whitelist', whitelist);
                         });
                     });
                 }
@@ -320,7 +322,7 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     var stats = grab(params.nick);
                     if (stats != -1 && roles.indexOf(user.role) < roles.indexOf(stats.role)) {
-                        return dao.ban(stats.remote_addr, channelName);
+                        return dao.ban(stats.remote_addr, channelName)
                     } else {
                         errorMessage('That IP is not online')
                     }
@@ -390,7 +392,7 @@ function createChannel(io, channelName) {
                                         }
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             channel.online.forEach(function(user) {
-                                                if (user.nick == params.nick.toLowerCase()) {
+                                                if (user.nick == params.nick) {
                                                     user.role = params.role;
                                                     user.access_level = params.access_level;
                                                     user.socket.emit('update', {
@@ -742,8 +744,8 @@ function createChannel(io, channelName) {
                             dao.getChannelInfo(channelName).then(function(info){
                                 if(info.whitelist){
                                     whitelist = JSON.parse(info.whitelist);
-                                    if(whitelist.indexOf(params.nick) == -1){
-                                        whitelist.push(params.nick);
+                                    if(!whitelist[params.nick]){
+                                        whitelist[params.nick] = {remote_addr:dbuser.get('remote_addr')};
                                         dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(){
                                             showMessage(params.nick + ' has been invited.')
                                         });
@@ -751,7 +753,9 @@ function createChannel(io, channelName) {
                                         showMessage(params.nick + ' has already been invited.')
                                     }
                                 } else {
-                                    dao.setChannelInfo(channelName, 'whitelist', JSON.stringify([params.nick])).then(function(){
+                                    whitelist = {};
+                                    whitelist[params.nick] = {'remote_addr':dbuser.get('remote_addr')};
+                                    dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(){
                                         showMessage(params.nick + ' has been invited.')
                                     }); 
                                 }
@@ -770,9 +774,8 @@ function createChannel(io, channelName) {
                         if(dbuser){
                             dao.getChannelInfo(channelName).then(function(info){
                                 whitelist = JSON.parse(info.whitelist);
-                                index = whitelist.indexOf(params.nick);
-                                if(index != -1){
-                                    whitelist.splice(index,1);
+                                if(whitelist[params.nick]){
+                                    delete whitelist[params.nick];
                                     dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(info){
                                         showMessage(params.nick + ' has been uninvited.')
                                     });
@@ -790,7 +793,8 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params){
                     dao.getChannelInfo(channelName).then(function(info){
                         if(info.whitelist){
-                            showMessage(info.whitelist);
+                            whitelist = JSON.parse(info.whitelist);
+                            showMessage(JSON.stringify(Object.keys(whitelist)));
                         } else {
                             showMessage('Nobody whitelisted on this channel');
                         }
@@ -924,23 +928,20 @@ function createChannel(io, channelName) {
                                     socket.disconnect();
                                 } else {
                                     if(data['private'] == 1){
-                                        for (i = 0; i < whitelist.length; i++) {
-                                            dao.findUser(whitelist[i]).then(function(dbuser){
-                                                if(user.remote_addr == dbuser.get('remote_addr')){
-                                                    permit = 1
-                                                };
-                                                if(i == whitelist.length && permit){
-                                                    attemptNick(dao, nick, undefined, token).then(function() {
-                                                        done.resolve.apply(done, arguments);
-                                                    }, function(err) {
-                                                        done.reject(err);
-                                                    });
-                                                } else {
-                                                    errorMessage('Channel is private.')
-                                                    socket.disconnect();
-                                                }
-                                            });
-                                        };
+                                        ips = [];
+                                        for(var key in whitelist) {
+                                            ips.push(whitelist[key].remote_addr);
+                                        }
+                                        if(ips.indexOf(user.remote_addr) != -1){
+                                            attemptNick(dao, nick, undefined, token).then(function() {
+                                                done.resolve.apply(done, arguments);
+                                            }, function(err) {
+                                                done.reject(err);
+                                            }); 
+                                        }else{
+                                            errorMessage('Channel is private.');
+                                            socket.disconnect()
+                                        }
                                     } else {
                                         attemptNick(dao, nick, undefined, token).then(function() {
                                             done.resolve.apply(done, arguments);
