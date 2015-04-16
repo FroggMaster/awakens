@@ -383,15 +383,10 @@ function createChannel(io, channelName) {
                                     console.log('ACCESS_GIVEN ' + user.nick + ' - ' + channelName + ' - ' + params.nick)
                                     dao.getChannelInfo(channelName).then(function(channelInfo) {
                                         access = JSON.parse(channelInfo.access);
-                                        for (i = 5; i >= 2; i--) {
-                                            for(q = 0; q < access[roles[i]].length; q++){
-                                                if(access[roles[i]][q][0] == params.nick.toLowerCase()){
-                                                    access[roles[i]].splice(q, 1);
-                                                }
-                                            }
-                                        }
-                                        if(params.role != 'basic'){
-                                            access[params.role].push([params.nick.toLowerCase(),params.access_level]);
+                                        if(params.role == 'basic'){
+                                            delete access[params.nick]
+                                        } else {
+                                            access[params.nick] = {'role':params.role,'access_level':params.access_level};
                                         }
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             channel.online.forEach(function(user) {
@@ -1297,22 +1292,15 @@ function createChannel(io, channelName) {
          */
         
         function GetInfo(nick) {
-            var rowl,aces;
-            for (i = 5; i >= 2; i--) {
-                for(q = 0; q < access[roles[i]].length; q++){
-                    if(access[roles[i]][q]){
-                        if(access[roles[i]][q][0].toLowerCase() == nick.toLowerCase()){
-                            rowl = roles[i]
-                            aces = access[roles[i]][q][1]
-                            return {"role":rowl,"access_level":aces}
-                        }
-                    }
-                }
-            }
-            if(!rowl && !aces){
+            if(!access[nick]){
                 return {
                     "role":'basic',
                     "access_level":3
+                }
+            } else {
+                return {
+                    "role":access[nick].role,
+                    "access_level":access[nick].access_level
                 }
             }
         }
@@ -1345,7 +1333,9 @@ function createChannel(io, channelName) {
             /**
              * make sure name is valid
              */
-             
+            
+            
+            
             function ValidName(name) {
                 //[^\x00-z]/.test(name)
                 var temp = 0,invalid = 0;
@@ -1406,7 +1396,7 @@ function createChannel(io, channelName) {
                     user.login = false;
                     dao.getChannelInfo(channelName).then(function(data){
                         if(!data.access){
-                            data.access = '{"admin":[],"mod":[],"basic":[],"mute":[]}'
+                            data.access = '{}'
                             dao.setChannelInfo(channelName, 'access', data.access)
                         }
                         access = JSON.parse(data.access);
