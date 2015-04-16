@@ -195,8 +195,9 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
                         chnl = dbuser.get('nick') + '.spooks.me/';
-                        access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]};
+                        access = {};
                         whitelist = {};
+                        access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
                         whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
                         dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
                             success && socketEmit(socket, 'update', {
