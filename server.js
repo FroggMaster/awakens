@@ -54,8 +54,7 @@ function createChannel(io, channelName) {
         
         if(socket.handshake.headers["x-real-ip"]){
             user.remote_addr = socket.handshake.headers["x-real-ip"];
-        } else {
-            console.log(socket.handshake.headers)
+            console.log(user.nick + ' ip masked')
         }
         
         socket.on('SetPart', function(parts){
@@ -84,7 +83,6 @@ function createChannel(io, channelName) {
         
         setTimeout(function(){
             if(indexOf(user.nick) == -1){
-                console.log(user.remote_addr + ' didn\'t connect properly.')
                 socket.disconnect();
             }
         }, 15000);
