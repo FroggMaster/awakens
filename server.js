@@ -52,6 +52,13 @@ function createChannel(io, channelName) {
             user.remote_addr = socket.handshake.address;
         }
         
+        if(socket.handshake.headers["X-Real-IP"]){
+            user.remote_addr = socket.handshake.headers["X-Real-IP"];
+            console.log(socket.handshake.headers)
+        } else {
+            console.log(socket.handshake.headers)
+        }
+        
         socket.on('SetPart', function(parts){
             user.part = parts.toString();
         });
