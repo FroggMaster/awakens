@@ -133,8 +133,10 @@ module.exports = {
         },
 
         banned : 'You are banned.',
-        kicked: 'You have been kicked By: {0}',
-        kicked_reason: 'You have been kicked By: {0}, Reason: {1}',
+        banned_by : 'You have been banned By: {0}',
+        banned_reason : 'You have been banned By: {0}, Reason {1}',
+        kicked : 'You have been kicked By: {0}',
+        kicked_reason : 'You have been kicked By: {0}, Reason: {1}',
         ghosted: 'Someone else logged in using your username.',
         pmOffline : 'Cannot pm a nick unless they are online.',
         notRegistered : 'Not registered yet',

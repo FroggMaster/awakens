@@ -128,16 +128,15 @@ module.exports = function(callback) {
              */
             unregister : function() {
                 if (info.registered) {
-                    return this.set({
-                        access_level : 3,
-                        role : 'basic',
-                        registered_on : null,
-                        registered : 0,
-                        verified : 0,
-                        pw_hash : null
-                    }).then(function() {
+                    
+                    var sql = 'delete from chat_users where nick=?';
+                    var params = [];
+                    
+                    params.push(this.get('nick'));
+                    return query(sql, params).then(function() {
                         return $.Deferred().resolve(true, msgs.unregistered);
                     });
+                    
                 } else {
                     return $.Deferred().resolve(false, msgs.notRegistered);
                 }
@@ -179,7 +178,7 @@ module.exports = function(callback) {
              * @param {string} access_level
              * @returns {$.Promise}
              */
-            access : function(role, access_level) {	
+            access : function(role, access_level) {
 				this.set('role', role)
                     access_level = new Number(access_level);
                     if (!isNaN(access_level) && access_level >= 0 && access_level <= 4) {
