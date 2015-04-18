@@ -56,7 +56,7 @@ function createChannel(io, channelName) {
             user.remote_addr = socket.handshake.headers["x-real-ip"];
             console.log(user.nick + ' ip masked')
         }
-        
+                
         socket.on('SetPart', function(parts){
             user.part = parts.toString();
         });
@@ -311,13 +311,9 @@ function createChannel(io, channelName) {
                 role : 'super',
                 params : [ 'oath' ],
                 handler : function(dao, dbuser, params) {
-                    if (params.oath == "I confirm this action.") {
-                        return dao.unban_all(channelName).then(function(){
-                            broadcastChannel(dao, channel, msgs.get('clear_channel', user.nick));
-                        })
-                    } else {
-                        errorMessage('Please enter the following oath after the command: I confirm this action.');
-                    }
+                    return dao.unban_all(channelName).then(function(){
+                        broadcastChannel(dao, channel, msgs.get('clear_channel', user.nick));
+                    })
                 }
             },
             banip : {
@@ -326,10 +322,14 @@ function createChannel(io, channelName) {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                     var stats = grab(params.nick);
-                    if (stats != -1 && roles.indexOf(user.role) < roles.indexOf(stats.role)) {
-                        return dao.ban(stats.remote_addr, channelName)
+                    if (stats != -1) {
+                        if(roles.indexOf(user.role) < roles.indexOf(stats.role)){
+                            return dao.ban(stats.remote_addr, channelName);
+                        } else {
+                            errorMessage('You may not ban admins');
+                        }
                     } else {
-                        errorMessage('That IP is not online')
+                        errorMessage('That IP is not online');
                     }
                 }
             },
@@ -374,8 +374,9 @@ function createChannel(io, channelName) {
                         var permit = 0;
                         return dao.findUser(params.nick).then(function(dbuser) {
                             if (dbuser && dbuser.get('verified')) {
+                                var nick = dbuser.get('nick');
                                 if(stats == -1){
-                                    stats = GetInfo(params.nick)
+                                    stats = GetInfo(nick)
                                 }
                                 if(roles.indexOf(user.role) <= 1 || user.role == 'admin' && user.access_level == 0){
                                     permit = 1
@@ -387,17 +388,17 @@ function createChannel(io, channelName) {
                                     }
                                 }
                                 if(permit){
-                                    console.log('ACCESS_GIVEN ' + user.nick + ' - ' + channelName + ' - ' + params.nick)
+                                    console.log('ACCESS_GIVEN ' + user.nick + ' - ' + channelName + ' - ' + nick)
                                     dao.getChannelInfo(channelName).then(function(channelInfo) {
                                         access = JSON.parse(channelInfo.access);
                                         if(params.role == 'basic'){
-                                            delete access[params.nick]
+                                            delete access[nick]
                                         } else {
-                                            access[params.nick] = {'role':params.role,'access_level':params.access_level};
+                                            access[nick] = {'role':params.role,'access_level':params.access_level};
                                         }
                                         dao.setChannelInfo(channelName, 'access', JSON.stringify(access)).then(function(){
                                             channel.online.forEach(function(user) {
-                                                if (user.nick == params.nick) {
+                                                if (user.nick == nick) {
                                                     user.role = params.role;
                                                     user.access_level = params.access_level;
                                                     user.socket.emit('update', {
@@ -409,7 +410,7 @@ function createChannel(io, channelName) {
                                             roomEmit('update',{
                                                 access : JSON.stringify(access)
                                             });
-                                            showMessage(params.nick + ' now has role ' + params.role + ' and access_level ' + params.access_level)
+                                            showMessage(nick + ' now has role ' + params.role + ' and access_level ' + params.access_level)
                                         });
                                     });
                                 } else {
@@ -747,21 +748,22 @@ function createChannel(io, channelName) {
                     dao.findUser(params.nick).then(function(dbuser){
                         if(dbuser){
                             dao.getChannelInfo(channelName).then(function(info){
+                                var nick = dbuser.get('nick');
                                 if(info.whitelist){
                                     whitelist = JSON.parse(info.whitelist);
-                                    if(!whitelist[params.nick]){
-                                        whitelist[params.nick] = {remote_addr:dbuser.get('remote_addr')};
+                                    if(!whitelist[nick]){
+                                        whitelist[nick] = {remote_addr:dbuser.get('remote_addr')};
                                         dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(){
-                                            showMessage(params.nick + ' has been invited.')
+                                            showMessage(nick + ' has been invited.')
                                         });
                                     } else {
-                                        showMessage(params.nick + ' has already been invited.')
+                                        showMessage(nick + ' has already been invited.')
                                     }
                                 } else {
                                     whitelist = {};
-                                    whitelist[params.nick] = {'remote_addr':dbuser.get('remote_addr')};
+                                    whitelist[nick] = {'remote_addr':dbuser.get('remote_addr')};
                                     dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(){
-                                        showMessage(params.nick + ' has been invited.')
+                                        showMessage(nick + ' has been invited.')
                                     }); 
                                 }
                             });
@@ -777,14 +779,15 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params){
                     dao.findUser(params.nick).then(function(dbuser){
                         if(dbuser){
+                            var nick = dbuser.get('nick');
                             dao.getChannelInfo(channelName).then(function(info){
                                 whitelist = JSON.parse(info.whitelist);
-                                if(whitelist[params.nick]){
-                                    delete whitelist[params.nick];
+                                if(whitelist[nick]){
+                                    delete whitelist[nick];
                                     dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(info){
-                                        showMessage(params.nick + ' has been uninvited.')
+                                        showMessage(nick + ' has been uninvited.')
                                     });
-                                    indexOf(params.nick) != -1 && socketEmit(channel.online[indexOf(params.nick)].socket,'refresh');
+                                    indexOf(nick) != -1 && socketEmit(channel.online[indexOf(nick)].socket,'refresh');
                                 } else {
                                     errorMessage('User wasn\'t invited')
                                 }

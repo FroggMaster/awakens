@@ -991,8 +991,7 @@ $(function() {
             params : [ 'id$' ]
         },
         unban_all : {
-            role : 'god',
-            params : [ 'oath$' ]
+            role : 'god'
         },
         banip : {
             role : 'admin',
@@ -1208,12 +1207,14 @@ $(function() {
         },
         user_list : {
             handler : function() {
-                var admin = JSON.parse(CLIENT.get('access')).admin;
-                var admins = admin[0][0];
-                for (i = 1; i < admin.length; i++) { 
-                    admins += ', ' + admin[i][0]
+                var admin = JSON.parse(CLIENT.get('access')),
+                admins = [];
+                for(var key in admin) {
+                    if(admin[key].role == 'admin'){
+                        admins.push(key);
+                    }
                 }
-                CLIENT.show("admins : \n" + admins)
+                CLIENT.show("admins : \n" + admins.join(','))
             }
         },
         frame : {
