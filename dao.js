@@ -128,15 +128,11 @@ module.exports = function(callback) {
              */
             unregister : function() {
                 if (info.registered) {
-                    
                     var sql = 'delete from chat_users where nick=?';
-                    var params = [];
-                    
-                    params.push(this.get('nick'));
+                    var params = [this.get('nick')];
                     return query(sql, params).then(function() {
                         return $.Deferred().resolve(true, msgs.unregistered);
                     });
-                    
                 } else {
                     return $.Deferred().resolve(false, msgs.notRegistered);
                 }
