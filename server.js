@@ -246,21 +246,12 @@ function createChannel(io, channelName) {
                 }
             },
             verify : {
-                params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
-                    return dbuser.verify(params.reenter_password, params.verification_code).done(function(success) {
-                        chnl = dbuser.get('nick') + '.spooks.me/';
-                        access = {};
-                        whitelist = {};
-                        access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
-                        whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
-                        dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
-                            success && socketEmit(socket, 'update', {
-                                login : true
-                            });
-                            dao.setChannelInfo(chnl, 'whitelist', whitelist);
-                        });
-                    });
+                    if (settings.recaptcha && settings.recaptcha.key){
+                        socketEmit(socket,'passverify');
+                    } else {
+                        console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
+                    }
                 }
             },
             banlist : {
