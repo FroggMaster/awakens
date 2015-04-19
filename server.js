@@ -77,7 +77,7 @@ function createChannel(io, channelName) {
                 $.ajax({
                     type: "POST",
                     url: url,
-                    secret : settings.recaptcha.key,
+                    secret : settings.api.recaptcha,
                     response : data.value,
                     success: function(data)
                     {
