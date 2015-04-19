@@ -8,6 +8,7 @@ var hasher = require('./md5');
 var _ = require('underscore');
 var $ = require('jquery-deferred');
 var express = require('express');
+var app = express();
 var fs = require('fs');
 var httpsPort = settings.https && settings.https.port;
 var httpPort = settings.server.port;
