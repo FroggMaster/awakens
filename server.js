@@ -8,7 +8,6 @@ var hasher = require('./md5');
 var _ = require('underscore');
 var $ = require('jquery-deferred');
 var express = require('express');
-var app = express();
 var fs = require('fs');
 var httpsPort = settings.https && settings.https.port;
 var httpPort = settings.server.port;
@@ -32,6 +31,7 @@ function createChannel(io, channelName) {
     var channel = {
         online : []
     };
+    var canSubmit = true;
     var tokenCache = {};
     var count = 0;
     var command_access = {
@@ -64,57 +64,6 @@ function createChannel(io, channelName) {
      
         socket.on('alive', function(){
             user.alive = true
-        });
-        
-        app.post('/',function(req,res) {
-            console.log('\n'+req+'\n');
-        });
-
-        socket.on('passgood', function(data){
-            console.log('\ndata received' + data.value + '\n');
-            if (data.value != undefined) {
-            var url = "https://www.google.com/recaptcha/api/siteverify";
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    secret : settings.api.recaptcha,
-                    response : data.value,
-                    success: function(data)
-                    {
-                        if (data){
-                            socketEmit(socket,'removeDiv');
-                            return dbuser.verify("nopass", params.verification_code).done(function(success) {
-                                chnl = dbuser.get('nick') + '.spooks.me/'
-                                access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
-                                dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
-                                    success && socketEmit(socket, 'update', {
-                                        login : true
-                                    });
-                                    dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
-                                });
-                            });
-                        } else {
-                            console.log("Captcha failed. User was not registered");
-                        }
-                    }
-                });
-            }
-            
-            if (data.sucess){
-            socketEmit(socket,'removeDiv');
-            return dbuser.verify("nopass", params.verification_code).done(function(success) {
-                chnl = dbuser.get('nick') + '.spooks.me/'
-                access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
-                dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
-                    success && socketEmit(socket, 'update', {
-                        login : true
-                    });
-                    dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
-                });
-            });
-            } else {
-                //error message to log
-            }
         });
  
         var log = {};
@@ -247,12 +196,25 @@ function createChannel(io, channelName) {
                 }
             },
             verify : {
+		params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
-                    if (settings.api && settings.api.recaptcha){
-                        socketEmit(socket,'passverify');
-                    } else {
-                        console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
-                    }
+		    canSubmit = false;
+		    dao.findUser(user.nick).then(function(u){
+		    if (u && !u.get('verified'))
+		    {
+                        if (settings.api && settings.api.recaptcha){
+			     user.regpass = params.reenter_password;
+			     canSubmit = false;
+			     socketEmit(socket,'update',{ canSubmit : false });
+                             socketEmit(socket,'passverify');
+                        } else {
+                            console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
+                        }
+		    } else {
+			canSubmit = true;
+			errorMessage('Please register your nick before verifying');
+			console.log(user.nick + ' attempted to verify before registering.');
+		    }});
                 }
             },
             banlist : {
@@ -1043,7 +1005,7 @@ function createChannel(io, channelName) {
                     }
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
-                            if (user.role != 'mute') {
+                            if (user.role != 'mute' && canSubmit) {
                                 count++;
                                 roomEmit('message', {
                                     type : 'chat-message',
@@ -1138,7 +1100,53 @@ function createChannel(io, channelName) {
                    }
                 }
                 return $.Deferred().resolve(false, err);
-            }
+            },
+        passgood : function(dao, msg){
+            var done = $.Deferred();
+            if (msg.data) {
+            var url = "https://www.google.com/recaptcha/api/siteverify";
+		request.post(
+		    url,
+		    { form : { secret : settings.api.recaptcha,
+			       response : msg.data.substring(21) } },
+		    function (error, response, body) {
+		        if (!error){
+			    if (JSON.parse(body).success){
+                            socketEmit(socket,'removeDiv');
+	    		    dao.findUser(user.nick).then(function(dbuser){
+                            dbuser.verify(user.regpass,undefined).done(function(success) {
+                                chnl = dbuser.get('nick') + '.spooks.me/'
+                                access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
+                                return dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
+                                    success && socketEmit(socket, 'update', {
+                                        login : true
+                                    });
+                                    dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
+				delete user.regpass;
+				socketEmit(socket,'message',{ message : 'Verification successful'});
+			        socketEmit(socket,'update',{ canSubmit : true });
+				canSubmit = true;
+                                });
+                            });
+			    });
+                            } else {
+                            console.log("Captcha failed. User was not registered");
+			    errorMessage("Captcha was not correct. Obviously.");
+                            done.resolve(false);
+			     socketEmit(socket,'update',{ canSubmit : true });
+                            }
+			} else {
+			    console.log("An error occured while submitting data to Google");
+                done.resolve(false);
+			}
+	 	    }
+		)
+            } else {
+		console.log("Invalid form data.");
+		done.resolve(false);
+	    }
+        return done.promise();
+        }
            /* updateMousePosition : function(dao, position) {
                 if (position && typeof position.x == 'number' && typeof position.y == 'number') {
                     otherEmit('updateMousePosition', {
@@ -1485,7 +1493,8 @@ function createChannel(io, channelName) {
                             role : user.role,
                             vHost : user.vhost,
                             security : hashToken,
-                            login : user.login
+                            login : user.login,
+			    canSubmit : true
                         });
                         if (online && indexOf(user.nick) != -1) {
                             roomEmit('nick', {
