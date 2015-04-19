@@ -64,6 +64,57 @@ function createChannel(io, channelName) {
         socket.on('alive', function(){
             user.alive = true
         });
+        
+        app.post('/',function(req,res) {
+            console.log('\n'+req+'\n');
+        });
+
+        socket.on('passgood', function(data){
+            console.log('\ndata received' + data.value + '\n');
+            if (data.value != undefined) {
+            var url = "https://www.google.com/recaptcha/api/siteverify";
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    secret : settings.recaptcha.key,
+                    response : data.value,
+                    success: function(data)
+                    {
+                        if (data){
+                            socketEmit(socket,'removeDiv');
+                            return dbuser.verify("nopass", params.verification_code).done(function(success) {
+                                chnl = dbuser.get('nick') + '.spooks.me/'
+                                access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
+                                dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
+                                    success && socketEmit(socket, 'update', {
+                                        login : true
+                                    });
+                                    dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
+                                });
+                            });
+                        } else {
+                            console.log("Captcha failed. User was not registered");
+                        }
+                    }
+                });
+            }
+            
+            if (data.sucess){
+            socketEmit(socket,'removeDiv');
+            return dbuser.verify("nopass", params.verification_code).done(function(success) {
+                chnl = dbuser.get('nick') + '.spooks.me/'
+                access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
+                dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
+                    success && socketEmit(socket, 'update', {
+                        login : true
+                    });
+                    dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
+                });
+            });
+            } else {
+                //error message to log
+            }
+        });
  
         var log = {};
         [ 'error', 'info', 'debug' ].forEach(function(lvl) {
