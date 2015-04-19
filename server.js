@@ -248,7 +248,7 @@ function createChannel(io, channelName) {
             },
             verify : {
                 handler : function(dao, dbuser, params) {
-                    if (settings.recaptcha && settings.recaptcha.key){
+                    if (settings.api && settings.api.recaptcha){
                         socketEmit(socket,'passverify');
                     } else {
                         console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
