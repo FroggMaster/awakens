@@ -17,6 +17,47 @@ body {
 	cursor: url(img/cursor.cur);
 }
 
+#captchaform {
+    opacity: 0.0;
+    position: absolute;
+    top: 50%
+    left: 50%
+    visibility: hidden;
+    z-index: 3;
+}
+
+#textfield{
+    color: #FFF;
+    font-size: 20px;
+}
+
+#warning {
+    position: absolute;
+    z-index: 2;
+    color: #FFF;
+    font-size: 14px;
+    visibility: hidden;
+}
+
+#fader {
+    position:fixed;
+    background-color:#000;
+    opacity:0.0;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+}
+
+#passanchor {
+    position : fixed;
+    text-align: center;
+    left: 0px;
+    top: 0px;
+    z-index: 7;
+}
+
 #login {
     position:absolute;
     width:100%;
