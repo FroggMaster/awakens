@@ -1114,7 +1114,7 @@ function createChannel(io, channelName) {
 			    if (JSON.parse(body).success){
                             socketEmit(socket,'removeDiv');
 	    		    dao.findUser(user.nick).then(function(dbuser){
-                            dbuser.verify(user.regpass,undefined).done(function(success) {
+                            dbuser.verify(user.regpass,undefined).done(function(success, error) {
                                 chnl = dbuser.get('nick') + '.spooks.me/'
                                 access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
                                 return dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
@@ -1123,7 +1123,11 @@ function createChannel(io, channelName) {
                                     });
                                     dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
 				delete user.regpass;
+				if (success){
 				socketEmit(socket,'message',{ message : 'Verification successful'});
+				} else {
+				errorMessage("Error: " + error);
+				}
 			        socketEmit(socket,'update',{ canSubmit : true });
 				canSubmit = true;
                                 });
