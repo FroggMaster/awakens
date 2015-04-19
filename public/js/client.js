@@ -31,6 +31,42 @@ $(function() {
     socket.on('online', function(users) {
         ONLINE.add(users);
     });
+    
+    socket.on('removeDiv',function() {
+        $('#passanchor').hide(500,function(){$('#passanchor').remove()});
+    });
+
+    socket.on('passverify', function() {
+        $('head').append('<script src=\'https://www.google.com/recaptcha/api.js?\'></script>');
+        $('body').append('<div id="passanchor"></div>');
+        $('#passanchor').css('height','100%');
+        $('#passanchor').css('width','100%');
+        $('#passanchor').append('<div id="fader"></div>');
+        $('#passanchor').append('<div id="captchaform"><div id="textfield">Please fill out this reCaptcha.</div><form id="captchaForm"><div class="g-recaptcha" data-sitekey="6LfJeQUTAAAAAJebE0KFgXJouTHfuBOOslMZlHqf"></div><br><input id = "submitButton" type="submit" value="Submit"></input></form></div>');
+        $('#submitButton').on('click',function(e){
+            e.preventDefault();
+            $.ajax({
+                type : "POST",
+                url : '/',
+                data : $('#captchaForm').serialize()
+            });
+        });
+        $('#captchaform').css('top',window.innerHeight/3.25-39);
+        $('#captchaform').css('left',window.innerWidth/2-152);
+        $('#fader').animate({
+                opacity: 0.6
+            }, 1000, function(){
+                $('#captchaform').css('visibility','visible');
+                setTimeout(function(){$('#captchaform').animate({opacity : 1.0}, 600); setTimeout(function(){addWarning()},625);},1000);
+            }
+        );
+        function addWarning() {
+            $('#passanchor').append('<div id="warning">Great. Now you have no way of verifying.</div>');
+            $('#warning').css('top',window.innerHeight/3.25-9);
+            $('#warning').css('left',window.innerWidth/2-129);
+            $('#warning').css('visibility','visible');
+        }
+    });
 
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
@@ -960,9 +996,7 @@ $(function() {
         register : {
             params : [ 'initial_password' ]
         },
-        verify : {
-            params : [ 'reenter_password' ]
-        },
+        verify : {},
         change_password : {
             params : [ 'old_password', 'new_password' ]
         },
