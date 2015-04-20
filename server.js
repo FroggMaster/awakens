@@ -99,6 +99,10 @@ function createChannel(io, channelName) {
                     } else {
                         log.info('Disconnected user was not found');
                     }
+                    count++;
+                    roomEmit('updateCount',{
+                    	count : count
+                    });
                     roomEmit('left', {
                         id : user.socket.id,
                         nick : user.nick,
