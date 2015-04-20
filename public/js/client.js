@@ -692,6 +692,17 @@ $(function() {
             	sound = 'name'
             }
         }
+        if(message.message.search(/>>(\d)+/g) != -1){
+            var lastMatch = message.message.match(/>>(\d)+/g)[message.message.match(/>>(\d)+/g).length - 1];
+            if ($('#spooky_msg_'+lastMatch.substring(2)).length > 0)
+            {
+            var recurse = $('#spooky_msg_'+lastMatch.substring(2)).parent().children().children()[0].childNodes[0].nodeValue
+            if (recurse.substring(0,recurse.length-1) == CLIENT.get('nick') && CLIENT.get('nick') != message.nick){
+                message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+            	sound = 'name'
+            }
+            }
+        }
         message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); if (textBox.value == \"\" || textBox.value.substring(textBox.length - 1) == \" \"){textBox.value = textBox.value + '>>"+message.count+" ';}else{textBox.value = textBox.value + ' >>"+message.count+" ';} $('#input-message').focus();");
         var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
