@@ -1120,6 +1120,7 @@ function createChannel(io, channelName) {
                                     whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
                                     return dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
                                         if(success){
+                                            user.login = true;
                                             socketEmit(socket, 'update', {
                                                 login : true
                                             });
