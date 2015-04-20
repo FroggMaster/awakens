@@ -356,20 +356,20 @@ $(function() {
                             message : "Use /login please (You did 'login')"
                         });
                     } else {
-                    input = this.decorate(input);
-                    if(!CLIENT.get('idle')){
-                        socket.emit('message', {
-                            flair : CLIENT.get('flair'),
-                            message : input
-                        });
-                    } else if (CLIENT.get('canSubmit')){
-                        CLIENT.show({
-                            type : 'chat-message',
-                            nick : CLIENT.get('nick'),
-                            message : input,
-                            flair : CLIENT.get('flair')
-                        });
-                    }
+                        input = this.decorate(input);
+                        if(!CLIENT.get('idle')){
+                            socket.emit('message', {
+                                flair : CLIENT.get('flair'),
+                                message : input
+                            });
+                        } else {
+                            CLIENT.show({
+                                type : 'chat-message',
+                                nick : CLIENT.get('nick'),
+                                message : input,
+                                flair : CLIENT.get('flair')
+                            });
+                        }
                     }
                 }
             }

@@ -100,20 +100,15 @@ module.exports = function(callback) {
              * @param {string} password
              * @returns {$.Promise}
              */
-            verify : function(password, verification_code) {
+            verify : function() {
                 var err;
                 if (!info.registered) {
                     err = msgs.notRegistered;
                 } else if (info.verified) {
                     err = msgs.alreadyVerified;
-                } else if (!this.verifyPassword(password)) {
-                    err = msgs.enterSamePassword;
-                } else if (!notEmptyString(password)) {
-                    err = msgs.invalidPassword;
                 } else {
                     return this.set({
-                        verified : 1,
-                        pw_hash : passwordHash.generate(password)
+                        verified : 1
                     }).then(function() {
                         return $.Deferred().resolve(true, msgs.verified);
                     });

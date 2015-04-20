@@ -31,7 +31,6 @@ function createChannel(io, channelName) {
     var channel = {
         online : []
     };
-    var canSubmit = true;
     var tokenCache = {};
     var count = 0;
     var command_access = {
@@ -202,25 +201,19 @@ function createChannel(io, channelName) {
                 }
             },
             verify : {
-		params : [ 'reenter_password' ],
+                params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
-		    canSubmit = false;
-		    dao.findUser(user.nick).then(function(u){
-		    if (u && !u.get('verified'))
-		    {
-                        if (settings.api && settings.api.recaptcha){
-			     user.regpass = params.reenter_password;
-			     canSubmit = false;
-			     socketEmit(socket,'update',{ canSubmit : false });
-                             socketEmit(socket,'passverify');
+                    dao.findUser(user.nick).then(function(u){
+                        if (u && !u.get('verified')){
+                            if (settings.api && settings.api.recaptcha){
+                                socketEmit(socket,'passverify');
+                            } else {
+                                console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
+                            }
                         } else {
-                            console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
+                            errorMessage('Please register your nick before verifying');
                         }
-		    } else {
-			canSubmit = true;
-			errorMessage('Please register your nick before verifying');
-			console.log(user.nick + ' attempted to verify before registering.');
-		    }});
+                    });
                 }
             },
             banlist : {
@@ -1011,7 +1004,7 @@ function createChannel(io, channelName) {
                     }
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
-                            if (user.role != 'mute' && canSubmit) {
+                            if (user.role != 'mute') {
                                 count++;
                                 roomEmit('message', {
                                     type : 'chat-message',
@@ -1111,51 +1104,49 @@ function createChannel(io, channelName) {
             var done = $.Deferred();
             if (msg.data) {
             var url = "https://www.google.com/recaptcha/api/siteverify";
-		request.post(
-		    url,
-		    { form : { secret : settings.api.recaptcha,
-			       response : msg.data.substring(21) } },
-		    function (error, response, body) {
-		        if (!error){
-			    if (JSON.parse(body).success){
+            request.post(
+                url,
+                { form : { secret : settings.api.recaptcha,
+			    response : msg.data.substring(21) } },
+                function (error, response, body) {
+                    if (!error){
+                        if (JSON.parse(body).success){
                             socketEmit(socket,'removeDiv');
-	    		    dao.findUser(user.nick).then(function(dbuser){
-                            dbuser.verify(user.regpass,undefined).done(function(success, error) {
-                                chnl = dbuser.get('nick') + '.spooks.me/'
-                                access = {"admin":[[dbuser.get('nick'),"0"]],"mod":[],"basic":[],"mute":[]}
-                                return dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
-                                    success && socketEmit(socket, 'update', {
-                                        login : true
+                            dao.findUser(user.nick).then(function(dbuser){
+                                dbuser.verify(user.regpass,undefined).done(function(success, error) {
+                                    chnl = dbuser.get('nick') + '.spooks.me/';
+                                    access = {};
+                                    whitelist = {};
+                                    access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
+                                    whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
+                                    return dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
+                                        if(success){
+                                            socketEmit(socket, 'update', {
+                                                login : true
+                                            });
+                                            showMessage('Verification successful')
+                                        }
+                                        delete user.regpass;
                                     });
-                                    dao.setChannelInfo(chnl, 'whitelist', [dbuser.get('nick')]);
-				delete user.regpass;
-				if (success){
-				socketEmit(socket,'message',{ message : 'Verification successful'});
-				} else {
-				errorMessage("Error: " + error);
-				}
-			        socketEmit(socket,'update',{ canSubmit : true });
-				canSubmit = true;
+                                    dao.setChannelInfo(chnl, 'whitelist', whitelist);
                                 });
                             });
-			    });
-                            } else {
+                        } else {
                             console.log("Captcha failed. User was not registered");
-			    errorMessage("Captcha was not correct. Obviously.");
+                            errorMessage("Captcha was not correct. Obviously.");
                             done.resolve(false);
-			     socketEmit(socket,'update',{ canSubmit : true });
-                            }
-			} else {
-			    console.log("An error occured while submitting data to Google");
-                done.resolve(false);
-			}
-	 	    }
-		)
+                        }
+                    } else {
+                        console.log("An error occured while submitting data to Google");
+                        done.resolve(false);
+                    }
+                }
+            );
             } else {
-		console.log("Invalid form data.");
-		done.resolve(false);
-	    }
-        return done.promise();
+                console.log("Invalid form data.");
+                done.resolve(false);
+            }
+            return done.promise();
         }
            /* updateMousePosition : function(dao, position) {
                 if (position && typeof position.x == 'number' && typeof position.y == 'number') {
@@ -1507,8 +1498,7 @@ function createChannel(io, channelName) {
                             role : user.role,
                             vHost : user.vhost,
                             security : hashToken,
-                            login : user.login,
-			    canSubmit : true
+                            login : user.login
                         });
                         if (online && indexOf(user.nick) != -1) {
                       	    count++;
