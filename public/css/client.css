@@ -515,7 +515,7 @@ color:white;
     padding-top: .2em;
     display: inline;
 }
-#highlightname.timestamp {
+.highlightname {
 color:gold;
 }
 
