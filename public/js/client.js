@@ -1013,9 +1013,7 @@ $(function() {
         register : {
             params : [ 'initial_password' ]
         },
-        verify : {
-	    params : [ 'reenter_password' ]
-	},
+        verify : {},
         change_password : {
             params : [ 'old_password', 'new_password' ]
         },

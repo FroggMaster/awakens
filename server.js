@@ -201,7 +201,6 @@ function createChannel(io, channelName) {
                 }
             },
             verify : {
-                params : [ 'reenter_password' ],
                 handler : function(dao, dbuser, params) {
                     dao.findUser(user.nick).then(function(u){
                         if (u && !u.get('verified')){
