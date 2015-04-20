@@ -134,7 +134,8 @@ function createChannel(io, channelName) {
                     var message = params.message.substring(0, settings.limits.message)
                     roomEmit('message', {
                         type : 'action-message',
-                        message : user.nick + ' ' + params.message
+                        message : user.nick + ' ' + params.message,
+                        count : count
                     });
                     return $.Deferred().resolve(true);
                 }
@@ -1324,11 +1325,15 @@ function createChannel(io, channelName) {
         }
 
         function broadcastChannel(dao, channel, message) {
+       	    count++;
             channel.online.forEach(function(user){
                 dao.findUser(user.nick).done(function(dbuser) {
                     socketEmit(user.socket, 'message', {
                         type : 'general-message',
                         message : message
+                    });
+                    socketEmit(user.socket,'updateCount',{
+                    	count : count	
                     });
                 })
             })
@@ -1501,16 +1506,24 @@ function createChannel(io, channelName) {
 			    canSubmit : true
                         });
                         if (online && indexOf(user.nick) != -1) {
+                      	    count++;
                             roomEmit('nick', {
                                 id : socket.id,
                                 nick : user.nick
                             });
+                            roomEmit('updateCount',{
+                            	count : count
+                            });
                         } else {
                             channel.online.push(user);
                             log.debug('Successful join!');
+                            count++;
                             roomEmit('join', {
                                 id : socket.id,
                                 nick : user.nick
+                            });
+                            roomEmit('updateCount',{
+                            	count : count
                             });
                         }
                         done.resolve(true);
