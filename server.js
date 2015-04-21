@@ -122,7 +122,7 @@ function createChannel(io, channelName) {
             nick : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
-                    if ((nick = params.nick.replace(/\s+/g, '')) != ''){
+                    if ((params.nick.replace(/\s+/g, '')) != ''){
                         return attemptNick(dao, nick.substring(0, settings.limits.nick));
                     }
                     socketEmit(socket,'message',{
@@ -1547,7 +1547,7 @@ function createChannel(io, channelName) {
                                     if (tokenCache[nick]) {
                                         if (token == tokenCache[nick]['token']) {
                                             var presentDate = new Date();
-                                            if (tokenCache[nick]['date']+604800001 > presentDate.getTime()){//set to one more millisecond b/c of anon2000
+                                            if (tokenCache[nick]['date']+604800000 > presentDate.getTime()){
                                                 log.debug('Token accepted.');
                                                 attempt(nick, undefined, dbuser, token);
                                             } else {
@@ -1580,7 +1580,6 @@ function createChannel(io, channelName) {
                     });
                 } else {
                     done.resolve(false, msgs.InvalidCharacters);
-                    fallback()
                 }
             } else {
                 fallback();
