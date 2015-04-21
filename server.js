@@ -144,17 +144,6 @@ function createChannel(io, channelName) {
                     return $.Deferred().resolve(true);
                 }
             },
-            punch : {
-                params : [ 'message' ],
-                handler : function(dao, dbuser, params) {
-                    var message = params.message.substring(0, settings.limits.message)
-                    roomEmit('message', {
-                        type : 'passive-message',
-                        message : user.nick + ' has punched ' + message + '.'
-                    });
-                    return $.Deferred().resolve(true);
-                }
-            },
             login : {
                 params : [ 'nick', 'password' ],
                 handler : function(dao, dbuser, params) {
@@ -367,6 +356,36 @@ function createChannel(io, channelName) {
                     }
                 }
             },
+            punch : {
+                role : 'mod',
+                params : [ 'nick', 'message' ],
+                handler : function(dao, dbuser, params) {
+                    var kuser = indexOf(params.nick);
+                    var permit = 0;
+                    if(kuser != -1){
+                        kuser = channel.online[kuser]
+                        fuser = grab(params.nick);
+                        if(roles.indexOf(user.role) < roles.indexOf(fuser.role)){
+                            permit = 1
+                        } else if(user.role == fuser.role && user.access_level < fuser.access_level){
+                            permit = 1
+                        }
+                        if(permit){
+                            msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
+                            socketEmit(kuser.socket, 'message', {
+                                type : 'error-message',
+                                message : msgs.get(msg.length > 0 ? 'punched_reason' : 'punched', user.nick, msg)
+                            });
+                            kuser.socket.disconnect();
+                            broadcastChannel(dao, channel, user.nick + " has punched " + params.nick + msg);
+                        } else {
+                            errorMessage('You may not kick admins');
+                        }
+                    } else {
+                        errorMessage(params.nick  +' is not online');
+                    }
+                }
+            },
             access : {
                 role : 'admin',
                 access_level : 0,
@@ -547,6 +566,10 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message);
                     return dao.setChannelInfo(channelName, 'topic', topic).then(function() {
+                    	count++;
+                    	roomEmit('updateCount',{
+                    	    count : count
+                    	});
                         roomEmit('update', {
                             topic : topic
                         });
