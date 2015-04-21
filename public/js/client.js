@@ -687,17 +687,19 @@ $(function() {
                 valid = true;
             }
         }
-        if (message.type == 'general-message'){
-            message.count = localCount;
+        if (message.type == 'general-message' || message.type == 'action-message'){
+            message.count = message.count || localCount;
         }
         if (message.count)
             el.append($('<div id=spooky_msg_' + message.count + ' class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
         else
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
         if(check.test(message.message) || valid){
-            if (message.nick != message.message.match(check)){
-            	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
-            	sound = 'name'
+            if ((message.type == 'chat-message') || (message.type = 'action-message') && message.message.split(' ')[0] != CLIENT.get('nick') && message.message.split(' ')[1] == CLIENT.get('nick')){
+                if (message.nick != message.message.match(check)){
+            	    message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+            	    sound = 'name'
+                }
             }
         }
         if(message.message.search(/>>(\d)+/g) != -1){
