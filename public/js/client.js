@@ -1002,9 +1002,6 @@ $(function() {
         me : {
             params : [ 'message$' ]
         },
-        punch : {
-            params : [ 'message$' ]
-        },
         login : {
             params : [ 'password', 'nick$' ]
         },
@@ -1047,6 +1044,10 @@ $(function() {
             params : [ 'nick' ]
         },
         kick : {
+            role : 'mod',
+            params : [ 'nick[|message]' ]
+        },
+        punch : {
             role : 'mod',
             params : [ 'nick[|message]' ]
         },
