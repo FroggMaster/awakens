@@ -58,9 +58,9 @@ $(function() {
         $('#captchaform').css('left',window.innerWidth/2-152);
         $('#fader').animate({
                 opacity: 0.6
-            }, 1000, function(){
+            }, 700, function(){
                 $('#captchaform').css('visibility','visible');
-                setTimeout(function(){$('#captchaform').animate({opacity : 1.0}, 600); setTimeout(function(){addWarning()},2000);},1000);
+                setTimeout(function(){$('#captchaform').animate({opacity : 1.0}, 500); setTimeout(function(){addWarning()},2000);},700);
             }
         );
         function addWarning() {
