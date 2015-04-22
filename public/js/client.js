@@ -131,10 +131,6 @@ $(function() {
         if (!first) {
             //window.location.reload();
         }
-        if (!CLIENT.get('security')){
-            var backupToken = localStorage['chat-security'];
-            CLIENT.set('security', backupToken);
-        }
         socket.emit('join', {
             nick : CLIENT.get('nick'),
             security : CLIENT.get('security')
@@ -266,7 +262,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick images flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick images security flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
