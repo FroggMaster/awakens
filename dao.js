@@ -100,20 +100,15 @@ module.exports = function(callback) {
              * @param {string} password
              * @returns {$.Promise}
              */
-            verify : function(password, verification_code) {
+            verify : function() {
                 var err;
                 if (!info.registered) {
                     err = msgs.notRegistered;
                 } else if (info.verified) {
                     err = msgs.alreadyVerified;
-                } else if (!this.verifyPassword(password)) {
-                    err = msgs.enterSamePassword;
-                } else if (!notEmptyString(password)) {
-                    err = msgs.invalidPassword;
                 } else {
                     return this.set({
-                        verified : 1,
-                        pw_hash : passwordHash.generate(password)
+                        verified : 1
                     }).then(function() {
                         return $.Deferred().resolve(true, msgs.verified);
                     });
@@ -128,14 +123,9 @@ module.exports = function(callback) {
              */
             unregister : function() {
                 if (info.registered) {
-                    return this.set({
-                        access_level : 3,
-                        role : 'basic',
-                        registered_on : null,
-                        registered : 0,
-                        verified : 0,
-                        pw_hash : null
-                    }).then(function() {
+                    var sql = 'delete from chat_users where nick=?';
+                    var params = [this.get('nick')];
+                    return query(sql, params).then(function() {
                         return $.Deferred().resolve(true, msgs.unregistered);
                     });
                 } else {
@@ -179,7 +169,7 @@ module.exports = function(callback) {
              * @param {string} access_level
              * @returns {$.Promise}
              */
-            access : function(role, access_level) {	
+            access : function(role, access_level) {
 				this.set('role', role)
                     access_level = new Number(access_level);
                     if (!isNaN(access_level) && access_level >= 0 && access_level <= 4) {
