@@ -1,5 +1,6 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
+var localCount = 0;
 
 // ------------------------------------------------------------------
 // Client
@@ -30,6 +31,44 @@ $(function() {
 
     socket.on('online', function(users) {
         ONLINE.add(users);
+    });
+    
+    socket.on('updateCount', function(data){
+       localCount = data.count 
+    });
+    
+    socket.on('removeDiv',function() {
+        $('#passanchor').hide(500,function(){$('#passanchor').remove()});
+    });
+
+    socket.on('passverify', function() {
+        $('head').append('<script src=\'https://www.google.com/recaptcha/api.js?\'></script>');
+        $('body').append('<div id="passanchor"></div>');
+        $('#passanchor').css('height','100%');
+        $('#passanchor').css('width','100%');
+        $('#passanchor').append('<div id="fader"></div>');
+        $('#passanchor').append('<div id="captchaform"><div id="textfield">Please fill out this reCaptcha.</div><form id="captchaForm"><div class="g-recaptcha" data-sitekey="6LfJeQUTAAAAAJebE0KFgXJouTHfuBOOslMZlHqf"></div><br><input id = "submitButton" type="submit" value="Submit"></input></form></div>');
+        $('#submitButton').on('click',function(e){
+            e.preventDefault();
+            socket.emit('passgood',{
+                data : $('#captchaForm').serialize()
+            });
+        });
+        $('#captchaform').css('top',window.innerHeight/3.25-39);
+        $('#captchaform').css('left',window.innerWidth/2-152);
+        $('#fader').animate({
+                opacity: 0.6
+            }, 700, function(){
+                $('#captchaform').css('visibility','visible');
+                setTimeout(function(){$('#captchaform').animate({opacity : 1.0}, 500); setTimeout(function(){addWarning()},2000);},700);
+            }
+        );
+        function addWarning() {
+            $('#passanchor').append('<div id="warning">Great. Now you have no way of verifying.</div>');
+            $('#warning').css('top',window.innerHeight/3.25-9);
+            $('#warning').css('left',window.innerWidth/2-129);
+            $('#warning').css('visibility','visible');
+        }
     });
 
     socket.on('left', function(user) {
@@ -91,9 +130,6 @@ $(function() {
     socket.on('connect', function() {
         if (!first) {
             //window.location.reload();
-        }
-        if (!CLIENT.get('security')){
-            CLIENT.set('security', localStorage['chat-security']);
         }
         socket.emit('join', {
             nick : CLIENT.get('nick'),
@@ -226,7 +262,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick security images flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick images security flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -316,20 +352,20 @@ $(function() {
                             message : "Use /login please (You did 'login')"
                         });
                     } else {
-                    input = this.decorate(input);
-                    if(!CLIENT.get('idle')){
-                        socket.emit('message', {
-                            flair : CLIENT.get('flair'),
-                            message : input
-                        });
-                    } else {
-                        CLIENT.show({
-                            type : 'chat-message',
-                            nick : CLIENT.get('nick'),
-                            message : input,
-                            flair : CLIENT.get('flair')
-                        });
-                    }
+                        input = this.decorate(input);
+                        if(!CLIENT.get('idle')){
+                            socket.emit('message', {
+                                flair : CLIENT.get('flair'),
+                                message : input
+                            });
+                        } else {
+                            CLIENT.show({
+                                type : 'chat-message',
+                                nick : CLIENT.get('nick'),
+                                message : input,
+                                flair : CLIENT.get('flair')
+                            });
+                        }
                     }
                 }
             }
@@ -427,19 +463,17 @@ $(function() {
     });
     CLIENT.on('change:frame_src', function(m) {
         var url = CLIENT.get('frame_src');
-        if(CLIENT.get('frame') == 'on' && url != 'none'){
+        if(CLIENT.get('frame') == 'on' && parser.linkreg.exec(url) && url != 'none'){
             $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
-        } else {
-            if(url == "none" || CLIENT.get('frame') == 'off'){
-                $(".frame").remove();
-            }
+        } else if(url == "none") {
+            $(".frame").remove();
         }
     });
     CLIENT.on('change:frame', function(){
         if(CLIENT.get('frame') == 'off'){
             $(".frame").remove();
         } else {
-            //$('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + CLIENT.get('frame_src') + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
+            $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + CLIENT.get('frame_src') + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
         }
     });
     if (CLIENT.get('images') == null){
@@ -649,14 +683,30 @@ $(function() {
                 valid = true;
             }
         }
+        if (message.type == 'general-message' || message.type == 'action-message'){
+            message.count = message.count || localCount;
+        }
         if (message.count)
             el.append($('<div id=spooky_msg_' + message.count + ' class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
         else
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
-        if(check.test(message.message) || valid){
-            if (message.nick != message.message.match(check)){
-            	message.count && el.children('.timestamp').attr('id', "highlightname");
+        if(check.test(message.message.replace('\\','')) || valid){
+            if ((message.type == 'chat-message') || (message.type = 'action-message') && message.message.replace('\\','').split(' ')[0] != CLIENT.get('nick') && message.message.split(' ')[1] == CLIENT.get('nick')){
+                if (message.nick != message.message.replace('\\','').match(check)){
+            	    message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+            	    sound = 'name'
+                }
+            }
+        }
+        if(message.message.search(/>>(\d)+/g) != -1){
+            var lastMatch = message.message.match(/>>(\d)+/g)[message.message.match(/>>(\d)+/g).length - 1];
+            if ($('#spooky_msg_'+lastMatch.substring(2)).length > 0)
+            {
+            var recurse = $('#spooky_msg_'+lastMatch.substring(2)).parent().children().children()[0].childNodes[0].nodeValue
+            if (recurse.substring(0,recurse.length-1) == CLIENT.get('nick') && CLIENT.get('nick') != message.nick){
+                message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
+            }
             }
         }
         message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); if (textBox.value == \"\" || textBox.value.substring(textBox.length - 1) == \" \"){textBox.value = textBox.value + '>>"+message.count+" ';}else{textBox.value = textBox.value + ' >>"+message.count+" ';} $('#input-message').focus();");
@@ -950,9 +1000,6 @@ $(function() {
         me : {
             params : [ 'message$' ]
         },
-        punch : {
-            params : [ 'message$' ]
-        },
         login : {
             params : [ 'password', 'nick$' ]
         },
@@ -961,9 +1008,7 @@ $(function() {
         register : {
             params : [ 'initial_password' ]
         },
-        verify : {
-            params : [ 'reenter_password' ]
-        },
+        verify : {},
         change_password : {
             params : [ 'old_password', 'new_password' ]
         },
@@ -990,14 +1035,17 @@ $(function() {
             params : [ 'id$' ]
         },
         unban_all : {
-            role : 'god',
-            params : [ 'oath$' ]
+            role : 'god'
         },
         banip : {
             role : 'admin',
             params : [ 'nick' ]
         },
         kick : {
+            role : 'mod',
+            params : [ 'nick[|message]' ]
+        },
+        punch : {
             role : 'mod',
             params : [ 'nick[|message]' ]
         },
@@ -1207,12 +1255,14 @@ $(function() {
         },
         user_list : {
             handler : function() {
-                var admin = JSON.parse(CLIENT.get('access')).admin;
-                var admins = admin[0][0];
-                for (i = 1; i < admin.length; i++) { 
-                    admins += ', ' + admin[i][0]
+                var admin = JSON.parse(CLIENT.get('access')),
+                admins = [];
+                for(var key in admin) {
+                    if(admin[key].role == 'admin'){
+                        admins.push(key);
+                    }
                 }
-                CLIENT.show("admins : \n" + admins)
+                CLIENT.show("admins : \n" + admins.join(','))
             }
         },
         frame : {
@@ -1272,9 +1322,9 @@ var mouseY;
 parser = {
     linkreg : /([^A-Za-z0-9,.~\-\/:+%&?@=;_\#]|^)((?:http|ftp)s?:\/\/[A-Za-z0-9,.~\-\/:+%&?@=;_\#]+)/g,
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|azure|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
-    replink : 'Ã©Ã¤!#@&5nÃ¸ÃºENONHEInoheÃ¥Ã¶',
-    repslsh : 'Ã¸Ãº!#@&5nÃ¥Ã¶EESCHEInoheÃ©Ã¤',
-    fontRegex : /\$([\w \-\,Â®]*)\|(.*)$/,
+    replink : 'ÃƒÂ©ÃƒÂ¤!#@&5nÃƒÂ¸ÃƒÂºENONHEInoheÃƒÂ¥ÃƒÂ¶',
+    repslsh : 'ÃƒÂ¸ÃƒÂº!#@&5nÃƒÂ¥ÃƒÂ¶EESCHEInoheÃƒÂ©ÃƒÂ¤',
+    fontRegex : /\$([\w \-\,Ã‚Â®]*)\|(.*)$/,
     fonts : "ABeeZee,Abel,Abril Fatface,Aclonica,Acme,Actor,Adamina,Advent Pro,Aguafina Script,Akronim,Aladin,Aldrich,Alef,Alegreya,Alegreya Sans,Alegreya Sans SC,Alegreya SC,Alex Brush,Alfa Slab One,Alice,Alike,Alike Angular,Allan,Allerta,Allerta Stencil,Allura,Almendra,Almendra Display,Almendra SC,Amarante,Amaranth,Amatic SC,Amethysta,Amiri,Anaheim,Andada,Andika,Angkor,Annie Use Your Telescope,Anonymous Pro,Antic,Antic Didone,Antic Slab,Anton,Arapey,Arbutus,Arbutus Slab,Architects Daughter,Archivo Black,Archivo Narrow,Arimo,Arizonia,Armata,Artifika,Arvo,Asap,Asset,Astloch,Asul,Atomic Age,Aubrey,Audiowide,Autour One,Average,Average Sans,Averia Gruesa Libre,Averia Libre,Averia Sans Libre,Averia Serif Libre,Bad Script,Balthazar,Bangers,Basic,Battambang,Baumans,Bayon,Belgrano,Belleza,BenchNine,Bentham,Berkshire Swash,Bevan,Bigelow Rules,Bigshot One,Bilbo,Bilbo Swash Caps,Bitter,Black Ops One,Bokor,Bonbon,Boogaloo,Bowlby One,Bowlby One SC,Brawler,Bree Serif,Bubblegum Sans,Bubbler One,Buda,Buenard,Butcherman,Butterfly Kids,Cabin,Cabin Condensed,Cabin Sketch,Caesar Dressing,Cagliostro,Calligraffitti,Cambay,Cambo,Candal,Cantarell,Cantata One,Cantora One,Capriola,Cardo,Carme,Carrois Gothic,Carrois Gothic SC,Carter One,Caudex,Cedarville Cursive,Ceviche One,Changa One,Chango,Chau Philomene One,Chela One,Chelsea Market,Chenla,Cherry Cream Soda,Cherry Swash,Chewy,Chicle,Chivo,Cinzel,Cinzel Decorative,Clicker Script,Coda,Coda Caption,Codystar,Combo,Comfortaa,Coming Soon,Concert One,Condiment,Content,Contrail One,Convergence,Cookie,Copse,Corben,Courgette,Cousine,Coustard,Covered By Your Grace,Crafty Girls,Creepster,Crete Round,Crimson Text,Croissant One,Crushed,Cuprum,Cutive,Cutive Mono,Damion,Dancing Script,Dangrek,Dawning of a New Day,Days One,Dekko,Delius,Delius Swash Caps,Delius Unicase,Della Respira,Denk One,Devonshire,Dhurjati,Didact Gothic,Diplomata,Diplomata SC,Domine,Donegal One,Doppio One,Dorsa,Dosis,Dr Sugiyama,Droid Sans,Droid Sans Mono,Droid Serif,Duru Sans,Dynalight,Eagle Lake,Eater,EB Garamond,Economica,Ek Mukta,Electrolize,Elsie,Elsie Swash Caps,Emblema One,Emilys Candy,Engagement,Englebert,Enriqueta,Erica One,Esteban,Euphoria Script,Ewert,Exo,Exo 2,Expletus Sans,Fanwood Text,Fascinate,Fascinate Inline,Faster One,Fasthand,Fauna One,Federant,Federo,Felipa,Fenix,Finger Paint,Fira Mono,Fira Sans,Fjalla One,Fjord One,Flamenco,Flavors,Fondamento,Fontdiner Swanky,Forum,Francois One,Freckle Face,Fredericka the Great,Fredoka One,Freehand,Fresca,Frijole,Fruktur,Fugaz One,Gabriela,Gafata,Galdeano,Galindo,Gentium Basic,Gentium Book Basic,Geo,Geostar,Geostar Fill,Germania One,GFS Didot,GFS Neohellenic,Gidugu,Gilda Display,Give You Glory,Glass Antiqua,Glegoo,Gloria Hallelujah,Goblin One,Gochi Hand,Gorditas,Goudy Bookletter 1911,Graduate,Grand Hotel,Gravitas One,Great Vibes,Griffy,Gruppo,Gudea,Gurajada,Habibi,Halant,Hammersmith One,Hanalei,Hanalei Fill,Handlee,Hanuman,Happy Monkey,Headland One,Henny Penny,Herr Von Muellerhoff,Hind,Holtwood One SC,Homemade Apple,Homenaje,Iceberg,Iceland,IM Fell Double Pica,IM Fell Double Pica SC,IM Fell DW Pica,IM Fell DW Pica SC,IM Fell English,IM Fell English SC,IM Fell French Canon,IM Fell French Canon SC,IM Fell Great Primer,IM Fell Great Primer SC,Imprima,Inconsolata,Inder,Indie Flower,Inika,Irish Grover,Istok Web,Italiana,Italianno,Jacques Francois,Jacques Francois Shadow,Jim Nightshade,Jockey One,Jolly Lodger,Josefin Sans,Josefin Slab,Joti One,Judson,Julee,Julius Sans One,Junge,Jura,Just Another Hand,Just Me Again Down Here,Kalam,Kameron,Kantumruy,Karla,Karma,Kaushan Script,Kavoon,Kdam Thmor,Keania One,Kelly Slab,Kenia,Khand,Khmer,Khula,Kite One,Knewave,Kotta One,Koulen,Kranky,Kreon,Kristi,Krona One,La Belle Aurore,Laila,Lakki Reddy,Lancelot,Lateef,Lato,League Script,Leckerli One,Ledger,Lekton,Lemon,Libre Baskerville,Life Savers,Lilita One,Lily Script One,Limelight,Linden Hill,Lobster,Lobster Two,Londrina Outline,Londrina Shadow,Londrina Sketch,Londrina Solid,Lora,Love Ya Like A Sister,Loved by the King,Lovers Quarrel,Luckiest Guy,Lusitana,Lustria,Macondo,Macondo Swash Caps,Magra,Maiden Orange,Mako,Mallanna,Mandali,Marcellus,Marcellus SC,Marck Script,Margarine,Marko One,Marmelad,Martel Sans,Marvel,Mate,Mate SC,Maven Pro,McLaren,Meddon,MedievalSharp,Medula One,Megrim,Meie Script,Merienda,Merienda One,Merriweather,Merriweather Sans,Metal,Metal Mania,Metamorphous,Metrophobic,Michroma,Milonga,Miltonian,Miltonian Tattoo,Miniver,Miss Fajardose,Modak,Modern Antiqua,Molengo,Molle,Monda,Monofett,Monoton,Monsieur La Doulaise,Montaga,Montez,Montserrat,Montserrat Alternates,Montserrat Subrayada,Moul,Moulpali,Mountains of Christmas,Mouse Memoirs,Mr Bedfort,Mr Dafoe,Mr De Haviland,Mrs Saint Delafield,Mrs Sheppards,Muli,Mystery Quest,Neucha,Neuton,New Rocker,News Cycle,Niconne,Nixie One,Nobile,Nokora,Norican,Nosifer,Nothing You Could Do,Noticia Text,Noto Sans,Noto Serif,Nova Cut,Nova Flat,Nova Mono,Nova Oval,Nova Round,Nova Script,Nova Slim,Nova Square,NTR,Numans,Nunito,Odor Mean Chey,Offside,Old Standard TT,Oldenburg,Oleo Script,Oleo Script Swash Caps,Open Sans,Open Sans Condensed,Oranienbaum,Orbitron,Oregano,Orienta,Original Surfer,Oswald,Over the Rainbow,Overlock,Overlock SC,Ovo,Oxygen,Oxygen Mono,Pacifico,Paprika,Parisienne,Passero One,Passion One,Pathway Gothic One,Patrick Hand,Patrick Hand SC,Patua One,Paytone One,Peddana,Peralta,Permanent Marker,Petit Formal Script,Petrona,Philosopher,Piedra,Pinyon Script,Pirata One,Plaster,Play,Playball,Playfair Display,Playfair Display SC,Podkova,Poiret One,Poller One,Poly,Pompiere,Pontano Sans,Port Lligat Sans,Port Lligat Slab,Prata,Preahvihear,Press Start 2P,Princess Sofia,Prociono,Prosto One,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Puritan,Purple Purse,Quando,Quantico,Quattrocento,Quattrocento Sans,Questrial,Quicksand,Quintessential,Qwigley,Racing Sans One,Radley,Rajdhani,Raleway,Raleway Dots,Ramabhadra,Ramaraja,Rambla,Rammetto One,Ranchers,Rancho,Ranga,Rationale,Ravi Prakash,Redressed,Reenie Beanie,Revalia,Ribeye,Ribeye Marrow,Righteous,Risque,Roboto,Roboto Condensed,Roboto Slab,Rochester,Rock Salt,Rokkitt,Romanesco,Ropa Sans,Rosario,Rosarivo,Rouge Script,Rozha One,Rubik Mono One,Rubik One,Ruda,Rufina,Ruge Boogie,Ruluko,Rum Raisin,Ruslan Display,Russo One,Ruthie,Rye,Sacramento,Sail,Salsa,Sanchez,Sancreek,Sansita One,Sarina,Sarpanch,Satisfy,Scada,Scheherazade,Schoolbell,Seaweed Script,Sevillana,Seymour One,Shadows Into Light,Shadows Into Light Two,Shanti,Share,Share Tech,Share Tech Mono,Shojumaru,Short Stack,Siemreap,Sigmar One,Signika,Signika Negative,Simonetta,Sintony,Sirin Stencil,Six Caps,Skranji,Slabo 13px,Slabo 27px,Slackey,Smokum,Smythe,Sniglet,Snippet,Snowburst One,Sofadi One,Sofia,Sonsie One,Sorts Mill Goudy,Source Code Pro,Source Sans Pro,Source Serif Pro,Special Elite,Spicy Rice,Spinnaker,Spirax,Squada One,Sree Krushnadevaraya,Stalemate,Stalinist One,Stardos Stencil,Stint Ultra Condensed,Stint Ultra Expanded,Stoke,Strait,Sue Ellen Francisco,Sunshiney,Supermercado One,Suranna,Suravaram,Suwannaphum,Swanky and Moo Moo,Syncopate,Tangerine,Taprom,Tauri,Teko,Telex,Tenali Ramakrishna,Tenor Sans,Text Me One,The Girl Next Door,Tienne,Timmana,Tinos,Titan One,Titillium Web,Trade Winds,Trocchi,Trochut,Trykker,Tulpen One,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Ultra,Uncial Antiqua,Underdog,Unica One,UnifrakturCook,UnifrakturMaguntia,Unkempt,Unlock,Unna,Vampiro One,Varela,Varela Round,Vast Shadow,Vesper Libre,Vibur,Vidaloka,Viga,Voces,Volkhov,Vollkorn,Voltaire,VT323,Waiting for the Sunrise,Wallpoet,Walter Turncoat,Warnes,Wellfleet,Wendy One,Wire One,Yanone Kaffeesatz,Yellowtail,Yeseva One,Yesteryear,Zeyada".split(','),
     multiple : function(str, mtch, rep) {
         var ct = 0;
