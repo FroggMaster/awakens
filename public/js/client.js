@@ -266,7 +266,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick security images flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak nick images flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
