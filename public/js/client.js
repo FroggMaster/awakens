@@ -1,5 +1,6 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
+var localCount = 0;
 
 // ------------------------------------------------------------------
 // Client
@@ -646,14 +647,28 @@ $(function() {
                 valid = true;
             }
         }
+        if (message.type == 'general-message' || message.type == 'action-message'){
+            message.count = message.count || localCount;
+        }
         if (message.count)
             el.append($('<div id=spooky_msg_' + message.count + ' class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
         else
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
-        if(check.test(message.message) || valid){
-            if (message.nick != message.message.match(check)){
+        if(check.test(message.message.replace('\\','')) || valid){
+            if (message.nick != message.message.replace('\\','').match(check)){
             	message.count && el.children('.timestamp').attr('id', "highlightname");
             	sound = 'name'
+            }
+        }
+        if(message.message.search(/>>(\d)+/g) != -1){
+            var lastMatch = message.message.match(/>>(\d)+/g)[message.message.match(/>>(\d)+/g).length - 1];
+            if ($('#spooky_msg_'+lastMatch.substring(2)).length > 0)
+            {
+            var recurse = $('#spooky_msg_'+lastMatch.substring(2)).parent().children().children()[0].childNodes[0].nodeValue
+            if (recurse.substring(0,recurse.length-1) == CLIENT.get('nick') && CLIENT.get('nick') != message.nick){
+                message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+            	sound = 'name'
+            }
             }
         }
         message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); if (textBox.value == \"\" || textBox.value.substring(textBox.length - 1) == \" \"){textBox.value = textBox.value + '>>"+message.count+" ';}else{textBox.value = textBox.value + ' >>"+message.count+" ';} $('#input-message').focus();");
