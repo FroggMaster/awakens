@@ -92,10 +92,6 @@ $(function() {
         if (!first) {
             //window.location.reload();
         }
-        if (!CLIENT.get('security')){
-            var backupToken = localStorage['chat-security'];
-            CLIENT.set('security', backupToken);
-        }
         socket.emit('join', {
             nick : CLIENT.get('nick'),
             security : CLIENT.get('security')
