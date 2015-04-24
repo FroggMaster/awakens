@@ -216,7 +216,7 @@ $(function() {
             CLIENT.show({
                     message : "Blocklist has been cleared"
             });
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "punch") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
