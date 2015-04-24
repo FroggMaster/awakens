@@ -1448,9 +1448,15 @@ parser = {
         //JavaScript links
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
             if(/[^:]*javascript *:/im.test(a)) {
-                    return '<div>' + b + '<a href="javascript:void(0)" title = "Run at your own risk. Running unknown javascript may compromise webpage security." onclick = "'+a+'">' + '[JavaScript]' + '</a></div>';
+                    if (b.trim() == ""){
+                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                    }
+                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             } else {
-                return '<div>'+b+'<a href="javascript:void(0)" title = "Run at your own risk. Running unknown scripts may compromise webpage security." onclick = "javascript: '+a+'">' + '[Javascript?]' + '</a></div>'
+                if (b.trim() == ""){
+                return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "javascript: '+a+'">' + '[Script]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                }
+                return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "javascript: '+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             }
         });
         //embed
