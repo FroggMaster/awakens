@@ -543,6 +543,7 @@ $(function() {
 
 $(function() {
     function updateCount() {
+        $('#user-list').css('max-height', window.innerHeight - 108 + 'px');
         if(CLIENT.get('menu_display') == 'block'){
             $('#online-users .category').text('Online (' + ONLINE.size() + ')');
         } else {
