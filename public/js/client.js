@@ -1183,6 +1183,19 @@ $(function() {
         },
         block : function(){},
         unblock : function(){},
+        blocklist : {
+            handler : function(params) {
+                if (CLIENT.get('block') != ""){
+                    CLIENT.show({
+                        message : "Users on your blocklist: " + CLIENT.get('block')
+                    });
+                } else {
+                    CLIENT.show({
+                        message : "There are no users on your blocklist"
+                    });
+                }
+            }
+        },
         unblock_all : {
             handler : function(params) {
                 CLIENT.set('block',"");
