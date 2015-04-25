@@ -719,6 +719,14 @@ function createChannel(io, channelName) {
                         } else {
                             dao.setChannelInfo(channelName, 'private', 1).then(function(){
                                 showMessage('Channel has been made private');
+                                channel.online.forEach(function(user){
+                                    dao.findUser(user.nick).done(function(dbuser) {
+                                        if (!dbuser || dbuser.get('verified') == 0){
+                                            errorMessage('Channel is private.');
+                                            user.socket.disconnect();
+                                        }
+                                    });
+                                });
                             });
                         }
                     });
