@@ -201,21 +201,6 @@ $(function() {
                     type : 'error-message'
                 });
             }
-        } else if (name == 'blocklist') {
-            if (CLIENT.get('block') != ""){
-                CLIENT.show({
-                    message : "Users on your blocklist: " + CLIENT.get('block')
-                });
-            } else {
-                CLIENT.show({
-                    message : "There are no users on your blocklist"
-                });
-            }
-	} else if (name == 'unblock_all'){
-            CLIENT.set('block',"");
-            CLIENT.show({
-                    message : "Blocklist has been cleared"
-            });
         } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
@@ -1198,8 +1183,14 @@ $(function() {
         },
         block : function(){},
         unblock : function(){},
-        blocklist : function(){},
-        unblock_all : function(){},
+        unblock_all : {
+            handler : function(params) {
+                CLIENT.set('block',"");
+                CLIENT.show({
+                        message : "Blocklist has been cleared"
+                });
+            }
+        },
         alert : function(){},
         unalert : function(){},
         private : {
