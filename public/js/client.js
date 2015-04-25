@@ -106,7 +106,7 @@ $(function() {
     
     socket.on('centermsg', function(data){
         $('#sam').remove()
-        $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
+        $('#background').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     });
     
     socket.on('alive', function(){
@@ -449,7 +449,7 @@ $(function() {
     CLIENT.on('change:frame_src', function(m) {
         var url = CLIENT.get('frame_src');
         if(CLIENT.get('frame') == 'on' && parser.linkreg.exec(url) && url != 'none'){
-            $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
+            $('#background').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
         } else if(url == "none") {
             $(".frame").remove();
         }
@@ -458,7 +458,7 @@ $(function() {
         if(CLIENT.get('frame') == 'off'){
             $(".frame").remove();
         } else {
-            $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + CLIENT.get('frame_src') + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
+            $('#background').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + CLIENT.get('frame_src') + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
         }
     });
     if (CLIENT.get('images') == null){
@@ -491,7 +491,7 @@ $(function() {
 $(function() {
     CLIENT.on('change:background', function(m, background) {
         if (background && CLIENT.get('bg') == 'on' && background != 'default') {
-            $('#messages').css('background', background);
+            $('#background').css('background', background);
             CLIENT.set('old', background);
         } else {
             CLIENT.set('old', background);
@@ -506,9 +506,9 @@ $(function() {
     });
     CLIENT.on('change:bg', function(m, bg){
         if(bg == 'on'){
-            $('#messages').css('background', CLIENT.get('old'));
+            $('#background').css('background', CLIENT.get('old'));
         } else {
-            $('#messages').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
+            $('#background').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
         }
     });
     // scrollbar and input
@@ -1186,7 +1186,7 @@ $(function() {
             handler : function(params) {
                 var att = params.att;
                 if (att == 'bg' && CLIENT.get('bg') == 'off'){
-                    $('#messages').css('background', CLIENT.get('old'));
+                    $('#background').css('background', CLIENT.get('old'));
                 } 
                 if(att != 'style' && att != 'font'){
                     CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
