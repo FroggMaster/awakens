@@ -687,7 +687,7 @@ $(function() {
             var lastMatch = message.message.match(/>>(\d)+/g)[message.message.match(/>>(\d)+/g).length - 1];
             if ($('#spooky_msg_'+lastMatch.substring(2)).length > 0)
             {
-            var recurse = $('#spooky_msg_'+lastMatch.substring(2)).parent().children().children()[0].childNodes[0].nodeValue
+            var recurse = $('#spooky_msg_'+lastMatch.substring(2)).parent().children().children()[0].textContent;
             if (recurse.substring(0,recurse.length-1) == CLIENT.get('nick') && CLIENT.get('nick') != message.nick){
                 message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
