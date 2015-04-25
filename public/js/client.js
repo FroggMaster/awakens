@@ -1449,12 +1449,12 @@ parser = {
         //embed
         str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         //colors
-        str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
-        str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
-        str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
-        str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: #$1;">$2</span>');
-        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: $1;">$2</span>');
-        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: $1;">$2</span>');
+        str = this.multiple(str, /&#35;&#35;([\da-f]{6})(((?!&).)+)/i, '<span style="background-color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;&#35;([\da-f]{3})(((?!&).)+)/i, '<span style="background-color: #$1;">$2</span>');
+        str = this.multiple(str,/&#35;([\da-f]{6})(((?!&).)+)/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;([\da-f]{3})(((?!&).)+)/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(((?!&).)+)', 'i'), '<span style="background-color: $1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(((?!&).)+)', 'i'), '<span style="color: $1;">$2</span>');
         str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$1\'">$2</span>');
         // filters
         //original = ['you','matter','think','care','about','this','for','shit','nigger','nothing','out of','doesn\'t','doesnt','my','ask','question','you are','nice','trying to','black','rose','no ','fag ','faggot','what','too ','to ','guy','white','yes','mom','ing ','with','th','are ']
