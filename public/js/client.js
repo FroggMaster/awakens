@@ -106,7 +106,7 @@ $(function() {
     
     socket.on('centermsg', function(data){
         $('#sam').remove()
-        $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
+        $('#background').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     });
     
     socket.on('alive', function(){
@@ -449,7 +449,7 @@ $(function() {
     CLIENT.on('change:frame_src', function(m) {
         var url = CLIENT.get('frame_src');
         if(CLIENT.get('frame') == 'on' && parser.linkreg.exec(url) && url != 'none'){
-            $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
+            $('#background').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
         } else if(url == "none") {
             $(".frame").remove();
         }
@@ -491,7 +491,7 @@ $(function() {
 $(function() {
     CLIENT.on('change:background', function(m, background) {
         if (background && CLIENT.get('bg') == 'on' && background != 'default') {
-            $('#messages').css('background', background);
+            $('#background').css('background', background);
             CLIENT.set('old', background);
         } else {
             CLIENT.set('old', background);
@@ -506,9 +506,9 @@ $(function() {
     });
     CLIENT.on('change:bg', function(m, bg){
         if(bg == 'on'){
-            $('#messages').css('background', CLIENT.get('old'));
+            $('#background').css('background', CLIENT.get('old'));
         } else {
-            $('#messages').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
+            $('#background').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
         }
     });
     // scrollbar and input
@@ -668,34 +668,34 @@ $(function() {
                 valid = true;
             }
         }
-        var content;
         if (message.type == 'general-message' || message.type == 'action-message'){
             message.count = message.count || localCount;
         }
-        if (message.count){
-            el.append($('<div class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
-            content = $('<div class="message-content spooky_msg_' + message.count + '"></div>').appendTo(el);
-        } else {
+        if (message.count)
+            el.append($('<div id=spooky_msg_' + message.count + ' class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
+        else
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
-            content = $('<div class="message-content"></div>').appendTo(el);
-        }
         if(check.test(message.message.replace('\\','')) || valid){
-            if (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message'){
-            	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
-            	sound = 'name'
+            if ((message.type == 'chat-message') || (message.type = 'action-message') && message.message.replace('\\','').split(' ')[0] != CLIENT.get('nick') && message.message.split(' ')[1] == CLIENT.get('nick')){
+                if (message.nick != message.message.replace('\\','').match(check)){
+            	    message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+            	    sound = 'name'
+                }
             }
         }
         if(message.message.search(/>>(\d)+/g) != -1){
             var lastMatch = message.message.match(/>>(\d)+/g)[message.message.match(/>>(\d)+/g).length - 1];
-            if ($('.spooky_msg_'+lastMatch.substring(2)).length > 0){
-                var recurse = $('.spooky_msg_'+lastMatch.substring(2)).text();
-                var name = recurse.match(/[^:]*/i)[0];
-                if (name == CLIENT.get('nick') && CLIENT.get('nick') != message.nick){
-                    message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
-                    sound = 'name'
-                }
+            if ($('#spooky_msg_'+lastMatch.substring(2)).length > 0)
+            {
+            var recurse = $('#spooky_msg_'+lastMatch.substring(2)).parent().children().children()[0].textContent;
+            if (recurse.substring(0,recurse.length-1) == CLIENT.get('nick') && CLIENT.get('nick') != message.nick){
+                message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+            	sound = 'name'
+            }
             }
         }
+        message.count && el.children('.timestamp').attr('onclick',"var textBox = document.getElementById('input-message'); if (textBox.value == \"\" || textBox.value.substring(textBox.length - 1) == \" \"){textBox.value = textBox.value + '>>"+message.count+" ';}else{textBox.value = textBox.value + ' >>"+message.count+" ';} $('#input-message').focus();");
+        var content = $('<div class="message-content"></div>').appendTo(el);
         if (message.nick) {
             var parsedFlair = null;
             if (message.flair) {
@@ -806,18 +806,6 @@ $(function() {
         var src = $el.attr('src');
         $el.replaceWith($('<a target="_blank"></a>').attr('href', src).text(src));
     }
-});
-
-// get message
-$( '#messages' ).on("click", ".message .timestamp", function(e) {
-    var textBox = document.getElementById('input-message');
-    var number = e.currentTarget.title;
-    if (textBox.value == '\\' || textBox.value.substring(textBox.length - 1) == '\\'){
-        textBox.value = textBox.value + '>>' + number;
-    }else{
-        textBox.value = textBox.value + '>>' + number;
-    } 
-    $('#input-message').focus();
 });
 
 // ------------------------------------------------------------------
@@ -1186,7 +1174,7 @@ $(function() {
             handler : function(params) {
                 var att = params.att;
                 if (att == 'bg' && CLIENT.get('bg') == 'off'){
-                    $('#messages').css('background', CLIENT.get('old'));
+                    $('#background').css('background', CLIENT.get('old'));
                 } 
                 if(att != 'style' && att != 'font'){
                     CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
@@ -1468,10 +1456,10 @@ parser = {
         // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
         // >>78 quote
-        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).parent().clone(); msgClone.children(\x27.timestamp\x27).attr(\x27id\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
+        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27#spooky_msg_'+str2+'\x27).parent().clone(); msgClone.children(\x27.timestamp\x27).attr(\x27id\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27#spooky_msg_'+str2+'\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27#spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27#spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
         function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
         if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
-		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2) != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
+		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementById('spooky_msg_'+p2) != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // >implying
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
