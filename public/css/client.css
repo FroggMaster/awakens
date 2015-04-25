@@ -604,8 +604,6 @@ color:gold;
     color:white;
     display:none;
     border-radius:5px;
-    overflow-y:auto;
-    overflow-x:hidden;
 }
 
 .tabbed-list{
