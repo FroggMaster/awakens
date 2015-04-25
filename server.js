@@ -1464,9 +1464,23 @@ function createChannel(io, channelName) {
                             var hashToken = hasher.hex_md5(hasher.genRandomSeed(6));
                             var currentDate = new Date();
                             currentDate = currentDate.getTime();
-                            tokenCache[user.nick] = {
-                                token : hashToken,
-                                date : currentDate
+                            if (tokenCache[user.nick]) {
+                                var subCache = tokenCache[user.nick];
+                                if (subCache.token3 && subCache.token3 == token){
+                                    tokenCache[user.nick].token3 = hashToken;
+                                    tokenCache[user.nick].date3 = currentDate;
+                                } else if (subCache.token2 && subCache.token2 == token){
+                                    tokenCache[user.nick].token2 = hashToken;
+                                    tokenCache[user.nick].date2 = currentDate;
+                                } else {
+                                    tokenCache[user.nick].token = hashToken;
+                                    tokenCache[user.nick].date = currentDate;
+                                }
+                            } else {
+                                tokenCache[user.nick] = {
+                                    token : hashToken,
+                                    date : currentDate
+                                }
                             }
                             if(roles.indexOf(dbuser.get('role')) <= 1){
                                 user.role = dbuser.get('role')
@@ -1538,17 +1552,23 @@ function createChannel(io, channelName) {
                                     }
                                 } else if (token) {
                                     if (tokenCache[nick]) {
-                                        if (token == tokenCache[nick]['token']) {
-                                            var presentDate = new Date();
-                                            if (tokenCache[nick]['date']+604800000 > presentDate.getTime()){
-                                                log.debug('Token accepted.');
-                                                attempt(nick, undefined, dbuser, token);
-                                            } else {
-                                                log.debug('Token was expired for '+nick+'.');
-                                                fallback();
-                                            }
+                                        var tokenDate;
+                                        if (token == tokenCache[nick]['token']){
+                                            tokenDate = tokenCache[nick]['date'];
+                                        } else if (token == tokenCache[nick]['token2']){
+                                            tokenDate = tokenCache[nick]['date2'];
+                                        } else if (token == tokenCache[nick]['token3']){
+                                            tokenDate = tokenCache[nick]['date3'];
                                         } else {
                                             console.log('Token was incorrect.');
+                                            fallback();
+                                        }
+                                        var presentDate = new Date();
+                                        if (tokenDate && tokenDate+604800000 > presentDate.getTime()){
+                                            log.debug('Token accepted.');
+                                            attempt(nick, undefined, dbuser, token);
+                                        } else {
+                                            log.debug('Token was expired for '+nick+'.');
                                             fallback();
                                         }
                                     } else {
