@@ -216,7 +216,7 @@ $(function() {
             CLIENT.show({
                     message : "Blocklist has been cleared"
             });
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak" || name == "punch") {
+        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
@@ -1069,10 +1069,6 @@ $(function() {
             params : [ 'nick' ]
         },
         kick : {
-            role : 'mod',
-            params : [ 'nick[|message]' ]
-        },
-        punch : {
             role : 'mod',
             params : [ 'nick[|message]' ]
         },
