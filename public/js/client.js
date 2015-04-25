@@ -1183,26 +1183,16 @@ $(function() {
         },
         block : function(){},
         unblock : function(){},
-        blocklist : {
-            handler : function(params) {
-                if (CLIENT.get('block') != ""){
-                    CLIENT.show({
-                        message : "Users on your blocklist: " + CLIENT.get('block')
-                    });
-                } else {
-                    CLIENT.show({
-                        message : "There are no users on your blocklist"
-                    });
-                }
+        blocklist : function(){
+            if (CLIENT.get('block') != ""){
+                CLIENT.show('Users on your blocklist: ' + CLIENT.get('block'));
+            } else {
+                CLIENT.show('There are no users on your blocklist');
             }
         },
-        unblock_all : {
-            handler : function(params) {
-                CLIENT.set('block',"");
-                CLIENT.show({
-                        message : "Blocklist has been cleared"
-                });
-            }
+        unblock_all : function(){
+            CLIENT.set('block',"");
+            CLIENT.show('Blocklist has been cleared');
         },
         alert : function(){},
         unalert : function(){},
