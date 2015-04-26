@@ -997,11 +997,6 @@ function createChannel(io, channelName) {
                 if (user.nick) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
-                    try {
-                        message = decodeURIComponent(escape(message));
-                    } catch(err){
-                        message = 0;
-                    }
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
