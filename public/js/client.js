@@ -673,12 +673,23 @@ $(function() {
             message.count = message.count || localCount;
         }
         if (message.count){
-            el.append($('<div class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
-            content = $('<div class="message-content spooky_msg_' + message.count + '"></div>').appendTo(el);
+            el.append($('<div id=spooky_msg_' + message.count + ' class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
+            if (message.count % 111111 == 0)
+                var colorSet = "#BD8F8F";
+            else if (message.count % 11111 == 0)
+                var colorSet = "#B18FBD";
+            else if (message.count % 1111 == 0)
+                var colorSet = "#8FBDAA";
+            else if (message.count % 111 == 0)
+                var colorSet = "#948FBD";
+            else if (message.count % 11 == 0)
+                var colorSet = "#8EA8AD";
+            if (colorSet != undefined)
+                $('#messages #spooky_msg_' + message.count).last().css('color',colorSet);
         } else {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
-            content = $('<div class="message-content"></div>').appendTo(el);
         }
+        content = $('<div class="message-content"></div>').appendTo(el);
         if(check.test(message.message.replace('\\','')) || valid){
             if (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message'){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
