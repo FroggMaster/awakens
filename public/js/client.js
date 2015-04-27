@@ -106,7 +106,7 @@ $(function() {
     
     socket.on('centermsg', function(data){
         $('#sam').remove()
-        $('#background').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
+        $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     });
     
     socket.on('alive', function(){
@@ -332,26 +332,20 @@ $(function() {
                         });
                     }
                 } else {
-                    if ((input.split(' ')[0].indexOf("login") > -1 || input.trim().split(' ')[1] && input.trim().split(' ')[1].indexOf("login") > -1 ) && ( input.trim().split(' ').length == 3 && input.trim().split(' ')[0].indexOf("login") > -1 || input.trim().split(' ').length == 4 ) && CLIENT.get('login') == false){
-                        CLIENT.show({
-                            message : "Use /login please (You did 'login')"
+                    input = this.decorate(input);
+                    if(!CLIENT.get('idle')){
+                        socket.emit('message', {
+                            flair : CLIENT.get('flair'),
+                            message : input
                         });
                     } else {
-                        input = this.decorate(input);
-                        if(!CLIENT.get('idle')){
-                            socket.emit('message', {
-                                flair : CLIENT.get('flair'),
-                                message : input
-                            });
-                        } else {
-                            CLIENT.show({
-                                type : 'chat-message',
-                                nick : CLIENT.get('nick'),
-                                message : input,
-                                flair : CLIENT.get('flair')
-                            });
-                        }
-                    }
+                        CLIENT.show({
+                            type : 'chat-message',
+                            nick : CLIENT.get('nick'),
+                            message : input,
+                            flair : CLIENT.get('flair')
+                        });
+                     }
                 }
             }
         },
@@ -491,7 +485,7 @@ $(function() {
 $(function() {
     CLIENT.on('change:background', function(m, background) {
         if (background && CLIENT.get('bg') == 'on' && background != 'default') {
-            $('#background').css('background', background);
+            $('#messages').css('background', background);
             CLIENT.set('old', background);
         } else {
             CLIENT.set('old', background);
@@ -506,9 +500,9 @@ $(function() {
     });
     CLIENT.on('change:bg', function(m, bg){
         if(bg == 'on'){
-            $('#background').css('background', CLIENT.get('old'));
+            $('#messages').css('background', CLIENT.get('old'));
         } else {
-            $('#background').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
+            $('#messages').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
         }
     });
     // scrollbar and input
@@ -673,23 +667,12 @@ $(function() {
             message.count = message.count || localCount;
         }
         if (message.count){
-            el.append($('<div id=spooky_msg_' + message.count + ' class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
-            if (message.count % 111111 == 0)
-                var colorSet = "#BD8F8F";
-            else if (message.count % 11111 == 0)
-                var colorSet = "#B18FBD";
-            else if (message.count % 1111 == 0)
-                var colorSet = "#8FBDAA";
-            else if (message.count % 111 == 0)
-                var colorSet = "#948FBD";
-            else if (message.count % 11 == 0)
-                var colorSet = "#8EA8AD";
-            if (colorSet != undefined)
-                $('#messages #spooky_msg_' + message.count).last().css('color',colorSet);
+            el.append($('<div class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
+            content = $('<div class="message-content spooky_msg_' + message.count + '"></div>').appendTo(el);
         } else {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
+            content = $('<div class="message-content"></div>').appendTo(el);
         }
-        content = $('<div class="message-content"></div>').appendTo(el);
         if(check.test(message.message.replace('\\','')) || valid){
             if (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message'){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
@@ -756,13 +739,12 @@ $(function() {
                 }
                 break;
             case 'system-message':
-            	parsed = parser.quickParse(message.message);
+            	parsed = parser.parse(message.message);
             	break;
             case 'error-message':
-            	parsed = parser.quickParse(message.message);
+            	parsed = parser.parse(message.message);
             	break;
             default:
-                if (message.type != "system-message")
                 parsed = parser.parseLinks(message.message);
                 break;
             }
@@ -1205,13 +1187,6 @@ $(function() {
         },
         block : function(){},
         unblock : function(){},
-        blocklist : function(){
-            if (CLIENT.get('block') != ""){
-                CLIENT.show('Users on your blocklist: ' + CLIENT.get('block'));
-            } else {
-                CLIENT.show('There are no users on your blocklist');
-            }
-        },
         unblock_all : function(){
             CLIENT.set('block',"");
             CLIENT.show('Blocklist has been cleared');
@@ -1504,12 +1479,12 @@ parser = {
         //embed
         str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         //colors
-        str = this.multiple(str, /&#35;&#35;([\da-f]{6})(((?!&#35;&#35;).)+)/i, '<span style="background-color: #$1;">$2</span>');
-        str = this.multiple(str, /&#35;&#35;([\da-f]{3})(((?!&#35;&#35;).)+)/i, '<span style="background-color: #$1;">$2</span>');
-        str = this.multiple(str,/&#35;([\da-f]{6})(((?!&#35;).)+)/i, '<span style="color: #$1;">$2</span>');
-        str = this.multiple(str, /&#35;([\da-f]{3})(((?!&#35;).)+)/i, '<span style="color: #$1;">$2</span>');
-        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(((?!&#35;&#35;).)+)', 'i'), '<span style="background-color: $1;">$2</span>');
-        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(((?!&#35;).)+)', 'i'), '<span style="color: $1;">$2</span>');
+        str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: $1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: $1;">$2</span>');
         str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$1\'">$2</span>');
         // filters
         //original = ['you','matter','think','care','about','this','for','shit','nigger','nothing','out of','doesn\'t','doesnt','my','ask','question','you are','nice','trying to','black','rose','no ','fag ','faggot','what','too ','to ','guy','white','yes','mom','ing ','with','th','are ']
@@ -1550,27 +1525,6 @@ parser = {
         str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
         // change spaces to &nbsp;
-        escs = str.match(/<[^>]+?>/gi);
-        str = str.replace(/<[^>]+?>/gi, this.repslsh);
-        str = str.replace(/\s{2}/gi, ' &nbsp;');
-        for (i in escs) {
-            str = str.replace(this.repslsh, escs[i]);
-        }
-        return str;
-    },
-    quickParse : function(str){
-        // escaping shit
-        str = str.replace(/\n/g, '\\n');
-        str = str.replace(/&/gi, '&amp;');
-        str = str.replace(/>/gi, '&gt;');
-        str = str.replace(/</gi, '&lt;');
-        str = str.replace(/"/gi, '&quot;');
-        str = str.replace(/#/gi, '&#35;');
-        str = str.replace(/'/gi, '&#39;');
-        str = str.replace(/~/gi, '&#126;');
-        str = str.replace(/\\\\n/g, this.repslsh);
-        str = str.replace(/\\n/g, '<br />');
-        str = str.replace(this.repslsh, '\\\\n');
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
         str = str.replace(/\s{2}/gi, ' &nbsp;');
