@@ -83,23 +83,14 @@ body {
     background:#1F1F1F;
     background:rgba(0,0,0,0.7);
 }
-#background {
-    background-color: #111;
+#messages {
+    background: #111;
     color: white;
     position: absolute;
     width: 100%;
     overflow-x: hidden;
     overflow-y: shown;
     height: 1000px;
-}
-#messages {
-    position: absolute;
-    background-color: transparent !important; 
-    width: 100%;
-    overflow-x: hidden;
-    overflow-y: shown;
-    height: 1000px;
-    z-index: 2;
 }
 
 /*
