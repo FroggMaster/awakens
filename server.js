@@ -182,25 +182,15 @@ function createChannel(io, channelName) {
                     dao.createUser(user.nick, user.remote_addr).done(function() {
                         dao.findUser(user.nick).then(function(dbuser){
                             dbuser.register(params.initial_password).then(function(){
-                                showMessage(msgs.registeredAndVerified)
-                                console.log(user.nick + ' has been registered')
+                                if (settings.api && settings.api.recaptcha){
+                                    showMessage(msgs.registeredAndVerified)
+                                    socketEmit(socket,'passverify');
+                                    console.log(user.nick + ' has been registered')
+                                } else {
+                                    console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
+                                }
                             });
                         });
-                    });
-                }
-            },
-            verify : {
-                handler : function(dao, dbuser, params) {
-                    dao.findUser(user.nick).then(function(u){
-                        if (u && !u.get('verified')){
-                            if (settings.api && settings.api.recaptcha){
-                                socketEmit(socket,'passverify');
-                            } else {
-                                console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
-                            }
-                        } else {
-                            errorMessage('Please register your nick before verifying');
-                        }
                     });
                 }
             },
