@@ -182,25 +182,14 @@ function createChannel(io, channelName) {
                     dao.createUser(user.nick, user.remote_addr).done(function() {
                         dao.findUser(user.nick).then(function(dbuser){
                             dbuser.register(params.initial_password).then(function(){
-                                showMessage(msgs.registeredAndVerified)
-                                console.log(user.nick + ' has been registered')
+                                if (settings.api && settings.api.recaptcha){
+                                    showMessage(msgs.registeredAndVerified);
+                                    socketEmit(socket,'passverify');
+                                } else {
+                                    console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
+                                }
                             });
                         });
-                    });
-                }
-            },
-            verify : {
-                handler : function(dao, dbuser, params) {
-                    dao.findUser(user.nick).then(function(u){
-                        if (u && !u.get('verified')){
-                            if (settings.api && settings.api.recaptcha){
-                                socketEmit(socket,'passverify');
-                            } else {
-                                console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
-                            }
-                        } else {
-                            errorMessage('Please register your nick before verifying');
-                        }
                     });
                 }
             },
@@ -719,14 +708,6 @@ function createChannel(io, channelName) {
                         } else {
                             dao.setChannelInfo(channelName, 'private', 1).then(function(){
                                 showMessage('Channel has been made private');
-                                channel.online.forEach(function(user){
-                                    dao.findUser(user.nick).done(function(dbuser) {
-                                        if (!dbuser || dbuser.get('verified') == 0){
-                                            errorMessage('Channel is private.');
-                                            user.socket.disconnect();
-                                        }
-                                    });
-                                });
                             });
                         }
                     });
@@ -997,6 +978,11 @@ function createChannel(io, channelName) {
                 if (user.nick) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
+                    try {
+                        message = decodeURIComponent(escape(message));
+                    } catch(err){
+                        message = 0;
+                    }
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {

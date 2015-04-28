@@ -332,20 +332,26 @@ $(function() {
                         });
                     }
                 } else {
-                    input = this.decorate(input);
-                    if(!CLIENT.get('idle')){
-                        socket.emit('message', {
-                            flair : CLIENT.get('flair'),
-                            message : input
+                    if ((input.split(' ')[0].indexOf("login") > -1 || input.trim().split(' ')[1] && input.trim().split(' ')[1].indexOf("login") > -1 ) && ( input.trim().split(' ').length == 3 && input.trim().split(' ')[0].indexOf("login") > -1 || input.trim().split(' ').length == 4 ) && CLIENT.get('login') == false){
+                        CLIENT.show({
+                            message : "Use /login please (You did 'login')"
                         });
                     } else {
-                        CLIENT.show({
-                            type : 'chat-message',
-                            nick : CLIENT.get('nick'),
-                            message : input,
-                            flair : CLIENT.get('flair')
-                        });
-                     }
+                        input = this.decorate(input);
+                        if(!CLIENT.get('idle')){
+                            socket.emit('message', {
+                                flair : CLIENT.get('flair'),
+                                message : input
+                            });
+                        } else {
+                            CLIENT.show({
+                                type : 'chat-message',
+                                nick : CLIENT.get('nick'),
+                                message : input,
+                                flair : CLIENT.get('flair')
+                            });
+                        }
+                    }
                 }
             }
         },
@@ -688,7 +694,7 @@ $(function() {
                     message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
                     sound = 'name'
                 }
-             }
+            }
         }
         if (message.nick) {
             var parsedFlair = null;
@@ -740,12 +746,13 @@ $(function() {
                 }
                 break;
             case 'system-message':
-            	parsed = parser.parse(message.message);
+            	parsed = parser.quickParse(message.message);
             	break;
             case 'error-message':
-            	parsed = parser.parse(message.message);
+            	parsed = parser.quickParse(message.message);
             	break;
             default:
+                if (message.type != "system-message")
                 parsed = parser.parseLinks(message.message);
                 break;
             }
@@ -998,7 +1005,6 @@ $(function() {
         register : {
             params : [ 'initial_password' ]
         },
-        verify : {},
         change_password : {
             params : [ 'old_password', 'new_password' ]
         },
@@ -1179,7 +1185,7 @@ $(function() {
             handler : function(params) {
                 var att = params.att;
                 if (att == 'bg' && CLIENT.get('bg') == 'off'){
-                    $('#background').css('background', CLIENT.get('old'));
+                    $('#messages').css('background', CLIENT.get('old'));
                 } 
                 if(att != 'style' && att != 'font'){
                     CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
@@ -1188,6 +1194,13 @@ $(function() {
         },
         block : function(){},
         unblock : function(){},
+        blocklist : function(){
+            if (CLIENT.get('block') != ""){
+                CLIENT.show('Users on your blocklist: ' + CLIENT.get('block'));
+            } else {
+                CLIENT.show('There are no users on your blocklist');
+            }
+        },
         unblock_all : function(){
             CLIENT.set('block',"");
             CLIENT.show('Blocklist has been cleared');
@@ -1454,7 +1467,7 @@ parser = {
         // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
         // >>78 quote
-        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).parent().clone(); msgClone.children(\x27.message-content\x27).attr(\x27class\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
+        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).parent().clone(); msgClone.children(\x27.timestamp\x27).attr(\x27id\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
         function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
         if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
 		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2) != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
@@ -1480,12 +1493,12 @@ parser = {
         //embed
         str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         //colors
-        str = this.multiple(str, /&#35;&#35;([\da-f]{6})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
-        str = this.multiple(str, /&#35;&#35;([\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
-        str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
-        str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: #$1;">$2</span>');
-        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: $1;">$2</span>');
-        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: $1;">$2</span>');
+        str = this.multiple(str, /&#35;&#35;([\da-f]{6})(((?!&#35;&#35;).)+)/i, '<span style="background-color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;&#35;([\da-f]{3})(((?!&#35;&#35;).)+)/i, '<span style="background-color: #$1;">$2</span>');
+        str = this.multiple(str,/&#35;([\da-f]{6})(((?!&).)+)/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;([\da-f]{3})(((?!&).)+)/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(((?!&#35;&#35;).)+)', 'i'), '<span style="background-color: $1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(((?!&).)+)', 'i'), '<span style="color: $1;">$2</span>');
         str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$1\'">$2</span>');
         // filters
         //original = ['you','matter','think','care','about','this','for','shit','nigger','nothing','out of','doesn\'t','doesnt','my','ask','question','you are','nice','trying to','black','rose','no ','fag ','faggot','what','too ','to ','guy','white','yes','mom','ing ','with','th','are ']
@@ -1526,6 +1539,27 @@ parser = {
         str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
         // change spaces to &nbsp;
+        escs = str.match(/<[^>]+?>/gi);
+        str = str.replace(/<[^>]+?>/gi, this.repslsh);
+        str = str.replace(/\s{2}/gi, ' &nbsp;');
+        for (i in escs) {
+            str = str.replace(this.repslsh, escs[i]);
+        }
+        return str;
+    },
+    quickParse : function(str){
+        // escaping shit
+        str = str.replace(/\n/g, '\\n');
+        str = str.replace(/&/gi, '&amp;');
+        str = str.replace(/>/gi, '&gt;');
+        str = str.replace(/</gi, '&lt;');
+        str = str.replace(/"/gi, '&quot;');
+        str = str.replace(/#/gi, '&#35;');
+        str = str.replace(/'/gi, '&#39;');
+        str = str.replace(/~/gi, '&#126;');
+        str = str.replace(/\\\\n/g, this.repslsh);
+        str = str.replace(/\\n/g, '<br />');
+        str = str.replace(this.repslsh, '\\\\n');
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
         str = str.replace(/\s{2}/gi, ' &nbsp;');
