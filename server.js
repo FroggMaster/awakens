@@ -911,8 +911,8 @@ function createChannel(io, channelName) {
                             user.tabs++
                         }
                     }
-                }
-                if (!user.nick && user.tabs < 3) {
+                }//&& user.tabs < 3
+                if (!user.nick) {
                     return dao.getChannelInfo(channelName).then(function(data){
                         var nick = msg && msg.nick;
                         var token = msg && msg.security;
