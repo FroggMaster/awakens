@@ -1350,14 +1350,10 @@ function createChannel(io, channelName) {
                     "access_level":3
                 }
             } else {
-                channel.online.forEach(function(user) {
-                    if (user.nick.toLowerCase() == nick.toLowerCase()) {
-                        return {
-                            "role":access[user.nick].role,
-                            "access_level":access[user.nick].access_level
-                        }
-                    }
-                });
+                return {
+                    "role":access[nick].role,
+                    "access_level":access[nick].access_level
+                }
             }
         }
         
