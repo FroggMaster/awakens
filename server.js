@@ -182,25 +182,15 @@ function createChannel(io, channelName) {
                     dao.createUser(user.nick, user.remote_addr).done(function() {
                         dao.findUser(user.nick).then(function(dbuser){
                             dbuser.register(params.initial_password).then(function(){
-                                showMessage(msgs.registeredAndVerified)
-                                console.log(user.nick + ' has been registered')
+                                if (settings.api && settings.api.recaptcha){
+                                    showMessage(msgs.registeredAndVerified)
+                                    socketEmit(socket,'passverify');
+                                    console.log(user.nick + ' has been registered')
+                                } else {
+                                    console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
+                                }
                             });
                         });
-                    });
-                }
-            },
-            verify : {
-                handler : function(dao, dbuser, params) {
-                    dao.findUser(user.nick).then(function(u){
-                        if (u && !u.get('verified')){
-                            if (settings.api && settings.api.recaptcha){
-                                socketEmit(socket,'passverify');
-                            } else {
-                                console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
-                            }
-                        } else {
-                            errorMessage('Please register your nick before verifying');
-                        }
                     });
                 }
             },
@@ -348,36 +338,6 @@ function createChannel(io, channelName) {
                             });
                             kuser.socket.disconnect();
                             broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
-                        } else {
-                            errorMessage('You may not kick admins');
-                        }
-                    } else {
-                        errorMessage(params.nick  +' is not online');
-                    }
-                }
-            },
-            punch : {
-                role : 'mod',
-                params : [ 'nick', 'message' ],
-                handler : function(dao, dbuser, params) {
-                    var kuser = indexOf(params.nick);
-                    var permit = 0;
-                    if(kuser != -1){
-                        kuser = channel.online[kuser]
-                        fuser = grab(params.nick);
-                        if(roles.indexOf(user.role) < roles.indexOf(fuser.role)){
-                            permit = 1
-                        } else if(user.role == fuser.role && user.access_level < fuser.access_level){
-                            permit = 1
-                        }
-                        if(permit){
-                            msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
-                            socketEmit(kuser.socket, 'message', {
-                                type : 'error-message',
-                                message : msgs.get(msg.length > 0 ? 'punched_reason' : 'punched', user.nick, msg)
-                            });
-                            kuser.socket.disconnect();
-                            broadcastChannel(dao, channel, user.nick + " has punched " + params.nick + msg);
                         } else {
                             errorMessage('You may not kick admins');
                         }
@@ -749,6 +709,14 @@ function createChannel(io, channelName) {
                         } else {
                             dao.setChannelInfo(channelName, 'private', 1).then(function(){
                                 showMessage('Channel has been made private');
+                                channel.online.forEach(function(user){
+                                    dao.findUser(user.nick).done(function(dbuser) {
+                                        if (!dbuser || dbuser.get('verified') == 0){
+                                            errorMessage('Channel is private.');
+                                            user.socket.disconnect();
+                                        }
+                                    });
+                                });
                             });
                         }
                     });
@@ -1019,11 +987,6 @@ function createChannel(io, channelName) {
                 if (user.nick) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
-                    try {
-                        message = decodeURIComponent(escape(message));
-                    } catch(err){
-                        message = 0;
-                    }
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
@@ -1494,9 +1457,23 @@ function createChannel(io, channelName) {
                             var hashToken = hasher.hex_md5(hasher.genRandomSeed(6));
                             var currentDate = new Date();
                             currentDate = currentDate.getTime();
-                            tokenCache[user.nick] = {
-                                token : hashToken,
-                                date : currentDate
+                            if (tokenCache[user.nick]) {
+                                var subCache = tokenCache[user.nick];
+                                if (subCache.token3 && subCache.token3 == token){
+                                    tokenCache[user.nick].token3 = hashToken;
+                                    tokenCache[user.nick].date3 = currentDate;
+                                } else if (subCache.token2 && subCache.token2 == token){
+                                    tokenCache[user.nick].token2 = hashToken;
+                                    tokenCache[user.nick].date2 = currentDate;
+                                } else {
+                                    tokenCache[user.nick].token = hashToken;
+                                    tokenCache[user.nick].date = currentDate;
+                                }
+                            } else {
+                                tokenCache[user.nick] = {
+                                    token : hashToken,
+                                    date : currentDate
+                                }
                             }
                             if(roles.indexOf(dbuser.get('role')) <= 1){
                                 user.role = dbuser.get('role')
@@ -1568,17 +1545,23 @@ function createChannel(io, channelName) {
                                     }
                                 } else if (token) {
                                     if (tokenCache[nick]) {
-                                        if (token == tokenCache[nick]['token']) {
-                                            var presentDate = new Date();
-                                            if (tokenCache[nick]['date']+604800000 > presentDate.getTime()){
-                                                log.debug('Token accepted.');
-                                                attempt(nick, undefined, dbuser, token);
-                                            } else {
-                                                log.debug('Token was expired for '+nick+'.');
-                                                fallback();
-                                            }
+                                        var tokenDate;
+                                        if (token == tokenCache[nick]['token']){
+                                            tokenDate = tokenCache[nick]['date'];
+                                        } else if (token == tokenCache[nick]['token2']){
+                                            tokenDate = tokenCache[nick]['date2'];
+                                        } else if (token == tokenCache[nick]['token3']){
+                                            tokenDate = tokenCache[nick]['date3'];
                                         } else {
                                             console.log('Token was incorrect.');
+                                            fallback();
+                                        }
+                                        var presentDate = new Date();
+                                        if (tokenDate && tokenDate+604800000 > presentDate.getTime()){
+                                            log.debug('Token accepted.');
+                                            attempt(nick, undefined, dbuser, token);
+                                        } else {
+                                            log.debug('Token was expired for '+nick+'.');
                                             fallback();
                                         }
                                     } else {

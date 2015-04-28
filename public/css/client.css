@@ -127,9 +127,8 @@ body {
 
 .frame{
     position: fixed;
-    width:100%;
+    width:99%;
     height:100%;
-    z-index:1;
 }
 
 .red body {
@@ -394,6 +393,7 @@ top:40%;
 left:0;
 font-size: 50px;
 right:0;
+z-index:1;
 }
 
 /* styles */
