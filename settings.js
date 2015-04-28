@@ -156,7 +156,7 @@ module.exports = {
         alreadyBeingUsed : 'That nick is already being used by someone else',
         verified : 'You have verified the nick',
         registered : 'You have registered the nick',
-        registeredAndVerified : 'Your nick was registered. Please verify the nick by typing /verify.',
+        registeredAndVerified : 'Your nick was registered. Please verify the nick.',
         unregistered : 'You have unregistered the nick',
         banlist : 'Globally banned: {0}',
         channel_banlist : 'Channel banned: {0}',
