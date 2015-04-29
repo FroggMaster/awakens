@@ -132,7 +132,7 @@ module.exports = {
             return value;
         },
 
-        banned : 'You are banned.',
+        banned : 'You are banned. Sorry guys, things are messed up. Go to jesse.spooks.me',
         banned_by : 'You have been banned By: {0}',
         banned_reason : 'You have been banned By: {0}, Reason {1}',
         kicked : 'You have been kicked By: {0}',
