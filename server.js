@@ -907,7 +907,6 @@ function createChannel(io, channelName) {
          
         _.each({
             join : function(dao, msg) {
-            	dao.unban_all("this.spooks.me/");
                 user.tabs = 0
                 if(channel.online.length > 0){
                     for (i = 0; i < channel.online.length; i++) { 
