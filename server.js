@@ -261,7 +261,7 @@ function createChannel(io, channelName) {
                                 access = JSON.parse(info.access);
                                 stats = GetInfo(nick);
                             }
-                            if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
+                            if(roles.indexOf(user.role) < roles.indexOf(stats.role)){
                                 permit = 1
                             } else {
                                 permit = 0
