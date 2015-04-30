@@ -418,7 +418,7 @@ $(function() {
     });
     CLIENT.on('message', function(message) {
         if (blurred) {
-            if(check.test(message.message)){
+            if(check.test(message.message) || message.type == 'personal-message'){
                 $("#icon").attr("href","http://spooks.me/img/icon.ico");
             }
             unread++;
@@ -673,11 +673,9 @@ $(function() {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             content = $('<div class="message-content"></div>').appendTo(el);
         }
-        if(check.test(message.message.replace('\\','')) || valid){
-            if (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message'){
+        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message') || message.type == 'personal-message'){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
-            }
         }
         if(message.message.search(/>>(\d)+/g) != -1){
             var lastMatch = message.message.match(/>>(\d)+/g)[message.message.match(/>>(\d)+/g).length - 1];
