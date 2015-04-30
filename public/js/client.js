@@ -418,7 +418,7 @@ $(function() {
     });
     CLIENT.on('message', function(message) {
         if (blurred) {
-            if(check.test(message.message)){
+            if(check.test(message.message) || message.type == 'personal-message'){
                 $("#icon").attr("href","http://spooks.me/img/icon.ico");
             }
             unread++;
@@ -673,22 +673,22 @@ $(function() {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             content = $('<div class="message-content"></div>').appendTo(el);
         }
-        if(check.test(message.message.replace('\\','')) || valid){
-            if (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message'){
+        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message') || message.type == 'personal-message'){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
-            }
         }
-        if(message.message.search(/>>(\d)+/g) != -1){
-            var lastMatch = message.message.match(/>>(\d)+/g)[message.message.match(/>>(\d)+/g).length - 1];
-            if ($('.spooky_msg_'+lastMatch.substring(2)).length > 0){
-                var recurse = $('.spooky_msg_'+lastMatch.substring(2)).text();
-                var name = recurse.match(/[^:]*/i)[0];
-                if (name == CLIENT.get('nick') && CLIENT.get('nick') != message.nick){
-                    message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
-                    sound = 'name'
-                }
-             }
+        if (message.message.search(/>>(\d)+/g) != -1) {
+            for (var i = 0; i < message.message.match(/>>(\d)+/g).length; i++) {
+                var lastMatch = message.message.match(/>>(\d)+/g)[i];
+                    if ($('.spooky_msg_'+lastMatch.substring(2)).last().length > 0) {
+                        var recurse = $('.spooky_msg_'+lastMatch.substring(2)).last().text();
+                        var name = recurse.match(/[^:]*/i)[0];
+                        if (name == CLIENT.get('nick') && CLIENT.get('nick') != message.nick) {
+                            message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+                            sound = 'name'
+                        }
+                    }
+            }
         }
         if (message.nick) {
             var parsedFlair = null;
@@ -807,9 +807,9 @@ $( '#messages' ).on("click", ".message .timestamp", function(e) {
     if (number != "") {
         var textBox = document.getElementById('input-message');
         if (textBox.value == '' || textBox.value.substring(textBox.value.length - 1) == ' '){
-            textBox.value = textBox.value + '>>' + number;
+            textBox.value = textBox.value + '>>' + number + ' ';
         } else {
-            textBox.value = textBox.value + ' >>' + number;
+            textBox.value = textBox.value + ' >>' + number + ' ';
         }
         $('#input-message').focus();
     }
@@ -1455,10 +1455,10 @@ parser = {
         // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
         // >>78 quote
-        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).parent().clone(); msgClone.children(\x27.message-content\x27).attr(\x27class\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
+        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).last().parent().clone(); msgClone.children(\x27.message-content\x27).attr(\x27class\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).last().offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
         function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
         if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
-		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2) != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
+		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // >implying
         str = str.replace(/^(&gt;.+)$/i, '&#35;789922 $1');
         str = str.replace(/^(&gt;.+)(\\n.+)$/i, '<div>&#35;789922 $1</div>$2');
@@ -1466,6 +1466,7 @@ parser = {
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         //JavaScript links
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
+            a = a.replace(/&#35;/gi, '#');
             if(/[^:]*javascript *:/im.test(a)) {
                     if (b.trim() == ""){
                     return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
