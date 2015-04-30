@@ -807,9 +807,9 @@ $( '#messages' ).on("click", ".message .timestamp", function(e) {
     if (number != "") {
         var textBox = document.getElementById('input-message');
         if (textBox.value == '' || textBox.value.substring(textBox.value.length - 1) == ' '){
-            textBox.value = textBox.value + '>>' + number;
+            textBox.value = textBox.value + '>>' + number + ' ';
         } else {
-            textBox.value = textBox.value + ' >>' + number;
+            textBox.value = textBox.value + ' >>' + number + ' ';
         }
         $('#input-message').focus();
     }
