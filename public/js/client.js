@@ -803,14 +803,16 @@ $(function() {
 
 // get message
 $( '#messages' ).on("click", ".message .timestamp", function(e) {
-    var textBox = document.getElementById('input-message');
     var number = e.currentTarget.title;
-    if (textBox.value == '\\' || textBox.value.substring(textBox.length - 1) == '\\'){
-        textBox.value = textBox.value + '>>' + number;
-    }else{
-        textBox.value = textBox.value + '>>' + number;
-    } 
-    $('#input-message').focus();
+    if (number != "") {
+        var textBox = document.getElementById('input-message');
+        if (textBox.value == '' || textBox.value.substring(textBox.value.length - 1) == ' '){
+            textBox.value = textBox.value + '>>' + number;
+        } else {
+            textBox.value = textBox.value + ' >>' + number;
+        }
+        $('#input-message').focus();
+    }
 });
 
 // ------------------------------------------------------------------
