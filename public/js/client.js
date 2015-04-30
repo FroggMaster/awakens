@@ -677,16 +677,16 @@ $(function() {
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
         }
-        if(message.message.search(/>>(\d)+/g) != -1){
-            var lastMatch = message.message.match(/>>(\d)+/g)[message.message.match(/>>(\d)+/g).length - 1];
-            if ($('.spooky_msg_'+lastMatch.substring(2)).length > 0){
-                var recurse = $('.spooky_msg_'+lastMatch.substring(2)).text();
-                var name = recurse.match(/[^:]*/i)[0];
-                if (name == CLIENT.get('nick') && CLIENT.get('nick') != message.nick){
-                    message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
-                    sound = 'name'
+        for (var i = 0; i < message.message.match(/>>(\d)+/g).length; i++) {
+            var lastMatch = message.message.match(/>>(\d)+/g)[i];
+                if ($('.spooky_msg_'+lastMatch.substring(2)).length > 0) {
+                    var recurse = $('.spooky_msg_'+lastMatch.substring(2)).text();
+                    var name = recurse.match(/[^:]*/i)[0];
+                    if (name == CLIENT.get('nick') && CLIENT.get('nick') != message.nick) {
+                        message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+                        sound = 'name'
+                    }
                 }
-             }
         }
         if (message.nick) {
             var parsedFlair = null;
