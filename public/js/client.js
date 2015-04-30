@@ -1464,6 +1464,7 @@ parser = {
         str = str.replace(/^(&gt;)$/i, '&#35;789922 $1');
         //JavaScript links
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
+            a = a.replace(/&#35;/gi, '#');
             if(/[^:]*javascript *:/im.test(a)) {
                     if (b.trim() == ""){
                     return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
