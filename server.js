@@ -52,10 +52,10 @@ function createChannel(io, channelName) {
             user.remote_addr = socket.handshake.address;
         }
         
-        /*if(socket.handshake.headers["x-real-ip"]){
+        if(socket.handshake.headers["x-real-ip"]){
             user.remote_addr = socket.handshake.headers["x-real-ip"];
             console.log(user.nick + ' ip masked')
-        }*/
+        }
                 
         socket.on('SetPart', function(parts){
             user.part = parts.toString();
