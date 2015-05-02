@@ -89,7 +89,7 @@ module.exports = function(callback) {
                 return this.set({
                     registered : 1,
                     pw_hash : passwordHash.generate(initial_password),
-					verified : 1
+		    verified : 1
                  }).then(function() {
                         return $.Deferred().resolve(true, msgs.verified);
                     });
