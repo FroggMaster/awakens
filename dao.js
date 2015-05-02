@@ -85,14 +85,15 @@ module.exports = function(callback) {
                 var err;
                 if (info.registered) {
                     err = msgs.alreadyRegistered;
-                }
+                } else {
                 return this.set({
                     registered : 1,
                     pw_hash : passwordHash.generate(initial_password),
 		    verified : 1
-                 }).then(function() {
+                    }).then(function() {
                         return $.Deferred().resolve(true, msgs.verified);
                     });
+                }
                 return $.Deferred().resolve(false, err);
             },
 
