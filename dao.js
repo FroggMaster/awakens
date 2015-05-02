@@ -76,7 +76,7 @@ module.exports = function(callback) {
             },
 
             /**
-             * Register this user.
+             * Register & Verify this user.
              * 
              * @param {string=} initial_password
              * @returns {$.Promise}
@@ -85,36 +85,18 @@ module.exports = function(callback) {
                 var err;
                 if (info.registered) {
                     err = msgs.alreadyRegistered;
-                }
+                } else {
                 return this.set({
                     registered : 1,
-                    pw_hash : passwordHash.generate(initial_password)
-                });
-                return $.Deferred().resolve(false, err);
-            },
-
-            /**
-             * Verify this user.
-             * 
-             * @param {number} verification_code
-             * @param {string} password
-             * @returns {$.Promise}
-             */
-            verify : function() {
-                var err;
-                if (!info.registered) {
-                    err = msgs.notRegistered;
-                } else if (info.verified) {
-                    err = msgs.alreadyVerified;
-                } else {
-                    return this.set({
-                        verified : 1
+                    pw_hash : passwordHash.generate(initial_password),
+		    verified : 1
                     }).then(function() {
                         return $.Deferred().resolve(true, msgs.verified);
                     });
                 }
                 return $.Deferred().resolve(false, err);
             },
+
 
             /**
              * Unregister this user.
