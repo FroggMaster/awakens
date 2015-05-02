@@ -260,6 +260,7 @@ function createChannel(io, channelName) {
                             if(stats == -1){
                                 access = JSON.parse(info.access);
                                 if(!access[nick]){
+                                    errorMessage(nick + ' has not joined since the last update and is not online.');
                                     return false;
                                 } else {
                                     return {
