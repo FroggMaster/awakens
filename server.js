@@ -253,31 +253,29 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser){
                         return dao.getChannelInfo(channelName).then(function(info){
-                            var msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
-                            var nick = dbuser ? dbuser.get('nick') : params.nick;
-                            var permit = 0;
-                            var stats = grab(nick);
-                            if(stats == -1){
-                                access = JSON.parse(info.access);
-                                stats = GetInfo(nick);
-                            }
-                            if(roles.indexOf(user.role) < roles.indexOf(stats.role)){
-                                permit = 1
-                            } else {
-                                permit = 0
-                            }
-                            if(permit){
-                                if(stats.socket){
-                                    socketEmit(stats.socket, 'message', {
-                                        type : 'error-message',
-                                        message : msgs.get(msg.length > 0 ? 'banned_reason' : 'banned_by', user.nick, msg)
-                                    });
-                                    stats.socket.disconnect();
+                            if(dbuser){
+                                var permit = 0;
+                                stats = grab(params.nick);
+                                if(stats == -1){
+                                    access = JSON.parse(info.access);
+                                    stats = GetInfo(params.nick);
                                 }
-                                broadcastChannel(dao, channel, user.nick + ' has channel banned ' + nick+msg);
-                                return dao.ban(nick, channelName);
+                                if(roles.indexOf(user.role) <= roles.indexOf(stats.role)){
+                                    permit = 1
+                                } else {
+                                    permit = 0
+                                }
+                                if(permit){
+                                    var msg = user.nick+" has channel banned "+params.nick;
+                                    if(params.message.trim())
+                                        msg+=": "+params.message.trim();
+                                    broadcastChannel(dao, channel, msg);
+                                    return dao.ban(params.nick, channelName);
+                                } else {
+                                    errorMessage('Can\'t ban user with higher role then your own.');
+                                }
                             } else {
-                                errorMessage('Can\'t ban user with higher role then your own.');
+                                return dao.ban(params.nick, channelName);
                             }
                         });
                     });
