@@ -259,7 +259,14 @@ function createChannel(io, channelName) {
                             var stats = grab(nick);
                             if(stats == -1){
                                 access = JSON.parse(info.access);
-                                stats = GetInfo(nick);
+                                if(!access[nick]){
+                                    return false;
+                                } else {
+                                    return {
+                                        "role":access[nick].role,
+                                        "access_level":access[nick].access_level
+                                    }
+                                }
                             }
                             if(roles.indexOf(user.role) < roles.indexOf(stats.role)){
                                 permit = 1
