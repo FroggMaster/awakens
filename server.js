@@ -179,18 +179,26 @@ function createChannel(io, channelName) {
             register : {
                 params : [ 'initial_password' ],
                 handler : function(dao, dbuser, params) {
-                    dao.createUser(user.nick, user.remote_addr).done(function() {
-                        dao.findUser(user.nick).then(function(dbuser){
-                            dbuser.register(params.initial_password).then(function(){
-                                if (settings.api && settings.api.recaptcha){
+                    dao.findUser(user.nick).then(function(dbuser){
+                        if (!settings.api || !settings.api.recaptcha){
+                            console.log("The API key for recaptcha is missing.");
+                            return false;
+                        }
+                        if (!dbuser) {
+                            dao.createUser(user.nick, user.remote_addr).done(function() {
+                                dao.findUser(user.nick).then(function(dbuser){
+                                    user.regpass = params.initial_password;
                                     showMessage(msgs.registeredAndVerified)
                                     socketEmit(socket,'passverify');
                                     console.log(user.nick + ' has been registered')
-                                } else {
-                                    console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
-                                }
+                                });
                             });
-                        });
+                        } else {
+                            user.regpass = params.initial_password;
+                            showMessage(msgs.registeredAndVerified)
+                            socketEmit(socket,'passverify');
+                            console.log(user.nick + ' has been registered')
+                        }
                     });
                 }
             },
@@ -1117,22 +1125,24 @@ function createChannel(io, channelName) {
                 function (error, response, body) {
                     if (!error){
                         if (JSON.parse(body).success){
-                            socketEmit(socket,'removeDiv');
                             dao.findUser(user.nick).then(function(dbuser){
-                                chnl = dbuser.get('nick') + '.spooks.me/';
-                                access = {};
-                                whitelist = {};
-                                access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
-                                whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
-                                return dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
-                                    user.login = true;
-                                    socketEmit(socket, 'update', {
-                                        login : true
+                                dbuser.register(user.regpass).then(function(){
+                                    socketEmit(socket,'removeDiv');
+                                    chnl = dbuser.get('nick') + '.spooks.me/';
+                                    access = {};
+                                    whitelist = {};
+                                    access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
+                                    whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
+                                    dao.setChannelInfo(chnl, 'whitelist', whitelist);
+                                    return dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
+                                        user.login = true;
+                                        socketEmit(socket, 'update', {
+                                            login : true
+                                        });
+                                        showMessage('Verification successful');
+                                        delete user.regpass;
                                     });
-                                    showMessage('Verification successful');
-                                    delete user.regpass;
                                 });
-                                dao.setChannelInfo(chnl, 'whitelist', whitelist);
                             });
                         } else {
                             console.log("Captcha failed. User was not registered");
