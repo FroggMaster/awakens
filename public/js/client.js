@@ -248,7 +248,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'cam color font style mute mute_speak nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -260,7 +260,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
+            'cam color font style flair mute mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -476,6 +476,9 @@ $(function() {
     }
     if (CLIENT.get('frame_src') == null){
         CLIENT.set('frame_src', ''); 
+    }
+    if (CLIENT.get('cam') == null){
+        CLIENT.set('cam', 'off'); 
     }
 });
 
@@ -1259,12 +1262,12 @@ $(function() {
             role : 'super',
             params : [ 'url' ]
         },
-        cam: function () {
-            if (CLIENT.get('cam') == 'off') {
-                CLIENT.set('cam', 'on');
+        cam : function (){
+            if (CLIENT.get('cam') == 'on') {
+                CLIENT.set('cam', 'off');
                 camFunc()
             } else {
-                CLIENT.set('cam', 'off')
+                CLIENT.set('cam', 'on')
                 camFunc()
             }
         }
@@ -1886,7 +1889,9 @@ cam.appendChild(loc)
 cam.appendChild(vid)
 
 function camFunc() {
+
     if (localStorage['chat-cam'] == 'on') {
+
 
         document.getElementById("webcam").style.display = "inline";
         var webrtc = new SimpleWebRTC({
@@ -1921,4 +1926,4 @@ function camFunc() {
         document.getElementById("webcam").style.display = "none";
     };
 }
-camFunc();
+camFunc();;
