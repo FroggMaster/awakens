@@ -1460,7 +1460,7 @@ parser = {
          str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
         }
         // try to replace all >>>/x/??? for links to 8ch.net/x/res/???
-        str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="https://8ch.net$1/$2>$&</a>');
+        str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="https://8ch.net$1/$2/>$&</a>');
         // if there's any links leading to 8ch.net/?/res/ (nothing
         // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
