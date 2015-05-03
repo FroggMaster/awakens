@@ -344,7 +344,7 @@ a:hover {
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
     display: block;
-    width: 1326px;
+    width: 90%;
     resize: none;
     height: 28px;
     border: 1px solid #0C0D0E;
