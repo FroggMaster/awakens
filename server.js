@@ -285,7 +285,7 @@ function createChannel(io, channelName) {
                                 broadcastChannel(dao, channel, user.nick + ' has channel banned ' + nick+msg);
                                 return dao.ban(nick, channelName);
                             } else {
-                                errorMessage('Can\'t ban user with higher role then your own.');
+                                errorMessage('Can\'t ban user with a role equal to or higher than your own.');
                             }
                         });
                     });
@@ -317,10 +317,10 @@ function createChannel(io, channelName) {
                         if(roles.indexOf(user.role) < roles.indexOf(stats.role)){
                             return dao.ban(stats.remote_addr, channelName);
                         } else {
-                            errorMessage('You may not ban admins');
+                            errorMessage('Can\'t ban user with a role equal to or higher than your own.');
                         }
                     } else {
-                        errorMessage('That IP is not online');
+                        errorMessage('That user is not online');
                     }
                 }
             },
