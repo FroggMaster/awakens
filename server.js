@@ -320,7 +320,17 @@ function createChannel(io, channelName) {
                             errorMessage('Can\'t ban user with a role equal to or higher than your own.');
                         }
                     } else {
-                        errorMessage('That user is not online');
+                        return dao.find_ip(params.nick).then(function(nicks) {
+                            if (nicks.length > 0){
+                                if (roles.indexOf(user.role) < roles.indexOf(stats.role)){
+                                    return dao.ban(params.nick, channelName);
+                                } else {
+                                    errorMessage('Can\'t ban user with a role equal to or higher than your own.');
+                                }
+                            } else {
+                                errorMessage('That IP does not exist.');
+                            }
+                        });
                     }
                 }
             },
