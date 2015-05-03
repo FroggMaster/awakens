@@ -16,6 +16,6 @@ A simple Node.JS chat server with some user management and games.
 4. Install npm and run node server.js on command line in the main project folder
 
 #Developing
-1. Don't commit directly to master! New features and suggestions should be committed directly to the dev branch.
+1. Don't commit directly to master! New features and suggestions should be **tested first on localhost** then sent to the dev branch.
 2. Run your own instance of the chat and never commit untested code unless you're 100% sure it won't break dev.
 3. A server running the dev branch is available at <http://2s4.me/>
