@@ -1039,7 +1039,7 @@ function createChannel(io, channelName) {
                     if (cmd) {
                         var params = msg.params;
                         for (var x in params){
-                            params[x] = params[x].replace(/[\u200B-\u200D\uFEFF]/g, '');
+                            params[x] = params[x].replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
                         }
                         var valid = true;
                         if (cmd.params) {
