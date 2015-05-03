@@ -600,8 +600,8 @@ color:gold;
 #tabbed-menu{
     z-index:1;
     background-color: #171717;
-	border-radius:5px;
-	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
+	border-radius:3px;
+	box-shadow: 0px 0px 3px black,inset 0px 0px 3px black;
     font-size: 1em;
     line-height:300%;
     font-weight: 600;
@@ -612,8 +612,8 @@ color:gold;
 
 #user-list{
     position:absolute;
-    right:3px;
-    bottom:100%;
+    right: 13px;
+    bottom: 71px;
     color:white;
     display:none;
     border-radius:3px;
