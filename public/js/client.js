@@ -740,9 +740,6 @@ $(function() {
                     parsed = parser.parse( '#6464C0' + message.name + ': ' + message.message);
                 }
                 break;
-            case 'system-message':
-            	parsed = parser.parse(message.message);
-            	break;
             case 'error-message':
             	parsed = parser.parse(message.message);
             	break;
