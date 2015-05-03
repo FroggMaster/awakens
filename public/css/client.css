@@ -344,7 +344,9 @@ a:hover {
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
     display: block;
-    width: 93%;
+    width: -moz-calc(100% - 103px); /* Firefox */
+    width: -webkit-calc(100% - 103px); /* Chrome, Safari */
+    width: calc(100% - 103px); /* Interent Derplorer */
     resize: none;
     height: 28px;
     border: 1px solid #0C0D0E;
@@ -610,11 +612,11 @@ color:gold;
 
 #user-list{
     position:absolute;
-    right:0;
+    right:3px;
     bottom:100%;
     color:white;
     display:none;
-    border-radius:5px;
+    border-radius:3px;
 }
 
 .tabbed-list{
