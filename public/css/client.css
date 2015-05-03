@@ -609,7 +609,7 @@ color:gold;
 #user-list{
     position:absolute;
     right:0;
-    top:40px;
+    bottom:100%;
     color:white;
     display:none;
     border-radius:5px;
