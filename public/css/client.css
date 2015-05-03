@@ -94,6 +94,8 @@ body {
 }
 #webcam {
     height: 155px;
+    top:0;
+    left:0;
 }
 #remoteVideos video {
     height: 150px;
