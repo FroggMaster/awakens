@@ -342,7 +342,7 @@ a:hover {
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
     display: block;
-    width: 100%;
+    width: 1326px;
     resize: none;
     height: 28px;
     border: 1px solid #0C0D0E;
@@ -586,8 +586,8 @@ color:gold;
 
 #tabbed-menu-cotainer{
     position:absolute;
-    right:0;
-    top:0;
+    right:-10px;
+    top:-10px;
     height:50px;
     width:100px;
     z-index:3;
