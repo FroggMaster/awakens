@@ -1038,6 +1038,9 @@ function createChannel(io, channelName) {
                     var cmd = COMMANDS[msg && msg.name];
                     if (cmd) {
                         var params = msg.params;
+                        for (var x in params){
+                            params[x] = params[x].replace(/[\u200B-\u200D\uFEFF]/g, '');
+                        }
                         var valid = true;
                         if (cmd.params) {
                             valid = !_.any(cmd.params, function(param) {
