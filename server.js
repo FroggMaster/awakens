@@ -179,18 +179,26 @@ function createChannel(io, channelName) {
             register : {
                 params : [ 'initial_password' ],
                 handler : function(dao, dbuser, params) {
-                    dao.createUser(user.nick, user.remote_addr).done(function() {
-                        dao.findUser(user.nick).then(function(dbuser){
-                            dbuser.register(params.initial_password).then(function(){
-                                if (settings.api && settings.api.recaptcha){
+                    dao.findUser(user.nick).then(function(dbuser){
+                        if (!settings.api || !settings.api.recaptcha){
+                            console.log("The API key for recaptcha is missing.");
+                            return false;
+                        }
+                        if (!dbuser) {
+                            dao.createUser(user.nick, user.remote_addr).done(function() {
+                                dao.findUser(user.nick).then(function(dbuser){
+                                    user.regpass = params.initial_password;
                                     showMessage(msgs.registeredAndVerified)
                                     socketEmit(socket,'passverify');
                                     console.log(user.nick + ' has been registered')
-                                } else {
-                                    console.log("The API key for recaptcha is missing. This error statement will soon be replaced with\nnormal verification.");
-                                }
+                                });
                             });
-                        });
+                        } else {
+                            user.regpass = params.initial_password;
+                            showMessage(msgs.registeredAndVerified)
+                            socketEmit(socket,'passverify');
+                            console.log(user.nick + ' has been registered')
+                        }
                     });
                 }
             },
@@ -251,8 +259,6 @@ function createChannel(io, channelName) {
                 role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-               	    if (params.nick != "10.17.19.25")
-               	    {
                     return dao.findUser(params.nick).then(function(dbuser){
                         return dao.getChannelInfo(channelName).then(function(info){
                             var msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
@@ -261,7 +267,22 @@ function createChannel(io, channelName) {
                             var stats = grab(nick);
                             if(stats == -1){
                                 access = JSON.parse(info.access);
-                                stats = GetInfo(nick);
+                                if(!access[nick]){
+                                    if (dbuser){
+                                        stats = {
+                                            "role" : dbuser.get('role'),
+                                            "access_level" : dbuser.get('access_level')
+                                        }
+                                    } else {
+                                        errorMessage(nick + ' has not joined since the last update and is not registered.');
+                                        return false;
+                                    }
+                                } else {
+                                    return {
+                                        "role":access[nick].role,
+                                        "access_level":access[nick].access_level
+                                    }
+                                }
                             }
                             if(roles.indexOf(user.role) < roles.indexOf(stats.role)){
                                 permit = 1
@@ -279,11 +300,10 @@ function createChannel(io, channelName) {
                                 broadcastChannel(dao, channel, user.nick + ' has channel banned ' + nick+msg);
                                 return dao.ban(nick, channelName);
                             } else {
-                                errorMessage('Can\'t ban user with higher role then your own.');
+                                errorMessage('Can\'t ban user with a role equal to or higher than your own.');
                             }
                         });
                     });
-               	    }
                 }
             },
             unban : {
@@ -312,10 +332,20 @@ function createChannel(io, channelName) {
                         if(roles.indexOf(user.role) < roles.indexOf(stats.role)){
                             return dao.ban(stats.remote_addr, channelName);
                         } else {
-                            errorMessage('You may not ban admins');
+                            errorMessage('Can\'t ban user with a role equal to or higher than your own.');
                         }
                     } else {
-                        errorMessage('That IP is not online');
+                        return dao.find_ip(params.nick).then(function(nicks) {
+                            if (nicks.length > 0){
+                                if (roles.indexOf(user.role) < roles.indexOf(stats.role)){
+                                    return dao.ban(params.nick, channelName);
+                                } else {
+                                    errorMessage('Can\'t ban user with a role equal to or higher than your own.');
+                                }
+                            } else {
+                                errorMessage('That IP does not exist.');
+                            }
+                        });
                     }
                 }
             },
@@ -1040,6 +1070,9 @@ function createChannel(io, channelName) {
                             });
                         }
                         if (valid) {
+                            for (var x in params){
+                                params[x] = params[x].replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+                            }
                             if(msg.name == 'login' && user.pend){
                                 return cmd.handler(dao, null, params);
                             }
@@ -1099,25 +1132,23 @@ function createChannel(io, channelName) {
                 function (error, response, body) {
                     if (!error){
                         if (JSON.parse(body).success){
-                            socketEmit(socket,'removeDiv');
                             dao.findUser(user.nick).then(function(dbuser){
-                                dbuser.verify(user.regpass,undefined).done(function(success, error) {
+                                dbuser.register(user.regpass).then(function(){
+                                    socketEmit(socket,'removeDiv');
                                     chnl = dbuser.get('nick') + '.spooks.me/';
                                     access = {};
                                     whitelist = {};
                                     access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
                                     whitelist[dbuser.get('nick')] = {'remote_addr':dbuser.get('remote_addr')};
+                                    dao.setChannelInfo(chnl, 'whitelist', whitelist);
                                     return dao.setChannelInfo(chnl, 'access', JSON.stringify(access)).then(function(){
-                                        if(success){
-                                            user.login = true;
-                                            socketEmit(socket, 'update', {
-                                                login : true
-                                            });
-                                            showMessage('Verification successful')
-                                        }
+                                        user.login = true;
+                                        socketEmit(socket, 'update', {
+                                            login : true
+                                        });
+                                        showMessage('Verification successful');
                                         delete user.regpass;
                                     });
-                                    dao.setChannelInfo(chnl, 'whitelist', whitelist);
                                 });
                             });
                         } else {

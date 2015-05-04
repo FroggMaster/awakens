@@ -26,19 +26,22 @@
     </head>
     <body>
         <script>window.channel="${channel}";</script>
-        <div id="tabbed-menu-cotainer">
-            <div id="tabbed-menu"></div>
-            <div id="user-list" class="online tabbed-list"></div>
-        </div>
-        <div id="online-users" class="menu-container">
+        
+		        <div id="online-users" class="menu-container">
                 <div class="category">Online</div><div id="X" onclick="$(this).parent().hide()">X</div>
 		<div class="menu-content"><ul class="online"></ul></div>
 		<div class="footer"><a href="/help/" target="_blank" title="Click here!" class="help">Help?</a></div>
         </div>
         <div id="youtube"></div>
-        <div id="messages" class="full-height scrollbar_default"></div>
+        <div id="messages" class="full-height scrollbar_default" ></div>
         <div id="input-bar"><div>
-         <textarea id="input-message" type="text" placeholder="Enter chat message. Then press enter to submit." autocomplete="off"></textarea></div>
+         <textarea id="input-message" type="text" placeholder="Enter chat message. Then press enter to submit." autocomplete="off"></textarea>
+    
+         </div>
+		        <div id="tabbed-menu-cotainer">
+            <div id="tabbed-menu"></div>
+            <div id="user-list" class="online tabbed-list"></div>
+        </div>
         <div id="bigimg"></div></div>
         <script src="/socket.io/socket.io.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -51,5 +54,6 @@
         <script src="/js/game.js"></script>
         <script src="/js/client.js"></script>
         <script src="/js/playingCards.js"></script>
+        
     </body>
 </html>
