@@ -333,9 +333,7 @@ a:hover {
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
     display: block;
-    width: -moz-calc(100% - 103px); /* Firefox */
-    width: -webkit-calc(100% - 103px); /* Chrome, Safari */
-    width: calc(100% - 103px); /* Interent Derplorer */
+    width: 100%;
     resize: none;
     height: 28px;
     border: 1px solid #0C0D0E;
@@ -578,9 +576,9 @@ color:gold;
 /*tabbed menu*/
 
 #tabbed-menu-cotainer{
-    position:fixed;
-    right:-11px;
-    bottom:-10px;
+    position:absolute;
+    right:0;
+    top:0;
     height:50px;
     width:100px;
     z-index:3;
@@ -589,8 +587,8 @@ color:gold;
 #tabbed-menu{
     z-index:1;
     background-color: #171717;
-	border-radius:3px;
-	box-shadow: 0px 0px 3px black,inset 0px 0px 3px black;
+	border-radius:5px;
+	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
     font-size: 1em;
     line-height:300%;
     font-weight: 600;
@@ -601,11 +599,11 @@ color:gold;
 
 #user-list{
     position:absolute;
-    right: 10px;
-    bottom: 71px;
+    right:0;
+    top:40px;
     color:white;
     display:none;
-    border-radius:3px;
+    border-radius:5px;
 }
 
 .tabbed-list{

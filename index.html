@@ -26,7 +26,10 @@
     </head>
     <body>
         <script>window.channel="${channel}";</script>
-        
+        <div id="tabbed-menu-cotainer">
+            <div id="tabbed-menu"></div>
+            <div id="user-list" class="online tabbed-list"></div>
+        </div>
 		        <div id="online-users" class="menu-container">
                 <div class="category">Online</div><div id="X" onclick="$(this).parent().hide()">X</div>
 		<div class="menu-content"><ul class="online"></ul></div>
