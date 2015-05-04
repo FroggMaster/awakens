@@ -1255,15 +1255,6 @@ $(function() {
         frame : {
             role : 'super',
             params : [ 'url' ]
-        },
-        cam: function () {
-            if (CLIENT.get('cam') == 'off') {
-                CLIENT.set('cam', 'on');
-                camFunc()
-            } else {
-                CLIENT.set('cam', 'off')
-                camFunc()
-            }
         }
     };
 
