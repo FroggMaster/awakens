@@ -268,8 +268,15 @@ function createChannel(io, channelName) {
                             if(stats == -1){
                                 access = JSON.parse(info.access);
                                 if(!access[nick]){
-                                    errorMessage(nick + ' has not joined since the last update and is not online.');
-                                    return false;
+                                    if (dbuser){
+                                        stats = {
+                                            "role" : dbuser.get('role'),
+                                            "access_level" : dbuser.get('access_level')
+                                        }
+                                    } else {
+                                        errorMessage(nick + ' has not joined since the last update and is not registered.');
+                                        return false;
+                                    }
                                 } else {
                                     return {
                                         "role":access[nick].role,
