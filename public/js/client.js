@@ -419,7 +419,7 @@ $(function() {
     });
     CLIENT.on('message', function(message) {
         if (blurred) {
-            if(check.test(message.message) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
+            if(message.message.search(check) != -1 || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
                 $("#icon").attr("href","http://spooks.me/img/icon.ico");
             }
             unread++;
