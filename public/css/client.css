@@ -588,7 +588,7 @@ color:gold;
     z-index:1;
     background-color: #171717;
 	border-radius: 50px;
-	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
+	box-shadow: 0px 4px 5px black,inset 0px 0px 5px black;
     font-size: 1em;
     line-height:250%;
     font-weight: 600;
