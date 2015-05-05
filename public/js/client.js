@@ -523,11 +523,7 @@ $(function() {
 
 $(function() {
     function updateCount() {
-        if(CLIENT.get('menu_display') == 'block'){
-            $('#online-users .category').text('Online (' + ONLINE.size() + ')');
-        } else {
-            $('#tabbed-menu').text('Online (' + ONLINE.size() + ')');
-        }
+        $('#tabbed-menu').text(ONLINE.size());
     }
     
     $('#tabbed-menu').click(function(){
@@ -535,7 +531,6 @@ $(function() {
     });
     
     if(CLIENT.get('menu_display') != 'undefined'){
-        $('.menu-container').css('display',CLIENT.get('menu_display'));
         $('.menu-container').css('left',CLIENT.get('menu_left'));
         $('.menu-container').css('top',CLIENT.get('menu_top'));
     }
@@ -557,11 +552,7 @@ $(function() {
                 nick.text(user.get('nick'));
         });
         CLIENT.on('change:menu_display', function(e) {
-            if(e.get('menu_display') == 'block'){
-                $('#tabbed-menu-cotainer').css( "display", "none" );
-            } else {
-                $('#tabbed-menu-cotainer').css( "display", "block" );
-            }
+            //nothing for now
            updateCount();
         });
         updateCount();
@@ -573,14 +564,13 @@ $(function() {
     ONLINE.on('reset', function() {
         $('.online').html('');
     });
-    $('#online-users').draggable({
+    $('#user-list').draggable({
         containment: '#messages',
         drag : function(){
             CLIENT.set('menu_left',$(this).css('left'));
             CLIENT.set('menu_top',$(this).css('top'));
         }
     }).resizable({ handles: "all" });
-    $('.ui-draggable-handle').css('position','absolute');
     
     $.contextMenu({
         selector: '.online li', 
