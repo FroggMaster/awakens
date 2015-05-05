@@ -725,7 +725,7 @@ $(function() {
                 parsed = message.message;
                 break;
             case 'general-message':
-                parsed = parser.parse(message.message);
+                parsed = parser.parse(message.message, true);
                 break;
             case 'alert-message':
                 parsed = parser.parse(message.message);
@@ -1394,7 +1394,7 @@ parser = {
         check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
         return check.test(str)
     },
-    parse : function(str) {
+    parse : function(str, second) {
         // escaping shit
         str = str.replace(/\n/g, '\\n');
         str = str.replace(/&/gi, '&amp;');
@@ -1429,7 +1429,9 @@ parser = {
             str = prestr + poststr;
         }
         var escs = str.match(/\\./g);
-        str = str.replace(/\\./g, this.repslsh);
+        if (!second){
+            str = str.replace(/\\./g, this.repslsh);
+        }
         // replace underscores, et cetera
         if(CLIENT.get('styles') == 'on'){
          str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
