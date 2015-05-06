@@ -328,7 +328,7 @@ $(function() {
                         }
                     } else {
                         CLIENT.show({
-                            message : 'Invalid command. Use /help for a list of commands, or /menu to view the user menu',
+                            message : 'Invalid command. Use /help for a list of commands.',
                             type : 'error-message'
                         });
                     }
@@ -960,14 +960,6 @@ $(function() {
 
 (function() {
     window.COMMANDS = {
-        menu : function() {
-            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none');
-            $('.menu-container').css('display',CLIENT.get('menu_display'));
-            if(CLIENT.get('left') != 'undefined'){
-                $('.menu-container').css('left',CLIENT.get('menu_left'));
-                $('.menu-container').css('top',CLIENT.get('menu_top'));
-            }
-        },
         help : function() {
             CLIENT.show({
                 message : 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /'),
