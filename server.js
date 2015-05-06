@@ -559,7 +559,6 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message);
                     dao.getChannelInfo(channelName).then(function(info){
-                        console.log(info);
                         if (info.topic == topic){
                             errorMessage(msgs.same_topic);
                             return false;
