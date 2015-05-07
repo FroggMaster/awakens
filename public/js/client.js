@@ -1,6 +1,6 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
-var localCount = 0, lastNick;
+var localCount = 0;
 
 // ------------------------------------------------------------------
 // Client
@@ -178,7 +178,6 @@ $(function() {
             var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
-                lastNick = nick;
                 var message = pm[2];
                 return {
                     nick : nick,
@@ -329,7 +328,7 @@ $(function() {
                         }
                     } else {
                         CLIENT.show({
-                            message : 'Invalid command. Use /help for a list of commands.',
+                            message : 'Invalid command. Use /help for a list of commands, or /menu to view the user menu',
                             type : 'error-message'
                         });
                     }
@@ -420,7 +419,7 @@ $(function() {
     });
     CLIENT.on('message', function(message) {
         if (blurred) {
-            if(message.message.search(check) != -1 || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
+            if(check.test(message.message) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
                 $("#icon").attr("href","http://spooks.me/img/icon.ico");
             }
             unread++;
@@ -512,8 +511,8 @@ $(function() {
         style = CLIENT.get('chat_style').split(',');
         $('#input-bar').css('background-color', style[0]);
         if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-            document.styleSheets[1].deleteRule(9);
-            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",9);
+            document.styleSheets[1].deleteRule(14);
+            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",14);
         }
     });
 });
@@ -565,6 +564,7 @@ $(function() {
     ONLINE.on('reset', function() {
         $('.online').html('');
     });
+    
     $('#user-list').draggable({
         containment: '#messages',
         drag : function(){
@@ -665,7 +665,7 @@ $(function() {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             content = $('<div class="message-content"></div>').appendTo(el);
         }
-        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
+        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message') || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
         }
@@ -716,7 +716,7 @@ $(function() {
                 parsed = message.message;
                 break;
             case 'general-message':
-                parsed = parser.parse(message.message, true);
+                parsed = parser.parse(message.message);
                 break;
             case 'alert-message':
                 parsed = parser.parse(message.message);
@@ -731,6 +731,9 @@ $(function() {
                     parsed = parser.parse( '#6464C0' + message.name + ': ' + message.message);
                 }
                 break;
+            case 'system-message':
+            	parsed = parser.parse(message.message);
+            	break;
             case 'error-message':
             	parsed = parser.parse(message.message);
             	break;
@@ -961,6 +964,14 @@ $(function() {
 
 (function() {
     window.COMMANDS = {
+        menu : function() {
+            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none');
+            $('.menu-container').css('display',CLIENT.get('menu_display'));
+            if(CLIENT.get('left') != 'undefined'){
+                $('.menu-container').css('left',CLIENT.get('menu_left'));
+                $('.menu-container').css('top',CLIENT.get('menu_top'));
+            }
+        },
         help : function() {
             CLIENT.show({
                 message : 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /'),
@@ -1109,19 +1120,6 @@ $(function() {
         pm : {
             params : [ 'nick|message' ]
         },
-        r : {
-            params : [ 'message' ],
-            handler : function(params){
-                if (lastNick){
-                    CLIENT.submit("/pm "+lastNick+"|"+params.message);
-                } else {
-                    CLIENT.show({
-                        type : 'error-message',
-                        message : 'You have not PMed anyone yet'
-                    });
-                }
-            }
-        },
         refresh : {role : 'super'},
         bg : {
             role : 'mod',
@@ -1211,6 +1209,7 @@ $(function() {
             params : [ 'url' ]
         },
         safe : function(){
+            $('#messages').html(''),
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
             CLIENT.set('mute_speak','on')
@@ -1389,7 +1388,7 @@ parser = {
         check = new RegExp("/(^#[0-9A-F]{6})|(^[0-9A-F]{6})|(^#[0-9A-F]{3})|(^[0-9A-F]{3})|(#" + this.coloreg + ")","i");
         return check.test(str)
     },
-    parse : function(str, second) {
+    parse : function(str) {
         // escaping shit
         str = str.replace(/\n/g, '\\n');
         str = str.replace(/&/gi, '&amp;');
@@ -1424,9 +1423,7 @@ parser = {
             str = prestr + poststr;
         }
         var escs = str.match(/\\./g);
-        if (!second){
-            str = str.replace(/\\./g, this.repslsh);
-        }
+        str = str.replace(/\\./g, this.repslsh);
         // replace underscores, et cetera
         if(CLIENT.get('styles') == 'on'){
          str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
@@ -1445,12 +1442,12 @@ parser = {
          str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
         }
         // try to replace all >>>/x/??? for links to 8ch.net/x/res/???
-        str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="https://8ch.net$1/res/$2/">$&</a>');
+        str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="https://8ch.net$1/res/$2">$&</a>');
         // if there's any links leading to 8ch.net/?/res/ (nothing
         // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
         // >>78 quote
-        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).last().parent().clone(); msgClone.children(\x27.message-content\x27).attr(\x27class\x27,\x27message-content msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).last().offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
+        function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).last().parent().clone(); msgClone.children(\x27.message-content\x27).attr(\x27class\x27,\x27msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + 49 < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - 49 - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).last().offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
         function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
         if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
 		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
@@ -1857,4 +1854,3 @@ $(function() {
         })
     });*/
 });
-
