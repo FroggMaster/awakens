@@ -1,6 +1,6 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
-var localCount = 0;
+var localCount = 0, lastNick;
 
 // ------------------------------------------------------------------
 // Client
@@ -178,6 +178,7 @@ $(function() {
             var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
+                lastNick = nick;
                 var message = pm[2];
                 return {
                     nick : nick,
@@ -1107,6 +1108,19 @@ $(function() {
         },
         pm : {
             params : [ 'nick|message' ]
+        },
+        r : {
+            params : [ 'message' ],
+            handler : function(params){
+                if (lastNick){
+                    CLIENT.submit("/pm "+lastNick+"|"+params.message);
+                } else {
+                    CLIENT.show({
+                        type : 'error-message',
+                        message : 'You have not PMed anyone yet'
+                    });
+                }
+            }
         },
         refresh : {role : 'super'},
         bg : {
