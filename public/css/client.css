@@ -588,7 +588,7 @@ color:gold;
     z-index:1;
     background-color: #171717;
 	border-radius: 50px;
-	box-shadow: 0px 0px 5px black,inset 0px 0px 5px black;
+	box-shadow: 0px 0px 10px black, 0px 0px 10px black;
     font-size: 1em;
     line-height:250%;
     font-weight: 600;
@@ -597,8 +597,7 @@ color:gold;
     cursor:pointer;
 }
 #tabbed-menu:active{
-    background-color: black;
-    box-shadow: 0px 0px 5px black,0px 0px 5px black;
+    box-shadow: inset 0px 0px 10px black,0px 0px 10px black;
 }
 
 #user-list{

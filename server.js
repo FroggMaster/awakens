@@ -558,15 +558,22 @@ function createChannel(io, channelName) {
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message);
-                    return dao.setChannelInfo(channelName, 'topic', topic).then(function() {
-                    	count++;
-                    	roomEmit('updateCount',{
-                    	    count : count
-                    	});
-                        roomEmit('update', {
-                            topic : topic
-                        });
-                        return true;
+                    dao.getChannelInfo(channelName).then(function(info){
+                        if (info.topic == topic){
+                            errorMessage(msgs.same_topic);
+                            return false;
+                        } else {
+                            return dao.setChannelInfo(channelName, 'topic', topic).then(function() {
+                                count++;
+                                roomEmit('updateCount',{
+                                    count : count
+                                });
+                                roomEmit('update', {
+                                    topic : topic
+                                });
+                                return true;
+                            });
+                        } 
                     });
                 }
             },

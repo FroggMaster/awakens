@@ -1,6 +1,6 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
-var localCount = 0;
+var localCount = 0, lastNick;
 
 // ------------------------------------------------------------------
 // Client
@@ -178,6 +178,7 @@ $(function() {
             var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
             if (pm) {
                 var nick = pm[1].replace('\\|', '|');
+                lastNick = nick;
                 var message = pm[2];
                 return {
                     nick : nick,
@@ -328,7 +329,7 @@ $(function() {
                         }
                     } else {
                         CLIENT.show({
-                            message : 'Invalid command. Use /help for a list of commands, or /menu to view the user menu',
+                            message : 'Invalid command. Use /help for a list of commands.',
                             type : 'error-message'
                         });
                     }
@@ -664,7 +665,7 @@ $(function() {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             content = $('<div class="message-content"></div>').appendTo(el);
         }
-        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message') || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
+        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
         }
@@ -960,14 +961,6 @@ $(function() {
 
 (function() {
     window.COMMANDS = {
-        menu : function() {
-            CLIENT.set('menu_display',$('.menu-container').css('display') == 'none' ? 'block' : 'none');
-            $('.menu-container').css('display',CLIENT.get('menu_display'));
-            if(CLIENT.get('left') != 'undefined'){
-                $('.menu-container').css('left',CLIENT.get('menu_left'));
-                $('.menu-container').css('top',CLIENT.get('menu_top'));
-            }
-        },
         help : function() {
             CLIENT.show({
                 message : 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /'),
@@ -1116,6 +1109,19 @@ $(function() {
         pm : {
             params : [ 'nick|message' ]
         },
+        r : {
+            params : [ 'message' ],
+            handler : function(params){
+                if (lastNick){
+                    CLIENT.submit("/pm "+lastNick+"|"+params.message);
+                } else {
+                    CLIENT.show({
+                        type : 'error-message',
+                        message : 'You have not PMed anyone yet'
+                    });
+                }
+            }
+        },
         refresh : {role : 'super'},
         bg : {
             role : 'mod',
@@ -1205,7 +1211,6 @@ $(function() {
             params : [ 'url' ]
         },
         safe : function(){
-            $('#messages').html(''),
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
             CLIENT.set('mute_speak','on')
