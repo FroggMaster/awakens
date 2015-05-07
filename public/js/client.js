@@ -665,7 +665,7 @@ $(function() {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             content = $('<div class="message-content"></div>').appendTo(el);
         }
-        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message') || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
+        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
         }
