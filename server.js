@@ -152,7 +152,7 @@ function createChannel(io, channelName) {
                     return dao.findUser(nick).then(function(u) {
                         if (u && u.get('verified')) {
                             if(!user.nick || user.nick.toLowerCase() != u.get('nick').toLowerCase()){
-                                return attemptNick(dao, nick, params.password);
+                                return attemptNick(dao, dbuser.get('nick'), params.password);
                             } else {
                                 errorMessage('You\'re already logged in...');
                             }
