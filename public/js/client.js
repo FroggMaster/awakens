@@ -1110,7 +1110,7 @@ $(function() {
             params : [ 'nick|message' ]
         },
         r : {
-            params : [ 'message' ],
+            params : [ 'message$' ],
             handler : function(params){
                 if (lastNick){
                     CLIENT.submit("/pm "+lastNick+"|"+params.message);
