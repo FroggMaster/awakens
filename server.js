@@ -379,11 +379,13 @@ function createChannel(io, channelName) {
                     }
                 }
             },
+	    //changes role and access level of another user
             access : {
                 role : 'admin',
                 access_level : 0,
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
+		   //disallows setting access level or role too high
                     if(roles.indexOf(params.role) >= 2 && params.access_level >= 0 && params.access_level <= 10000){
                         var done = $.Deferred();
                         var stats = grab(params.nick);
@@ -394,15 +396,16 @@ function createChannel(io, channelName) {
                                 if(stats == -1){
                                     stats = GetInfo(nick)
                                 }
-                                if(roles.indexOf(user.role) <= 1 || user.role == 'admin' && user.access_level == 0){
-                                    permit = 1
-                                } else {
-                                    if(roles.indexOf(params.role) >= roles.indexOf(user.role) && roles.indexOf(stats.role) >= roles.indexOf(user.role)){
+				//checks to see if your access level AND role is higher
+                              	if(roles.indexOf(params.role) > roles.indexOf(user.role) && roles.indexOf(stats.role) > roles.indexOf(user.role)){
                                         if(params.access_level >= user.access_level && stats.access_level >= user.access_level){
                                             permit = 1
                                         }
                                     }
+				else {
+                                    return $.Deferred().resolve(false, 'You don\'t have high enough permissions.');
                                 }
+
                                 if(permit){
                                     console.log('ACCESS_GIVEN ' + user.nick + ' - ' + channelName + ' - ' + nick)
                                     dao.getChannelInfo(channelName).then(function(channelInfo) {
