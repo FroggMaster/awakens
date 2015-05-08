@@ -82,8 +82,8 @@ body {
 #quoteDiv {
     background:#1F1F1F;
     box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.8) inset;
-    border: 1px solid #333;
-    border-radius: 2px;
+    border: 1px solid #2F2F2F;
+    border-radius: 1px;
 }
 #messages {
     background: #111;
