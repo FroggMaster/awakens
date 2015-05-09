@@ -335,7 +335,9 @@ a:hover {
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
     display: block;
-    width: 95%;
+    width: -moz-calc(100% - 42px);      /* Firefox */
+    width: -webkit-calc(100% - 42px);   /* WebKit */
+    width: calc(100% - 42px);           /* Standard */
     resize: none;
     height: 28px;
     border: 1px solid #0C0D0E;
