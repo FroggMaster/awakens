@@ -102,11 +102,15 @@ function createChannel(io, channelName) {
                     roomEmit('updateCount',{
                     	count : count
                     });
-                    roomEmit('left', {
-                        id : user.socket.id,
-                        nick : user.nick,
-                        part : user.part
-                    });
+                    //doesn't emit text if user was kicked
+	                if(!user.kicked) {
+                        
+                        roomEmit('left', {
+                            id : user.socket.id,
+                            nick : user.nick,
+                            part : user.part
+                        });
+                    }
                 }
                 //log.info('Disconnected');
             } catch (err) {
@@ -369,6 +373,7 @@ function createChannel(io, channelName) {
                                 type : 'error-message',
                                 message : msgs.get(msg.length > 0 ? 'kicked_reason' : 'kicked', user.nick, msg)
                             });
+                            kuser.kicked = 1;
                             kuser.socket.disconnect();
                             broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
                         } else {
