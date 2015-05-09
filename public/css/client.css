@@ -81,7 +81,9 @@ body {
 }
 #quoteDiv {
     background:#1F1F1F;
-    background:rgba(0,0,0,0.7);
+    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.8) inset;
+    border: 1px solid #2F2F2F;
+    border-radius: 1px;
 }
 #messages {
     background: #111;
@@ -333,7 +335,9 @@ a:hover {
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
     display: block;
-    width: 95%;
+    width: -moz-calc(100% - 34px);      /* Firefox */
+    width: -webkit-calc(100% - 34px);   /* WebKit */
+    width: calc(100% - 34px);           /* Standard */
     resize: none;
     height: 28px;
     border: 1px solid #0C0D0E;
@@ -579,25 +583,27 @@ color:gold;
     position:absolute;
     right:0;
     bottom:5%;
-    height:42px;
-    width:42px;
+    height:40px;
+    width:34px;
     z-index:3;
 }
 
 #tabbed-menu{
     z-index:1;
-    background-color: #171717;
+    background-color: #555;
 	border-radius: 50px;
-	box-shadow: 0px 0px 10px black, 0px 0px 10px black;
+	box-shadow: 0px 3px 10px black, 0px 3px 10px black;
     font-size: 1em;
-    line-height:250%;
+    line-height:200%;
     font-weight: 600;
     text-align: center;
     color:white;
     cursor:pointer;
 }
 #tabbed-menu:active{
-    box-shadow: inset 0px 0px 10px black,0px 0px 10px black;
+    position:relative;
+    top:3px;
+    box-shadow: none;
 }
 
 #user-list{

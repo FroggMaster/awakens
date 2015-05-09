@@ -512,8 +512,8 @@ $(function() {
         style = CLIENT.get('chat_style').split(',');
         $('#input-bar').css('background-color', style[0]);
         if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-            document.styleSheets[1].deleteRule(9);
-            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",9);
+            document.styleSheets[1].deleteRule(14);
+            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",14);
         }
     });
 });
@@ -565,13 +565,38 @@ $(function() {
     ONLINE.on('reset', function() {
         $('.online').html('');
     });
-    $('#user-list').draggable({
-        containment: '#messages',
+    $('#tabbed-menu-cotainer').draggable({
+        revert: 'invalid',
         drag : function(){
             CLIENT.set('menu_left',$(this).css('left'));
             CLIENT.set('menu_top',$(this).css('top'));
+            if(parseInt($(this).css('top')) > -60){
+                $(this).draggable( "option", "containment", "" );
+            }
         }
-    }).resizable({ handles: "all" });
+    });
+    
+    $('#messages').droppable({
+        accept: '#tabbed-menu-cotainer'
+    });
+    
+    $('#input-bar').droppable({
+        accept: '#tabbed-menu-cotainer',
+        drop: function (event, ui) {
+            //snap button into place
+            $('#tabbed-menu-cotainer').css('top','8px')
+            $('#tabbed-menu-cotainer').css('left','')
+            $('#tabbed-menu-cotainer').css('right','0')
+            //resize char-bar
+            $('#input-message').css('width','calc(100% - 34px)')
+        },
+        out: function(event, ui){
+            //expand chat-bar
+            $('#input-message').css('width','100%');
+            //set containment 
+            $('#tabbed-menu-cotainer').draggable('option','containment','#messages');
+        }
+    });
     
     $.contextMenu({
         selector: '.online li', 
@@ -1110,7 +1135,7 @@ $(function() {
             params : [ 'nick|message' ]
         },
         r : {
-            params : [ 'message' ],
+            params : [ 'message$' ],
             handler : function(params){
                 if (lastNick){
                     CLIENT.submit("/pm "+lastNick+"|"+params.message);
@@ -1517,7 +1542,9 @@ parser = {
             }
         
   
-        str = str.replace(/<a [^>]*href="[^"]*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
+        if (str.search(/(youtu(\.)?be)/gi) != -1){
+            str = str.replace(/<a [^>]*href="[^"]*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
+        }
         str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*liveleak.com\/ll_embed\?f=(\w+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'liveleak\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
