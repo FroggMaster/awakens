@@ -565,13 +565,15 @@ $(function() {
     ONLINE.on('reset', function() {
         $('.online').html('');
     });
-    $('#user-list').draggable({
-        containment: '#messages',
-        drag : function(){
-            CLIENT.set('menu_left',$(this).css('left'));
-            CLIENT.set('menu_top',$(this).css('top'));
+    $('#tabbed-menu-cotainer').draggable();
+    
+    $('#input-bar').droppable({
+        drop: function (event, ui) {
+            $('#tabbed-menu-cotainer').css('top','8px')
+            $('#tabbed-menu-cotainer').css('left','')
+            $('#tabbed-menu-cotainer').css('right','0')
         }
-    }).resizable({ handles: "all" });
+    });
     
     $.contextMenu({
         selector: '.online li', 
@@ -1516,7 +1518,6 @@ parser = {
                 }
             }
         
-  
         if (str.search(/(youtu(\.)?be)/gi) != -1){
             str = str.replace(/<a [^>]*href="[^"]*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
         }
