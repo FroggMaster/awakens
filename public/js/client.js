@@ -565,13 +565,36 @@ $(function() {
     ONLINE.on('reset', function() {
         $('.online').html('');
     });
-    $('#tabbed-menu-cotainer').draggable();
+    $('#tabbed-menu-cotainer').draggable({
+        revert: 'invalid',
+        drag : function(){
+            CLIENT.set('menu_left',$(this).css('left'));
+            CLIENT.set('menu_top',$(this).css('top'));
+            if(parseInt($(this).css('top')) > -60){
+                $(this).draggable( "option", "containment", "" );
+            }
+        }
+    });
+    
+    $('#messages').droppable({
+        accept: '#tabbed-menu-cotainer'
+    });
     
     $('#input-bar').droppable({
+        accept: '#tabbed-menu-cotainer',
         drop: function (event, ui) {
+            //snap button into place
             $('#tabbed-menu-cotainer').css('top','8px')
             $('#tabbed-menu-cotainer').css('left','')
             $('#tabbed-menu-cotainer').css('right','0')
+            //resize char-bar
+            $('#input-message').css('width','calc(100% - 34px)')
+        },
+        out: function(event, ui){
+            //expand chat-bar
+            $('#input-message').css('width','100%');
+            //set containment 
+            $('#tabbed-menu-cotainer').draggable('option','containment','#messages');
         }
     });
     
@@ -1518,6 +1541,7 @@ parser = {
                 }
             }
         
+  
         if (str.search(/(youtu(\.)?be)/gi) != -1){
             str = str.replace(/<a [^>]*href="[^"]*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
         }
