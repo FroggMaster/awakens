@@ -11,7 +11,7 @@ try {
 
 module.exports = {
     server : {
-        port : 8080,
+        port : 80,
         compression : true,
         cache : false
     // 86400000

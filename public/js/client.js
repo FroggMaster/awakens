@@ -1239,11 +1239,13 @@ $(function() {
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
             CLIENT.set('mute_speak','on')
+            CLIENT.set('frames','off')
         },
         unsafe : function(){
             CLIENT.set('bg','on'),
             CLIENT.set('images','on'),
             CLIENT.set('mute_speak','off')
+            CLIENT.set('frames','on')
         },
         msg : {
             params : [ 'message$' ]

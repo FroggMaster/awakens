@@ -377,7 +377,7 @@ function createChannel(io, channelName) {
                             kuser.socket.disconnect();
                             broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
                         } else {
-                            errorMessage('You may not kick admins');
+                            errorMessage('Can\'t kick user with a role higher than your own.');
                         }
                     } else {
                         errorMessage(params.nick  +' is not online');
@@ -393,22 +393,33 @@ function createChannel(io, channelName) {
                     //disallows setting access level or role too high
                     if(roles.indexOf(params.role) >= 2 && params.access_level >= 0 && params.access_level <= 10000){
                         var done = $.Deferred();
-                        var stats = grab(params.nick);
+                        // gets other users stats
+                        var other_user = grab(params.nick);
                         var permit = 0;
                         return dao.findUser(params.nick).then(function(dbuser) {
                             if (dbuser && dbuser.get('verified')) {
                                 var nick = dbuser.get('nick');
-                                if(stats == -1){
-                                    stats = GetInfo(nick)
+                                if(other_user == -1){
+                                    other_user = GetInfo(nick)
                                 }
-                                //checks to see if your access level AND role is higher
-                              	if(roles.indexOf(params.role) > roles.indexOf(user.role) && roles.indexOf(stats.role) > roles.indexOf(user.role)){
-                                        if(params.access_level >= user.access_level && stats.access_level >= user.access_level){
-                                            permit = 1
-                                        }
+                                //new role must not be above yours
+                              	if(roles.indexOf(params.role) < roles.indexOf(user.role)){
+                                    return $.Deferred().resolve(false, 'Can\'t put someones access above your own.');
+                                }
+                                //your role is greater
+                                if (roles.indexOf(other_user.role) > roles.indexOf(user.role)){
+                                    permit = 1
+                                }
+                                //your roles are equal
+                                else if (roles.indexOf(other_user.role) == roles.indexOf(user.role)){
+                                    //new role must not be above yours
+                                  	if(params.access_level < user.access_level){
+                                        return $.Deferred().resolve(false, 'Can\'t put someones access above your own.');
                                     }
-                                else {
-                                    return $.Deferred().resolve(false, 'You don\'t have high enough permissions.');
+                                    //your level must be higher
+                                    if(other_user.access_level > user.access_level){
+                                       permit = 1
+                                    }
                                 }
 
                                 if(permit){
@@ -438,7 +449,7 @@ function createChannel(io, channelName) {
                                         });
                                     });
                                 } else {
-                                    return $.Deferred().resolve(false, 'Can\'t put someones access above your own.');
+                                    return $.Deferred().resolve(false, 'You don\'t have high enough permissions.');
                                 }
                             } else {
                                 return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
