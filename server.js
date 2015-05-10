@@ -377,7 +377,7 @@ function createChannel(io, channelName) {
                             kuser.socket.disconnect();
                             broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
                         } else {
-                            errorMessage('You may not kick admins');
+                            errorMessage('Can\'t kick user with a role higher than your own.');
                         }
                     } else {
                         errorMessage(params.nick  +' is not online');
