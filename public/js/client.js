@@ -357,7 +357,7 @@ $(function() {
         },
 
         decorate : function(input) {
-            if (input.charAt(0) != '>') {
+            if (!(input.charAt(0) == '>' && input.charAt(1) != '>')) {
                 var style = this.get('style');
                 var color = this.get('color');
                 var font = this.get('font');
