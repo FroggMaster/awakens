@@ -1507,11 +1507,14 @@ parser = {
 		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // >implying
         var strArray = str.split('<br />');
+        console.log(strArray);
         for (var i = 0; i < strArray.length; i++) {
-            if (strArray[i].search(/^(&gt;.*)/i) != -1 && strArray[i].search(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != 0)
-                strArray[i] = strArray[i].replace(/^(&gt;.*)/i, '&#35;789922 $1');
-            else if (i > 0 && strArray[i-1].substring(0,8) != '&#35;FFF')
-                strArray[i] = '&#35;FFF' + strArray[i];
+            if (strArray[i].length != 0){
+	            if (strArray[i].search(/^(&gt;.*)/i) != -1 && strArray[i].search(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != 0)
+	                strArray[i] = strArray[i].replace(/^(&gt;.*)/i, '&#35;789922 $1');
+	            else if (i > 0 && strArray[i].substring(0,5) != '&#35;' && strArray[i-1].substring(0,11) == '&#35;789922')
+	                strArray[i] = '&#35;FFF' + strArray[i];
+            }
         }
         str = strArray.join('<br />');
         //JavaScript links
