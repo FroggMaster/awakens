@@ -375,7 +375,12 @@ function createChannel(io, channelName) {
                             });
                             kuser.kicked = 1;
                             kuser.socket.disconnect();
-                            broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
+			    roomEmit('kicked', {
+			        id : user.socket.id,
+			        kicker : user.nick,
+				kicked: params.nick,
+				reason: msg
+			    });
                         } else {
                             errorMessage('Can\'t kick user with a role higher than your own.');
                         }
