@@ -70,25 +70,21 @@ $(function() {
             $('#warning').css('visibility','visible');
         }
     });
-    socket.on('kicked', function(info) {
-        ONLINE.remove(info.id);
-	CLIENT.show({
-		type : 'general-message',
-		message : info.kicker + ' has kicked ' + info.kicked + info.reason
-    	});
-    });
+
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-        if(user.part == undefined){
-            CLIENT.show({
-                type : 'general-message',
-                message : user.nick + ' has left '
-            });
-        } else {
-            CLIENT.show({
-                type : 'general-message',
-                message : user.nick + ' has left ' + user.part
-            });
+        if(!user.kicked){
+            if(user.part == undefined){
+                CLIENT.show({
+                    type : 'general-message',
+                    message : user.nick + ' has left '
+                });
+            } else {
+                CLIENT.show({
+                    type : 'general-message',
+                    message : user.nick + ' has left ' + user.part
+                });
+            }
         }
     });
 

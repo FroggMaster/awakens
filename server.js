@@ -103,14 +103,12 @@ function createChannel(io, channelName) {
                     	count : count
                     });
                     //doesn't emit text if user was kicked
-	                if(!user.kicked) {
-                        
-                        roomEmit('left', {
-                            id : user.socket.id,
-                            nick : user.nick,
-                            part : user.part
-                        });
-                    }
+                    roomEmit('left', {
+                        id : user.socket.id,
+                        nick : user.nick,
+                        part : user.part,
+                        kicked : user.kicked
+                    });
                 }
                 //log.info('Disconnected');
             } catch (err) {
@@ -375,12 +373,7 @@ function createChannel(io, channelName) {
                             });
                             kuser.kicked = 1;
                             kuser.socket.disconnect();
-			    roomEmit('kicked', {
-			        id : user.socket.id,
-			        kicker : user.nick,
-				kicked: params.nick,
-				reason: msg
-			    });
+                            broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
                         } else {
                             errorMessage('Can\'t kick user with a role higher than your own.');
                         }
