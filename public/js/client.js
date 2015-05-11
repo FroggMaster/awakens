@@ -1507,7 +1507,6 @@ parser = {
 		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // >implying
         var strArray = str.split('<br />');
-        console.log(strArray);
         for (var i = 0; i < strArray.length; i++) {
             if (strArray[i].length != 0){
 	            if (strArray[i].search(/^(&gt;.*)/i) != -1 && strArray[i].search(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != 0)
