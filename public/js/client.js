@@ -1059,6 +1059,10 @@ $(function() {
         whois : {
             params : [ 'nick$' ]
         },
+        findalt : {
+            role : 'super',
+            params : [ 'nick$' ]
+        },
         topic : {
             role : 'mod',
             params : [ 'topic$' ]
