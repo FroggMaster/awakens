@@ -1616,6 +1616,10 @@ function createChannel(io, channelName) {
                             });
                             if (user.role == "anonymous"){
                                 user.role = "basic";
+                                user.socket.emit('update', {
+                                    access_level : user.access_level.toString(),
+                                    role : user.role
+                                });
                             } 
                             roomEmit('nick', {
                                 id : socket.id,
