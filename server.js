@@ -689,7 +689,7 @@ function createChannel(io, channelName) {
                             if (t === undefined) {
                                 t = settings.speak['default'];
                             }
-                            request('http://2s4.me/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+                            request('http://this.spooks.me/public/audio/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
                                 if(voice == 'default') {
                                     body = null
                                 };
