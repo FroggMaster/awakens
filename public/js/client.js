@@ -446,7 +446,7 @@ $(function() {
     });
     CLIENT.on('change:frame_src', function(m) {
         var url = CLIENT.get('frame_src');
-        if(CLIENT.get('frame') == 'on' && parser.linkreg.exec(url) && url != 'none'){
+        if(CLIENT.get('frame') == 'on' && url && parser.linkreg.exec(url) && url != 'none'){
             $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + url + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
         } else if(url == "none") {
             $(".frame").remove();
