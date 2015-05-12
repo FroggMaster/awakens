@@ -27,7 +27,7 @@ function createChannel(io, channelName) {
 
     var elbot = require('./elbot').start();
     var room = io.of('/' + channelName);
-    var roles = ['god','super','admin','mod','basic','mute'];
+    var roles = ['god','super','admin','mod','basic','mute','anonymous'];
     var channel = {
         online : []
     };
@@ -107,7 +107,8 @@ function createChannel(io, channelName) {
                         id : user.socket.id,
                         nick : user.nick,
                         part : user.part,
-                        kicked : user.kicked
+                        kicked : user.kicked,
+                        anon : checkAnon(user)
                     });
                 }
                 //log.info('Disconnected');
@@ -140,7 +141,9 @@ function createChannel(io, channelName) {
                     count++;
                     roomEmit('message', {
                         type : 'action-message',
-                        message : user.nick + ' ' + params.message,
+                        nick: user.nick,
+                        message : params.message,
+                        anon: checkAnon(user),
                         count : count
                     });
                     return $.Deferred().resolve(true);
@@ -635,6 +638,14 @@ function createChannel(io, channelName) {
                     });
                 }
             },
+	        anonymous: {
+		        //1 makes it anonymous, 0 makes it normal
+		        params : [ 'bool' ],
+                handler : function(dao, dbuser, params) {
+                    showMessage('Anonymous mode set to ' + params.bool);
+                    return dao.setChannelInfo(channelName,'anonymous',params.bool);
+                }
+	        },
             theme : {
                 params : [ 'input_style', 'scrollbar_style' ],
                 handler : function(dao, dbuser, params) {
@@ -1047,16 +1058,19 @@ function createChannel(io, channelName) {
                     if (typeof message == 'string') {
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
+                                //unmuted chat
                                 count++;
                                 roomEmit('message', {
                                     type : 'chat-message',
                                     nick : user.nick,
+                                    anon : checkAnon(user),
                                     flair : typeof msg.flair == 'string' ? msg.flair.substring(0, settings.limits.message) : '',
                                     message : message.substring(0, settings.limits.message),
                                     hat : hat,
                                     count : count
                                 });
                             } else {
+                                //muted chat
                                 socketEmit(user.socket, 'update', {
                                     idle : 1
                                 });
@@ -1283,12 +1297,15 @@ function createChannel(io, channelName) {
                     socket.disconnect();
                     done.resolve(false);
                 } else {
+		            //emits list of people in channel
                     var users = _.map(channel.online, function(user) {
                         return {
                             id : user.socket.id,
-                            nick : user.nick
+                            nick : user.nick,
+                            anon : checkAnon(user)
                         };
                     });
+                    
                     socketEmit(socket, 'online', users);
                     dao.getChannelInfo(channelName).then(function(channelInfo) {
                         socketEmit(socket, 'update', channelInfo);
@@ -1313,7 +1330,14 @@ function createChannel(io, channelName) {
             log.debug('socket emit', JSON.stringify(args));
             socket.emit.apply(socket, args);
         }
-
+        /**
+         * @inner
+         * @param {Object} user
+         */
+        function checkAnon(user) {
+            return user.role == 'anonymous';
+        }
+        
         /**
          * @inner
          */
@@ -1544,9 +1568,11 @@ function createChannel(io, channelName) {
                             user.vhost = dbuser.get('vHost')
                             user.login = true;
                             console.log(user.nick + ' joined with ' + user.role + ' - ' + user.access_level)
-                        } else {
+                       
+                        }else {
                             user.vhost = user.remote_addr;
-                            user.role = 'basic';
+                             //if channel is anon, make new users anon
+                            user.role = parseInt(data.anonymous) ? 'anonymous' : 'basic';
                             user.access_level = 3;
                         }
                         socketEmit(socket, 'update', {
@@ -1563,20 +1589,26 @@ function createChannel(io, channelName) {
                       	    roomEmit('updateCount',{
                             	count : count
                             });
+                            if (user.role == "anonymous"){
+                                user.role = "basic";
+                            } 
                             roomEmit('nick', {
                                 id : socket.id,
                                 nick : user.nick
                             });
                         } else {
+			                //new user joins
                             channel.online.push(user);
                             log.debug('Successful join!');
                             count++;
                             roomEmit('updateCount',{
                             	count : count
                             });
-                            roomEmit('join', {
+		                    //hides nick if anonymous
+                             roomEmit('join', {
                                 id : socket.id,
-                                nick : user.nick
+                                nick : user.nick,
+                                anon: checkAnon(user)
                             });
                         }
                         done.resolve(true);

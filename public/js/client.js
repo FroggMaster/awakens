@@ -13,7 +13,7 @@ $(function() {
     var first = true;
     var requestId = 0;
     var requests = {};
-    var roles = ['god','super','admin','mod','basic','mute'];
+    var roles = ['god','super','admin','mod','basic','anonymous','mute'];
 
     Game.init(socket);
 
@@ -21,7 +21,7 @@ $(function() {
         ONLINE.add(user);
         CLIENT.show({
             type : 'general-message',
-            message : user.nick + ' has joined '
+            message : CLIENT.anonymize(user) + ' has joined '
         });
  
     if(CLIENT.get('part') != undefined){
@@ -77,12 +77,12 @@ $(function() {
             if(user.part == undefined){
                 CLIENT.show({
                     type : 'general-message',
-                    message : user.nick + ' has left '
+                    message : CLIENT.anonymize(user) + ' has left '
                 });
             } else {
                 CLIENT.show({
                     type : 'general-message',
-                    message : user.nick + ' has left ' + user.part
+                    message : CLIENT.anonymize(user) + ' has left ' + user.part
                 });
             }
         }
@@ -90,8 +90,9 @@ $(function() {
 
     socket.on('nick', function(info) {
         var user = ONLINE.get(info.id);
-        var old = user.get('nick');
+        var old = CLIENT.anonymize(user);
         user.set('nick', info.nick);
+        user.set('anon', false);
         CLIENT.show({
             type : 'general-message',
             message : old + ' is now known as ' + info.nick
@@ -308,9 +309,10 @@ $(function() {
                     var name = parsed[1].toLowerCase();
                     var cmd = COMMANDS[name];
                     if(cmd && !cmd.role){
-                        cmd.role = 'basic'
+                        //minimum role for all cmds
+                        cmd.role = 'anonymous'
                     }
-                    if (cmd && roles.indexOf(role) <= (roles.indexOf(cmd.role) || 3)) {
+                    if (cmd && roles.indexOf(role) <= roles.indexOf(cmd.role)) {
                         var expect = cmd.params || [];
                         var params = parseParams(name, input, expect);
                         if (expect.length == 0 || params) {
@@ -337,12 +339,14 @@ $(function() {
                     }
                 } else {
                     input = this.decorate(input);
+		            //real text
                     if(!CLIENT.get('idle')){
                         socket.emit('message', {
                             flair : CLIENT.get('flair'),
                             message : input
                         });
                     } else {
+	                //muted text
                         CLIENT.show({
                             type : 'chat-message',
                             nick : CLIENT.get('nick'),
@@ -384,6 +388,11 @@ $(function() {
                 }
             }
             return input;
+        },
+        anonymize: function (user){
+            //hides anonymous nicks unless you are admin
+            var anon = user.anon||(user.anon == undefined && user.get('anon'));
+            return roles.indexOf(CLIENT.get('role')) > 2 && anon? 'anonymous': user.nick || user.get('nick');
         }
 
         /*updateMousePosition : function(position) {
@@ -542,17 +551,18 @@ $(function() {
         var li = $('<li class="users"></li>').attr({
             class : 'online-' + user.get('id')
         }).appendTo('.online');
-        var nick;
-        if (user.get('nick').length > 35)
-            nick = $('<span></span>').text(user.get('nick').substring(0,32)+'...').appendTo(li);
+        var nick = CLIENT.anonymize(user);
+        if (nick.length > 35)
+            nick = $('<span></span>').text(nick.substring(0,32)+'...').appendTo(li);
         else
-            nick = $('<span></span>').text(user.get('nick')).appendTo(li);
+            nick = $('<span></span>').text(nick).appendTo(li);
         li.append(' ');
         user.on('change:nick', function() {
-            if (user.get('nick').length > 35)
-                nick.text(user.get('nick').substring(0,32)+'...');
+            var new_nick = CLIENT.anonymize(user);
+            if (new_nick.length > 35)
+                nick.text(new_nick.substring(0,32)+'...');
             else
-                nick.text(user.get('nick'));
+                nick.text(new_nick);
         });
         CLIENT.on('change:menu_display', function(e) {
             //nothing for now
@@ -648,7 +658,7 @@ $(function() {
 
 $(function() {
     var animation = null;
-    var roles = ['god','super','admin','mod','basic','mute'];
+    var roles = ['god','super','admin','mod','basic','anonymous','mute'];
     
     CLIENT.on('message', function(message) {
         if (typeof message == 'string') {
@@ -712,7 +722,10 @@ $(function() {
                     }
             }
         }
-        if (message.nick) {
+        if (message.type == 'action-message'){
+            message.message = CLIENT.anonymize(message) + ' ' + message.message;
+        }
+        else if (message.nick) {
             var parsedFlair = null;
             if (message.flair) {
                 parsedFlair = parser.parse(message.flair);
@@ -728,7 +741,7 @@ $(function() {
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(parsedFlair + ':').appendTo(content);
             } else {
-                $('<span class="nick"></span>').text(message.nick + ':').appendTo(content);
+                $('<span class="nick"></span>').text(CLIENT.anonymize(message) + ':').appendTo(content);
             }
         }
         if (message.message) {
@@ -749,8 +762,6 @@ $(function() {
                 parsed = parser.parse(message.message, true);
                 break;
             case 'alert-message':
-                parsed = parser.parse(message.message);
-                break;
             case 'note-message':
                 parsed = parser.parse(message.message);
                 break; 
@@ -1116,6 +1127,7 @@ $(function() {
             }
         },
         flair : {
+            role: 'basic',
             params : [ 'flair$' ],
             handler : function(params) {
                 if (params.flair == 'default' || params.flair == 'none') {
@@ -1192,9 +1204,15 @@ $(function() {
         elbot : {
             params : [ 'message$' ]
         },
+	    //sends an anonymous text
         anon : {
             params : [ 'message$' ]
         },
+	    //1 makes the channel anonymous, 0 makes it normal
+	    anonymous: {
+	        role : 'admin',
+	        params : [ 'bool$' ]
+	    },
         part : {
             params : [ 'message$' ]
         },
