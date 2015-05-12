@@ -725,10 +725,10 @@ $(function() {
             if(message.hat != 'nohat' && message.type == 'chat-message'){
                 $('<span class="hat ' + message.hat + '" style="background:url(\'/css/img/hats/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
             }
-            if (parsedFlair) {
-                $('<span class="nick"></span>').html(parsedFlair + ':').appendTo(content);
+            if (parsedFlair){
+                $('<span class="nick"></span>').html(message.type == 'spoken-message' ? parsedFlair : parsedFlair + ':').appendTo(content);
             } else {
-                $('<span class="nick"></span>').text(message.nick + ':').appendTo(content);
+                $('<span class="nick"></span>').text(message.type == 'spoken-message' ? message.nick : message.nick + ':').appendTo(content);
             }
         }
         if (message.message) {
