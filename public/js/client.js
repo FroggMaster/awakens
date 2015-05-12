@@ -1334,7 +1334,7 @@ remove = function(att,user){
 var mouseX;
 var mouseY;
 parser = {
-    linkreg : /(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/([-a-z\d%_.:~+]|(&#126;))*)*(\?[;&a-z\d%_.~+=-]*)?(&#35;[-a-z\d_\.]*)?/i,
+    linkreg : /(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)*(\?([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?(&#35;([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?/i,
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|azure|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
     replink : 'ÃƒÂ©ÃƒÂ¤!#@&5nÃƒÂ¸ÃƒÂºENONHEInoheÃƒÂ¥ÃƒÂ¶',
     repslsh : 'ÃƒÂ¸ÃƒÂº!#@&5nÃƒÂ¥ÃƒÂ¶EESCHEInoheÃƒÂ©ÃƒÂ¤',
@@ -1389,6 +1389,7 @@ parser = {
         str = str.replace(/>/gi, '&gt;');
         str = str.replace(/</gi, '&lt;');
         str = str.replace(/\n/g, '\\n');
+        str = str.replace(/\$/gi, '&#36;');
         str = str.replace(/\\\\n/g, this.repslsh);
         str = str.replace(/\\n/g, '<br />');
         str = str.replace(this.repslsh, '\\\\n');
@@ -1447,6 +1448,7 @@ parser = {
         str = str.replace(/</gi, '&lt;');
         str = str.replace(/"/gi, '&quot;');
         str = str.replace(/#/gi, '&#35;');
+        str = str.replace(/\$/gi, '&#36;');
         str = str.replace(/'/gi, '&#39;');
         str = str.replace(/~/gi, '&#126;');
         str = str.replace(/\\\\n/g, this.repslsh);
