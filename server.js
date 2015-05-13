@@ -54,7 +54,6 @@ function createChannel(io, channelName) {
         
         if(socket.handshake.headers["x-real-ip"]){
             user.remote_addr = socket.handshake.headers["x-real-ip"];
-            console.log(user.nick + ' ip masked')
         }
                 
         socket.on('SetPart', function(parts){
