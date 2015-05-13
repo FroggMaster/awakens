@@ -298,7 +298,7 @@ a:hover {
 }
 
 .spoken-message .nick:after {
-	content: ' says: ';
+	content: ' says ';
 }
 
 .elbot-message .nick:after {

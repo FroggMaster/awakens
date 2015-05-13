@@ -1,0 +1,17 @@
+﻿Revert "Merge pull request #290 from InfraRaven/dev"
+
+This reverts commit 19033af50c4ad75becc7dabac9dd4748662c73e9, reversing
+changes made to 0e5295d9b0ee6c5420c6548bc9b7fc1e2294144f.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   public/audio/speak/yodaspeak.php
+#	modified:   public/css/client.css
+#	modified:   public/js/client.js
+#	modified:   server.js
+#
+
