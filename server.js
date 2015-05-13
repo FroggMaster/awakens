@@ -1496,7 +1496,6 @@ function createChannel(io, channelName) {
              */
             function fallback() {
                 log.debug('Nick fallback');
-                console.log('creating anonymous user')
                 attemptNick(dao, 'Anonymous').then(function(success, errorMessage) {
                     done.resolve(success, errorMessage);
                 }, function(err) {
