@@ -302,7 +302,7 @@ $(function() {
             var role = this.get('role');
             var access_level = this.get('access_level');
             if (access_level >= 0) {
-                var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
+                var parsed = /^\/(?!embed)(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
@@ -1445,11 +1445,17 @@ parser = {
         str = str.replace(/\\\\n/g, this.repslsh);
         str = str.replace(/\\n/g, '<br />');
         str = str.replace(this.repslsh, '\\\\n');
+        // define alt link substring
+        var repEmb = this.replink.substring(0,40) + '¤';
         // remove my replacement characters. they are not fscking allowed. lol.
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
-        // replace links
+        // set links array for embeds and links
         var links = [];
+        var embedLinks = [];
+        //embed
+        str = str.replace(/\/embed (\S*)\|/g, function(match, p1){if (p1.match(this.linkreg)){for (var i = 0; i < 3; i++ ){embedLinks.push(p1)}} return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';});
+        // replace links
         var prestr= "";
         var poststr = str;
         var index;
@@ -1515,8 +1521,6 @@ parser = {
                 return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "javascript: '+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             }
         });
-        //embed
-        str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         //colors
         str = this.multiple(str, /&#35;&#35;([\da-f]{6}|[\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
@@ -1535,6 +1539,13 @@ parser = {
         // replace escapes
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i][1]);
+        }
+        // replace embedded links
+        if (embedLinks.length > 0) {
+            for (var i = 0; i < embedLinks.length; i++) {
+                elink = embedLinks[i].replace(/^((.)(.+))$/, '$1');
+                str = str.replace(repEmb, elink);
+            }
         }
         // replace links
         if (links.length > 0) {
