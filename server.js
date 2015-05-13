@@ -1515,7 +1515,7 @@ function createChannel(io, channelName) {
                     });
                     osock.disconnect();
                 }
-                if (indexOf(nick) >= 0 && nick != 'Anonymouse') {
+                if (indexOf(nick) >= 0 && nick != 'Anonymous') {
                     log.debug('Attempted to nick to ', nick, ' but someone else is using that nick right now');
                     if (user.nick) {
                         done.resolve(false, msgs.alreadyBeingUsed);
@@ -1534,7 +1534,7 @@ function createChannel(io, channelName) {
                         }
                         access = JSON.parse(data.access);
                         stats = GetInfo(user.nick);
-                        if(dbuser && user.nick != 'Anonymouse'){
+                        if(dbuser && user.nick != 'Anonymous'){
                             var hashToken = hasher.hex_md5(hasher.genRandomSeed(6));
                             var currentDate = new Date();
                             currentDate = currentDate.getTime();
