@@ -1515,7 +1515,9 @@ function createChannel(io, channelName) {
                     });
                     osock.disconnect();
                 }
+                console.log(nick)
                 if (indexOf(nick) >= 0 && nick != 'Anonymous') {
+                    console.log('made it here')
                     log.debug('Attempted to nick to ', nick, ' but someone else is using that nick right now');
                     if (user.nick) {
                         done.resolve(false, msgs.alreadyBeingUsed);
