@@ -1526,7 +1526,6 @@ function createChannel(io, channelName) {
                         fallback();
                     }
                 } else {
-                    console.log('making normal nick')
                     var online = !!user.nick;
                     var stats = {};
                     user.nick = nick;
