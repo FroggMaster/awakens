@@ -729,9 +729,9 @@ $(function() {
                 message.nick += '(' + message.id + ')'
             }
             if (parsedFlair) {
-                $('<span class="nick"></span>').html(parsedFlair + ':').appendTo(content);
+                $('<span class="nick"></span>').html(message.type == 'spoken-message' ? parsedFlair : parsedFlair + ':').appendTo(content);
             } else {
-                $('<span class="nick"></span>').text(message.nick + ':').appendTo(content);
+                $('<span class="nick"></span>').text(message.type == 'spoken-message' ? message.nick : message.nick + ':').appendTo(content);
             }
         }
         if (message.message) {
