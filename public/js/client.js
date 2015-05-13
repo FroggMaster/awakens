@@ -302,7 +302,7 @@ $(function() {
             var role = this.get('role');
             var access_level = this.get('access_level');
             if (access_level >= 0) {
-                var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
+                var parsed = /^\/(?!embed)(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
@@ -455,7 +455,7 @@ $(function() {
     CLIENT.on('change:frame', function(){
         if(CLIENT.get('frame') == 'off'){
             $(".frame").remove();
-        } else {
+        } else if(CLIENT.get('frame_src')){
             $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + CLIENT.get('frame_src') + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
         }
     });
@@ -725,10 +725,13 @@ $(function() {
             if(message.hat != 'nohat' && message.type == 'chat-message'){
                 $('<span class="hat ' + message.hat + '" style="background:url(\'/css/img/hats/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
             }
+            if(message.nick == 'Anonymous' && message.id && roles.indexOf(CLIENT.get('role')) <= 2){
+                message.nick += '(' + message.id + ')'
+            }
             if (parsedFlair) {
-                $('<span class="nick"></span>').html(parsedFlair + ':').appendTo(content);
+                $('<span class="nick"></span>').html(message.type == 'spoken-message' ? parsedFlair : parsedFlair + ':').appendTo(content);
             } else {
-                $('<span class="nick"></span>').text(message.nick + ':').appendTo(content);
+                $('<span class="nick"></span>').text(message.type == 'spoken-message' ? message.nick : message.nick + ':').appendTo(content);
             }
         }
         if (message.message) {
@@ -1059,6 +1062,10 @@ $(function() {
         whois : {
             params : [ 'nick$' ]
         },
+        findalt : {
+            role : 'super',
+            params : [ 'nick$' ]
+        },
         topic : {
             role : 'mod',
             params : [ 'topic$' ]
@@ -1116,6 +1123,7 @@ $(function() {
             }
         },
         flair : {
+            role: 'basic',
             params : [ 'flair$' ],
             handler : function(params) {
                 if (params.flair == 'default' || params.flair == 'none') {
@@ -1192,6 +1200,7 @@ $(function() {
         elbot : {
             params : [ 'message$' ]
         },
+        //sends an anonymous text
         anon : {
             params : [ 'message$' ]
         },
@@ -1244,13 +1253,13 @@ $(function() {
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
             CLIENT.set('mute_speak','on')
-            CLIENT.set('frames','off')
+            CLIENT.set('frame','off')
         },
         unsafe : function(){
             CLIENT.set('bg','on'),
             CLIENT.set('images','on'),
             CLIENT.set('mute_speak','off')
-            CLIENT.set('frames','on')
+            CLIENT.set('frame','on')
         },
         msg : {
             params : [ 'message$' ]
@@ -1334,35 +1343,17 @@ remove = function(att,user){
 var mouseX;
 var mouseY;
 parser = {
-    linkreg : /(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.:~+]*)*(\?[;&a-z\d%_.~+=-]*)?(&#35;[-a-z\d_\.]*)?/i,
+    linkreg : /(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)*(\?([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?(&#35;([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?/i,
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|azure|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
     replink : 'ÃƒÂ©ÃƒÂ¤!#@&5nÃƒÂ¸ÃƒÂºENONHEInoheÃƒÂ¥ÃƒÂ¶',
     repslsh : 'ÃƒÂ¸ÃƒÂº!#@&5nÃƒÂ¥ÃƒÂ¶EESCHEInoheÃƒÂ©ÃƒÂ¤',
-    fontRegex : /\$([\w \-\,Ã‚Â®]*)\|(.*)$/,
+    fontRegex : /(\$|(&#36;))([\w \-\,Ã‚Â®]*)\|(.*)$/,
     fonts : "ABeeZee,Abel,Abril Fatface,Aclonica,Acme,Actor,Adamina,Advent Pro,Aguafina Script,Akronim,Aladin,Aldrich,Alef,Alegreya,Alegreya Sans,Alegreya Sans SC,Alegreya SC,Alex Brush,Alfa Slab One,Alice,Alike,Alike Angular,Allan,Allerta,Allerta Stencil,Allura,Almendra,Almendra Display,Almendra SC,Amarante,Amaranth,Amatic SC,Amethysta,Amiri,Anaheim,Andada,Andika,Angkor,Annie Use Your Telescope,Anonymous Pro,Antic,Antic Didone,Antic Slab,Anton,Arapey,Arbutus,Arbutus Slab,Architects Daughter,Archivo Black,Archivo Narrow,Arimo,Arizonia,Armata,Artifika,Arvo,Asap,Asset,Astloch,Asul,Atomic Age,Aubrey,Audiowide,Autour One,Average,Average Sans,Averia Gruesa Libre,Averia Libre,Averia Sans Libre,Averia Serif Libre,Bad Script,Balthazar,Bangers,Basic,Battambang,Baumans,Bayon,Belgrano,Belleza,BenchNine,Bentham,Berkshire Swash,Bevan,Bigelow Rules,Bigshot One,Bilbo,Bilbo Swash Caps,Bitter,Black Ops One,Bokor,Bonbon,Boogaloo,Bowlby One,Bowlby One SC,Brawler,Bree Serif,Bubblegum Sans,Bubbler One,Buda,Buenard,Butcherman,Butterfly Kids,Cabin,Cabin Condensed,Cabin Sketch,Caesar Dressing,Cagliostro,Calligraffitti,Cambay,Cambo,Candal,Cantarell,Cantata One,Cantora One,Capriola,Cardo,Carme,Carrois Gothic,Carrois Gothic SC,Carter One,Caudex,Cedarville Cursive,Ceviche One,Changa One,Chango,Chau Philomene One,Chela One,Chelsea Market,Chenla,Cherry Cream Soda,Cherry Swash,Chewy,Chicle,Chivo,Cinzel,Cinzel Decorative,Clicker Script,Coda,Coda Caption,Codystar,Combo,Comfortaa,Coming Soon,Concert One,Condiment,Content,Contrail One,Convergence,Cookie,Copse,Corben,Courgette,Cousine,Coustard,Covered By Your Grace,Crafty Girls,Creepster,Crete Round,Crimson Text,Croissant One,Crushed,Cuprum,Cutive,Cutive Mono,Damion,Dancing Script,Dangrek,Dawning of a New Day,Days One,Dekko,Delius,Delius Swash Caps,Delius Unicase,Della Respira,Denk One,Devonshire,Dhurjati,Didact Gothic,Diplomata,Diplomata SC,Domine,Donegal One,Doppio One,Dorsa,Dosis,Dr Sugiyama,Droid Sans,Droid Sans Mono,Droid Serif,Duru Sans,Dynalight,Eagle Lake,Eater,EB Garamond,Economica,Ek Mukta,Electrolize,Elsie,Elsie Swash Caps,Emblema One,Emilys Candy,Engagement,Englebert,Enriqueta,Erica One,Esteban,Euphoria Script,Ewert,Exo,Exo 2,Expletus Sans,Fanwood Text,Fascinate,Fascinate Inline,Faster One,Fasthand,Fauna One,Federant,Federo,Felipa,Fenix,Finger Paint,Fira Mono,Fira Sans,Fjalla One,Fjord One,Flamenco,Flavors,Fondamento,Fontdiner Swanky,Forum,Francois One,Freckle Face,Fredericka the Great,Fredoka One,Freehand,Fresca,Frijole,Fruktur,Fugaz One,Gabriela,Gafata,Galdeano,Galindo,Gentium Basic,Gentium Book Basic,Geo,Geostar,Geostar Fill,Germania One,GFS Didot,GFS Neohellenic,Gidugu,Gilda Display,Give You Glory,Glass Antiqua,Glegoo,Gloria Hallelujah,Goblin One,Gochi Hand,Gorditas,Goudy Bookletter 1911,Graduate,Grand Hotel,Gravitas One,Great Vibes,Griffy,Gruppo,Gudea,Gurajada,Habibi,Halant,Hammersmith One,Hanalei,Hanalei Fill,Handlee,Hanuman,Happy Monkey,Headland One,Henny Penny,Herr Von Muellerhoff,Hind,Holtwood One SC,Homemade Apple,Homenaje,Iceberg,Iceland,IM Fell Double Pica,IM Fell Double Pica SC,IM Fell DW Pica,IM Fell DW Pica SC,IM Fell English,IM Fell English SC,IM Fell French Canon,IM Fell French Canon SC,IM Fell Great Primer,IM Fell Great Primer SC,Imprima,Inconsolata,Inder,Indie Flower,Inika,Irish Grover,Istok Web,Italiana,Italianno,Jacques Francois,Jacques Francois Shadow,Jim Nightshade,Jockey One,Jolly Lodger,Josefin Sans,Josefin Slab,Joti One,Judson,Julee,Julius Sans One,Junge,Jura,Just Another Hand,Just Me Again Down Here,Kalam,Kameron,Kantumruy,Karla,Karma,Kaushan Script,Kavoon,Kdam Thmor,Keania One,Kelly Slab,Kenia,Khand,Khmer,Khula,Kite One,Knewave,Kotta One,Koulen,Kranky,Kreon,Kristi,Krona One,La Belle Aurore,Laila,Lakki Reddy,Lancelot,Lateef,Lato,League Script,Leckerli One,Ledger,Lekton,Lemon,Libre Baskerville,Life Savers,Lilita One,Lily Script One,Limelight,Linden Hill,Lobster,Lobster Two,Londrina Outline,Londrina Shadow,Londrina Sketch,Londrina Solid,Lora,Love Ya Like A Sister,Loved by the King,Lovers Quarrel,Luckiest Guy,Lusitana,Lustria,Macondo,Macondo Swash Caps,Magra,Maiden Orange,Mako,Mallanna,Mandali,Marcellus,Marcellus SC,Marck Script,Margarine,Marko One,Marmelad,Martel Sans,Marvel,Mate,Mate SC,Maven Pro,McLaren,Meddon,MedievalSharp,Medula One,Megrim,Meie Script,Merienda,Merienda One,Merriweather,Merriweather Sans,Metal,Metal Mania,Metamorphous,Metrophobic,Michroma,Milonga,Miltonian,Miltonian Tattoo,Miniver,Miss Fajardose,Modak,Modern Antiqua,Molengo,Molle,Monda,Monofett,Monoton,Monsieur La Doulaise,Montaga,Montez,Montserrat,Montserrat Alternates,Montserrat Subrayada,Moul,Moulpali,Mountains of Christmas,Mouse Memoirs,Mr Bedfort,Mr Dafoe,Mr De Haviland,Mrs Saint Delafield,Mrs Sheppards,Muli,Mystery Quest,Neucha,Neuton,New Rocker,News Cycle,Niconne,Nixie One,Nobile,Nokora,Norican,Nosifer,Nothing You Could Do,Noticia Text,Noto Sans,Noto Serif,Nova Cut,Nova Flat,Nova Mono,Nova Oval,Nova Round,Nova Script,Nova Slim,Nova Square,NTR,Numans,Nunito,Odor Mean Chey,Offside,Old Standard TT,Oldenburg,Oleo Script,Oleo Script Swash Caps,Open Sans,Open Sans Condensed,Oranienbaum,Orbitron,Oregano,Orienta,Original Surfer,Oswald,Over the Rainbow,Overlock,Overlock SC,Ovo,Oxygen,Oxygen Mono,Pacifico,Paprika,Parisienne,Passero One,Passion One,Pathway Gothic One,Patrick Hand,Patrick Hand SC,Patua One,Paytone One,Peddana,Peralta,Permanent Marker,Petit Formal Script,Petrona,Philosopher,Piedra,Pinyon Script,Pirata One,Plaster,Play,Playball,Playfair Display,Playfair Display SC,Podkova,Poiret One,Poller One,Poly,Pompiere,Pontano Sans,Port Lligat Sans,Port Lligat Slab,Prata,Preahvihear,Press Start 2P,Princess Sofia,Prociono,Prosto One,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Puritan,Purple Purse,Quando,Quantico,Quattrocento,Quattrocento Sans,Questrial,Quicksand,Quintessential,Qwigley,Racing Sans One,Radley,Rajdhani,Raleway,Raleway Dots,Ramabhadra,Ramaraja,Rambla,Rammetto One,Ranchers,Rancho,Ranga,Rationale,Ravi Prakash,Redressed,Reenie Beanie,Revalia,Ribeye,Ribeye Marrow,Righteous,Risque,Roboto,Roboto Condensed,Roboto Slab,Rochester,Rock Salt,Rokkitt,Romanesco,Ropa Sans,Rosario,Rosarivo,Rouge Script,Rozha One,Rubik Mono One,Rubik One,Ruda,Rufina,Ruge Boogie,Ruluko,Rum Raisin,Ruslan Display,Russo One,Ruthie,Rye,Sacramento,Sail,Salsa,Sanchez,Sancreek,Sansita One,Sarina,Sarpanch,Satisfy,Scada,Scheherazade,Schoolbell,Seaweed Script,Sevillana,Seymour One,Shadows Into Light,Shadows Into Light Two,Shanti,Share,Share Tech,Share Tech Mono,Shojumaru,Short Stack,Siemreap,Sigmar One,Signika,Signika Negative,Simonetta,Sintony,Sirin Stencil,Six Caps,Skranji,Slabo 13px,Slabo 27px,Slackey,Smokum,Smythe,Sniglet,Snippet,Snowburst One,Sofadi One,Sofia,Sonsie One,Sorts Mill Goudy,Source Code Pro,Source Sans Pro,Source Serif Pro,Special Elite,Spicy Rice,Spinnaker,Spirax,Squada One,Sree Krushnadevaraya,Stalemate,Stalinist One,Stardos Stencil,Stint Ultra Condensed,Stint Ultra Expanded,Stoke,Strait,Sue Ellen Francisco,Sunshiney,Supermercado One,Suranna,Suravaram,Suwannaphum,Swanky and Moo Moo,Syncopate,Tangerine,Taprom,Tauri,Teko,Telex,Tenali Ramakrishna,Tenor Sans,Text Me One,The Girl Next Door,Tienne,Timmana,Tinos,Titan One,Titillium Web,Trade Winds,Trocchi,Trochut,Trykker,Tulpen One,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Ultra,Uncial Antiqua,Underdog,Unica One,UnifrakturCook,UnifrakturMaguntia,Unkempt,Unlock,Unna,Vampiro One,Varela,Varela Round,Vast Shadow,Vesper Libre,Vibur,Vidaloka,Viga,Voces,Volkhov,Vollkorn,Voltaire,VT323,Waiting for the Sunrise,Wallpoet,Walter Turncoat,Warnes,Wellfleet,Wendy One,Wire One,Yanone Kaffeesatz,Yellowtail,Yeseva One,Yesteryear,Zeyada".split(','),
     multiple : function(str, mtch, rep) {
         var ct = 0;
-        while (str.match(mtch) != null && ct++ < 15)
+        while (str.match(mtch) != null && ct++ < 9)
             str = str.replace(mtch, rep);
         return str;
-    },
-    multipleAdj : function(str, mtch, rep) {
-        var fullStr = "";
-        while (str.match(mtch)){
-            var mainStr = str.substring(str.lastIndexOf('&#35;'));
-            str = str.substring(0,str.lastIndexOf('&#35;'));
-            if (str.length >= 5 && str.substring(str.length-5) == "&#35;"){
-                str = str.substring(0,str.length-5);
-                mainStr = "&#35;" + mainStr;
-            }
-            if (mainStr.search(mtch) == 0){
-                fullStr = mainStr.replace(mtch,rep) + fullStr;
-            } else {
-                fullStr = mainStr + fullStr;
-            }
-        }
-        fullStr = str + fullStr;
-        return fullStr;
     },
     loadedFonts : {},
     addFont : function(family) {
@@ -1377,7 +1368,7 @@ parser = {
         var match;
         while (match = this.fontRegex.exec(str)) {
             str = str.replace(this.fontRegex, "$2");
-            this.addFont(match[1]);
+            this.addFont(match[3]);
         }
     },
     removeHTML : function(parsed) {
@@ -1389,6 +1380,7 @@ parser = {
         str = str.replace(/>/gi, '&gt;');
         str = str.replace(/</gi, '&lt;');
         str = str.replace(/\n/g, '\\n');
+        str = str.replace(/\$/gi, '&#36;');
         str = str.replace(/\\\\n/g, this.repslsh);
         str = str.replace(/\\n/g, '<br />');
         str = str.replace(this.repslsh, '\\\\n');
@@ -1447,16 +1439,23 @@ parser = {
         str = str.replace(/</gi, '&lt;');
         str = str.replace(/"/gi, '&quot;');
         str = str.replace(/#/gi, '&#35;');
+        str = str.replace(/\$/gi, '&#36;');
         str = str.replace(/'/gi, '&#39;');
         str = str.replace(/~/gi, '&#126;');
         str = str.replace(/\\\\n/g, this.repslsh);
         str = str.replace(/\\n/g, '<br />');
         str = str.replace(this.repslsh, '\\\\n');
+        // define alt link substring
+        var repEmb = this.replink.substring(0,40) + '¤';
         // remove my replacement characters. they are not fscking allowed. lol.
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
-        // replace links
+        // set links array for embeds and links
         var links = [];
+        var embedLinks = [];
+        //embed
+        str = str.replace(/\/embed (\S*)\|/g, function(match, p1){if (p1.match(this.linkreg)){for (var i = 0; i < 3; i++ ){embedLinks.push(p1)}} return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';});
+        // replace links
         var prestr= "";
         var poststr = str;
         var index;
@@ -1506,16 +1505,7 @@ parser = {
         if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
 		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // >implying
-        var strArray = str.split('<br />');
-        for (var i = 0; i < strArray.length; i++) {
-            if (strArray[i].length != 0){
-	            if (strArray[i].search(/^(&gt;.*)/i) != -1 && strArray[i].search(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != 0)
-	                strArray[i] = strArray[i].replace(/^(&gt;.*)/i, '&#35;789922 $1');
-	            else if (i > 0 && strArray[i].substring(0,5) != '&#35;' && strArray[i-1].substring(0,11) == '&#35;789922')
-	                strArray[i] = '&#35;FFF' + strArray[i];
-            }
-        }
-        str = strArray.join('<br />');
+        str = str.replace(/^(&gt;.*)$/i, '&#35;789922 $1');
         //JavaScript links
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
             a = a.replace(/&#35;/gi, '#');
@@ -1531,15 +1521,13 @@ parser = {
                 return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "javascript: '+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             }
         });
-        //embed
-        str = str.replace(/\/embed(\S*)(.*)/g, '<a target="_blank" href="$1">$1</a> <a target="_blank" onclick="video(\'\', \'embed\', \'$1\')">[embed]</a>');
         //colors
-        str = this.multipleAdj(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
-        str = this.multipleAdj(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: #$1;">$2</span>');
-        str = this.multipleAdj(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: $1;">$2</span>');
-        str = this.multipleAdj(str, /&#35;&#35;([\da-f]{6}|[\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
-        str = this.multipleAdj(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: $1;">$2</span>');
-        str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$1\'">$2</span>');
+        str = this.multiple(str, /&#35;&#35;([\da-f]{6}|[\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: $1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: $1;">$2</span>');
+        str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$3\'">$4</span>');
         // filters
         //original = ['you','matter','think','care','about','this','for','shit','nigger','nothing','out of','doesn\'t','doesnt','my','ask','question','you are','nice','trying to','black','rose','no ','fag ','faggot','what','too ','to ','guy','white','yes','mom','ing ','with','th','are ']
         //replace = ['u','matta','be thinkin','give a fuck','bout','dis','fo','shiznit','nigga','nuttin','outa','don\'t','dont','muh','axe','queshon','yo ass is','dank','tryna','nigga','flowa','naw ','homo ','homo','whut','2 ','2 ','nigga','cracka','ye','mama','in ','wit','d','r ']
@@ -1551,6 +1539,13 @@ parser = {
         // replace escapes
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i][1]);
+        }
+        // replace embedded links
+        if (embedLinks.length > 0) {
+            for (var i = 0; i < embedLinks.length; i++) {
+                elink = embedLinks[i].replace(/^((.)(.+))$/, '$1');
+                str = str.replace(repEmb, elink);
+            }
         }
         // replace links
         if (links.length > 0) {
