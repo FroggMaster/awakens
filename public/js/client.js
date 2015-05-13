@@ -1368,7 +1368,7 @@ parser = {
         var match;
         while (match = this.fontRegex.exec(str)) {
             str = str.replace(this.fontRegex, "$2");
-            this.addFont(match[1]);
+            this.addFont(match[3]);
         }
     },
     removeHTML : function(parsed) {
