@@ -719,7 +719,7 @@ function createChannel(io, channelName) {
                                 return throttle.on('speak-' + al, t).then(function() {
                                     roomEmit('message', {
                                         type : 'spoken-message',
-                                        nick : dbuser.get('nick'),
+                                        nick : user.nick,
                                         message : message.substring(0, settings.limits.spoken),
                                         source : body,
                                         voice : voice
