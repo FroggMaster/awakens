@@ -7,7 +7,7 @@ A simple Node.JS chat server with some user management and games.
 
 ### Requirements:
 1. node.js and npm installed  
-`npm install`
+Install dependendies: `npm install`
 2. MySQL installed
 
 ### Local Installation:
