@@ -719,7 +719,7 @@ function createChannel(io, channelName) {
                                 return throttle.on('speak-' + al, t).then(function() {
                                     roomEmit('message', {
                                         type : 'spoken-message',
-                                        nick : dbuser.get('nick'),
+                                        nick : user.nick,
                                         message : message.substring(0, settings.limits.spoken),
                                         source : body,
                                         voice : voice
@@ -1515,7 +1515,9 @@ function createChannel(io, channelName) {
                     });
                     osock.disconnect();
                 }
+                console.log(nick)
                 if (indexOf(nick) >= 0 && nick != 'Anonymous') {
+                    console.log('made it here')
                     log.debug('Attempted to nick to ', nick, ' but someone else is using that nick right now');
                     if (user.nick) {
                         done.resolve(false, msgs.alreadyBeingUsed);
