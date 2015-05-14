@@ -591,8 +591,10 @@ color:gold;
 #tabbed-menu{
     z-index:1;
     background-color: #555;
-	border-radius: 50px;
-	box-shadow: 0px 3px 10px black, 0px 3px 10px black;
+    border-radius: 50px;
+    box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,.2),
+	        inset 0px -1px 0px 0px rgba(0,0,0,1), 
+	        0px 3px 10px rgba(0,0,0,.9); 
     font-size: 1em;
     line-height:200%;
     font-weight: 600;
@@ -603,7 +605,9 @@ color:gold;
 #tabbed-menu:active{
     position:relative;
     top:3px;
-    box-shadow: none;
+    box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,.2),
+	        inset 0px -1px 0px 0px rgba(0,0,0,1), 
+	        0px 3px 3px rgba(0,0,0,.2);
 }
 
 #user-list{
