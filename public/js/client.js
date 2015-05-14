@@ -146,7 +146,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
     
     //Playvid command that turns the vid on, but checks to make sure the person doesn't have mute on.
     socket.on('playvid', function(url){
-        if(url.url == "stop" || CLIENT.get('mute') == 'on'){
+        if(url.url == "stop" || CLIENT.get('mute') == 'on' || CLIENT.get('play') == 'off'){
             $("#youtube")[0].innerHTML = ""
         } else {
             $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
@@ -285,7 +285,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color font style mute mute_speak nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -297,7 +297,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
+            'color font style flair mute play mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                         this.show(key + ' changed to: ' + value);
@@ -493,6 +493,12 @@ $(function() {
             $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + CLIENT.get('frame_src') + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
         }
     });
+    CLIENT.on('change:play', function(){
+        if(CLIENT.get('play') == 'off'){
+            $("#youtube")[0].innerHTML = "";
+        }
+    });
+    // a bunch of test and sets
     if (CLIENT.get('images') == null){
         CLIENT.set('images', 'on'); 
     }
@@ -513,6 +519,9 @@ $(function() {
     }
     if (CLIENT.get('frame_src') == null){
         CLIENT.set('frame_src', ''); 
+    }
+    if (CLIENT.get('play') == null){
+        CLIENT.set('play', 'on');
     }
 });
 
@@ -1211,7 +1220,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak images note topic styles bg part block background mask msg alert security frame frame_src'.split(' ');
+                var valid = 'color font style flair mute mute_speak play images note topic styles bg part block background mask msg alert security frame frame_src'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
