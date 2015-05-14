@@ -1,4 +1,5 @@
 <?php
+echo 'error';
 $url = "http://www.yodaspeak.co.uk/index.php";
 
 $curse = str_replace(
