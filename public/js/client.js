@@ -1,46 +1,68 @@
-var DATE_FORMAT = 'shortTime';
-var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
-var localCount = 0, lastNick;
+var DATE_FORMAT = 'shortTime'; 					//Style of time keeping. 12, 24, or military. This is 12.
+var BLACKLIST = [ 'bruno.sucks', 'donkey.dong']; 		//Blacklisted websites
+var localCount = 0, lastNick; 
 
 // ------------------------------------------------------------------
 // Client
 // ------------------------------------------------------------------
 
-ONLINE = new Backbone.Collection();
-
-$(function() {
+ONLINE = new Backbone.Collection(); 				/*Backbone.js, a model that allows binding and custom events, as well as API functions.
+				    				http://backbonejs.org/ */
+$(function() {							//Overall function for the client's basic interactions with server
     var socket = io('/' + window.channel);
     var first = true;
     var requestId = 0;
     var requests = {};
-    var roles = ['god','super','admin','mod','basic','mute'];
-
-    Game.init(socket);
-
+var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of spooks.
+    								-God: Owner(s), obviously the most powerful.
+    								-Super: Developer(s), have special abilities like seeing
+    								who posted with anon, people's IP addresses, etc.
+    								-Admin: Trustworthy individual who has the ability to now ban.
+    								-Mod: Generally an inbetween stage to see if you can trust
+    								someone, a Mod is the first step in gaining power on Spooks.
+    								If you are an access 0 moderator, you can change the topic,
+    								background, and kick people.
+    								-Basic: The standard person browsing Spooks. Every single person
+    								who joins Spooks automatically is a Basic Access level 3.
+    								-Mute: Someone who when they speak cannot be heard. Subhuman
+    								swine :^)
+    								==IMPORTANT: Access level also determines your abilities, as
+    								seen in Mod, and by the fact that an Admin 3 cannot kick an
+    								Admin 2-0. */
+    							
+    Game.init(socket); 						//Remnants of Mario considering adding games to Spooks.
+    
+    //When someone else joins, you add them to the user list, and then make a message that says " ** NAME has joined ** "
     socket.on('join', function(user) {
         ONLINE.add(user);
         CLIENT.show({
             type : 'general-message',
             message : user.nick + ' has joined '
         });
- 
+        
+    //If you have a part, you set it.
     if(CLIENT.get('part') != undefined){
         socket.emit('SetPart', CLIENT.get('part'));
     }
     });
-
+    
+    //When you join, you get added to the list of users.
     socket.on('online', function(users) {
         ONLINE.add(users);
     });
     
+    //Use this to update the localCount variable.
     socket.on('updateCount', function(data){
        localCount = data.count 
     });
     
+    //Remove the password verification GUI
     socket.on('removeDiv',function() {
         $('#passanchor').hide(500,function(){$('#passanchor').remove()});
     });
 
+    /*The fun, long function that you go through when you try to verify your account, specifically your password. Uses Google
+    Recaptcha API*/
     socket.on('passverify', function() {
         $('head').append('<script src=\'https://www.google.com/recaptcha/api.js?\'></script>');
         $('body').append('<div id="passanchor"></div>');
@@ -71,6 +93,8 @@ $(function() {
         }
     });
 
+    /*When some fool leaves, generate a message that depends on if they have a part. If you pretend a lack of a set part is just
+    an empty string, then it's " ** NAME has left " + PART + " ** " */
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
         if(!user.kicked){
@@ -88,6 +112,7 @@ $(function() {
         }
     });
 
+    //When someone wants to change their name, also make a message that says " ** OLDNAME is now known as NAME ** "
     socket.on('nick', function(info) {
         var user = ONLINE.get(info.id);
         var old = user.get('nick');
@@ -97,7 +122,8 @@ $(function() {
             message : old + ' is now known as ' + info.nick
         });
     });
-
+    
+    //When you update, make mutes role basic
     socket.on('update', function(info) {
         if(info.role == 'mute'){
             info.role = 'basic'
@@ -106,16 +132,19 @@ $(function() {
         CLIENT.set(info);
     });
     
+    //Centermsg just centers the /msg.
     socket.on('centermsg', function(data){
         $('#sam').remove()
         $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     	CLIENT.set({ msg : data.msg });
     });
     
+    //Tests connection.
     socket.on('alive', function(){
         socket.emit('alive')
     });
     
+    //Playvid command that turns the vid on, but checks to make sure the person doesn't have mute on.
     socket.on('playvid', function(url){
         if(url.url == "stop" || CLIENT.get('mute') == 'on' || CLIENT.get('play') == 'off'){
             $("#youtube")[0].innerHTML = ""
@@ -123,13 +152,15 @@ $(function() {
             $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
         }
     });
-
+    
+    //General way that people submit messages to the chat. Checks to make sure the person isn't blocked.
     socket.on('message', function(msg) {
         if(CLIENT.get('block').indexOf(msg.nick) == -1){
             CLIENT.show(msg);
         }
     });
-
+    
+    //When someone joins, waste space in this program for no reason. 
     socket.on('connect', function() {
         if (!first) {
             //window.location.reload();
@@ -140,7 +171,8 @@ $(function() {
         });
         first = false;
     });
-
+    
+    //When told to disconnect, you get a red error type message that tells you that you've disconnected.
     socket.on('disconnect', function() {
         ONLINE.reset();
         CLIENT.show({
@@ -148,11 +180,13 @@ $(function() {
             type : 'error-message'
         });
     });
-
+    
+    //Refreshes.
     socket.on('refresh', function() {
         window.location.reload();
     });
-
+    
+    //If the socket has an error, it rejects it, else it resolves it
     socket.on('response', function(msg) {
         var def = msg && requests[msg.id];
         if (def && def.state() == 'pending') {
@@ -1099,10 +1133,10 @@ $(function() {
             CLIENT.set('mute_speak', 'on');
         },
         style : {
-            params : [ 'style$' ],
+            params : [ 'style' ],
             handler : function(params) {
                 if (params.style == 'default' || params.style == 'none') {
-                    params.style = null;
+                    style = null;
                 }
                 CLIENT.set('style', params.style);
             }
@@ -1120,7 +1154,7 @@ $(function() {
             params : [ 'color' ],
             handler : function(params) {
                 if (params.color == 'default' || params.color == 'none') {
-                    CLIENT.set('color', null);
+                    params.color = null;
                 } else if (parser.isColor(params.color)){
                     CLIENT.set('color', params.color);
                 } else {
@@ -1136,7 +1170,7 @@ $(function() {
             params : [ 'flair$' ],
             handler : function(params) {
                 if (params.flair == 'default' || params.flair == 'none') {
-                    flair = null;
+                    params.flair = null;
                 }
                 flair = params.flair.replace(/&/g, '\\&')
                 CLIENT.set('flair', flair);
@@ -1520,14 +1554,14 @@ parser = {
             a = a.replace(/&#35;/gi, '#');
             if(/[^:]*javascript *:/im.test(a)) {
                     if (b.trim() == ""){
-                    	return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
                     }
-                    	return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             } else {
                 if (b.trim() == ""){
-                	return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[Script]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "javascript: '+a+'">' + '[Script]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
                 }
-                	return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "javascript: '+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             }
         });
         //colors
