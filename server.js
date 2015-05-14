@@ -185,20 +185,24 @@ function createChannel(io, channelName) {
                             console.log("The API key for recaptcha is missing.");
                             return false;
                         }
-                        if (!dbuser) {
-                            dao.createUser(user.nick, user.remote_addr).done(function() {
-                                dao.findUser(user.nick).then(function(dbuser){
-                                    user.regpass = params.initial_password;
-                                    showMessage(msgs.registeredAndVerified)
-                                    socketEmit(socket,'passverify');
-                                    console.log(user.nick + ' has been registered')
+                        if(user.nick != 'Anonymous'){
+                            if (!dbuser) {
+                                dao.createUser(user.nick, user.remote_addr).done(function() {
+                                    dao.findUser(user.nick).then(function(dbuser){
+                                        user.regpass = params.initial_password;
+                                        showMessage(msgs.registeredAndVerified)
+                                        socketEmit(socket,'passverify');
+                                        console.log(user.nick + ' has been registered')
+                                    });
                                 });
-                            });
+                            } else {
+                                user.regpass = params.initial_password;
+                                showMessage(msgs.registeredAndVerified)
+                                socketEmit(socket,'passverify');
+                                console.log(user.nick + ' has been registered')
+                            }
                         } else {
-                            user.regpass = params.initial_password;
-                            showMessage(msgs.registeredAndVerified)
-                            socketEmit(socket,'passverify');
-                            console.log(user.nick + ' has been registered')
+                            errorMessage('may not register this nick')
                         }
                     });
                 }
