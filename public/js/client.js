@@ -1254,7 +1254,7 @@ $(function() {
             params : [ 'message$' ]
         },
         afk : {},
-        set : {
+        toggle : {
             params : [ 'att' ],
             handler : function(params) {
                 var att = params.att;
