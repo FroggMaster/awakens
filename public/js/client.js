@@ -242,17 +242,18 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
         } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
             var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
             if (pm) {
-                var nick = pm[1].replace('\\|', '|');
-                var message = pm[2]  || " ";
+                //parses for commands in format param1|param2
+                var param1 = pm[1].replace('\\|', '|');
+                var param2 = pm[2]  || " ";
                 if(name == 'speak'){
                     return {
-                        voice : nick,
-                        message : message
+                        message : param1,
+                        voice : param2
                     }; 
                 } else {
                     return {
-                        nick : nick,
-                        message : message
+                        nick : param1,
+                        message : param2
                     };
                 }
             }
@@ -817,7 +818,7 @@ $(function() {
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-            var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'alien', 'nigga', 'demon'];
+            var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
             if(voices.indexOf(message.voice) > 0){
                 var uri = message.source
             } else {
@@ -1238,7 +1239,7 @@ $(function() {
             }
         },
         speak : {
-            params : [ '[voice|]message' ]
+            params : [ 'message|[voice]' ]
         },
         elbot : {
             params : [ 'message$' ]

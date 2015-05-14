@@ -704,10 +704,10 @@ function createChannel(io, channelName) {
                 }
             },
             speak : {
-                params : [ 'message', 'voice' ],
+                params : ['message','voice'],
                 handler : function(dao, dbuser, params) {
-                    var voices = ['default','yoda','clever', 'old', 'loli', 'whisper', 'badguy', 'aussie', 'terrorist', 'japan', 'alien', 'nigga', 'demon'];
-                    var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
+                    var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
+                    var message = params.message;
                     var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default'
                     if (message) {
                         if (roles.indexOf(user.role) <= 5) {
@@ -716,23 +716,33 @@ function createChannel(io, channelName) {
                             if (t === undefined) {
                                 t = settings.speak['default'];
                             }
-                            request('http://this.spooks.me/audio/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
-                                if(voice == 'default') {
-                                    body = null
-                                };
-                                return throttle.on('speak-' + al, t).then(function() {
-                                    roomEmit('message', {
-                                        type : 'spoken-message',
-                                        nick : user.nick,
-                                        message : message.substring(0, settings.limits.spoken),
-                                        source : body,
-                                        voice : voice
-                                    });
-                                return true;
-                                }, function() {
-                                    return $.Deferred().resolve(false, msgs.throttled);
+                            //default voice requires no php processing
+                            if(voice == 'default') {
+                                roomEmit('message', {
+                                    type : 'spoken-message',
+                                    nick : user.nick,
+                                    message : message.substring(0, settings.limits.spoken),
+                                    source : null,
+                                    voice : voice
                                 });
-                            });
+                            }
+                            //other voices send request to spooks.me:8080/speaks/ php files                       
+                            else {
+                                request('http://spooks.me:8080/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
+                                    return throttle.on('speak-' + al, t).then(function() {
+                                        roomEmit('message', {
+                                            type : 'spoken-message',
+                                            nick : user.nick,
+                                            message : message.substring(0, settings.limits.spoken),
+                                            source : body,
+                                            voice : voice
+                                        });
+                                    return true;
+                                    }, function() {
+                                        return $.Deferred().resolve(false, msgs.throttled);
+                                    });
+                                });
+                            }
                         } else {
                             return $.Deferred().resolve(false, msgs.muted);
                         }
