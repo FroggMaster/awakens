@@ -1225,6 +1225,8 @@ $(function() {
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
+                    }else if (attribute_name == 'bg'){
+                        attribute_name = 'background';
                     }
                     CLIENT.show({
                         type : 'escaped-message',
