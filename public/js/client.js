@@ -1090,7 +1090,7 @@ $(function() {
             CLIENT.set('mute_speak', 'on');
         },
         style : {
-            params : [ 'style' ],
+            params : [ 'style$' ],
             handler : function(params) {
                 if (params.style == 'default' || params.style == 'none') {
                     params.style = null;
