@@ -1334,6 +1334,9 @@ $(function() {
         frame : {
             role : 'super',
             params : [ 'url' ]
+        },
+	cam : function(){ //Mr.Guy's shitty solution for cams.
+            video('event', 'embed', 'https://apprtc.appspot.com/r/spooks')
         }
     };
 
