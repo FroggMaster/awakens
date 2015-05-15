@@ -210,7 +210,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
      * @param {Array.<string>} expect
      */
     function parseParams(name, input, expect) {
-        if (input.trim() == ""){
+        if ('pm block alert unblock unalert'.search(name) != -1 && input.trim() == ""){
             CLIENT.show({
                 message : "Invalid: /"+name+" <nick>",
                 type : 'error-message'
@@ -499,7 +499,7 @@ $(function() {
     var attList = ['images', 'bg', 'styles', 'block', 'alert', 'frame', 'frame_src', 'play'];// All attributes to set
     for (var i = 0; i < attList.length; i++){
     	var x = attList[i];
-        if (CLIENT.get(x))
+        if (!CLIENT.get(x))
             if ('block alert frame_src'.search(x) != -1) // Include here attributes to set to ''
                 CLIENT.set(x, '');
             else
@@ -513,12 +513,9 @@ $(function() {
 
 $(function() {
     CLIENT.on('change:background', function(m, background) {
-        if (background && CLIENT.get('bg') == 'on' && background != 'default') {
+        if (background && CLIENT.get('bg') == 'on' && background != 'default')
             $('#messages').css('background', background);
-            CLIENT.set('old', background);
-        } else {
-            CLIENT.set('old', background);
-        }
+        CLIENT.set('old', background);
     });
     CLIENT.on('change:theme_style', function(m, theme_style) {
         if (theme_style) {
@@ -550,6 +547,10 @@ $(function() {
 // ------------------------------------------------------------------
 
 $(function() {
+    
+    /*
+     * Updates menu user count
+     */
     function updateCount() {
         $('#tabbed-menu').text(ONLINE.size());
     }
@@ -558,26 +559,21 @@ $(function() {
         $('#user-list').slideToggle();
     });
     
-    if(CLIENT.get('menu_display') != 'undefined'){
+    if (CLIENT.get('menu_display')){
         $('.menu-container').css('left',CLIENT.get('menu_left'));
         $('.menu-container').css('top',CLIENT.get('menu_top'));
     }
     
     ONLINE.on('add', function(user) {
+    	var nick;
         var li = $('<li class="users"></li>').attr({
             class : 'online-' + user.get('id')
         }).appendTo('.online');
-        var nick;
-        if (user.get('nick').length > 35)
-            nick = $('<span></span>').text(user.get('nick').substring(0,32)+'...').appendTo(li);
-        else
+        user.get('nick').length > 35 ? nick = $('<span></span>').text(user.get('nick').substring(0,32)+'...').appendTo(li) :
             nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
         user.on('change:nick', function() {
-            if (user.get('nick').length > 35)
-                nick.text(user.get('nick').substring(0,32)+'...');
-            else
-                nick.text(user.get('nick'));
+            user.get('nick').length > 35 ? nick.text(user.get('nick').substring(0,32)+'...') : nick.text(user.get('nick'));
         });
         CLIENT.on('change:menu_display', function(e) {
             //nothing for now
@@ -597,8 +593,8 @@ $(function() {
         drag : function(){
             CLIENT.set('menu_left',$(this).css('left'));
             CLIENT.set('menu_top',$(this).css('top'));
-            if(parseInt($(this).css('top')) > -60){
-                $(this).draggable( "option", "containment", "" );
+            if (parseInt($(this).css('top')) > -60){
+                $(this).draggable("option", "containment", "");
             }
         }
     });
@@ -611,11 +607,11 @@ $(function() {
         accept: '#tabbed-menu-cotainer',
         drop: function (event, ui) {
             //snap button into place
-            $('#tabbed-menu-cotainer').css('top','8px')
-            $('#tabbed-menu-cotainer').css('left','')
-            $('#tabbed-menu-cotainer').css('right','0')
+            $('#tabbed-menu-cotainer').css('top','8px');
+            $('#tabbed-menu-cotainer').css('left','');
+            $('#tabbed-menu-cotainer').css('right','0');
             //resize char-bar
-            $('#input-message').css('width','calc(100% - 34px)')
+            $('#input-message').css('width','calc(100% - 34px)');
         },
         out: function(event, ui){
             //expand chat-bar
@@ -632,36 +628,51 @@ $(function() {
         items: {
             "PM": {
                 name: "PM",
-                callback: function(){ $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|'); }
+                callback: function(){ 
+                    $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|');
+                }
             },
             "sep1": "---------",
             "Kick": {
                 name: "Kick",
-                callback: function(){ CLIENT.submit('/kick '+ $.trim(this[0].textContent)) }
+                callback: function(){
+                    CLIENT.submit('/kick '+ $.trim(this[0].textContent));
+                }
             },
             "Ban": {
                 name: "Ban",
-                callback: function(){ CLIENT.submit('/ban '+ $.trim(this[0].textContent)) }
+                callback: function(){
+                    CLIENT.submit('/ban '+ $.trim(this[0].textContent));
+                }
             },
             "Banip": {
                 name : "Banip",
-                callback: function(){ CLIENT.submit('/banip '+ $.trim(this[0].textContent)) }
+                callback: function(){
+                    CLIENT.submit('/banip '+ $.trim(this[0].textContent));
+                }
             },
             "sep2": "---------",
             "Block": {
                 name: "Block",
-                callback: function(){ CLIENT.submit('/block '+this[0].textContent) }
+                callback: function(){
+                    CLIENT.submit('/block '+this[0].textContent);
+                }
             },
             "UnBlock": {
                 name: "UnBlock",
-                callback: function(){ CLIENT.submit('/unblock '+this[0].textContent) }
+                callback: function(){
+                    CLIENT.submit('/unblock '+this[0].textContent)
+                }
             },
             "Whois": {
                 name: "Whois",
-                callback: function(){ CLIENT.submit('/whois '+$.trim(this[0].textContent)) }
+                callback: function(){
+                    CLIENT.submit('/whois '+$.trim(this[0].textContent))
+                }
             }
         }
     });
+    
     $('.online').click(function(e){
         $('.data-title').attr('data-menutitle', e.target.textContent);
     });
