@@ -1134,10 +1134,10 @@ $(function() {
             CLIENT.set('mute_speak', 'on');
         },
         style : {
-            params : [ 'style' ],
+            params : [ 'style$' ],
             handler : function(params) {
                 if (params.style == 'default' || params.style == 'none') {
-                    style = null;
+                    params.style = null;
                 }
                 CLIENT.set('style', params.style);
             }
@@ -1155,7 +1155,7 @@ $(function() {
             params : [ 'color' ],
             handler : function(params) {
                 if (params.color == 'default' || params.color == 'none') {
-                    params.color = null;
+                    CLIENT.set('color', null);
                 } else if (parser.isColor(params.color)){
                     CLIENT.set('color', params.color);
                 } else {
@@ -1171,7 +1171,7 @@ $(function() {
             params : [ 'flair$' ],
             handler : function(params) {
                 if (params.flair == 'default' || params.flair == 'none') {
-                    params.flair = null;
+                    flair = null;
                 }
                 flair = params.flair.replace(/&/g, '\\&')
                 CLIENT.set('flair', flair);
@@ -1560,14 +1560,14 @@ parser = {
             a = a.replace(/&#35;/gi, '#');
             if(/[^:]*javascript *:/im.test(a)) {
                     if (b.trim() == ""){
-                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                    	return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
                     }
                     return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             } else {
                 if (b.trim() == ""){
-                return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "javascript: '+a+'">' + '[Script]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[Script]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
                 }
-                return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "javascript: '+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             }
         });
         //colors
