@@ -247,8 +247,8 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
                 var param2 = pm[2]  || " ";
                 if(name == 'speak'){
                     return {
-                        message : param1,
-                        voice : param2
+                        voice : param1,
+                        message : param2
                     }; 
                 } else {
                     return {
@@ -1241,7 +1241,7 @@ $(function() {
             }
         },
         speak : {
-            params : [ 'message|[voice]' ]
+            params : [ '[voice]|message' ]
         },
         elbot : {
             params : [ 'message$' ]

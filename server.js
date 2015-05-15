@@ -704,11 +704,11 @@ function createChannel(io, channelName) {
                 }
             },
             speak : {
-                params : ['message','voice'],
+                params : ['voice','message'],
                 handler : function(dao, dbuser, params) {
                     var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
-                    var message = params.message;
-                    var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default'
+                    var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
+                    var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default';
                     if (message) {
                         if (roles.indexOf(user.role) <= 5) {
                             var al = roles.indexOf(user.role);
