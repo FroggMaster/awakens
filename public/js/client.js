@@ -210,77 +210,78 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
      * @param {Array.<string>} expect
      */
     function parseParams(name, input, expect) {
-        if (name == 'pm') {
-            var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
-            if (pm) {
-                var nick = pm[1].replace('\\|', '|');
-                lastNick = nick;
-                var message = pm[2];
-                return {
-                    nick : nick,
-                    message : message,
-                }; 
-            }
-        } else if(name == 'block' || name == 'alert'){
-            if (input.trim() != ""){
-                add(name,input.trim());
-            } else {
-                CLIENT.show({
-                    message : "Invalid: /"+name+" <nick>",
-                    type : 'error-message'
-                });
-            }
-        } else if(name == 'unblock' || name == 'unalert') {
-            if (input.trim() != ""){
-                remove(name.substring(2),input.trim());
-            } else {
-                CLIENT.show({
-                    message : "Invalid: /"+name+" <nick>",
-                    type : 'error-message'
-                });
-            }
-        } else if (name == 'kick' || name == "ban" || name == "permaban" || name == "speak") {
-            var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
-            if (pm) {
-                //parses for commands in format param1|param2
-                var param1 = pm[1].replace('\\|', '|');
-                var param2 = pm[2]  || " ";
-                if(name == 'speak'){
-                    return {
-                        voice : param1,
-                        message : param2
-                    }; 
-                } else {
-                    return {
-                        nick : param1,
-                        message : param2
-                    };
-                }
-            }
-        } else if(name == 'global') {
-            var msg = /([\s\S]*)?$/.exec(input);
-            return {
-                message : msg[0]
-            };
-        } else {
-            var values = input.split(' ');
-            if (values[0] == '') {
-                values.shift();
-            }
-            var lastParam = _.last(expect);
-            if (lastParam && /\$$/.test(lastParam) && values.length > expect.length) {
-                var combine = values.splice(expect.length, values.length - expect.length).join(' ');
-                values[expect.length - 1] += ' ' + combine;
-            }
-            if (values.length == expect.length) {
-                var params = {};
-                values.forEach(function(param, i) {
-                    params[expect[i].replace('$', '')] = param;
-                });
-                return params;
-            }
+        if (input.trim() == ""){
+            CLIENT.show({
+                message : "Invalid: /"+name+" <nick>",
+                type : 'error-message'
+            });
+            return;
         }
-        return null;
+        switch(name) {
+            case 'pm':
+                var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
+                if (pm) {
+                    var nick = pm[1].replace('\\|', '|');
+                    lastNick = nick;
+                    return {
+                        nick : nick,
+                        message : pm[2],
+                    }; 
+                }
+                break;
+            case 'block':
+            case 'alert':
+                add(name, input.trim());
+                break;
+            case 'unblock':
+            case 'unalert':
+                remove(name.substring(2),input.trim());
+                break;
+            case 'kick':
+            case 'ban':
+            case 'permaban':
+            case 'speak':
+                var pm = /^(.*?[^\\])(?:\|([\s\S]*))?$/.exec(input);
+                if (pm) {
+                    var param1 = pm[1].replace('\\|', '|');
+                    var param2 = pm[2]  || " ";
+                    if(name == 'speak'){
+                        return {
+                            message : param1,
+                            voice : param2
+                        }; 
+                    } else {
+                        return {
+                            nick : param1,
+                            message : param2
+                        };
+                    }
+                }
+                break;
+            case 'global':
+                var msg = /([\s\S]*)?$/.exec(input);
+                return {
+                    message : msg[0]
+                };
+                break;
+            default:
+                var values = input.split(' ');
+                if (values[0] == '') {
+                    values.shift();
+                }
+                var lastParam = _.last(expect);
+                if (lastParam && /\$$/.test(lastParam) && values.length > expect.length) {
+                    var combine = values.splice(expect.length, values.length - expect.length).join(' ');
+                    values[expect.length - 1] += ' ' + combine;
+                }
+                if (values.length == expect.length) {
+                    var params = {};
+                    values.forEach(function(param, i) {
+                        params[expect[i].replace('$', '')] = param;
+                    });
+                    return params;
+                }
+        }
     }
 
     CLIENT = new (Backbone.Model.extend({
@@ -337,7 +338,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
             var role = this.get('role');
             var access_level = this.get('access_level');
             if (access_level >= 0) {
-                var parsed = /^\/(?!embed)(\w+) ?([\s\S]*)/.exec(input);
+                var parsed = /^\/(?!embed)(\w+) ?([^\s]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
