@@ -556,7 +556,14 @@ $(function() {
     }
     
     $('#tabbed-menu').click(function(){
-        $('#user-list').slideToggle();
+    	var distanceFromTop = $("#tabbed-menu").offset().top - $(window).scrollTop()
+    	if ( distanceFromTop < 350 ) {
+    	    document.getElementById("user-list").style.bottom = "inherit";
+    	}
+    	else {
+    	    document.getElementById("user-list").style.bottom = "50px";
+    	}
+    	$('#user-list').slideToggle();
     });
     
     if (CLIENT.get('menu_display')){
