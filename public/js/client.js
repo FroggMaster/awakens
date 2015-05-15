@@ -773,39 +773,39 @@ $(function() {
         if (message.message) {
             var parsed;
             switch (message.type) {
-            case 'escaped-message':
-                parsed = $('<span></span>').text(message.message).html().replace(/\n/g, '<br/>');
-                break;
-            case 'personal-message':
-            case 'chat-message':
-                parser.getAllFonts(message.message);
-                parsed = parser.parse(message.message);
-                break;
-            case 'elbot-response':
-                parsed = message.message;
-                break;
-            case 'general-message':
-                parsed = parser.parse(message.message, true);
-                break;
-            case 'alert-message':
-                parsed = parser.parse(message.message);
-                break;
-            case 'note-message':
-                parsed = parser.parse(message.message);
-                break; 
-            case 'anon-message':
-                if(CLIENT.get('role') == null || roles.indexOf(CLIENT.get('role')) >= 2){
-                    parsed = parser.parse( '#6464C0' + 'anon' + ': ' + message.message);
-                } else {
-                    parsed = parser.parse( '#6464C0' + message.name + ': ' + message.message);
-                }
-                break;
-            case 'error-message':
-            	parsed = parser.parse(message.message);
-            	break;
-            default:
-                parsed = parser.parseLinks(message.message);
-                break;
+                case 'escaped-message':
+                    parsed = $('<span></span>').text(message.message).html().replace(/\n/g, '<br/>');
+                    break;
+                case 'personal-message':
+                case 'chat-message':
+                    parser.getAllFonts(message.message);
+                    parsed = parser.parse(message.message);
+                    break;
+                case 'elbot-response':
+                    parsed = message.message;
+                    break;
+                case 'general-message':
+                    parsed = parser.parse(message.message, true);
+                    break;
+                case 'alert-message':
+                    parsed = parser.parse(message.message);
+                    break;
+                case 'note-message':
+                    parsed = parser.parse(message.message);
+                    break; 
+                case 'anon-message':
+                    if(CLIENT.get('role') == null || roles.indexOf(CLIENT.get('role')) >= 2){
+                        parsed = parser.parse( '#6464C0' + 'anon' + ': ' + message.message);
+                    } else {
+                        parsed = parser.parse( '#6464C0' + message.name + ': ' + message.message);
+                    }
+                    break;
+                case 'error-message':
+                    parsed = parser.parse(message.message);
+                    break;
+                default:
+                    parsed = parser.parseLinks(message.message);
+                    break;
             }
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
@@ -859,16 +859,15 @@ $(function() {
     }
 });
 
-// get message
-$( '#messages' ).on("click", ".message .timestamp", function(e) {
+/*
+ * Sets input bar value to clicked message
+ */
+$('#messages').on("click", ".message .timestamp", function(e){
     var number = e.currentTarget.title;
     if (number != "") {
         var textBox = document.getElementById('input-message');
-        if (textBox.value == '' || textBox.value.substring(textBox.value.length - 1) == ' '){
-            textBox.value = textBox.value + '>>' + number + ' ';
-        } else {
-            textBox.value = textBox.value + ' >>' + number + ' ';
-        }
+        textBox.value == '' || textBox.value.substring(textBox.value.length - 1) == ' ' ? textBox.value = textBox.value + '>>' + number + ' ' :
+        textBox.value = textBox.value + ' >>' + number + ' ';
         $('#input-message').focus();
     }
 });
@@ -943,9 +942,7 @@ $(function() {
         var ac = $('#autocomplete');
         if (ac.length == 0 || ac.css('display') == 'none') {
             var text = input.val();
-            if (text) {
-                CLIENT.submit(text);
-            }
+            text && CLIENT.submit(text);
             historyIndex = -1;
             history.push(text);
             input.val('');
@@ -958,9 +955,7 @@ $(function() {
             if (!e.shiftKey) {
                 e.preventDefault();
                 var text = input.val();
-                if (text) {
-                    CLIENT.submit(text);
-                }
+                text && CLIENT.submit(text);
                 historyIndex = -1;
                 history.push(text);
                 input.val('');
@@ -988,11 +983,11 @@ $(function() {
     });
     
     var ctrl = false;
-    var hover = null;
+    var hover;
 
     $(document).keydown(function(e){
-        if(e.keyCode == 17 && hover != null){
-            if(hover.localName == 'img'){
+        if (e.keyCode == 17 && hover){
+            if (hover.localName == 'img'){
                 $('#bigimg')[0].innerHTML = hover.outerHTML;
                 $('#bigimg').children().removeAttr('onload');
             }
@@ -1001,21 +996,21 @@ $(function() {
     })
 
     $(document).keyup(function(e){
-        if(e.keyCode == 17){
+        if (e.keyCode == 17){
             ctrl = false;
             $('#bigimg')[0].innerHTML = '';
         }
     })
 
- $('#messages').on('mousemove', function(e) {
+    $('#messages').on('mousemove', function(e) {
         hover = e.target;
-  if(hover.localName == 'img' && ctrl){
-   $('#bigimg')[0].innerHTML = hover.outerHTML;
-   $('#bigimg').children().removeAttr('onload');
-  } else {
-   $('#bigimg')[0].innerHTML = '';
-  }
- });
+        if(hover.localName == 'img' && ctrl){
+            $('#bigimg')[0].innerHTML = hover.outerHTML;
+            $('#bigimg').children().removeAttr('onload');
+        } else {
+            $('#bigimg')[0].innerHTML = '';
+        }
+    });
     
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
