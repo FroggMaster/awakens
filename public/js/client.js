@@ -410,14 +410,9 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
                     input = style + input;
                 }
                 input = ' ' + input;
-                if (color) {
-                    input = '#' + color + input + ' ';
-                } else {
-                    input = input + ' ';
-                }
-                if (font) {
+                color ? input = '#' + color + input + ' ' : input = input + ' ';
+                if (font)
                     input = '$' + font + '|' + input;
-                }
             }
             return input;
         }
