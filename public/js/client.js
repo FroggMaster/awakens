@@ -338,7 +338,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
             var role = this.get('role');
             var access_level = this.get('access_level');
             if (access_level >= 0) {
-                var parsed = /^\/(?!embed)(\w+) ?([^\s]*)/.exec(input);
+                var parsed = /^\/(?!embed)(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
@@ -495,30 +495,15 @@ $(function() {
             $("#youtube")[0].innerHTML = "";
         }
     });
-    // a bunch of test and sets
-    if (CLIENT.get('images') == null){
-        CLIENT.set('images', 'on'); 
-    }
-    if (CLIENT.get('bg') == null){
-        CLIENT.set('bg', 'on'); 
-    }
-    if (CLIENT.get('styles') == null){
-        CLIENT.set('styles', 'on'); 
-    }
-    if (CLIENT.get('block') == null){
-        CLIENT.set('block', ''); 
-    }
-    if (CLIENT.get('alert') == null){
-        CLIENT.set('alert', ''); 
-    }
-    if (CLIENT.get('frame') == null){
-        CLIENT.set('frame', 'on'); 
-    }
-    if (CLIENT.get('frame_src') == null){
-        CLIENT.set('frame_src', ''); 
-    }
-    if (CLIENT.get('play') == null){
-        CLIENT.set('play', 'on');
+    
+    var attList = ['images', 'bg', 'styles', 'block', 'alert', 'frame', 'frame_src', 'play'];// All attributes to set
+    for (var i = 0; i < attList.length; i++){
+    	var x = attList[i];
+        if (CLIENT.get(x))
+            if ('block alert frame_src'.search(x) != -1) // Include here attributes to set to ''
+                CLIENT.set(x, '');
+            else
+                CLIENT.set(x, 'on'); // Default is 'on'
     }
 });
 
