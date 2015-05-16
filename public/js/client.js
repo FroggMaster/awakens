@@ -1835,7 +1835,7 @@ function video(event, type, input) {
             height : '322px',
             zIndex : '5'
         }).appendTo('body');
-        var header = $('<div></div>').css({
+        var header = $('<div class="top"></div>').css({
             cursor : 'move',
             userSelect : 'none',
             backgroundColor : '#444'
