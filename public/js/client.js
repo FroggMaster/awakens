@@ -906,17 +906,12 @@ $('#messages').on("click", ".message .timestamp", function(e){
 
 $(function() {
     function setHighlightColor(color) {
-        var textColor = null;
+        var textColor;
         if (color) {
             var i = color.lastIndexOf('#');
-            if (i >= 0) {
-                textColor = color.substring(i + 1);
-            } else {
-                textColor = color;
-            }
-            if (/([a-f]{6}|[a-f]{3})/i.test(textColor)) {
-                textColor = '#' + textColor;
-            }
+            i >= 0 ? textColor = color.substring(i + 1) : textColor = color;
+            if (/([a-f]{6}|[a-f]{3})/i.test(textColor))
+            	textColor = '#' + textColor;
         } else {
             textColor = '#888';
         }
@@ -1032,11 +1027,16 @@ $(function() {
 // ------------------------------------------------------------------
 
 (function() {
+    var nullCmds = { // Command objects with no properties
+        server : ['logout', 'unregister', 'whoami'],     // {}
+        local : ['block', 'unblock', 'alert', 'unalert'] // function(){}
+    };
     window.COMMANDS = {
         help : function() {
+            var cmdList = 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /');
             CLIENT.show({
-                message : 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /'),
-                type : 'system-message'
+            	type : 'system-message',
+                message : cmdList
             });
         },
         nick : {
@@ -1048,8 +1048,6 @@ $(function() {
         login : {
             params : [ 'password', 'nick$' ]
         },
-        logout : {},
-        unregister : {},
         register : {
             params : [ 'initial_password' ]
         },
@@ -1097,7 +1095,6 @@ $(function() {
             role : 'god',
             params : [ 'access_level', 'nick$' ]
         },
-        whoami : {},
         whois : {
             params : [ 'nick$' ]
         },
@@ -1248,7 +1245,6 @@ $(function() {
         part : {
             params : [ 'message$' ]
         },
-        afk : {},
         toggle : {
             params : [ 'att' ],
             handler : function(params) {
@@ -1261,14 +1257,10 @@ $(function() {
                 }
             }
         },
-        block : function(){},
-        unblock : function(){},
         unblock_all : function(){
             CLIENT.set('block',"");
             CLIENT.show('Blocklist has been cleared');
         },
-        alert : function(){},
-        unalert : function(){},
         private : {
             role : 'super'
         },
@@ -1337,21 +1329,29 @@ $(function() {
             video('event', 'embed', 'https://apprtc.appspot.com/r/spooks')
         }
     };
+    for (x in nullCmds)
+        for (var i = 0; i < nullCmds[x].length; i++)
+            x == 'server' ? window.COMMANDS[nullCmds[x][i]] = {} : window.COMMANDS[nullCmds[x][i]] = function(){};
 
     COMMANDS.colour = COMMANDS.color;
     COMMANDS.background = COMMANDS.bg;
 })();
 
-var searchTerm;
-add = function(att,user){
-    block = CLIENT.get(att);
-    searchTerm = new RegExp("(^|(?: ))" + user+"($|,+? )","i");
-    if(block.search(searchTerm) == -1){
+/*
+ * Adds user to the specified list
+ * 
+ * @param att   Name of the list
+ * @param user  Nick to be added to that list
+ */
+add = function(att, user){
+    var block = CLIENT.get(att);
+    var searchTerm = new RegExp("(^|(?: ))" + user + "($|,+? )","i");
+    if (block.search(searchTerm) == -1){
         block += ", " + user;
-        while (block[0] == "," | block[0] == " ")
+        while (block[0] == "," | block[0] == " ") // it works...
             block = block.substring(1);
         CLIENT.show(user + ' has been added');
-        CLIENT.set(att,block);
+        CLIENT.set(att, block);
     } else {
         CLIENT.show({
             message : 'That nick is already added',
@@ -1359,20 +1359,27 @@ add = function(att,user){
         });
     }
 }
-remove = function(att,user){
-    block = CLIENT.get(att);
-    searchTerm = new RegExp("(^|(?: ))" + user+"($|,+? )","i");
-    index = block.search(searchTerm);
-    if(index != -1){
+
+/*
+ * Removes user from a specified list
+ *
+ * @param att   Name of the list
+ * @param user  Nick to be removed from that list
+ */
+remove = function(att, user){
+    var block = CLIENT.get(att);
+    var searchTerm = new RegExp("(^|(?: ))" + user+"($|,+? )","i");
+    var index = block.search(searchTerm);
+    if (index != -1){
         if (block.split(",").length == 1){
             block = "";
         } else {
-            block = block.substring(0,index-1) + block.substring(index+user.length+1);
-            while (block[0] == "," | block[0] == " ")
+            block = block.substring(0,index-1) + block.substring(index+user.length+1).trim();
+            while (block[0] == ",")
                 block = block.substring(1);
         }
         CLIENT.show(user + ' was removed.');
-        CLIENT.set(att,block);
+        CLIENT.set(att, block);
     } else {
         CLIENT.show({
             message : 'That nick is not on the list',
