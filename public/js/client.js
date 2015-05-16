@@ -1847,7 +1847,8 @@ function video(event, type, input) {
         var shim = null;
         var container = $('<div class="container"></div>').css({
             width : '100%',
-            height : 'calc(100% - 34px)'
+            height : 'calc(100% - 34px)',
+            backgroundColor : '#111'
         }).appendTo(videoOverlay);
         var bottom = $('<div class="bottom"></div>').css({
             width : '100%',
