@@ -1426,7 +1426,7 @@ parser = {
         return $('<span>' + parsed + '</span>').text();
     },
     parseLinks : function(str) {
-        // escaping shit
+        // Convert chars to html codes
         str = str.replace(/&/gi, '&amp;');
         str = str.replace(/>/gi, '&gt;');
         str = str.replace(/</gi, '&lt;');
@@ -1435,10 +1435,10 @@ parser = {
         str = str.replace(/\\\\n/g, this.repslsh);
         str = str.replace(/\\n/g, '<br />');
         str = str.replace(this.repslsh, '\\\\n');
-        // remove my replacement characters. they are not fscking allowed. lol.
+        // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
-        // replace links
+        // Parse links
         var links = [];
         var prestr= "";
         var poststr = str;
@@ -1458,18 +1458,17 @@ parser = {
         }
         var escs = str.match(/\\./g);
         str = str.replace(/\\./g, this.repslsh);
-        // replace escapes
-        for (i in escs) {
+        // Replace escapes
+        for (i in escs)
             str = str.replace(this.repslsh, escs[i][1]);
-        }
-        // replace links
+        // Replace links
         if (links.length > 0) {
             for (var i = 0; i < links.length; i++) {
                 link = links[i].replace(/^((.)(.+))$/, '$1');
                 str = str.replace(this.replink, '<a target="_blank" href="' + link + '">' + link + '</a>');
             }
         }
-        // change spaces to &nbsp;
+        // Parse spaces
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
         str = str.replace(/\s{2}/gi, ' &nbsp;');
@@ -1483,31 +1482,37 @@ parser = {
         return check.test(str)
     },
     parse : function(str, second) {
-        // escaping shit
+        // Convert chars to html codes
         str = str.replace(/\n/g, '\\n');
         str = str.replace(/&/gi, '&amp;');
         str = str.replace(/>/gi, '&gt;');
         str = str.replace(/</gi, '&lt;');
         str = str.replace(/"/gi, '&quot;');
         str = str.replace(/#/gi, '&#35;');
+        // Codes containing hashtags go below
         str = str.replace(/\$/gi, '&#36;');
         str = str.replace(/'/gi, '&#39;');
         str = str.replace(/~/gi, '&#126;');
         str = str.replace(/\\\\n/g, this.repslsh);
         str = str.replace(/\\n/g, '<br />');
         str = str.replace(this.repslsh, '\\\\n');
-        // define alt link substring
+        // Define embed substring
         var repEmb = this.replink.substring(0,40) + '¤';
-        // remove my replacement characters. they are not fscking allowed. lol.
+        // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
         // set links array for embeds and links
         var links = [];
         var embedLinks = [];
-        //embed
-        str = str.replace(/\/embed (\S*)\|/g, function(match, p1){if (p1.match(this.linkreg)){for (var i = 0; i < 3; i++ ){embedLinks.push(p1)}} return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';});
-        // replace links
-        var prestr= "";
+        // Filter out embed links
+        str = str.replace(/\/embed (\S*)\|/g, function(match, p1){
+        	if (p1.match(this.linkreg))
+        		for (var i = 0; i < 3; i++ )
+        			embedLinks.push(p1)
+        	return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';
+        });
+        // Replace links
+        var prestr = "";
         var poststr = str;
         var index;
         while (poststr.search(/https?:\/\//i) != -1){
@@ -1524,40 +1529,37 @@ parser = {
             str = prestr + poststr;
         }
         var escs = str.match(/\\./g);
-        if (!second){
+        if (!second) // Does not remove backslashes for gen-messages
             str = str.replace(/\\./g, this.repslsh);
+        // Add styles
+        if (CLIENT.get('styles') == 'on'){
+            str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
+            str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
+            str = this.multiple(str, /\/\++([^\|]+)\|?/g, '<div id=spinner>$1</div>');
+            str = this.multiple(str, /\/\+([^\|]+)\|?/g, '<div id=rotat>$1</div>');
+            str = this.multiple(str, /\/\^([^\|]+)\|?/g, '<big>$1</big>');
+            str = this.multiple(str, /\/\*([^\|]+)\|?/g, '<strong>$1</strong>');
+            str = this.multiple(str, /\/\%([^\|]+)\|?/g, '<i>$1</i>');
+            str = this.multiple(str, /\/\_([^\|]+)\|?/g, '<u>$1</u>');
+            str = this.multiple(str, /\/\-([^\|]+)\|?/g, '<strike>$1</strike>');
+            str = str.replace(/\/\&amp;([^\|]+)\|?/g, '<div id=marquee>$1</div>');
+            str = this.multiple(str, /\/\@([^\|]+)\|?/g, '<div id=test style="text-shadow: 0 0 2px white;color: transparent;">$1</div>')
+            str = this.multiple(str, /\/\!([^\|]+)\|?/g, '<div id=flashing>$1</div>');
+            str = this.multiple(str, /\/\&#126;([^\|]+)\|?/g, '<small>$1</small>');
+            str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
         }
-        // replace underscores, et cetera
-        if(CLIENT.get('styles') == 'on'){
-         str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
-         str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
-         str = this.multiple(str, /\/\++([^\|]+)\|?/g, '<div id=spinner>$1</div>');
-         str = this.multiple(str, /\/\+([^\|]+)\|?/g, '<div id=rotat>$1</div>');
-         str = this.multiple(str, /\/\^([^\|]+)\|?/g, '<big>$1</big>');
-         str = this.multiple(str, /\/\*([^\|]+)\|?/g, '<strong>$1</strong>');
-         str = this.multiple(str, /\/\%([^\|]+)\|?/g, '<i>$1</i>');
-         str = this.multiple(str, /\/\_([^\|]+)\|?/g, '<u>$1</u>');
-         str = this.multiple(str, /\/\-([^\|]+)\|?/g, '<strike>$1</strike>');
-         str = str.replace(/\/\&amp;([^\|]+)\|?/g, '<div id=marquee>$1</div>');
-         str = this.multiple(str, /\/\@([^\|]+)\|?/g, '<div id=test style="text-shadow: 0 0 2px white;color: transparent;">$1</div>')
-         str = this.multiple(str, /\/\!([^\|]+)\|?/g, '<div id=flashing>$1</div>');
-         str = this.multiple(str, /\/\&#126;([^\|]+)\|?/g, '<small>$1</small>');
-         str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
-        }
-        // try to replace all >>>/x/??? for links to 8ch.net/x/res/???
+        // Replace >>>/x/<text> with 8ch.net/x/res/<text>
         str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="https://8ch.net$1/res/$2/">$&</a>');
-        // if there's any links leading to 8ch.net/?/res/ (nothing
-        // after /res/), trim them to just /?/
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
-        // >>78 quote
+        // Add quotes
         var barWidth = 52; //includes quoteDiv border
         function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).last().parent().clone(); msgClone.children(\x27.message-content\x27).attr(\x27class\x27,\x27message-content msg_quote_'+str2+'\x27); msgClone.appendTo(\x27#quoteDiv\x27);}if ($(\x27#quoteDiv\x27).height() + mouseY + '+barWidth+' < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - '+barWidth+' - $(\x27#quoteDiv\x27).height()})}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + '+barWidth+' < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - '+barWidth+' - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).last().offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
         function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
         if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
 		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
-        // >implying
+        // Add greentext
         str = str.replace(/^(&gt;.*)$/i, '&#35;789922 $1');
-        //JavaScript links
+        // Javascript links
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
             a = a.replace(/&#35;/gi, '#');
             if(/[^:]*javascript *:/im.test(a)) {
@@ -1572,67 +1574,54 @@ parser = {
                     return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             }
         });
-        //colors
+        // Replace colors
         str = this.multiple(str, /&#35;&#35;([\da-f]{6}|[\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: #$1;">$2</span>');
         str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: $1;">$2</span>');
         str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: $1;">$2</span>');
         str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$3\'">$4</span>');
-        // filters
-        //original = ['you','matter','think','care','about','this','for','shit','nigger','nothing','out of','doesn\'t','doesnt','my','ask','question','you are','nice','trying to','black','rose','no ','fag ','faggot','what','too ','to ','guy','white','yes','mom','ing ','with','th','are ']
-        //replace = ['u','matta','be thinkin','give a fuck','bout','dis','fo','shiznit','nigga','nuttin','outa','don\'t','dont','muh','axe','queshon','yo ass is','dank','tryna','nigga','flowa','naw ','homo ','homo','whut','2 ','2 ','nigga','cracka','ye','mama','in ','wit','d','r ']
-        //for (i = 0; i < original.length; i++) { 
-        //   if(str.indexOf(original[i]) != -1){
-        //        str = str.replace(original[i],replace[i])
-        //   }
-        //}
-        // replace escapes
+        // Replace escapes
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i][1]);
         }
-        // replace embedded links
+        // Replace embed links
         if (embedLinks.length > 0) {
             for (var i = 0; i < embedLinks.length; i++) {
                 elink = embedLinks[i].replace(/^((.)(.+))$/, '$1');
                 str = str.replace(repEmb, elink);
             }
         }
-        // replace links
+        // Replace other links
         if (links.length > 0) {
             for (var i = 0; i < links.length; i++) {
                 link = links[i].replace(/^((.)(.+))$/, '$1');
                 str = str.replace(this.replink, '<a target="_blank" href="' + link + '">' + link + '</a>');
             }
         }
-
-            var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:gif|jpg|jpeg|png|bmp))<\/a>/i.exec(str);
-
-            if (img && CLIENT.get('images') == 'on') {
-                var blacklisted = false;
-                for ( var i = 0; i < BLACKLIST.length && !blacklisted; i++) {
-                    blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
-                }
-                if (!blacklisted) {
-                    str = str.replace(img[0], img[1] + '<img src="' + img[2] + '" onload="scrollToBottom()" onerror="imageError(this)" /></a>');
-                }
+        // Prevent blacklisted images, parse images
+        var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:gif|jpg|jpeg|png|bmp))<\/a>/i.exec(str);
+        if (img && CLIENT.get('images') == 'on') {
+            var blacklisted = false;
+            for (var i = 0; i < BLACKLIST.length; i++){
+                blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
+                if (blacklisted) break;
+                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '" onload="scrollToBottom()" onerror="imageError(this)" /></a>');
             }
-        
-  
-        if (str.search(/(youtu(\.)?be)/gi) != -1){
-            str = str.replace(/<a [^>]*href="[^"]*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
         }
+        // Video embeds
+        if (str.search(/(youtu(\.)?be)/gi) != -1)
+            str = str.replace(/<a [^>]*href="[^"]*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*liveleak.com\/ll_embed\?f=(\w+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'liveleak\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
-        // change spaces to &nbsp;
+        // Parse spaces
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
         str = str.replace(/\s{2}/gi, ' &nbsp;');
-        for (i in escs) {
+        for (i in escs)
             str = str.replace(this.repslsh, escs[i]);
-        }
         return str;
     }
 };
