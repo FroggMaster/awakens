@@ -987,6 +987,49 @@ function createChannel(io, channelName) {
                     }
                 }
             },
+            user_list : {
+                role : 'mod',
+                handler : function(dao, dbuser, params) {
+                    var roleList = {
+                        god : {},
+                        super : {},
+                        admin : {},
+                        mod : {},
+                        mute : {},
+                        unknown : {}, // if they have no role, which shouldn't happen
+                    };
+                    var strRoles = ['God','Super','Admins','Mods','Muted','Undefined'];
+                    var users = channel.online;
+                    // sort user role and access data
+                    for (var i = 0; i < users.length; i++){
+                        var u = users[i];
+                        if (u.role && u.role != 'basic'){
+                            if (roleList[u.role][u.access_level])
+                                roleList[u.role][u.access_level].push(u.nick);
+                            else
+                                roleList[u.role][u.access_level] = [u.nick];
+                        } else if (u.role != 'basic'){
+                            if (roleList['unknown'][u.access_level]){
+                                roleList['unknown'][u.access_level].push(u.nick);
+                            } else {
+                                roleList['unknown'][u.access_level] = [u.nick];
+                            }
+                        }
+                    }
+                    // put together into a string
+                    var ct = 0;
+                    var str = '';
+                    for (var x in roleList){
+                        if (Object.keys(roleList[x]).length !== 0){
+                            str += strRoles[ct] + ':\n';
+                            for (var y in roleList[x])
+                                str += '(' + y + ') ' + roleList[x][y].join(', ') + '\n';
+                        }
+                        ct++;
+                    }
+                    str.length !== 0 ? showMessage(str) : errorMessage(msgs.alone);
+                }
+            },
             frame : {
                 role : 'super',
                 params : [ 'url' ],
