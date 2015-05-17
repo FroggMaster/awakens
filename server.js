@@ -508,19 +508,29 @@ function createChannel(io, channelName) {
             },
             whoami : {
                 handler : function(dao, dbuser) {
-                    showMessage(msgs.get('whoami', user.nick, user.role,user.access_level, user.remote_addr));
-                    return $.Deferred().resolve(true).promise();
+                    return dao.findUser(user.nick).then(function(dbuser) {
+                    	var stats = grab(user.nick);
+                        if (dbuser){
+                            if (roles.indexOf(dbuser.get('role')) <= 1){
+                                var stats = {
+                                    role : dbuser.get('role'),
+                                    access_level : dbuser.get('access_level'),
+                                }
+                            }
+                        }
+                        showMessage(msgs.get('whoami', user.nick, stats.role, stats.access_level, user.remote_addr));
+                    });
                 }
             },
             whois : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        var stats = grab(params.nick)
-                        var reg,mask;
-                        if(stats != -1 || dbuser) {
+                        var stats = grab(params.nick);
+                        var reg, mask;
+                        if (stats != -1 || dbuser) {
                             if(dbuser){
-                                if(roles.indexOf(dbuser.get('role')) <= 1){
+                                if (roles.indexOf(dbuser.get('role')) <= 1){
                                     stats = {
                                         role : dbuser.get('role'),
                                         access_level : dbuser.get('access_level'),
