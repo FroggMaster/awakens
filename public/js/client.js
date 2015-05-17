@@ -1300,7 +1300,9 @@ $(function() {
         mask : {
             params : [ 'vHost' ]
         },
-        ghost : {role : 'super'},
+        ghost : {
+        	role : 'super'
+        },
         global : {
             role : 'super',
             params : [ 'message' ]
@@ -1310,16 +1312,7 @@ $(function() {
             params : [ 'command', 'role', 'access_level' ]
         },
         user_list : {
-            handler : function() {
-                var admin = JSON.parse(CLIENT.get('access')),
-                admins = [];
-                for(var key in admin) {
-                    if(admin[key].role == 'admin'){
-                        admins.push(key);
-                    }
-                }
-                CLIENT.show("admins : \n" + admins.join(','))
-            }
+            role : 'mod'
         },
         frame : {
             role : 'super',
