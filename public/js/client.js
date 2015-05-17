@@ -1631,6 +1631,9 @@ parser = {
 // ------------------------------------------------------------------
 
 $(function() {
+    /*
+     * Resizes chat elements to fit window
+     */
     function resize() {
         var width = $(window).width();
         var height = $(window).height();
@@ -1645,7 +1648,7 @@ $(function() {
             $this.css('width', $(window).width() + 'px');
         });
     }
-    $(window).resize(resize);
+    $(window).resize(resize); // Add event listener to 'window'
     resize();
 });
 
@@ -1655,20 +1658,18 @@ $(function() {
 
 $(function() {
     var autoCompleteList = false;
-
+    
     $('<div id="autocomplete"></div>').css('bottom', $('#input-message').outerHeight() + 20 + 'px').appendTo('body');
     $('#input-message').keydown(function(e) {
-        if (e.keyCode == 9 && !autoCompleteList) {
-            // on tab
+        if (e.keyCode == 9 && !autoCompleteList) {//on tab
             e.preventDefault();
             var match = $(this).val().match(/\S+?$/);
             var v = match && match[0].toLowerCase();
             var list = [];
             ONLINE.each(function(user) {
                 var user_name = user.get('nick');
-                if (!v || user_name.toLowerCase().indexOf(v) == 0) {
+                if (!v || user_name.toLowerCase().indexOf(v) == 0)
                     list.push(user_name);
-                }
             });
             $('#autocomplete').show();
             $('#autocomplete').html('');
@@ -1679,7 +1680,7 @@ $(function() {
         } else if (e.keyCode == 9 && autoCompleteList) {
             e.preventDefault();
             var list = autoCompleteList;
-            if (list.length == 0 || list[0] === undefined) {
+            if (list.length == 0 || !list[0]) {
                 autoCompleteList = false;
                 $('#autocomplete').hide();
                 this.value += ' ';
@@ -1742,10 +1743,9 @@ $(function() {
                     break;
                 }
             }
-            if (list[0] === undefined) {
-                if (chr == '') {
+            if (!list[0]) {
+                if (chr.length == 0)
                     chr = ' ';
-                }
                 this.value += chr;
             } else {
                 var x = $(this).val().split(' ');
@@ -1765,7 +1765,7 @@ $(function() {
         message : '/audio/Bing.mp3',
         name : '/audio/Bwoop.wav'
     };
-    for ( var sound in SOUNDS) {
+    for (var sound in SOUNDS) {
         var html = [ '<audio id="', sound, '_audio"><source src="', SOUNDS[sound], '"></source><embed width=0 height=0 src="', SOUNDS[sound], '"></audio>' ].join('');
         $(html).appendTo('body');
     }
@@ -1793,37 +1793,35 @@ $(function() {
 
 function video(event, type, input) {
     function stop(e) {
-        e.stopPropagation();
         e.preventDefault();
+        e.stopPropagation();
     }
     function hide() {
         videoOverlay.hide();
         $('.container', videoOverlay).html('');
     }
-    if (event.stopPropagation) {
-        event.stopPropagation();
-    } else {
-        event.cancelBubble = true;
-    }
+    event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
     var embed;
     switch (type) {
-    case 'youtube':
-        embed = '<iframe width="100%" height="100%" src="//www.youtube.com/embed/' + input + '" frameborder="0" allowfullscreen></iframe>';
-        break;
-    case 'html5':
-        embed = '<video width="100%" height="100%" src="' + input + '" controls></video>';
-        break;
-    case 'liveleak':
-        embed = '<iframe width="100%" height="100%" src="http://www.liveleak.com/ll_embed?f=' + input + '" frameborder="0" allowfullscreen></iframe>';
-        break;
-    case 'vimeo':
-        embed = '<iframe src="//player.vimeo.com/video/' + input + '" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-        break;
-    case 'ustream':
-        embed = '<iframe src="//www.ustream.tv/embed/' + input + '?v=3&amp;wmode=direct" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-    case 'embed':
-        embed = '<iframe width="100%" height="100%" src="' + input + '" frameborder="0" allowfullscreen></iframe>';
-        break;
+        case 'youtube':
+            embed = '<iframe width="100%" height="100%" src="//www.youtube.com/embed/' + input + '" frameborder="0" allowfullscreen></iframe>';
+            break;
+        case 'html5':
+            embed = '<video width="100%" height="100%" src="' + input + '" controls></video>';
+            break;
+        case 'liveleak':
+            embed = '<iframe width="100%" height="100%" src="http://www.liveleak.com/ll_embed?f=' + input + '" frameborder="0" allowfullscreen></iframe>';
+            break;
+        case 'vimeo':
+            embed = '<iframe src="//player.vimeo.com/video/' + input + '" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+            break;
+        case 'ustream':
+            embed = '<iframe src="//www.ustream.tv/embed/' + input + '?v=3&amp;wmode=direct" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+        case 'embed':
+            embed = '<iframe width="100%" height="100%" src="' + input + '" frameborder="0" allowfullscreen></iframe>';
+            break;
+        default: // Shouldn't get here
+            break;
     }
     var videoOverlay = $('.video-overlay');
     if (videoOverlay.length == 0) {
@@ -1897,58 +1895,11 @@ function video(event, type, input) {
     });
     videoOverlay.show();
     $(".video-overlay").resizable({
-        start: function( event, ui ) {$(".video-overlay iframe").css("display","none")},
-        stop: function( event, ui ) {$(".video-overlay iframe").css("display","block")}
+        start: function(event, ui) {
+        	$(".video-overlay iframe").css("display","none")
+        },
+        stop: function(event, ui) {
+        	$(".video-overlay iframe").css("display","block")
+        }
     });
 }
-
-// ------------------------------------------------------------------
-// Mouse Positions
-// ------------------------------------------------------------------
-
-$(function() {
-    /*var position = null, x, y;
-    $(window).mousemove(function(e) {
-        x = e.clientX / $(window).width();
-        y = e.clientY / $(window).height();
-    });
-
-    setInterval(function() {
-        if (CLIENT.get('cursors') == 'off' ? 0 : 1 && !position || position.x != x || position.y != y) {
-            CLIENT.updateMousePosition(position = {
-                x : x,
-                y : y
-            });
-        }
-    }, 50);
-    CLIENT.on('updateMousePosition', function(msg) {
-        var el = $('#cursor-' + msg.id);
-        if (el.length == 0) {
-            var user = ONLINE.get(msg.id);
-            if (user) {
-                var nick = $('<span class="nick"></span>').text(user.get('nick'));
-                el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
-                el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
-                user.on('change:nick', function(m, newNick) {
-                    nick.text(newNick);
-                });
-            }
-        }
-        el.css({
-            left : (msg.position.x * 100) + '%',
-            top : (msg.position.y * 100) + '%'
-        });
-    });
-    ONLINE.on('remove', function(user) {
-        $('#cursor-' + user.get('id')).remove();
-    });
-    ONLINE.on('reset', function() {
-        $('.mouseCursor').remove();
-    });
-    CLIENT.on('change:cursors', function(m, cursors) {
-        $('.mouseCursor').css({
-            display : cursors == 'off' ? 'none' : 'block'
-        })
-    });*/
-});
-
