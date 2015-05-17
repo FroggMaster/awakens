@@ -949,21 +949,23 @@ function createChannel(io, channelName) {
                         channel.online[i].socket.emit('alive')
                     }
                     setTimeout(function(){
-                        for (i = 0; i < channel.online.length; i++) {
+                    	var i = 0;
+                        while (i < channel.online.length) {
                             if(!channel.online[i].alive){
                                 roomEmit('left', {
                                     id : channel.online[i].socket.id,
                                     nick : channel.online[i].nick,
-                                    part : 'i\'m a spooky ghost!'
+                                    part : 'I\'m a spooky ghost!'
                                 });
-                                channel.online.splice(to, 1);
+                                channel.online.splice(i, 1);
                                 channel.online[i].socket.disconnect();
                                 showMessage(channel.online[i].nick + ' was a ghost!');
                             } else {
                                 showMessage(channel.online[i].nick + ' isn\'t a ghost.');
+                                i++;
                             }
                         }
-                    },1000);
+                    }, 1000);
                 }
             },
             global : {
