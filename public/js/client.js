@@ -396,7 +396,8 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
         },
 
         decorate : function(input) {
-            if (!(input.charAt(0) == '>' && input.charAt(1) != '>')) {
+            if (input.charAt(0) != '>' || input.search(/(^| )&gt;&gt;[1-9]([0-9]+)?/) == 0 
+            || input.search(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/i) == 0) {
                 var style = this.get('style');
                 var color = this.get('color');
                 var font = this.get('font');
@@ -1498,7 +1499,7 @@ parser = {
         var links = [];
         var embedLinks = [];
         // Filter out embed links
-        str = str.replace(/\/embed (\S*)\|/g, function(match, p1){
+        str = str.replace(/\/embed (\S*) *\|/g, function(match, p1){
         	if (p1.match(this.linkreg))
         		for (var i = 0; i < 3; i++ )
         			embedLinks.push(p1)
