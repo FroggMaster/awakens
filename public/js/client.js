@@ -1499,11 +1499,14 @@ parser = {
         var links = [];
         var embedLinks = [];
         // Filter out embed links
-        str = str.replace(/\/embed (\S*) *\|/g, function(match, p1){
-        	if (p1.match(this.linkreg))
-        		for (var i = 0; i < 3; i++ )
-        			embedLinks.push(p1)
-        	return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';
+        str = str.replace(/(\\*)\/embed (\S*) *\|/g, function(match, p1, p2){
+            if (p1.length == 0){
+                if (p2.match(this.linkreg))
+                    for (var i = 0; i < 3; i++ )
+                        embedLinks.push(p2)
+                return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';
+            }
+            return match;
         });
         // Replace links
         var prestr = "";
