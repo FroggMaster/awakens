@@ -619,8 +619,7 @@ color:gold;
     border-radius:5px;
     box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, 
     		rgba(0, 0, 0, 0.8) 0 1px 7px 0px inset, 
-    		rgba(255,255,255, .2) 0px -1px 0px 0px,
-
+    		rgba(255,255,255, .2) 0px -1px 0px 0px;
     border: 4px solid #222;
 }
 
