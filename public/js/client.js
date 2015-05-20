@@ -498,7 +498,7 @@ $(function() {
         }
     });
     
-    var attList = ['images', 'bg', 'styles', 'block', 'alert', 'frame', 'frame_src', 'play'];// All attributes to set
+    var attList = ['images', 'bg', 'styles', 'block', 'alert', 'frame', 'frame_src', 'play', 'tcolor'];// All attributes to set
     for (var i = 0; i < attList.length; i++){
     	var x = attList[i];
         if (!CLIENT.get(x))
@@ -1252,8 +1252,30 @@ $(function() {
                 var att = params.att;
                 if (att == 'bg' && CLIENT.get('bg') == 'off'){
                     $('#background').css('background', CLIENT.get('old'));
-                } 
-                if(att != 'style' && att != 'font'){
+                }
+                if (att == 'color'){
+                    if (CLIENT.get('tcolor') == 'on' || CLIENT.get('tcolor') == null && CLIENT.set('tcolor','on')){
+                        $.each($('.message-content'), function(key, value){
+                            value = value.innerHTML.replace(/<span style="(background-)?color: ([#\d\w]+);">/gi, function(match, p1, p2){
+                                if (p1 === undefined)
+                                    p1 = '';
+                                return '<span style="'+p1+'color: !'+p2+'!;">';
+                            });
+                            value = value.replace('color: transparent;','');
+                            $(this).html(value);
+                        });
+                    } else {
+                        $.each($('.message-content'), function(key, value){
+                            value = value.innerHTML.replace(/<span style="(background-)?color: !([#\d\w]+)!;">/gi, function(match, p1, p2){
+                                if (p1 === undefined)
+                                    p1 = '';
+                                return '<span style="'+p1+'color: '+p2+';">';
+                            });
+                            $(this).html(value);
+                        });
+                    }
+                    CLIENT.set('tcolor', CLIENT.get('tcolor') == 'on' ? 'off' : 'on');
+                } else if (att != 'style' && att != 'font'){
                     CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
                 }
             }
