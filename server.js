@@ -508,19 +508,29 @@ function createChannel(io, channelName) {
             },
             whoami : {
                 handler : function(dao, dbuser) {
-                    showMessage(msgs.get('whoami', user.nick, user.role,user.access_level, user.remote_addr));
-                    return $.Deferred().resolve(true).promise();
+                    return dao.findUser(user.nick).then(function(dbuser) {
+                    	var stats = grab(user.nick);
+                        if (dbuser){
+                            if (roles.indexOf(dbuser.get('role')) <= 1){
+                                var stats = {
+                                    role : dbuser.get('role'),
+                                    access_level : dbuser.get('access_level'),
+                                }
+                            }
+                        }
+                        showMessage(msgs.get('whoami', user.nick, stats.role, stats.access_level, user.remote_addr));
+                    });
                 }
             },
             whois : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        var stats = grab(params.nick)
-                        var reg,mask;
-                        if(stats != -1 || dbuser) {
+                        var stats = grab(params.nick);
+                        var reg, mask;
+                        if (stats != -1 || dbuser) {
                             if(dbuser){
-                                if(roles.indexOf(dbuser.get('role')) <= 1){
+                                if (roles.indexOf(dbuser.get('role')) <= 1){
                                     stats = {
                                         role : dbuser.get('role'),
                                         access_level : dbuser.get('access_level'),
@@ -939,21 +949,23 @@ function createChannel(io, channelName) {
                         channel.online[i].socket.emit('alive')
                     }
                     setTimeout(function(){
-                        for (i = 0; i < channel.online.length; i++) {
+                    	var i = 0;
+                        while (i < channel.online.length) {
                             if(!channel.online[i].alive){
                                 roomEmit('left', {
                                     id : channel.online[i].socket.id,
                                     nick : channel.online[i].nick,
-                                    part : 'i\'m a spooky ghost!'
+                                    part : 'I\'m a spooky ghost!'
                                 });
-                                channel.online.splice(to, 1);
+                                channel.online.splice(i, 1);
                                 channel.online[i].socket.disconnect();
                                 showMessage(channel.online[i].nick + ' was a ghost!');
                             } else {
                                 showMessage(channel.online[i].nick + ' isn\'t a ghost.');
+                                i++;
                             }
                         }
-                    },1000);
+                    }, 1000);
                 }
             },
             global : {
@@ -973,6 +985,49 @@ function createChannel(io, channelName) {
                     } else {
                         errorMessage(params.command + ' isn\'t a command');
                     }
+                }
+            },
+            user_list : {
+                role : 'mod',
+                handler : function(dao, dbuser, params) {
+                    var roleList = {
+                        god : {},
+                        super : {},
+                        admin : {},
+                        mod : {},
+                        mute : {},
+                        unknown : {}, // if they have no role, which shouldn't happen
+                    };
+                    var strRoles = ['God','Super','Admins','Mods','Muted','Undefined'];
+                    var users = channel.online;
+                    // sort user role and access data
+                    for (var i = 0; i < users.length; i++){
+                        var u = users[i];
+                        if (u.role && u.role != 'basic'){
+                            if (roleList[u.role][u.access_level])
+                                roleList[u.role][u.access_level].push(u.nick);
+                            else
+                                roleList[u.role][u.access_level] = [u.nick];
+                        } else if (u.role != 'basic'){
+                            if (roleList['unknown'][u.access_level]){
+                                roleList['unknown'][u.access_level].push(u.nick);
+                            } else {
+                                roleList['unknown'][u.access_level] = [u.nick];
+                            }
+                        }
+                    }
+                    // put together into a string
+                    var ct = 0;
+                    var str = '';
+                    for (var x in roleList){
+                        if (Object.keys(roleList[x]).length !== 0){
+                            str += strRoles[ct] + ':\n';
+                            for (var y in roleList[x])
+                                str += '(' + y + ') ' + roleList[x][y].join(', ') + '\n';
+                        }
+                        ct++;
+                    }
+                    str.length !== 0 ? showMessage(str) : errorMessage(msgs.alone);
                 }
             },
             frame : {
