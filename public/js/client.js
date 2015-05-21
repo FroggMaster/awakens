@@ -537,6 +537,7 @@ $(function() {
     CLIENT.on('change:chat_style', function(m, style){
         style = CLIENT.get('chat_style').split(',');
         $('#input-bar').css('background-color', style[0]);
+        $('#user-list').css('background-color', style[2]);
         if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
             document.styleSheets[1].deleteRule(14);
             document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",14);
@@ -1204,7 +1205,7 @@ $(function() {
         },
         theme : {
             role : 'admin',
-            params : [ 'input_style', 'scrollbar_style' ]
+            params : [ 'input_style', 'scrollbar_style', 'menu_style' ]
         },
         reset : {
             role : 'super',
