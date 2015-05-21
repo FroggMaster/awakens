@@ -1253,7 +1253,7 @@ $(function() {
                 if (att == 'bg' && CLIENT.get('bg') == 'off'){
                     $('#background').css('background', CLIENT.get('old'));
                 }
-                if (att == 'color'){
+                if (att.search(/colou?r/) != -1){
                     if (CLIENT.get('tcolor') == 'on' || CLIENT.get('tcolor') == null && CLIENT.set('tcolor','on')){
                         $.each($('.message-content'), function(key, value){
                             value = value.innerHTML.replace(/<span style="(background-)?color: ([#\d\w]+);">/gi, function(match, p1, p2){
