@@ -740,8 +740,10 @@ $(function() {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             content = $('<div class="message-content"></div>').appendTo(el);
         }
-        if (CLIENT.get('timestamp') == 'off')
-            el.children().first().css('visibility','hidden')
+        if (CLIENT.get('timestamp') == 'off') {
+            el.children().first().css('visibility','hidden');
+            el.children().first().css('font-size','0.2em');
+        }
         if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
@@ -1281,10 +1283,12 @@ $(function() {
                     if (CLIENT.get('timestamp') == 'on' || CLIENT.get('timestamp') == null && CLIENT.set('timestamp','on')){
                         $.each($('.timestamp'), function(key, value){
                                 $(this).css('visibility', 'hidden');
+                                $(this).css('font-size', '0.2em');
                             });
                     } else {
                         $.each($('.timestamp'), function(key, value){
                                 $(this).css('visibility', 'visible');
+                                $(this).css('font-size', '0.8em');
                             });
                     }
                     CLIENT.set('timestamp', CLIENT.get('timestamp') == 'on' ? 'off' : 'on');
