@@ -288,7 +288,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tcolor font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color tcolor timestamp font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -740,6 +740,8 @@ $(function() {
             el.append($('<div class="timestamp"></div>').text(time.format(DATE_FORMAT) + ' '));
             content = $('<div class="message-content"></div>').appendTo(el);
         }
+        if (CLIENT.get('timestamp') == 'off')
+            el.children().first().css('visibility','hidden')
         if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
@@ -1275,6 +1277,17 @@ $(function() {
                         });
                     }
                     CLIENT.set('tcolor', CLIENT.get('tcolor') == 'on' ? 'off' : 'on');
+                } else if (att == 'timestamp'){
+                    if (CLIENT.get('timestamp') == 'on' || CLIENT.get('timestamp') == null && CLIENT.set('timestamp','on')){
+                        $.each($('.timestamp'), function(key, value){
+                                $(this).css('visibility', 'hidden');
+                            });
+                    } else {
+                        $.each($('.timestamp'), function(key, value){
+                                $(this).css('visibility', 'visible');
+                            });
+                    }
+                    CLIENT.set('timestamp', CLIENT.get('timestamp') == 'on' ? 'off' : 'on');
                 } else if (att != 'style' && att != 'font'){
                     CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
                 }
@@ -1562,7 +1575,10 @@ parser = {
             str = this.multiple(str, /\/\_([^\|]+)\|?/g, '<u>$1</u>');
             str = this.multiple(str, /\/\-([^\|]+)\|?/g, '<strike>$1</strike>');
             str = str.replace(/\/\&amp;([^\|]+)\|?/g, '<div id=marquee>$1</div>');
-            str = this.multiple(str, /\/\@([^\|]+)\|?/g, '<div id=test style="text-shadow: 0 0 2px white;color: transparent;">$1</div>')
+            var ghostly = 'color: transparent;';
+            if (CLIENT.get('tcolor') == 'off')
+                ghostly = '';
+            str = this.multiple(str, /\/\@([^\|]+)\|?/g, '<div id=test style="text-shadow: 0 0 2px white;'+ghostly+'">$1</div>')
             str = this.multiple(str, /\/\!([^\|]+)\|?/g, '<div id=flashing>$1</div>');
             str = this.multiple(str, /\/\&#126;([^\|]+)\|?/g, '<small>$1</small>');
             str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
