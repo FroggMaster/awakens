@@ -1208,7 +1208,7 @@ $(function() {
         },
         theme : {
             role : 'admin',
-            params : [ 'input_style', 'scrollbar_style' ]
+            params : [ 'input_style', 'scrollbar_style', 'menu_style' ]
         },
         reset : {
             role : 'super',
