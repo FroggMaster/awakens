@@ -1348,7 +1348,7 @@ $(function() {
             params : [ 'message' ]
         },
         lock : {
-            role : 'super',
+            role : 'admin',
             params : [ 'command', 'role', 'access_level' ]
         },
         user_list : {
