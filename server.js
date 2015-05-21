@@ -38,7 +38,10 @@ function createChannel(io, channelName) {
         topic : ['mod',0],
         theme : ['admin',0],
         note : ['admin',0],
-        lock  : ['admin',0]
+        kick : ['admin',3],
+        ban : ['admin',0],
+        unban : ['admin',0],
+        access : ['admin',0]
     };
     
     room.on('connection', function(socket) {
@@ -261,7 +264,6 @@ function createChannel(io, channelName) {
                 }
             },
             ban : {
-                role : 'admin',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser){
@@ -312,7 +314,6 @@ function createChannel(io, channelName) {
                 }
             },
             unban : {
-                role : 'admin',
                 params : [ 'id' ],
                 handler : function(dao, dbuser, params) {
                     broadcastChannel(dao, channel, dbuser.get("nick")+" has channel unbanned "+params.id);
@@ -355,7 +356,6 @@ function createChannel(io, channelName) {
                 }
             },
             kick : {
-                role : 'mod',
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
                     var kuser = indexOf(params.nick);
@@ -387,8 +387,6 @@ function createChannel(io, channelName) {
             },
             //changes role and access level of another user
             access : {
-                role : 'admin',
-                access_level : 0,
                 params : [ 'role', 'access_level', 'nick' ],
                 handler : function(dao, dbuser, params) {
                     //disallows setting access level or role too high
@@ -673,9 +671,12 @@ function createChannel(io, channelName) {
                 }
             },
             theme : {
-                params : [ 'input_style', 'scrollbar_style' ],
+                params : [ 'input_style', 'scrollbar_style', 'menu_style' ],
                 handler : function(dao, dbuser, params) {
-                    var input = [params.input_style.substring(0, settings.limits.message), params.scrollbar_style.substring(0, settings.limits.message)];
+                    var input = [params.input_style.substring(0, settings.limits.message), 
+                    		 params.scrollbar_style.substring(0, settings.limits.message), 
+                    		 params.menu_style.substring(0, settings.limits.message)
+                    		];
                     return dao.setChannelInfo(channelName, 'chat_style', input.toString()).then(function() {
                         roomEmit('update', {
                             chat_style : input.toString()
@@ -976,6 +977,8 @@ function createChannel(io, channelName) {
                 }
             },
             lock : {
+                role : 'admin',
+                access_level : 0,
                 params : [ 'command', 'role' ],
                 handler : function(dao, dbuser, params) {
                     var cmd = COMMANDS[params.command];
@@ -1213,16 +1216,19 @@ function createChannel(io, channelName) {
                                         }
                                     }
                                     if (valid) {
+                                        console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params);
                                         if(!command_access[msg.name] || roles.indexOf(command_access[msg.name][0]) > roles.indexOf(user.role)){
                                             return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
                                         } else {
-                                            if(command_access[msg.name][1] >= user.access_level && roles.indexOf(command_access[msg.name][0]) > roles.indexOf(user.role)){
+                                            console.log(roles.indexOf(command_access[msg.name][0]) > roles.indexOf(user.role))
+                                            if(roles.indexOf(command_access[msg.name][0]) > roles.indexOf(user.role)){
+                                                return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
+                                            } else if(command_access[msg.name][1] >= user.access_level){
                                                 return cmd.handler(dao, dbuser, params) || $.Deferred().resolve(true);
                                             } else {
                                                 return $.Deferred().resolve(false, msgs.invalidCommandAccess + ' (Locked)');
                                             }
                                         }
-                                        console.log(user.nick + ' - ' + msg.name + ' - ' + user.role, params);
                                     } else {
                                         return $.Deferred().resolve(false, msgs.invalidCommandAccess);
                                     }
