@@ -288,7 +288,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tcolor timestamp font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color tcolor tfont timestamp font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -1258,7 +1258,7 @@ $(function() {
                 if (att == 'bg' && CLIENT.get('bg') == 'off'){
                     $('#background').css('background', CLIENT.get('old'));
                 }
-                if (att.search(/colou?r/) != -1){
+                if (att == 'color' || att == 'colour'){
                     if (CLIENT.get('tcolor') == 'on' || CLIENT.get('tcolor') == null && CLIENT.set('tcolor','on')){
                         $.each($('.message-content'), function(key, value){
                             value = value.innerHTML.replace(/<span style="(background-)?color: ([#\d\w]+);">/gi, function(match, p1, p2){
@@ -1293,6 +1293,21 @@ $(function() {
                             });
                     }
                     CLIENT.set('timestamp', CLIENT.get('timestamp') == 'on' ? 'off' : 'on');
+                } else if (att == 'font' || att == 'fonts') {
+                    if (CLIENT.get('tfont') == 'on' || CLIENT.get('tfont') == null && CLIENT.set('tfont','on')){
+                        $.each($('.message-content'), function(key, value){
+                            $(this).html(value.innerHTML.replace(/<span style="font-family:'([\w\s\d]+)'">/gi, function(match, p1){
+                                return '<span style="font-family:!\''+p1+'\'!">';
+                            }));
+                        });
+                    } else {
+                        $.each($('.message-content'), function(key, value){
+                            $(this).html(value.innerHTML.replace(/<span style="font-family:!'(\w+)'!">/gi, function(match, p1){
+                                return '<span style="font-family:\''+p1+'\'">';
+                            }));
+                        });
+                    }
+                    CLIENT.set('tfont', CLIENT.get('tfont') == 'on' ? 'off' : 'on');
                 } else if (att != 'style' && att != 'font'){
                     CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
                 }
@@ -1623,7 +1638,10 @@ parser = {
         str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: '+wrap+'#$1'+wrap+';">$2</span>');
         str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: '+wrap+'$1'+wrap+';">$2</span>');
         str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: '+wrap+'$1'+wrap+';">$2</span>');
-        str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$3\'">$4</span>');
+        wrap = '';
+        if (CLIENT.get('tfont') == 'off')
+            wrap = '!';
+        str = this.multiple(str, this.fontRegex, '<span style="font-family:'+wrap+'\'$3\''+wrap+'">$4</span>');
         // Replace escapes
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i][1]);
