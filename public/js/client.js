@@ -1141,7 +1141,7 @@ $(function() {
         },
         banip : {
             role : 'admin',
-            params : [ 'nick' ]
+            params : [ 'nick$' ]
         },
         kick : {
             role : 'mod',
