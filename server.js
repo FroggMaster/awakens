@@ -884,7 +884,7 @@ function createChannel(io, channelName) {
                             dao.getChannelInfo(channelName).then(function(info){
                                 whitelist = JSON.parse(info.whitelist);
                                 if (whitelist[nick]){
-                                    if (whitelist.length < 2){
+                                    if (Object.keys(whitelist).length < 2){
                                     	errorMessage('You may not remove the last person from the whitelist.');
                                     	return false;
                                     } else {
