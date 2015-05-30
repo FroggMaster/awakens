@@ -1077,7 +1077,7 @@ function createChannel(io, channelName) {
                             var done = $.Deferred();
                             var nick = msg && msg.nick.slice(0,100);
                               dao.isBanned(channelName, nick, user.remote_addr, user.vhost).then(function(isbanned) {
-                                if (isbanned) {
+                                if (isbanned && nick != "Anonymous") {
                                     log.debug('Join request, but user is banned');
                                     errorMessage(msgs.banned);
                                     socket.disconnect();
@@ -1334,8 +1334,12 @@ function createChannel(io, channelName) {
                             log.debug('Received message: ', msg, args);
                             dao(function(dao) {
                                 dao.isBanned(channelName, user.remote_addr, user.nick, user.vhost).done(function(banned) {
-                                    log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
-                                    if (banned) {
+                                    if (user.nick == 'Anonymous' && banned){
+                                        log.debug('Anonymous was banned. However, ban was ignored.');
+                                    } else {
+                                        log.debug('User is ' + (banned ? '' : 'not ') + 'banned');
+                                    }
+                                    if (banned && user.nick != 'Anonymous') {
                                         errorMessage(msgs.banned);
                                         socket.disconnect();
                                         dao.release();
@@ -1380,7 +1384,7 @@ function createChannel(io, channelName) {
         function initClient(dao) {
             var done = $.Deferred();
             dao.isBanned(channelName, user.remote_addr).then(function(banned) {
-                if (banned) {
+                if (banned && user.nick != 'Anonymous') {
                     errorMessage(msgs.banned);
                     socket.disconnect();
                     done.resolve(false);
