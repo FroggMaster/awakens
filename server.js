@@ -297,19 +297,15 @@ function createChannel(io, channelName) {
                                 permit = 0
                             }
                             if(permit){
-                            	if (params.nick != 'Anonymous') {
-	                                if(stats.socket){
-	                                    socketEmit(stats.socket, 'message', {
-	                                        type : 'error-message',
-	                                        message : msgs.get(msg.length > 0 ? 'banned_reason' : 'banned_by', user.nick, msg)
-	                                    });
-	                                    stats.socket.disconnect();
-	                                }
-	                                broadcastChannel(dao, channel, user.nick + ' has channel banned ' + nick+msg);
-	                                return dao.ban(nick, channelName);
-                            	} else {
-                            	    errorMessage('You may not ban the generic identifier "Anonymous".');
-                            	}
+                                if(stats.socket){
+                                    socketEmit(stats.socket, 'message', {
+                                        type : 'error-message',
+                                        message : msgs.get(msg.length > 0 ? 'banned_reason' : 'banned_by', user.nick, msg)
+                                    });
+                                    stats.socket.disconnect();
+                                }
+                                broadcastChannel(dao, channel, user.nick + ' has channel banned ' + nick+msg);
+                                return dao.ban(nick, channelName);
                             } else {
                                 errorMessage('Can\'t ban user with a role equal to or higher than your own.');
                             }
@@ -819,13 +815,12 @@ function createChannel(io, channelName) {
                             dao.setChannelInfo(channelName, 'private', 1).then(function(){
                                 showMessage('Channel has been made private');
                                 channel.online.forEach(function(user){
-                                    if (ips.indexOf(user.remote_addr) == -1){
-                                        user.socket.emit('message', {
-                                            type : 'error-message',
-                                            message : 'Channel is private.'
-                                        });
-                                        user.socket.disconnect();
-                                    }
+                                    dao.findUser(user.nick).done(function(dbuser) {
+                                        if (!dbuser || dbuser.get('verified') == 0){
+                                            errorMessage('Channel is private.');
+                                            user.socket.disconnect();
+                                        }
+                                    });
                                 });
                             });
                         }
@@ -887,19 +882,14 @@ function createChannel(io, channelName) {
                             var nick = dbuser.get('nick');
                             dao.getChannelInfo(channelName).then(function(info){
                                 whitelist = JSON.parse(info.whitelist);
-                                if (whitelist[nick]){
-                                    if (Object.keys(whitelist).length < 2){
-                                    	errorMessage('You may not remove the last person from the whitelist.');
-                                    	return false;
-                                    } else {
-                                        delete whitelist[nick];
-                                        dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(info){
-                                            showMessage(nick + ' has been uninvited.');
-                                        });
-                                        indexOf(nick) != -1 && socketEmit(channel.online[indexOf(nick)].socket,'refresh');
-                                    }
+                                if(whitelist[nick]){
+                                    delete whitelist[nick];
+                                    dao.setChannelInfo(channelName, 'whitelist', JSON.stringify(whitelist)).then(function(info){
+                                        showMessage(nick + ' has been uninvited.')
+                                    });
+                                    indexOf(nick) != -1 && socketEmit(channel.online[indexOf(nick)].socket,'refresh');
                                 } else {
-                                    errorMessage('User wasn\'t invited');
+                                    errorMessage('User wasn\'t invited')
                                 }
                             });
                         }
