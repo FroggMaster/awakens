@@ -1,4 +1,4 @@
-spooks-chatjs
+spooks-chatjs (kpig)
 ================
 
 ![Spooks logo variant](http://i.imgur.com/gs3iohM.jpg "Spooks logo")
