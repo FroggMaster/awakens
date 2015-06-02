@@ -301,7 +301,7 @@ function createChannel(io, channelName) {
                                 	if (stats.socket){
                                 	    socketEmit(stats.socket, 'message', {
                                 	    	type : 'error-message',
-                                	    	message : msgs.get(msg.length > 0 ? 'banned_reason' : 'banned_by', user.nick msg)
+                                	    	message : msgs.get(msg.length > 0 ? 'banned_reason' : 'banned_by', user.nick + msg)
                                 	    });
                                 	    stats.socket.disconnect();
                                 	}
