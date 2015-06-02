@@ -288,7 +288,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tcolor tfont timestamp font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color tcolor tfont tstyle timestamp font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 this.set(key, localStorage.getItem('chat-' + key));
                 this.on('change:' + key, function(m, value) {
                     if (value) {
@@ -1308,10 +1308,9 @@ $(function() {
         toggle : {
             params : [ 'att' ],
             handler : function(params) {
-                var att = params.att;
-                if (att == 'bg' && CLIENT.get('bg') == 'off'){
+                var att = params.att, toggled;
+                if (att == 'bg' && CLIENT.get('bg') == 'off')
                     $('#background').css('background', CLIENT.get('old'));
-                }
                 if (att == 'color' || att == 'colour'){
                     if (CLIENT.get('tcolor') == 'on' || CLIENT.get('tcolor') == null && CLIENT.set('tcolor','on')){
                         $.each($('.message-content'), function(key, value){
@@ -1330,10 +1329,11 @@ $(function() {
                                     p1 = '';
                                 return '<span style="'+p1+'color: '+p2+';">';
                             });
+                            value = value.replace('<div id="test" style="text-shadow: 0 0 2px white;">','<div id="test" style="text-shadow: 0 0 2px white;color: transparent;">');
                             $(this).html(value);
                         });
                     }
-                    CLIENT.set('tcolor', CLIENT.get('tcolor') == 'on' ? 'off' : 'on');
+                    toggled = 'tcolor';
                 } else if (att == 'timestamp'){
                     if (CLIENT.get('timestamp') == 'on' || CLIENT.get('timestamp') == null && CLIENT.set('timestamp','on')){
                         $.each($('.timestamp'), function(key, value){
@@ -1346,7 +1346,7 @@ $(function() {
                                 $(this).css('font-size', '0.8em');
                             });
                     }
-                    CLIENT.set('timestamp', CLIENT.get('timestamp') == 'on' ? 'off' : 'on');
+                    toggled = 'timestamp';
                 } else if (att == 'font' || att == 'fonts') {
                     if (CLIENT.get('tfont') == 'on' || CLIENT.get('tfont') == null && CLIENT.set('tfont','on')){
                         $.each($('.message-content'), function(key, value){
@@ -1361,10 +1361,24 @@ $(function() {
                             }));
                         });
                     }
-                    CLIENT.set('tfont', CLIENT.get('tfont') == 'on' ? 'off' : 'on');
+                    toggled = 'tfont';
+                } else if (att = 'style' || att == 'styles'){
+                    if (CLIENT.get('tstyle') == 'on' || CLIENT.get('tstyle') == null && CLIENT.set('tstyle','on')){
+                    	$.each($('.message-content'), function(key, value){
+                    	    $(this).html(value.innerHTML.replace(/((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))/gi, function(match){
+                    	    	return '<!--' + match + '-->';
+                    	    }));
+                    	});
+                    } else {
+                    	$.each($('.message-content'), function(key, value){
+                    	    $(this).html(value.innerHTML.replace(/<!--((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))-->/gi, '$1'));
+                    	});
+                    }
+                    toggled = 'tstyle';
                 } else if (att != 'style' && att != 'font'){
-                    CLIENT.set(att, CLIENT.get(att) == 'on' ? 'off' : 'on');
+                    toggled = att;
                 }
+                CLIENT.set(toggled, CLIENT.get(toggled) == 'on' ? 'off' : 'on');
             }
         },
         unblock_all : function(){
