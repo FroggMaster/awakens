@@ -69,7 +69,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
         $('#passanchor').css('height','100%');
         $('#passanchor').css('width','100%');
         $('#passanchor').append('<div id="fader"></div>');
-        $('#passanchor').append('<div id="captchaform"><div id="textfield">Please fill out this reCaptcha.</div><form id="captchaForm"><div class="g-recaptcha" data-sitekey="6LfJeQUTAAAAAJebE0KFgXJouTHfuBOOslMZlHqf"></div><br><input id = "submitButton" type="submit" value="Submit"></input></form></div>');
+        $('#passanchor').append('<div id="captchaform"><div id="textfield">Please fill out this reCaptcha.</div><form id="captchaForm"><div class="g-recaptcha" data-sitekey="6LequgcTAAAAAHlYe2BdOek5-OmM6F-hbJGIc4QD"></div><br><input id = "submitButton" type="submit" value="Submit"></input></form></div>');
         $('#submitButton').on('click',function(e){
             e.preventDefault();
             socket.emit('passgood',{
