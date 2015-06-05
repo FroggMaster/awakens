@@ -1,6 +1,7 @@
 var DATE_FORMAT = 'shortTime'; 					//Style of time keeping. 12, 24, or military. This is 12.
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong']; 		//Blacklisted websites
-var localCount = 0, lastNick; 
+var localCount = 0, lastNick;
+var CLIENT_RECAPTCHA_KEY = "6LequgcTAAAAAHlYe2BdOek5-OmM6F-hbJGIc4QD"; //Replace with your own from Google recaptcha
 
 // ------------------------------------------------------------------
 // Client
@@ -69,7 +70,7 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
         $('#passanchor').css('height','100%');
         $('#passanchor').css('width','100%');
         $('#passanchor').append('<div id="fader"></div>');
-        $('#passanchor').append('<div id="captchaform"><div id="textfield">Please fill out this reCaptcha.</div><form id="captchaForm"><div class="g-recaptcha" data-sitekey="6LequgcTAAAAAHlYe2BdOek5-OmM6F-hbJGIc4QD"></div><br><input id = "submitButton" type="submit" value="Submit"></input></form></div>');
+        $('#passanchor').append('<div id="captchaform"><div id="textfield">Please fill out this reCaptcha.</div><form id="captchaForm"><div class="g-recaptcha" data-sitekey="'+CLIENT_RECAPTCHA_KEY+'"></div><br><input id = "submitButton" type="submit" value="Submit"></input></form></div>');
         $('#submitButton').on('click',function(e){
             e.preventDefault();
             socket.emit('passgood',{

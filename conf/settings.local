@@ -12,5 +12,8 @@
     "https" : null,
     "server" : {
         "port" : 80
+    },
+    "api" : {
+        "recaptcha" : "YOUR_SERVER_KEY_HERE"
     }
 }
