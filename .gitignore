@@ -1,4 +1,4 @@
 ssl/
-conf/settings.json
+nohup.out
 /node_modules/
 .project

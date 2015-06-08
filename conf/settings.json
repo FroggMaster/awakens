@@ -1,0 +1,19 @@
+{
+    "db" : {
+        "user" : "root",
+        "password" : null
+    },
+    "log" : {
+        "error" : true,
+        "info" : false,
+        "debug" : false,
+        "db" : false
+    },
+    "https" : null,
+    "server" : {
+        "port" : 80
+    },
+    "api" : {
+        "recaptcha" : "6Lcw6wcTAAAAAIk1fUD_5B9ilW-nDKEzAGzjWDLx"
+    }
+}
