@@ -698,3 +698,23 @@ Query request: select * from chat_users where nick=? [ 'Frogger' ]
 Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
 Mon Jun 08 2015 01:44:14 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#90FF#90Fr#72Do#084g#084g#257e#0A2r","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FN#09Eo #0ADi#0ACt#0BA'#0B9s #0B8n#0C7o#00CC66t#00DD55. ","hat":"nohat","count":50}]
 DB Connection released
+Mon Jun 08 2015 01:45:10 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal this is the kind of stuff i\'m looking for:\n/*Backbone.js, a model that allows binding and custom events, as well as API functions.\n\t\t\t\t    \t\t\t\thttp://backbonejs.org/ */ ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:45:10 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:45:10 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal this is the kind of stuff i'm looking for:\n/*Backbone.js, a model that allows binding and custom events, as well as API functions.\n\t\t\t\t    \t\t\t\thttp://backbonejs.org/ */ ","hat":"nohat","count":51}]
+DB Connection released
+Mon Jun 08 2015 01:46:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal or this\nhttp://tts-api.com/tts.mp3?q=test%20test ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:46:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:46:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal or this\nhttp://tts-api.com/tts.mp3?q=test%20test ","hat":"nohat","count":52}]
+DB Connection released
