@@ -1,7 +1,7 @@
 var DATE_FORMAT = 'shortTime'; 					//Style of time keeping. 12, 24, or military. This is 12.
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong']; 		//Blacklisted websites
 var localCount = 0, lastNick;
-var CLIENT_RECAPTCHA_KEY = "6LequgcTAAAAAHlYe2BdOek5-OmM6F-hbJGIc4QD"; //Replace with your own from Google recaptcha
+var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm"; //Replace with your own from Google recaptcha
 
 // ------------------------------------------------------------------
 // Client
