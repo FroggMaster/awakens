@@ -1,0 +1,700 @@
+http listening on *:80
+Starting channel: 2spooks4.me/
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:49.181.146.128' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:06 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] socket emit ["online",[]]
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:31:06 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] socket emit ["update",{"access":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}","background":"black","notification":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs","topic":"anon2000 is a fag"}]
+DB Connection released
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:71.179.52.105' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105] socket emit ["online",[]]
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105] socket emit ["update",{"access":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}","background":"black","notification":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs","topic":"anon2000 is a fag"}]
+DB Connection released
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105] Received message:  join [ { nick: 'aoeu', security: '1400912b6976c492bcd7bef3077d5368' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:71.179.52.105' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105] User is not banned
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', 'aoeu', '::ffff:71.179.52.105', undefined ]
+Query resolved:  []
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Token not stored on server!
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105] Nick fallback
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105] Nick  Anonymous  does not exist, nicking to a new nick
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] socket emit ["update",{"id":"1IUnXhxn9m8cX-WmAAAC","nick":"Anonymous","access_level":"3","role":"basic","vHost":"1IUnXhxn9m8cX-WmAAAC","login":false}]
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] Successful join!
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] room emit ["updateCount",{"count":1}]
+Mon Jun 08 2015 01:31:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] room emit ["join",{"id":"1IUnXhxn9m8cX-WmAAAC","nick":"Anonymous"}]
+DB Connection released
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:174.1.53.212' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212] socket emit ["online",[{"id":"1IUnXhxn9m8cX-WmAAAC","nick":"Anonymous"}]]
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212] socket emit ["update",{"access":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}","background":"black","notification":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs","topic":"anon2000 is a fag"}]
+DB Connection released
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:207.204.232.120' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] socket emit ["online",[{"id":"1IUnXhxn9m8cX-WmAAAC","nick":"Anonymous"}]]
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] socket emit ["update",{"access":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}","background":"black","notification":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs","topic":"anon2000 is a fag"}]
+DB Connection released
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212] Received message:  join [ { nick: 'Frogger',
+    security: '3d332476641dbc6e84612f1bb2024f0a' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:174.1.53.212' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212] User is not banned
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', 'Frogger', '::ffff:174.1.53.212', undefined ]
+Query resolved:  []
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Token not stored on server!
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212] Nick fallback
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212] Nick  Anonymous  does not exist, nicking to a new nick
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] socket emit ["update",{"id":"HkPXDgeKjHxmfKxKAAAD","nick":"Anonymous","access_level":"3","role":"basic","vHost":"HkPXDgeKjHxmfKxKAAAD","login":false}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] Successful join!
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] room emit ["updateCount",{"count":2}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] room emit ["join",{"id":"HkPXDgeKjHxmfKxKAAAD","nick":"Anonymous"}]
+DB Connection released
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] Received message:  join [ { nick: 'anon2000',
+    security: 'e00ac063ddc5353368e46b96845d76a7' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:207.204.232.120' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] User is not banned
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  'anon2000',
+  '::ffff:207.204.232.120',
+  undefined ]
+Query resolved:  []
+Query request: select * from chat_users where nick=? [ 'anon2000' ]
+Query resolved:  [{"nick":"anon2000","vHost":null,"remote_addr":"::ffff:207.204.232.120","pw_hash":"sha1$98a66da9$1$5f923acdee79b79ac7f1bdd45028381fa628cc3f","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Token not stored on server!
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] Nick fallback
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] Nick  Anonymous  does not exist, nicking to a new nick
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] socket emit ["update",{"id":"fNQAyn43hEsNYok8AAAE","nick":"Anonymous","access_level":"3","role":"basic","vHost":"fNQAyn43hEsNYok8AAAE","login":false}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] Successful join!
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] room emit ["updateCount",{"count":3}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] room emit ["join",{"id":"fNQAyn43hEsNYok8AAAE","nick":"Anonymous"}]
+DB Connection released
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] Received message:  join [ { nick: 'Kevin', security: 'd7d79a4da78f596f2ea8a6581b93dc62' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:49.181.146.128' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] User is not banned
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', 'Kevin', '::ffff:49.181.146.128', undefined ]
+Query resolved:  []
+Query request: select * from chat_users where nick=? [ 'Kevin' ]
+Query resolved:  [{"nick":"Kevin","vHost":null,"remote_addr":"::ffff:49.181.146.128","pw_hash":"sha1$e97bb72b$1$44b02ac7b5403899c627a7be3729e68b87a94214","role":"super","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Token not stored on server!
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] Nick fallback
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] Nick  Anonymous  does not exist, nicking to a new nick
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] socket emit ["update",{"id":"xo1oNY_Xna2SbdNMAAAB","nick":"Anonymous","access_level":"3","role":"basic","vHost":"xo1oNY_Xna2SbdNMAAAB","login":false}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] Successful join!
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] room emit ["updateCount",{"count":4}]
+Mon Jun 08 2015 01:31:08 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] room emit ["join",{"id":"xo1oNY_Xna2SbdNMAAAB","nick":"Anonymous"}]
+DB Connection released
+Mon Jun 08 2015 01:31:16 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#72DA#90Fn#084o#0A2n#54By#0A2m#084o#084u#166s',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FA#09En#0ADd #0ACw#0BAe#0B9\'#0B8r#0C7e #00CC66f#00DD55i#00DD44x#00EE33e#00EE22d#00FF11. ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Anonymous',
+  'HkPXDgeKjHxmfKxKAAAD' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:16 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] User is not banned
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Mon Jun 08 2015 01:31:16 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] room emit ["message",{"type":"chat-message","nick":"Anonymous","flair":"$Crafty Girls|/*/^/^#72DA#90Fn#084o#0A2n#54By#0A2m#084o#084u#166s","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FA#09En#0ADd #0ACw#0BAe#0B9'#0B8r#0C7e #00CC66f#00DD55i#00DD44x#00EE33e#00EE22d#00FF11. ","hat":"nohat","count":5,"id":"HkPXDgeKjHxmfKxKAAAD"}]
+DB Connection released
+Mon Jun 08 2015 01:31:19 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] Received message:  command [ { name: 'login',
+    params: { password: 'WelcomeHome21', nick: 'Frogger' } } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Anonymous',
+  'HkPXDgeKjHxmfKxKAAAD' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:31:19 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] User is not banned
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Anonymous - login - basic { password: 'WelcomeHome21', nick: 'Frogger' }
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:31:19 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Anonymous] Nick password was correct
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Frogger joined with god - 0
+Mon Jun 08 2015 01:31:19 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] socket emit ["update",{"id":"HkPXDgeKjHxmfKxKAAAD","nick":"Frogger","access_level":"0","role":"god","vHost":"You're.My.Frog.Minion.Bitch","security":"a423d84736f3444d984dfb0f2a12de7d","login":true}]
+Mon Jun 08 2015 01:31:19 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["updateCount",{"count":6}]
+Mon Jun 08 2015 01:31:19 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["nick",{"id":"HkPXDgeKjHxmfKxKAAAD","nick":"Frogger"}]
+DB Connection released
+Mon Jun 08 2015 01:32:33 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] room emit ["updateCount",{"count":7}]
+Mon Jun 08 2015 01:32:33 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] room emit ["left",{"id":"fNQAyn43hEsNYok8AAAE","nick":"Anonymous"}]
+Mon Jun 08 2015 01:32:34 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] room emit ["updateCount",{"count":8}]
+Mon Jun 08 2015 01:32:34 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] room emit ["left",{"id":"xo1oNY_Xna2SbdNMAAAB","nick":"Anonymous","part":"[/*#FFFFFFM#EEDDFFY#DBF P#DDBBFFE#C9FN#CC99FFI#B7FS I#BB77FFS#A5F T#AA55FFH#93FE#9933FF E#81FM#8811FFB#7700FFODIMENT OF VIOLENCE AND CHAOS!|]"}]
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:207.204.232.120' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:32:34 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] socket emit ["online",[{"id":"HkPXDgeKjHxmfKxKAAAD","nick":"Frogger"},{"id":"xo1oNY_Xna2SbdNMAAAB","nick":"Anonymous"}]]
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:32:34 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] socket emit ["update",{"access":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}","background":"black","notification":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs","topic":"anon2000 is a fag"}]
+DB Connection released
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] Received message:  join [ { nick: 'Anonymous',
+    security: 'e00ac063ddc5353368e46b96845d76a7' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:207.204.232.120' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] User is not banned
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  'Anonymous',
+  '::ffff:207.204.232.120',
+  undefined ]
+Query resolved:  []
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120] Nick  Anonymous  does not exist, nicking to a new nick
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] socket emit ["update",{"id":"BbFHvQXqUJZ8egmbAAAH","nick":"Anonymous","access_level":"3","role":"basic","vHost":"BbFHvQXqUJZ8egmbAAAH","login":false}]
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] Successful join!
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] room emit ["updateCount",{"count":9}]
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:207.204.232.120,Anonymous] room emit ["join",{"id":"BbFHvQXqUJZ8egmbAAAH","nick":"Anonymous"}]
+DB Connection released
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:49.181.146.128' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] socket emit ["online",[{"id":"HkPXDgeKjHxmfKxKAAAD","nick":"Frogger"},{"id":"xo1oNY_Xna2SbdNMAAAB","nick":"Anonymous"},{"id":"BbFHvQXqUJZ8egmbAAAH","nick":"Anonymous"}]]
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:32:35 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] socket emit ["update",{"access":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}","background":"black","notification":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs","topic":"anon2000 is a fag"}]
+DB Connection released
+Mon Jun 08 2015 01:32:36 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] Received message:  join [ { nick: 'Anonymous',
+    security: 'd7d79a4da78f596f2ea8a6581b93dc62' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and banned=? [ '2spooks4.me/', '::ffff:49.181.146.128' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:32:36 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] User is not banned
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  'Anonymous',
+  '::ffff:49.181.146.128',
+  undefined ]
+Query resolved:  []
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Mon Jun 08 2015 01:32:36 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128] Nick  Anonymous  does not exist, nicking to a new nick
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+Mon Jun 08 2015 01:32:36 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] socket emit ["update",{"id":"urXnX1vEOSQGcjddAAAG","nick":"Anonymous","access_level":"3","role":"basic","vHost":"urXnX1vEOSQGcjddAAAG","login":false}]
+Mon Jun 08 2015 01:32:36 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] Successful join!
+Mon Jun 08 2015 01:32:36 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] room emit ["updateCount",{"count":10}]
+Mon Jun 08 2015 01:32:36 GMT-0400 (EDT) DEBUG [::ffff:49.181.146.128,Anonymous] room emit ["join",{"id":"urXnX1vEOSQGcjddAAAG","nick":"Anonymous"}]
+DB Connection released
+Mon Jun 08 2015 01:32:41 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal so \nA: isn\'t there still an archive of oldspooks on github?\nB: if it\'s shit like settings and users files, why not just create them and then stick them in the new github?\nC: y u no do testing on http://spooks4.me/ so that this can be a stable site?\nD: pls create automatic server reset mechanism on the server so you don\'t have to manually reset it all the time ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:71.179.52.105',
+  'Anonymous',
+  '1IUnXhxn9m8cX-WmAAAC' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:32:41 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] User is not banned
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Mon Jun 08 2015 01:32:41 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] room emit ["message",{"type":"chat-message","nick":"Anonymous","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal so \nA: isn't there still an archive of oldspooks on github?\nB: if it's shit like settings and users files, why not just create them and then stick them in the new github?\nC: y u no do testing on http://spooks4.me/ so that this can be a stable site?\nD: pls create automatic server reset mechanism on the server so you don't have to manually reset it all the time ","hat":"nohat","count":11,"id":"1IUnXhxn9m8cX-WmAAAC"}]
+DB Connection released
+Mon Jun 08 2015 01:32:45 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] Received message:  command [ { name: 'login',
+    params: { password: 'varuca911', nick: 'aoeu' } } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:71.179.52.105',
+  'Anonymous',
+  '1IUnXhxn9m8cX-WmAAAC' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:32:45 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] User is not banned
+Query request: select * from chat_users where nick=? [ 'Anonymous' ]
+Query resolved:  []
+Anonymous - login - basic { password: 'varuca911', nick: 'aoeu' }
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:32:45 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,Anonymous] Nick password was correct
+Query request: select info_key, value from chat_channel_info where channel=? [ '2spooks4.me/' ]
+Query resolved:  [{"info_key":"access","value":"{\"Kapellomg\":{\"role\":\"mod\",\"access_level\":\"3\"},\"aoeu\":{\"role\":\"admin\",\"access_level\":\"3\"},\"Lacy\":{\"role\":\"admin\",\"access_level\":\"3\"},\"beercats\":{\"role\":\"admin\",\"access_level\":\"3\"}}"},{"info_key":"background","value":"black"},{"info_key":"notification","value":"#lightgreyWelcome to Spooks. Credits to InfraRaven for our original website.\n#b30000Visit http://this.spooks.me, the original site, which has moved on to become a Visual Chat.\n\nhttp://i.imgur.com/aRc1tYB.jpg\n\nFor commands, type /help. \n\n#redMost errors have been resolved; Soon Spooks shall start working on expansion and growth.\nIf you're interested in our progress or what we're working on you can take a look at http://notepad.cc/share/lNlySjAzxh\n\n#b30000Do /nick YOUR_NAME, then /register PASSWD.\n\n#36FA00http://2spooks4.me and http://spooks4.me newly registered domains.\n#darkgreenSoon the later of these two addresses will become our Developer Branch/Fallout Shelter.\n\n#b30000Interested in our source? \nhttps://github.com/FroggMaster/spooks-chatjs"},{"info_key":"topic","value":"anon2000 is a fag"}]
+aoeu joined with admin - 3
+Mon Jun 08 2015 01:32:45 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] socket emit ["update",{"id":"1IUnXhxn9m8cX-WmAAAC","nick":"aoeu","access_level":"3","role":"admin","vHost":null,"security":"0b9bb1c13da79910d27982e930e66658","login":true}]
+Mon Jun 08 2015 01:32:45 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Successful join!
+Mon Jun 08 2015 01:32:45 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["updateCount",{"count":12}]
+Mon Jun 08 2015 01:32:45 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["join",{"id":"1IUnXhxn9m8cX-WmAAAC","nick":"aoeu"}]
+DB Connection released
+Mon Jun 08 2015 01:33:49 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal also \ni\'ve been dicking around on heroku for like a day, and nodejs for 2 days, and i just found out there\'s a pre-built solution for what i want to do that already has free API servers ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:33:49 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:33:49 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal also \ni've been dicking around on heroku for like a day, and nodejs for 2 days, and i just found out there's a pre-built solution for what i want to do that already has free API servers ","hat":"nohat","count":13}]
+DB Connection released
+Mon Jun 08 2015 01:34:03 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal but that just tells me i\'m learning :^) ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:34:03 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:34:03 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal but that just tells me i'm learning :^) ","hat":"nohat","count":14}]
+DB Connection released
+Mon Jun 08 2015 01:34:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal and that my dicking around has been productive and educational enough that i feel comfortable looking up APIs ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:34:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:34:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal and that my dicking around has been productive and educational enough that i feel comfortable looking up APIs ","hat":"nohat","count":15}]
+DB Connection released
+Mon Jun 08 2015 01:35:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal also the solution uses a .js file and an open-source server that\'s apparently also written in js, meaning i can use the clients as servers when they\'re needed\nfurther increasing the decentralization\nso that\'s good ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:35:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:35:26 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal also the solution uses a .js file and an open-source server that's apparently also written in js, meaning i can use the clients as servers when they're needed\nfurther increasing the decentralization\nso that's good ","hat":"nohat","count":16}]
+DB Connection released
+Mon Jun 08 2015 01:36:03 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '>inb4 frogger isn\'t actually connected/alive' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:36:03 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:36:03 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":">inb4 frogger isn't actually connected/alive","hat":"nohat","count":17}]
+DB Connection released
+Mon Jun 08 2015 01:36:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#257F#257r#166o#084g#72Dg#084e#90Fr',
+    message: '>>11 A) Yes, however SQL/Database isn\'t saved in Github\nB) See a)\nC) I need to wait for my secondary VPS provider to grant me access.\nD) I will soon; I\'ll add it to the list of suggestions;' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:36:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:36:08 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#257F#257r#166o#084g#72Dg#084e#90Fr","message":">>11 A) Yes, however SQL/Database isn't saved in Github\nB) See a)\nC) I need to wait for my secondary VPS provider to grant me access.\nD) I will soon; I'll add it to the list of suggestions;","hat":"nohat","count":18}]
+DB Connection released
+Mon Jun 08 2015 01:36:36 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#0A2F#90Fr#72Do#084g#54Bg#084e#166r',
+    message: '>>16 We\'re running our client off a .JS Client.JS actually. ;o' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:36:36 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:36:36 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#0A2F#90Fr#72Do#084g#54Bg#084e#166r","message":">>16 We're running our client off a .JS Client.JS actually. ;o","hat":"nohat","count":19}]
+DB Connection released
+Mon Jun 08 2015 01:39:06 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal do you use a prebuilt solution for posting messages to the screen, or is it just a document.write every time? ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:06 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:06 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal do you use a prebuilt solution for posting messages to the screen, or is it just a document.write every time? ","hat":"nohat","count":20}]
+DB Connection released
+Mon Jun 08 2015 01:39:24 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal wait is it this\n        <script src="/js/client.js"></script> ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:24 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:24 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal wait is it this\n        <script src=\"/js/client.js\"></script> ","hat":"nohat","count":21}]
+DB Connection released
+Mon Jun 08 2015 01:39:31 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#257F#084r#72Do#0A2g#084g#257e#54Br',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FT#09Eh#0ADa#0ACt #0BAi#0B9s #0B8o#0C7u#00CC66r #00DD55c#00DD44l#00EE33i#00EE22e#00FF11n#00FF00t. ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:31 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:31 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#257F#084r#72Do#0A2g#084g#257e#54Br","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FT#09Eh#0ADa#0ACt #0BAi#0B9s #0B8o#0C7u#00CC66r #00DD55c#00DD44l#00EE33i#00EE22e#00FF11n#00FF00t. ","hat":"nohat","count":22}]
+DB Connection released
+Mon Jun 08 2015 01:39:37 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#0A2F#90Fr#084o#084g#72Dg#166e#54Br',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FP#09Er#0ADe#0ACs#0BAs #0B9C#0B8t#0C7r#00CC66l#00DD55+#00DD44S#00EE33h#00EE22i#00FF11f#00FF00t+J ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:37 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:37 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#0A2F#90Fr#084o#084g#72Dg#166e#54Br","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FP#09Er#0ADe#0ACs#0BAs #0B9C#0B8t#0C7r#00CC66l#00DD55+#00DD44S#00EE33h#00EE22i#00FF11f#00FF00t+J ","hat":"nohat","count":23}]
+DB Connection released
+Mon Jun 08 2015 01:39:40 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#166F#0A2r#54Bo#90Fg#0A2g#084e#90Fr',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FY#09Eo#0ADu #0ACc#0BAa#0B9n #0B8s#0C7e#00CC66e #00DD55c#00DD44o#00EE33d#00EE22e#00FF11. ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:40 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:40 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#166F#0A2r#54Bo#90Fg#0A2g#084e#90Fr","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FY#09Eo#0ADu #0ACc#0BAa#0B9n #0B8s#0C7e#00CC66e #00DD55c#00DD44o#00EE33d#00EE22e#00FF11. ","hat":"nohat","count":24}]
+DB Connection released
+Mon Jun 08 2015 01:39:53 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '>Failed to load resource: net::ERR_INTERNET_DISCONNECTED' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:53 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:53 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":">Failed to load resource: net::ERR_INTERNET_DISCONNECTED","hat":"nohat","count":25}]
+DB Connection released
+Mon Jun 08 2015 01:39:54 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '>Failed to load resource: net::ERR_INTERNET_DISCONNECTED' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:54 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:54 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":">Failed to load resource: net::ERR_INTERNET_DISCONNECTED","hat":"nohat","count":26}]
+DB Connection released
+Mon Jun 08 2015 01:39:55 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '>Failed to load resource: net::ERR_INTERNET_DISCONNECTED' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:55 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:55 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":">Failed to load resource: net::ERR_INTERNET_DISCONNECTED","hat":"nohat","count":27}]
+DB Connection released
+Mon Jun 08 2015 01:39:55 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '>Failed to load resource: net::ERR_INTERNET_DISCONNECTED' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:39:55 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:39:55 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":">Failed to load resource: net::ERR_INTERNET_DISCONNECTED","hat":"nohat","count":28}]
+DB Connection released
+Mon Jun 08 2015 01:40:12 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal so mane error ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:40:12 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:40:12 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal so mane error ","hat":"nohat","count":29}]
+DB Connection released
+Mon Jun 08 2015 01:40:56 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal wow client.js is big ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:40:56 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:40:56 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal wow client.js is big ","hat":"nohat","count":30}]
+DB Connection released
+Mon Jun 08 2015 01:41:21 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal i\'m assuming this is a prebuilt thing because it\'s 2long2b built by sammich alone ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:41:21 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:41:21 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal i'm assuming this is a prebuilt thing because it's 2long2b built by sammich alone ","hat":"nohat","count":31}]
+DB Connection released
+Mon Jun 08 2015 01:41:53 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal is there a website with tutorials on how to use it? ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:41:53 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:41:53 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal is there a website with tutorials on how to use it? ","hat":"nohat","count":32}]
+DB Connection released
+Mon Jun 08 2015 01:41:57 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#90FF#54Br#084o#90Fg#90Fg#72De#90Fr',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FH#09Em#0ADm ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:41:57 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:41:57 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#90FF#54Br#084o#90Fg#90Fg#72De#90Fr","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FH#09Em#0ADm ","hat":"nohat","count":33}]
+DB Connection released
+Mon Jun 08 2015 01:42:10 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#257F#72Dr#257o#90Fg#257g#0A2e#257r',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09Ft#09Eh#0ADa#0ACt #0BAd#0B9o#0B8e#0C7s#00CC66n#00DD55\'#00DD44t #00EE33h#00EE22a#00FF11v#00FF00e to do with our website; That\'s just an error. You\'ll see the on other sites too. ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:10 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:10 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#257F#72Dr#257o#90Fg#257g#0A2e#257r","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09Ft#09Eh#0ADa#0ACt #0BAd#0B9o#0B8e#0C7s#00CC66n#00DD55'#00DD44t #00EE33h#00EE22a#00FF11v#00FF00e to do with our website; That's just an error. You'll see the on other sites too. ","hat":"nohat","count":34}]
+DB Connection released
+Mon Jun 08 2015 01:42:20 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#084F#0A2r#166o#72Dg#166g#72De#72Dr',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FH#09Eo#0ADw #0ACt#0BAo #0B9u#0B8s#0C7e #00CC66w#00DD55h#00DD44a#00EE33t#00EE22? ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:20 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:20 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#084F#0A2r#166o#72Dg#166g#72De#72Dr","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FH#09Eo#0ADw #0ACt#0BAo #0B9u#0B8s#0C7e #00CC66w#00DD55h#00DD44a#00EE33t#00EE22? ","hat":"nohat","count":35}]
+DB Connection released
+Mon Jun 08 2015 01:42:23 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#084F#166r#0A2o#72Dg#257g#084e#54Br',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FL#09Ei#0ADk#0ACe #0BAS#0B9p#0B8o#0C7o#00CC66k#00DD55s#00DD44? ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:23 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:23 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#084F#166r#0A2o#72Dg#257g#084e#54Br","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FL#09Ei#0ADk#0ACe #0BAS#0B9p#0B8o#0C7o#00CC66k#00DD55s#00DD44? ","hat":"nohat","count":36}]
+DB Connection released
+Mon Jun 08 2015 01:42:24 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal client.js ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:24 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:24 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal client.js ","hat":"nohat","count":37}]
+DB Connection released
+Mon Jun 08 2015 01:42:26 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#257F#084r#90Fo#90Fg#084g#084e#257r',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FO#09Eh ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:26 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:26 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#257F#084r#90Fo#90Fg#084g#084e#257r","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FO#09Eh ","hat":"nohat","count":38}]
+DB Connection released
+Mon Jun 08 2015 01:42:28 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal the framework ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:28 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:28 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal the framework ","hat":"nohat","count":39}]
+DB Connection released
+Mon Jun 08 2015 01:42:36 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal because i make shit 4 fun and profit ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:36 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:36 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal because i make shit 4 fun and profit ","hat":"nohat","count":40}]
+DB Connection released
+Mon Jun 08 2015 01:42:38 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#166F#72Dr#084o#72Dg#72Dg#0A2e#166r',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FY#09Eo#0ADu #0ACn#0BAe#0B9e#0B8d #0C7e#00CC66v#00DD55e#00DD44r#00EE33y#00EE22t#00FF11h#00FF00ing from the github pretty much ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:38 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:38 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#166F#72Dr#084o#72Dg#72Dg#0A2e#166r","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FY#09Eo#0ADu #0ACn#0BAe#0B9e#0B8d #0C7e#00CC66v#00DD55e#00DD44r#00EE33y#00EE22t#00FF11h#00FF00ing from the github pretty much ","hat":"nohat","count":41}]
+DB Connection released
+Mon Jun 08 2015 01:42:57 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal so is client.js developed by a third party or not? ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:42:57 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:42:57 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal so is client.js developed by a third party or not? ","hat":"nohat","count":42}]
+DB Connection released
+Mon Jun 08 2015 01:43:35 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal or is it just the "put all the shit we need to client to do here" file? ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:43:35 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:43:35 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal or is it just the \"put all the shit we need to client to do here\" file? ","hat":"nohat","count":43}]
+DB Connection released
+Mon Jun 08 2015 01:43:50 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#257F#54Br#0A2o#084g#54Bg#90Fe#0A2r',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FO#09Eh #0ADl#0ACe#0BAl ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:43:50 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:43:50 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#257F#54Br#0A2o#084g#54Bg#90Fe#0A2r","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FO#09Eh #0ADl#0ACe#0BAl ","hat":"nohat","count":44}]
+DB Connection released
+Mon Jun 08 2015 01:43:57 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#0A2F#0A2r#90Fo#90Fg#084g#084e#72Dr',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FG#09Eo #0ADl#0ACo#0BAo#0B9k #0B8a#0C7t #00CC66t#00DD55h#00DD44e #00EE33g#00EE22i#00FF11t#00FF00hub ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:43:57 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:43:57 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#0A2F#0A2r#90Fo#90Fg#084g#084e#72Dr","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FG#09Eo #0ADl#0ACo#0BAo#0B9k #0B8a#0C7t #00CC66t#00DD55h#00DD44e #00EE33g#00EE22i#00FF11t#00FF00hub ","hat":"nohat","count":45}]
+DB Connection released
+Mon Jun 08 2015 01:44:01 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '>-Mute: Someone who when they speak cannot be heard. Subhuman\n    \t\t\t\t\t\t\t\tswine :^)\n>jew face' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:44:01 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:44:01 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":">-Mute: Someone who when they speak cannot be heard. Subhuman\n    \t\t\t\t\t\t\t\tswine :^)\n>jew face","hat":"nohat","count":46}]
+DB Connection released
+Mon Jun 08 2015 01:44:04 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#166F#72Dr#257o#72Dg#72Dg#90Fe#0A2r',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ https://github.com/FroggMaster/spooks-chatjs ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:44:04 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:44:04 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#166F#72Dr#257o#72Dg#72Dg#90Fe#0A2r","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ https://github.com/FroggMaster/spooks-chatjs ","hat":"nohat","count":47}]
+DB Connection released
+Mon Jun 08 2015 01:44:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] Received message:  message [ { flair: '$courier new|##black#purpleaoeu',
+    message: '$courier new|##black#teal this is not built by a third party ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/', '::ffff:71.179.52.105', 'aoeu', null ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:44:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] User is not banned
+Query request: select * from chat_users where nick=? [ 'aoeu' ]
+Query resolved:  [{"nick":"aoeu","vHost":null,"remote_addr":"::ffff:71.179.52.105","pw_hash":"sha1$93f2bec7$1$eea5abfd4976c72d33cb3ae7263235faf59b500a","role":"basic","access_level":3,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:44:07 GMT-0400 (EDT) DEBUG [::ffff:71.179.52.105,aoeu] room emit ["message",{"type":"chat-message","nick":"aoeu","flair":"$courier new|##black#purpleaoeu","message":"$courier new|##black#teal this is not built by a third party ","hat":"Coin","count":48}]
+DB Connection released
+Mon Jun 08 2015 01:44:12 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#166F#90Fr#084o#72Dg#166g#084e#257r',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FN#09Eo#0AD. ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:44:12 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:44:12 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#166F#90Fr#084o#72Dg#166g#084e#257r","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FN#09Eo#0AD. ","hat":"nohat","count":49}]
+DB Connection released
+Mon Jun 08 2015 01:44:14 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] Received message:  message [ { flair: '$Crafty Girls|/*/^/^#90FF#90Fr#72Do#084g#084g#257e#0A2r',
+    message: '$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FN#09Eo #0ADi#0ACt#0BA\'#0B9s #0B8n#0C7o#00CC66t#00DD55. ' } ]
+Query request: select banned from chat_banned where (channel=? or channel is null) and (banned=? or banned=? or banned=?) [ '2spooks4.me/',
+  '::ffff:174.1.53.212',
+  'Frogger',
+  'You\'re.My.Frog.Minion.Bitch' ]
+Database connection established
+Query resolved:  []
+Mon Jun 08 2015 01:44:14 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] User is not banned
+Query request: select * from chat_users where nick=? [ 'Frogger' ]
+Query resolved:  [{"nick":"Frogger","vHost":"You're.My.Frog.Minion.Bitch","remote_addr":"::ffff:174.1.53.212","pw_hash":"sha1$43f64564$1$7f4dcc319cfa097fd3723741bcb7f3da561eda78","role":"god","access_level":0,"email_address":null,"verification_code":null,"verified":1,"registered":1}]
+Mon Jun 08 2015 01:44:14 GMT-0400 (EDT) DEBUG [::ffff:174.1.53.212,Frogger] room emit ["message",{"type":"chat-message","nick":"Frogger","flair":"$Crafty Girls|/*/^/^#90FF#90Fr#72Do#084g#084g#257e#0A2r","message":"$Gloria Hallelujah|#0F6 /@/!/^/^🎩 /~ #09FN#09Eo #0ADi#0ACt#0BA'#0B9s #0B8n#0C7o#00CC66t#00DD55. ","hat":"nohat","count":50}]
+DB Connection released
