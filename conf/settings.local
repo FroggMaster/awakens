@@ -4,10 +4,10 @@
         "password" : null
     },
     "log" : {
-        "error" : true,
-        "info" : true,
-        "debug" : true,
-        "db" : true
+        "error" : false,
+        "info" : false,
+        "debug" : false,
+        "db" : false
     },
     "https" : null,
     "server" : {
