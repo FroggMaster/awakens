@@ -24,7 +24,7 @@ For local testing use:
 ## Developing
 * ***Don't commit directly to master!*** New features and suggestions should be tested first on localhost then sent to the dev branch.
 * Run your own instance of the chat and never commit untested code unless you are certain it won't break dev.
-* A server running the dev branch is available at **<http://2s4.me/>**
+* A server running the dev branch is available at **<http://spooks4.me/>**
 
 ### Server Restarting
 
