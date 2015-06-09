@@ -1407,6 +1407,18 @@ $(function() {
             role : 'super',
             params : [ 'url' ]
         },
+		imgoff : function(){
+            CLIENT.set('images','off')
+        },
+		bgoff : function(){
+            CLIENT.set('bg','off')
+        },
+		imgon : function(){
+            CLIENT.set('images','on')
+        },
+		bgon : function(){
+            CLIENT.set('bg','on')
+        },
         safe : function(){
             CLIENT.set('bg','off'),
             CLIENT.set('images','off'),
