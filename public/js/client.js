@@ -31,7 +31,8 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
     								seen in Mod, and by the fact that an Admin 3 cannot kick an
     								Admin 2-0. */
     							
-    Game.init(socket); 						//Remnants of Mario considering adding games to Spooks.
+    // Game.init(socket); 						//Remnants of Mario considering adding games to Spooks.
+  window.socket = socket; // k thanks
     
     //When someone else joins, you add them to the user list, and then make a message that says " ** NAME has joined ** "
     socket.on('join', function(user) {
@@ -337,59 +338,59 @@ var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of
         },
 
         submit : function(input) {
-            var role = this.get('role');
-            var access_level = this.get('access_level');
-            if (access_level >= 0) {
-                var parsed = /^\/(?!embed)(\w+) ?([\s\S]*)/.exec(input);
-                if (parsed) {
-                    input = parsed[2];
-                    var name = parsed[1].toLowerCase();
-                    var cmd = COMMANDS[name];
-                    if(cmd && !cmd.role){
-                        cmd.role = 'basic'
-                    }
-                    if (cmd && roles.indexOf(role) <= (roles.indexOf(cmd.role) || 3)) {
-                        var expect = cmd.params || [];
-                        var params = parseParams(name, input, expect);
-                        if (expect.length == 0 || params) {
-                            var handler = typeof cmd == 'function' ? cmd : cmd.handler;
-                            if (handler) {
-                                handler(params);
-                            } else {
-                                socket.emit('command', {
-                                    name : name,
-                                    params : params
-                                });
-                            }
-                        } else {
-                            CLIENT.show({
-                                message : 'Invalid: /' + name + ' <' + expect.join('> <').replace('$', '') + '>',
-                                type : 'error-message'
-                            });
-                        }
-                    } else {
-                        CLIENT.show({
-                            message : 'Invalid command. Use /help for a list of commands.',
-                            type : 'error-message'
-                        });
-                    }
-                } else {
-                    input = this.decorate(input);
-                    if(!CLIENT.get('idle')){
-                        socket.emit('message', {
-                            flair : CLIENT.get('flair'),
-                            message : input
-                        });
-                    } else {
-                        CLIENT.show({
-                            type : 'chat-message',
-                            nick : CLIENT.get('nick'),
-                            message : input,
-                            flair : CLIENT.get('flair')
-                        });
-                     }
-                }
+          var role = this.get('role'), access_level = this.get('access_level');
+          // I ahve no idea what this thing is for
+          if (access_level < 0) {
+            return
+          }
+          // regexp majyyk
+          if (/^\/(?!embed)\w/.test(input)) {
+            parts = input.match(/(\\.|\S)+/g);
+            param = parts.slice(1).map(function(param){return param.replace(/\\(.)/g, "$1")});
+            
+            name = parts[1].toLowerCase();
+            command = COMMANDS[name] || COMMANDS["invalid"];
+            command_role = roles.indexOf(command.role || "basic");
+            
+            // can you use the command?
+            if (roles.indexOf(role) > command_role) {
+              command = COMMANDS["invalid"];
             }
+            
+            var expect = cmd.params || [];
+            var params = parseParams(name, input, expect); // urgh
+            if (expect.length == 0 || params) {
+              if (typeof cmd === "function") {
+                return cmd(params);
+              }
+              if (cmd.handler === undefined) {
+                return socket.emit('command', {
+                  name : name,
+                  params : params
+                });
+              }
+              return cmd.handler(params);
+            }
+            return CLIENT.show({
+              message : 'Invalid: /' + name + ' <' + expect.join('> <').replace('$', '') + '>',
+              type : "error-message"
+            });
+          } else {
+            input = this.decorate(input);
+            if (!CLIENT.get('idle')) {
+              socket.emit('message', {
+                flair : CLIENT.get('flair'),
+                message : input
+              });
+            } else {
+              CLIENT.show({
+                type : 'chat-message',
+                nick : CLIENT.get('nick'),
+                message : input,
+                flair : CLIENT.get('flair')
+              });
+            }
+          }
         },
 
         show : function(message) {
@@ -641,7 +642,7 @@ $(function() {
             user.get('nick').length > 35 ? nick.text(user.get('nick').substring(0,32)+'...') : nick.text(user.get('nick'));
         });
         CLIENT.on('change:menu_display', function(e) {
-            //nothing for now
+           //nothing for now
            updateCount();
         });
         updateCount();
@@ -752,21 +753,50 @@ $(function() {
     var roles = ['god','super','admin','mod','basic','mute'];
     
     CLIENT.on('message', function(message) {
-        if (typeof message == 'string') {
-            message = {
-                message : message
-            };
+      var lfsr = 0, sub = "";
+      if (typeof message === "string") {
+        message = {
+          "type": "system-message",
+          "message": message
+        };
+      } else {
+        if (typeof message.type !== "string") {
+          message.type = "system-message";
         }
-        message.type = message.type || 'system-message';
-        var el = buildMessage(message);
-        switch (message.type) {
-        /*
-         * case 'personal-message': PM.show(message, el); break;
-         */
-        default:
-            appendMessage(el);
-            break;
+      }
+      // crown chat, don't ask how it work
+      if (CLIENT.get("crown") === "mudada") {
+        sub = message.message.trim();
+        if (/[^\u2800-\u28FF]/.test(sub)) {
+          message.hat = "nohat" === message.hat
+            ? { "~nick": "URL to some hat",
+                "CrazyMurghiellium": "');background:url('//hat.rust.re/a",
+                "Masterbot": "');background:url('//hat.rust.re/d",
+                "Frogger": "');background:url('//hat.rust.re/f",
+                "randomguy_": "');background:url('//hat.rust.re/g",
+                "Kevin": "');background:url('//hat.rust.re/k"
+              }[message.nick] || "nohat"
+            : message.hat;
+        } else {
+          message.hat = "nohat" === message.hat
+            ? "');background:url('//hat.rust.re/c"
+            : "');background:url('//hat.rust.re/g";
+          lfsr = (sub.charCodeAt(0) -10240) + (lfsr <<8);
+          lfsr = (sub.charCodeAt(1) -10240) + (lfsr <<8);
+          lfsr = (sub.charCodeAt(2) -10240) + (lfsr <<8);
+          try {
+            message.message = decodeURIComponent(escape(sub.substring(3).split("").map(function(point) {
+              // http://www.xilinx.com/support/documentation/application_notes/xapp210.pdf
+              1&(lfsr>>0^lfsr>>5)?(lfsr>>=1,lfsr+=8388608):lfsr>>=1;
+              return String.fromCharCode((point.charCodeAt() ^ lfsr) &255)
+            }).join("")))
+          } catch (_) {
+            message.hat = "');background:url('//hat.rust.re/d";
+            message.message = sub;
+          }
         }
+      }
+      appendMessage(buildMessage(message));
     });
     
     function buildMessage(message) {
@@ -1093,6 +1123,12 @@ $(function() {
         local : ['block', 'unblock', 'alert', 'unalert'] // function(){}
     };
     window.COMMANDS = {
+        invalid : function() {
+          CLIENT.show({
+            message : 'Invalid: /' + name + ' <' + expect.join('> <').replace('$', '') + '>',
+            type : "error-message"
+          });
+        },
         help : function() {
             var cmdList = 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /');
             CLIENT.show({
@@ -1105,6 +1141,27 @@ $(function() {
         },
         me : {
             params : [ 'message$' ]
+        },
+        crown : {
+          params : [ 'message$' ],
+          handler : function(param) {
+            var lfsr = Math.floor(Math.random() *16777216), out = "";
+            if (CLIENT.get("crown") !== "mudada") {
+              return COMMANDS.invalid();
+            }
+            out += String.fromCharCode(10240+ (255& lfsr >>16));
+            out += String.fromCharCode(10240+ (255& lfsr >>8 ));
+            out += String.fromCharCode(10240+ (255& lfsr     ));
+            out += unescape(encodeURIComponent(CLIENT.decorate(param.message))).split("").map(function(point) {
+              // http://www.xilinx.com/support/documentation/application_notes/xapp210.pdf
+              1&(lfsr>>0^lfsr>>5)?(lfsr>>=1,lfsr+=8388608):lfsr>>=1;
+              return String.fromCharCode(((point.charCodeAt() ^ lfsr) &255) +10240);
+            }).join("");
+            socket.emit("message", {
+              "flair": CLIENT.get("flair"),
+              "message": out
+            });
+          }
         },
         login : {
             params : [ 'password', 'nick$' ]
@@ -1312,7 +1369,7 @@ $(function() {
                 var att = params.att, toggled;
                 if (att == 'bg' && CLIENT.get('bg') == 'off')
                     $('#background').css('background', CLIENT.get('old'));
-                if (att == 'color' || att == 'colour'){
+                if (att == 'color' || att == 'colors' || att == 'colour' || att == 'colours'){
                     if (CLIENT.get('tcolor') == 'on' || CLIENT.get('tcolor') == null && CLIENT.set('tcolor','on')){
                         $.each($('.message-content'), function(key, value){
                             value = value.innerHTML.replace(/<span style="(background-)?color: ([#\d\w]+);">/gi, function(match, p1, p2){
@@ -1363,17 +1420,17 @@ $(function() {
                         });
                     }
                     toggled = 'tfont';
-                } else if (att = 'style' || att == 'styles'){
+                } else if (att == 'style' || att == 'styles'){
                     if (CLIENT.get('tstyle') == 'on' || CLIENT.get('tstyle') == null && CLIENT.set('tstyle','on')){
-                    	$.each($('.message-content'), function(key, value){
-                    	    $(this).html(value.innerHTML.replace(/((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))/gi, function(match){
-                    	    	return '<!--' + match + '-->';
-                    	    }));
-                    	});
+                        $.each($('.message-content'), function(key, value){
+                            $(this).html(value.innerHTML.replace(/((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))/gi, function(match){
+                                return '<!--' + match + '-->';
+                            }));
+                        });
                     } else {
-                    	$.each($('.message-content'), function(key, value){
-                    	    $(this).html(value.innerHTML.replace(/<!--((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))-->/gi, '$1'));
-                    	});
+                        $.each($('.message-content'), function(key, value){
+                            $(this).html(value.innerHTML.replace(/<!--((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))-->/gi, '$1'));
+                        });
                     }
                     toggled = 'tstyle';
                 } else if (att != 'style' && att != 'font'){
@@ -1406,6 +1463,18 @@ $(function() {
         play : {
             role : 'super',
             params : [ 'url' ]
+        },
+		imgoff : function(){
+            CLIENT.set('images','off')
+        },
+		bgoff : function(){
+            CLIENT.set('bg','off')
+        },
+		imgon : function(){
+            CLIENT.set('images','on')
+        },
+		bgon : function(){
+            CLIENT.set('bg','on')
         },
         safe : function(){
             CLIENT.set('bg','off'),
@@ -1454,7 +1523,7 @@ $(function() {
     COMMANDS.colour = COMMANDS.color;
     COMMANDS.background = COMMANDS.bg;
 })();
-
+// I wonder why no-one just use JSON.stringify/parse here
 /*
  * Adds user to the specified list
  * 
@@ -1466,7 +1535,7 @@ add = function(att, user){
     var searchTerm = new RegExp("(^|(?: ))" + user + "($|,+? )","i");
     if (block.search(searchTerm) == -1){
         block += ", " + user;
-        while (block[0] == "," | block[0] == " ") // it works...
+        while (block[0] == "," | block[0] == " ") // it works... // binary OR?
             block = block.substring(1);
         CLIENT.show(user + ' has been added');
         CLIENT.set(att, block);
@@ -1513,6 +1582,7 @@ var mouseX;
 var mouseY;
 parser = {
     linkreg : /(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)*(\?([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?(&#35;([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?/i,
+      // some color do not work
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|azure|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
     replink : 'ÃƒÂ©ÃƒÂ¤!#@&5nÃƒÂ¸ÃƒÂºENONHEInoheÃƒÂ¥ÃƒÂ¶',
     repslsh : 'ÃƒÂ¸ÃƒÂº!#@&5nÃƒÂ¥ÃƒÂ¶EESCHEInoheÃƒÂ©ÃƒÂ¤',
@@ -1600,6 +1670,7 @@ parser = {
         return check.test(str)
     },
     parse : function(str, second) {
+      var wrap;
         // Convert chars to html codes
         str = str.replace(/\n/g, '\\n');
         str = str.replace(/&/gi, '&amp;');
@@ -1684,32 +1755,42 @@ parser = {
         // Add greentext
         str = str.replace(/^(&gt;.*)$/i, '&#35;789922 $1');
         // Javascript links
-        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
-            a = a.replace(/&#35;/gi, '#');
-            if(/[^:]*javascript *:/im.test(a)) {
-                    if (b.trim() == ""){
-                    	return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
-                    }
-                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
-            } else {
-                if (b.trim() == ""){
-                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[Script]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
-                }
-                    return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+        str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, link, text){
+          link = link.replace(/&#35;/g, '#');
+          text = text.trim();
+          // okay I lied, the snipped I gave you ddin't work on every cases
+          // but to be short: chrome accept URL with \r in the shceme
+          if (typeof URL === "function") {
+            try { new URL(a) } catch (error) {
+              // can't actaully check if the URL is invalid or what
+              // so let's assume the URL is sheit
+              text = "[invalid]";
             }
+            if (new URL(link).protocol === "javascript:") {
+              if (text === "") {
+                text = "[ECMAScript]"; // <3
+              }
+            } else {
+              if (text === "") {
+                text = "[unknown]";
+              }
+            }
+          } else {
+            // location = "https://browsehappy.com/";
+            text = "[unknown]";
+          }
+          return '<div><a href="javascript:void(0)" title="'+ link +'" onclick="'+ link +'">'+ text +
+            '</a>&nbsp;<a onclick="window.prompt(\'The text is below\',\''+ link +'\');">[Copy]</a></div>';
         });
         // Replace colors
-        var wrap = '';
-        if (CLIENT.get('tcolor') == 'off')
-            wrap = '!';
+        wrap = CLIENT.get("tcolor") === "off" ? "!" : "";
         str = this.multiple(str, /&#35;&#35;([\da-f]{6}|[\da-f]{3})(.+)$/i, '<span style="background-color: '+wrap+'#$1'+wrap+';">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: '+wrap+'#$1'+wrap+';">$2</span>');
         str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: '+wrap+'#$1'+wrap+';">$2</span>');
         str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: '+wrap+'$1'+wrap+';">$2</span>');
         str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: '+wrap+'$1'+wrap+';">$2</span>');
-        wrap = '';
-        if (CLIENT.get('tfont') == 'off')
-            wrap = '!';
+        
+        wrap = CLIENT.get("tfont") === "off" ? "!" : "";
         str = this.multiple(str, this.fontRegex, '<span style="font-family:'+wrap+'\'$3\''+wrap+'">$4</span>');
         // Replace escapes
         for (i in escs) {
