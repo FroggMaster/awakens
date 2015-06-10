@@ -1312,7 +1312,7 @@ $(function() {
                 var att = params.att, toggled;
                 if (att == 'bg' && CLIENT.get('bg') == 'off')
                     $('#background').css('background', CLIENT.get('old'));
-                if (att == 'color' || att == 'colors' || att == 'colour' || att == 'colours'){
+                if (att == 'color' || att == 'colour'){
                     if (CLIENT.get('tcolor') == 'on' || CLIENT.get('tcolor') == null && CLIENT.set('tcolor','on')){
                         $.each($('.message-content'), function(key, value){
                             value = value.innerHTML.replace(/<span style="(background-)?color: ([#\d\w]+);">/gi, function(match, p1, p2){
@@ -1363,7 +1363,7 @@ $(function() {
                         });
                     }
                     toggled = 'tfont';
-                } else if (att == 'style' || att == 'styles'){
+                } else if (att = 'style' || att == 'styles'){
                     if (CLIENT.get('tstyle') == 'on' || CLIENT.get('tstyle') == null && CLIENT.set('tstyle','on')){
                     	$.each($('.message-content'), function(key, value){
                     	    $(this).html(value.innerHTML.replace(/((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))/gi, function(match){
