@@ -1365,15 +1365,15 @@ $(function() {
                     toggled = 'tfont';
                 } else if (att == 'style' || att == 'styles'){
                     if (CLIENT.get('tstyle') == 'on' || CLIENT.get('tstyle') == null && CLIENT.set('tstyle','on')){
-                    	$.each($('.message-content'), function(key, value){
-                    	    $(this).html(value.innerHTML.replace(/((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))/gi, function(match){
-                    	    	return '<!--' + match + '-->';
-                    	    }));
-                    	});
+                        $.each($('.message-content'), function(key, value){
+                            $(this).html(value.innerHTML.replace(/((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))/gi, function(match){
+                                return '<!--' + match + '-->';
+                            }));
+                        });
                     } else {
-                    	$.each($('.message-content'), function(key, value){
-                    	    $(this).html(value.innerHTML.replace(/<!--((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))-->/gi, '$1'));
-                    	});
+                        $.each($('.message-content'), function(key, value){
+                            $(this).html(value.innerHTML.replace(/<!--((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))-->/gi, '$1'));
+                        });
                     }
                     toggled = 'tstyle';
                 } else if (att != 'style' && att != 'font'){
