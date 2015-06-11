@@ -227,7 +227,6 @@ $(function() {							//Overall function for the client's basic interactions with
                 var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
                 if (pm) {
                     var nick = pm[1].replace('\\|', '|');
-                    lastNick = nick;
                     return {
                         nick : nick,
                         message : pm[2],
@@ -792,7 +791,7 @@ $(function() {
         if (message.type == 'general-message' || message.type == 'action-message'){
             message.count = message.count || localCount;
         }
-        if (message.type == 'personal-message' && !lastNick){
+        if (message.type == 'personal-message'){
             lastNick = message.nick;
         }
         if (message.count){
