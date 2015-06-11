@@ -401,8 +401,8 @@ $(function() {							//Overall function for the client's basic interactions with
         },
 
         decorate : function(input) {
-            if (input.charAt(0) != '>' || input.search(/(^| )&gt;&gt;[1-9]([0-9]+)?/) == 0 
-            || input.search(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/i) == 0) {
+            if (input.charAt(0) != '>' || input.search(/(^| )>>[1-9]([0-9]+)?/) == 0 
+            || input.search(/>>>(\/[a-z0-9]+)\/(\d+)?\/?/i) == 0) {
                 var style = this.get('style');
                 var color = this.get('color');
                 var font = this.get('font');
