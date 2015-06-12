@@ -12,6 +12,8 @@ var fs = require('fs');
 var httpsPort = settings.https && settings.https.port;
 var httpPort = settings.server.port;
 
+String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
+
 /*
  * catch the uncaught errors that weren't wrapped in a domain or try catch
  * statement do not use this in modules, but only in applications, as otherwise
@@ -1148,6 +1150,10 @@ function createChannel(io, channelName) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
+					var argumentString = message.substring(message.indexOf(" ") + 7).trim();
+					    if (message.contains("define")) {
+                            define(argumentString);
+                        }
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
                                 count++;
@@ -1412,6 +1418,19 @@ function createChannel(io, channelName) {
             });
             return done.promise();
         }
+				
+		function define(word){
+	        request('https://api.wordnik.com/v4/word.json/' + word + '/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5', function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                   definition = JSON.parse(body);
+				   if (definition[0] === undefined){
+					    socketEmit(socket, 'message', 'No definition found for ' + word + '.');
+					} else {
+					    socketEmit(socket, 'message', definition[0].word + ': ' + definition[0].text);
+					}
+                }
+            });
+	     }
 
         /**
          * @inner
