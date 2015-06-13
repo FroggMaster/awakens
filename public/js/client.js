@@ -1453,6 +1453,9 @@ $(function() {
         },
         ask : {
             params : [ 'message$' ]
+        },
+        define : {
+            params : [ 'message$' ]
         }
     };
     for (x in nullCmds)
