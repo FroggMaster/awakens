@@ -4,8 +4,6 @@ var dao = require('./dao');
 var throttle = require('./throttle');
 var request = require('request');
 var hasher = require('./md5');
-var htmlparser = require("htmlparser2");
-var jsdom = require("jsdom");
 
 var _ = require('underscore');
 var $ = require('jquery-deferred');
@@ -1187,9 +1185,6 @@ function createChannel(io, channelName) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
-						if (message.contains("watch?v=") || message.contains("youtu.be")) {
-                            getTitles(message);
-                        }
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
                                 count++;
@@ -1530,42 +1525,6 @@ function createChannel(io, channelName) {
 							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                             message : "#orangeTails."
                         });
-            }
-        }
-		
-		
-        function getTitle(url) {
-            request(url, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-
-                    jsdom.env(
-                        body, ['code.jquery.com/jquery-1.6.min.js'],
-                        function (errors, window) {
-							title = window.document._ids['eow-title'][0]._attributes.title._nodeValue
-                            var video_id = url.split('v=')[1];
-                            var ampersandPosition = video_id.indexOf('&');
-                            if (ampersandPosition !== -1) {
-                                video_id = video_id.substring(0, ampersandPosition);
-                            }
-                            var thumb = "\n           https://img.youtube.com/vi/" + video_id + "/default.jpg"
-                    roomEmit('message', {
-                            type : 'chat-message',
-                            nick : '2Spooks',
-							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
-                            message : "#cyanTitle: " + title + thumb
-                        });
-                        }
-                    );
-                }
-            })
-        }
-		
-        function getTitles(message) {
-            var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/gim;
-            var idpattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gim;
-            var urls = message.match(urlpattern);
-            for (var c in urls) {
-                getTitle(urls[c]);
             }
         }
 
