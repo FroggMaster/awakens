@@ -1065,7 +1065,19 @@ function createChannel(io, channelName) {
                         count : count
                     });
                     ask(user.nick)
-					console.log("LOOOOOOOOOOL")
+                }
+            },
+			define : {
+                params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+                    var message = params.message.substring(0, settings.limits.message);
+                    count++;
+                    roomEmit('message', {
+                        type : 'action-message',
+                        message : user.nick + ': define ' + params.message,
+                        count : count
+                    });
+                    define(message)
                 }
             }
         };
@@ -1164,10 +1176,6 @@ function createChannel(io, channelName) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
-					var defineString = message.substring(message.indexOf("define") + 7).trim();
-					    if (message.contains("define")) {
-                            define(argumentString);
-                        }
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
                                 count++;
