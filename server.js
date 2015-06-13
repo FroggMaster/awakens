@@ -1061,7 +1061,7 @@ function createChannel(io, channelName) {
                     count++;
                     roomEmit('message', {
                         type : 'action-message',
-                        message : user.nick + ' ' + params.message,
+                        message : user.nick + 'asked the spooky server: ' + params.message,
                         count : count
                     });
                     ask(user.nick)
