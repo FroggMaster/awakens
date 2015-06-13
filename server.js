@@ -1457,13 +1457,15 @@ function createChannel(io, channelName) {
 				   if (definition[0] === undefined){
 					   roomEmit('message', {
                                     type : 'chat-message',
-                                    nick : 'SpookyBot',
+                                    nick : '2Spooks',
+									flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
                                     message : 'No definition found for ' + word + '.'
                                 });
 					} else {
 						   roomEmit('message', {
                                     type : 'chat-message',
-                                    nick : 'SpookyBot',
+                                    nick : '2Spooks',
+									flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
                                     message : definition[0].word + ': ' + definition[0].text
                                 });
 					}
@@ -1476,28 +1478,32 @@ function createChannel(io, channelName) {
                 case (0):
                     roomEmit('message', {
                             type : 'chat-message',
-                            nick : 'SpookyBot',
+                            nick : '2Spooks',
+							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
                             message : "#redNo, " + name + "."
                         });
                     break;
                 case (1):
                     roomEmit('message', {
                             type : 'chat-message',
-                            nick : 'SpookyBot',
+                            nick : '2Spooks',
+							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
                             message : "#greenYes, " + name + "."
                         });
                     break;
                 case (2):
                     roomEmit('message', {
                             type : 'chat-message',
-                            nick : 'SpookyBot',
+                            nick : '2Spooks',
+							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
                             message : "#yellowMaybe, " + name + "."
                         });
                     break;
                 default: // Also covers unexpected results
                     roomEmit('message', {
                             type : 'chat-message',
-                            nick : 'SpookyBot',
+                            nick : '2Spooks',
+							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
                             message : "#orangeI don't know, " + name + "."
                         });
                     break;
@@ -1508,13 +1514,15 @@ function createChannel(io, channelName) {
             if (Math.random() < 0.5) {
                     roomEmit('message', {
                             type : 'chat-message',
-                            nick : 'SpookyBot',
+                            nick : '2Spooks',
+							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
                             message : "#orangeHeads."
                         });
             } else {
                     roomEmit('message', {
                             type : 'chat-message',
-                            nick : 'SpookyBot',
+                            nick : '2Spooks',
+							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
                             message : "#orangeTails."
                         });
             }
