@@ -1450,6 +1450,9 @@ $(function() {
         },
 	cam : function(){ //Mr.Guy's shitty solution for cams.
             video('event', 'embed', 'http://spookyscary.party/')
+        },
+        ask : {
+            params : [ 'message$' ]
         }
     };
     for (x in nullCmds)
