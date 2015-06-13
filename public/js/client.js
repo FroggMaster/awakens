@@ -1456,7 +1456,8 @@ $(function() {
         },
         define : {
             params : [ 'message$' ]
-        }
+        },
+        coinflip : {}
     };
     for (x in nullCmds)
         for (var i = 0; i < nullCmds[x].length; i++)
