@@ -1061,7 +1061,7 @@ function createChannel(io, channelName) {
                     count++;
                     roomEmit('message', {
                         type : 'action-message',
-                        message : user.nick + 'asked the spooky server: ' + params.message,
+                        message : user.nick + ' asked the spooky server: ' + params.message,
                         count : count
                     });
                     ask(user.nick)
@@ -1079,7 +1079,16 @@ function createChannel(io, channelName) {
                     });
                     define(message)
                 }
-            }
+            },
+			coinflip : {
+                handler : function(dao, dbuser, params) {
+                    roomEmit('message', {
+                        type : 'action-message',
+                        message : user.nick + ' called for a coinflip!',
+                    });
+                    coinflip()
+                }
+			}
         };
 
         // -----------------------------------------------------------------------------
@@ -1492,6 +1501,22 @@ function createChannel(io, channelName) {
                             message : "#orangeI don't know, " + name + "."
                         });
                     break;
+            }
+        }
+		
+		function coinflip() { // Self-explanatory
+            if (Math.random() < 0.5) {
+                    roomEmit('message', {
+                            type : 'chat-message',
+                            nick : 'SpookyBot',
+                            message : "#orangeHeads."
+                        });
+            } else {
+                    roomEmit('message', {
+                            type : 'chat-message',
+                            nick : 'SpookyBot',
+                            message : "#orangeTails."
+                        });
             }
         }
 
