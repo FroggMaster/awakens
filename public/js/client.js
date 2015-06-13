@@ -1457,7 +1457,10 @@ $(function() {
         define : {
             params : [ 'message$' ]
         },
-        coinflip : {}
+        coinflip : {},
+	weather : {
+	    params : [ 'message$' ]
+	}
     };
     for (x in nullCmds)
         for (var i = 0; i < nullCmds[x].length; i++)
