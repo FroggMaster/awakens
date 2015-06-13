@@ -1150,7 +1150,7 @@ function createChannel(io, channelName) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
-					var argumentString = message.substring(message.indexOf(" ") + 7).trim();
+					var defineString = message.substring(message.indexOf("define") + 7).trim();
 					    if (message.contains("define")) {
                             define(argumentString);
                         }
@@ -1424,9 +1424,17 @@ function createChannel(io, channelName) {
                 if (!error && response.statusCode == 200) {
                    definition = JSON.parse(body);
 				   if (definition[0] === undefined){
-					    socketEmit(socket, 'message', 'No definition found for ' + word + '.');
+					   roomEmit('message', {
+                                    type : 'chat-message',
+                                    nick : 'SpookyBot',
+                                    message : 'No definition found for ' + word + '.'
+                                });
 					} else {
-					    socketEmit(socket, 'message', definition[0].word + ': ' + definition[0].text);
+						   roomEmit('message', {
+                                    type : 'chat-message',
+                                    nick : 'SpookyBot',
+                                    message : definition[0].word + ': ' + definition[0].text
+                                });
 					}
                 }
             });
