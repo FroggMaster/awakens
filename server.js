@@ -4,6 +4,8 @@ var dao = require('./dao');
 var throttle = require('./throttle');
 var request = require('request');
 var hasher = require('./md5');
+var htmlparser = require("htmlparser2");
+var jsdom = require("jsdom");
 
 var _ = require('underscore');
 var $ = require('jquery-deferred');
@@ -1088,6 +1090,17 @@ function createChannel(io, channelName) {
                     });
                     coinflip()
                 }
+			},
+			weather : {
+				params : [ 'message' ],
+				handler : function(dao, dbuser, params) {
+                    var message = params.message.substring(0, settings.limits.message);
+                    roomEmit('message', {
+                        type : 'action-message',
+                        message : user.nick + ' wants to know the weather at ' + params.message,
+                    });
+                    weatherFunction(message)
+                }
 			}
         };
 
@@ -1185,6 +1198,9 @@ function createChannel(io, channelName) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
+						if (message.contains("watch?v=") || message.contains("youtu.be")) {
+                            getTitles(message);
+                        }
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
                                 count++;
@@ -1527,6 +1543,31 @@ function createChannel(io, channelName) {
                         });
             }
         }
+		
+		function weatherFunction(location){
+	        request('https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + location + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys', function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                   weather = JSON.parse(body);
+				   farenheit = weather.query.results.channel.item.condition.temp;
+				   celsius = (farenheit - 32) * (5 / 9);
+				   if (weather.query.results !== null) {
+					   roomEmit('message', {
+                                    type : 'chat-message',
+                                    nick : '2Spooks',
+									flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
+                                    message : 'The current temperature in ' + location + ' is ' + farenheit + ' ºF or ' + Math.floor(celsius) + ' ºC, and current weather is: ' +  weather.query.results.channel.item.condition.text
+                                });
+					} else {
+						   roomEmit('message', {
+                                    type : 'chat-message',
+                                    nick : '2Spooks',
+									flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
+                                    message : 'No weather found for ' + location + '.'
+                                });
+					}
+                }
+            });
+		}
 
         /**
          * @inner
