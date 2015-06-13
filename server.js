@@ -1053,6 +1053,20 @@ function createChannel(io, channelName) {
                         });
                     });
                 }
+            },
+			ask : {
+                params : [ 'message' ],
+                handler : function(dao, dbuser, params) {
+                    var message = params.message.substring(0, settings.limits.message);
+                    count++;
+                    roomEmit('message', {
+                        type : 'action-message',
+                        message : user.nick + ' ' + params.message,
+                        count : count
+                    });
+                    ask(user.nick)
+					console.log("LOOOOOOOOOOL")
+                }
             }
         };
 
@@ -1439,6 +1453,39 @@ function createChannel(io, channelName) {
                 }
             });
 	     }
+		 
+		 function ask(name) { // Answers questions
+            switch (Math.floor(Math.random()*3)) {
+                case (0):
+                    roomEmit('message', {
+                            type : 'chat-message',
+                            nick : 'SpookyBot',
+                            message : "#redNo, " + name + "."
+                        });
+                    break;
+                case (1):
+                    roomEmit('message', {
+                            type : 'chat-message',
+                            nick : 'SpookyBot',
+                            message : "#greenYes, " + name + "."
+                        });
+                    break;
+                case (2):
+                    roomEmit('message', {
+                            type : 'chat-message',
+                            nick : 'SpookyBot',
+                            message : "#yellowMaybe, " + name + "."
+                        });
+                    break;
+                default: // Also covers unexpected results
+                    roomEmit('message', {
+                            type : 'chat-message',
+                            nick : 'SpookyBot',
+                            message : "#orangeI don't know, " + name + "."
+                        });
+                    break;
+            }
+        }
 
         /**
          * @inner
