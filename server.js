@@ -1458,14 +1458,14 @@ function createChannel(io, channelName) {
 					   roomEmit('message', {
                                     type : 'chat-message',
                                     nick : '2Spooks',
-									flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
+									flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                                     message : 'No definition found for ' + word + '.'
                                 });
 					} else {
 						   roomEmit('message', {
                                     type : 'chat-message',
                                     nick : '2Spooks',
-									flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
+									flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                                     message : definition[0].word + ': ' + definition[0].text
                                 });
 					}
@@ -1479,7 +1479,7 @@ function createChannel(io, channelName) {
                     roomEmit('message', {
                             type : 'chat-message',
                             nick : '2Spooks',
-							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
+							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                             message : "#redNo, " + name + "."
                         });
                     break;
@@ -1487,7 +1487,7 @@ function createChannel(io, channelName) {
                     roomEmit('message', {
                             type : 'chat-message',
                             nick : '2Spooks',
-							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
+							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                             message : "#greenYes, " + name + "."
                         });
                     break;
@@ -1495,7 +1495,7 @@ function createChannel(io, channelName) {
                     roomEmit('message', {
                             type : 'chat-message',
                             nick : '2Spooks',
-							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
+							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                             message : "#yellowMaybe, " + name + "."
                         });
                     break;
@@ -1503,7 +1503,7 @@ function createChannel(io, channelName) {
                     roomEmit('message', {
                             type : 'chat-message',
                             nick : '2Spooks',
-							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
+							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                             message : "#orangeI don't know, " + name + "."
                         });
                     break;
@@ -1515,14 +1515,14 @@ function createChannel(io, channelName) {
                     roomEmit('message', {
                             type : 'chat-message',
                             nick : '2Spooks',
-							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
+							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                             message : "#orangeHeads."
                         });
             } else {
                     roomEmit('message', {
                             type : 'chat-message',
                             nick : '2Spooks',
-							flair : '$Waiting for the Sunrise|/^/^/^/^/*/@#yellow2#greenSpooks',
+							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                             message : "#orangeTails."
                         });
             }
