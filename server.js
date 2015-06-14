@@ -199,10 +199,7 @@ function createChannel(io, channelName) {
                                     });
                                 });
                             } else {
-                                user.regpass = params.initial_password;
-                                showMessage(msgs.registeredAndVerified)
-                                socketEmit(socket,'passverify');
-                                console.log(user.nick + ' has been registered')
+                                showMessage(msgs.alreadyRegistered)
                             }
                         } else {
                             errorMessage('may not register this nick')
