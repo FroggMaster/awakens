@@ -1,4 +1,5 @@
 ssl/
 nohup.out
+npm-debug.log
 /node_modules/
 .project
