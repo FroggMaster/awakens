@@ -1098,17 +1098,6 @@ function createChannel(io, channelName) {
                     });
                     weatherFunction(message)
                 }
-			},
-			weather : {
-				params : [ 'location' ],
-				handler : function(dao, dbuser, params) {
-                    var message = params.message.substring(0, settings.limits.message);
-                    roomEmit('message', {
-                        type : 'action-message',
-                        message : user.nick + ' wants to know the weather at ' + params.message,
-                    });
-                    weather(message)
-                }
 			}
         };
 
