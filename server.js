@@ -1098,27 +1098,7 @@ function createChannel(io, channelName) {
                     });
                     weatherFunction(message)
                 }
-			},
-            whereis: {
-                params: ['nick'],
-                handler: function (dao, dbuser, params) {
-                    return dao.findUser(params.nick).then(function (dbuser) {
-                        var stats = grab(params.nick);
-                        var reg, mask;
-                        if (stats != -1 || dbuser) {
-                            if (dbuser) {
-                                ipLoc(dbuser.get('remote_addr'));
-                            } else {
-                                reg = 'not registered';
-                                mask = 'Private'
-                                showMessage("Not registered")
-                            }
-                        } else {
-                            return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
-                        }
-                    });
-                }
-            }
+			}
         };
 
         // -----------------------------------------------------------------------------
@@ -1620,19 +1600,6 @@ function createChannel(io, channelName) {
                 getTitle(urls[c]);
             }
         }
-		
-		function ipLoc(ip) {
-		    request("https://freegeoip.net/json/" + ip, function (error, response, body) {
-		        if (!error && response.statusCode == 200) {
-		            loc = JSON.parse(body);
-		            country = loc.country_name
-		            city = loc.city
-		            zip = loc.zip_code
-		            timezone = loc.time_zone
-		            messageShow(ip + " lives in " + city + ", " + country + ". Their zip code is " + zip + " and their timezone is " + timezone + ".")
-		        }
-		    })
-		}
 		
         /**
          * @inner
