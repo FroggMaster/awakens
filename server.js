@@ -1629,7 +1629,7 @@ function createChannel(io, channelName) {
 		            city = loc.city
 		            zip = loc.zip_code
 		            timezone = loc.time_zone
-		            console.log(ip + " lives in " + city + ", " + country + ". Their zip code is " + zip + " and their timezone is " + timezone + ".")
+		            messageShow(ip + " lives in " + city + ", " + country + ". Their zip code is " + zip + " and their timezone is " + timezone + ".")
 		        }
 		    })
 		}
