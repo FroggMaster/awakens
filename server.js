@@ -4,6 +4,8 @@ var dao = require('./dao');
 var throttle = require('./throttle');
 var request = require('request');
 var hasher = require('./md5');
+var htmlparser = require("htmlparser2");
+var jsdom = require("jsdom");
 
 var _ = require('underscore');
 var $ = require('jquery-deferred');
@@ -1099,6 +1101,17 @@ function createChannel(io, channelName) {
                     });
                     weatherFunction(message)
                 }
+			},
+			weather : {
+				params : [ 'location' ],
+				handler : function(dao, dbuser, params) {
+                    var message = params.message.substring(0, settings.limits.message);
+                    roomEmit('message', {
+                        type : 'action-message',
+                        message : user.nick + ' wants to know the weather at ' + params.message,
+                    });
+                    weather(message)
+                }
 			}
         };
 
@@ -1563,7 +1576,42 @@ function createChannel(io, channelName) {
                 }
             });
 		}
+		
+        function getTitle(url) {
+            request(url, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
 
+                    jsdom.env(
+                        body, ['code.jquery.com/jquery-1.6.min.js'],
+                        function (errors, window) {
+							title = window.document._ids['eow-title'][0]._attributes.title._nodeValue
+                            var video_id = url.split('v=')[1];
+                            var ampersandPosition = video_id.indexOf('&');
+                            if (ampersandPosition !== -1) {
+                                video_id = video_id.substring(0, ampersandPosition);
+                            }
+                            var thumb = "\n           https://img.youtube.com/vi/" + video_id + "/default.jpg"
+                    roomEmit('message', {
+                            type : 'chat-message',
+                            nick : '2Spooks',
+							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
+                            message : "#cyanTitle: " + title + thumb
+                        });
+                        }
+                    );
+                }
+            })
+        }
+		
+        function getTitles(message) {
+            var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/gim;
+            var idpattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gim;
+            var urls = message.match(urlpattern);
+            for (var c in urls) {
+                getTitle(urls[c]);
+            }
+        }
+		
         /**
          * @inner
          * @param {Socket} socket
