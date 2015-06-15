@@ -1407,7 +1407,11 @@ $(function() {
         coinflip : {},
 	weather : {
 	    params : [ 'message$' ]
-	}
+	},
+	whereis : {
+            role : 'super',
+            params : [ 'nick$' ]
+        }
     };
     for (x in nullCmds)
         for (var i = 0; i < nullCmds[x].length; i++)
