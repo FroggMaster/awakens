@@ -686,7 +686,8 @@ $(function() {
             "Whois": {
                 name: "Whois",
                 callback: function(){
-                    CLIENT.submit('/whois '+$.trim(this[0].textContent))
+                    var nick = $.trim(this[0].textContent);
+                    CLIENT.submit('/whois '+ (nick == 'Anonymous' ? '{"Anonymous":[{"id" : "'+ this[0].id + '"}]}' : nick));
                 }
             }
         }
