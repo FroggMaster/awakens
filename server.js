@@ -309,7 +309,7 @@ function createChannel(io, channelName) {
                                 	broadcastChannel(dao, channel, user.nick + ' has channel banned ' + nick + msg);
                                 	return dao.ban(nick, channelName);
                                 } else {
-                                    errorMessage('Can\'t ban user with a role equal to or higher than your own.');
+                                    errorMessage('You may not ban "Anonymous"');
                                 }
                             }
                         });
@@ -361,11 +361,28 @@ function createChannel(io, channelName) {
             kick : {
                 params : [ 'nick', 'message' ],
                 handler : function(dao, dbuser, params) {
-                    var kuser = indexOf(params.nick);
+                    var nick = params.nick;
+                    var obj;
+                    try {//Lets you kick anonymous using menu, safely
+                        var id = JSON.parse(nick).Anonymous[0].id;
+                        if (findId(id) != -1) {
+                            nick = 'Anonymous';
+                            obj = findId(id);
+                        }
+                    } catch (e) {
+                        //nothing
+                    }
+                    if (nick.length == 31 && nick.search(/Anonymous\([\d\w-_]{20}\)/) == 0){//lets you kick by name
+                        if (findId(nick.substring(10,30)) != -1) {
+                            obj = findId(nick.substring(10,30));
+                            nick = 'Anonymous';
+                        }
+                    }
+                    var kuser = indexOf(nick);
                     var permit = 0;
                     if(kuser != -1){
-                        kuser = channel.online[kuser]
-                        fuser = grab(params.nick);
+                        kuser = obj || channel.online[kuser];
+                        fuser = obj || grab(nick);
                         if(roles.indexOf(user.role) < roles.indexOf(fuser.role)){
                             permit = 1
                         } else if(user.role == fuser.role && user.access_level < fuser.access_level){
@@ -379,12 +396,12 @@ function createChannel(io, channelName) {
                             });
                             kuser.kicked = 1;
                             kuser.socket.disconnect();
-                            broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
+                            broadcastChannel(dao, channel, user.nick + " has kicked " + nick + msg);
                         } else {
                             errorMessage('Can\'t kick user with a role higher than your own.');
                         }
                     } else {
-                        errorMessage(params.nick  +' is not online');
+                        errorMessage(nick  +' is not online');
                     }
                 }
             },
@@ -1689,6 +1706,20 @@ function createChannel(io, channelName) {
                         return i;
                     }
                 }
+            }
+            return -1;
+        }
+        
+        /**
+         * Search online users by id
+         *
+         * @param {string} id
+         * @return {Object}
+         */
+        function findId(id) {
+            for (var i = 0; i < channel.online.length; i++) {
+                if (channel.online[i].socket.id == id)
+                    return channel.online[i];
             }
             return -1;
         }

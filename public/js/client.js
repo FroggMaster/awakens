@@ -584,7 +584,8 @@ $(function() {
     ONLINE.on('add', function(user) {
     	var nick;
         var li = $('<li class="users"></li>').attr({
-            class : 'online-' + user.get('id')
+            class : 'online-' + user.get('id'),
+            id : user.get('id')
         }).appendTo('.online');
         user.get('nick').length > 35 ? nick = $('<span></span>').text(user.get('nick').substring(0,32)+'...').appendTo(li) :
             nick = $('<span></span>').text(user.get('nick')).appendTo(li);
@@ -653,7 +654,8 @@ $(function() {
             "Kick": {
                 name: "Kick",
                 callback: function(){
-                    CLIENT.submit('/kick '+ $.trim(this[0].textContent));
+                    var nick = $.trim(this[0].textContent);
+                    CLIENT.submit('/kick '+ (nick == 'Anonymous' ? '{"Anonymous":[{"id" : "'+ this[0].id + '"}]}' : nick));
                 }
             },
             "Ban": {
