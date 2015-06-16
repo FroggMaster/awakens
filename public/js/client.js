@@ -2000,6 +2000,4 @@ function video(event, type, input) {
     });
 }
 // Scroll to bottom on resize.
-window.addEventListener('resize', function(event){
-  scrollToBottom()
-})
+window.addEventListener('resize', scrollToBottom)
