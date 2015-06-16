@@ -2002,4 +2002,4 @@ function video(event, type, input) {
 // Scroll to bottom on resize.
 $(window).resize(function() {
   scrollToBottom()
-}
+})
