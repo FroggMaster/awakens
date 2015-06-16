@@ -1743,6 +1743,7 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
+        scrollToBottom()
     }
     $(window).resize(resize); // Add event listener to 'window'
     resize();
@@ -2000,4 +2001,7 @@ function video(event, type, input) {
     });
 }
 // Scroll to bottom on resize.
-window.addEventListener('resize', scrollToBottom())
+// Scroll to bottom on resize.
+window.addEventListener('resize', function(event){
+  scrollToBottom()
+})
