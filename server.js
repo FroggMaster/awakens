@@ -598,9 +598,17 @@ function createChannel(io, channelName) {
                 role : 'super',
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
+                    var rem_add;
+                    var nick = params.nick;
+                    if (nick.length == 31 && nick.search(/Anonymous\([\d\w-_]{20}\)/) == 0){//lets you fidnalt by name
+                        id = nick.substring(10,30);
+                        if (findId(id) != -1) {
+                            rem_add = findId(id).remote_addr;
+                        }
+                    }
                     return dao.findUser(params.nick).then(function(dbuser) {
                         if (!dbuser){
-                            var addr = grab(params.nick) && grab(params.nick).remote_addr;
+                            addr = rem_add || grab(params.nick) && grab(params.nick).remote_addr;
                         }
                         if(addr || dbuser) {
                             var userip = dbuser && dbuser.get('remote_addr') ? dbuser.get('remote_addr') : addr ? addr : 'undefined';
