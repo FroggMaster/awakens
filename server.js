@@ -543,15 +543,33 @@ function createChannel(io, channelName) {
             whois : {
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
+                    var obj, id;
+                    var nick = params.nick;
+                    try {//Lets you whois anonymous using menu, safely
+                        id = JSON.parse(nick).Anonymous[0].id;
+                        if (findId(id) != -1) {
+                            nick = 'Anonymous';
+                            obj = findId(id);
+                        }
+                    } catch (e) {
+                        //nothing
+                    }
+                    if (nick.length == 31 && nick.search(/Anonymous\([\d\w-_]{20}\)/) == 0){//lets you whois by name
+                        id = nick.substring(10,30);
+                        if (findId(nick.substring(10,30)) != -1) {
+                            obj = findId(nick.substring(10,30));
+                        }
+                    }
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        var stats = grab(params.nick);
+                        var stats = obj || grab(params.nick);
+                        stats != -1 ? id = stats.socket.id : id = "Not Online";
                         var reg, mask;
                         if (stats != -1 || dbuser) {
                             if(dbuser){
                                 if (roles.indexOf(dbuser.get('role')) <= 1){
                                     stats = {
                                         role : dbuser.get('role'),
-                                        access_level : dbuser.get('access_level'),
+                                        access_level : dbuser.get('access_level')
                                     }
                                 } else {
                                     stats = GetInfo(params.nick);
@@ -563,10 +581,10 @@ function createChannel(io, channelName) {
                                 mask = (dbuser.get('vHost') ? dbuser.get('vHost') : 'Private');
                             } else {
                                 reg = 'not registered';
-                                mask = 'Private'
+                                mask = 'Private';
                             }
                             if (roles.indexOf(user.role) <= 1) {
-                                showMessage(msgs.get('whois', stats.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, reg));
+                                showMessage(msgs.get('whois', stats.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, id, reg));
                             } else if (roles.indexOf(user.role) >= 2) {
                                 showMessage(msgs.get('whoiss', stats.nick, stats.role, stats.access_level, mask, reg));
                             }
