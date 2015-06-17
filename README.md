@@ -17,9 +17,9 @@ A simple Node.JS chat server with some user management and games.
 <br>
 <br>
 To run:
-`node server > /dev/null 2>&1 &`<br>
+`nodejs server > /dev/null 2>&1 &`<br>
 For local testing use:
-`node server`
+`nodejs server`
 
 ## Developing
 * ***Don't commit directly to master!*** New features and suggestions should be tested first on localhost then sent to the dev branch.
@@ -28,9 +28,9 @@ For local testing use:
 
 ### Server Restarting
 
-**Please** do not use `nohup node server`, it creates output files like  [this](http://i.gyazo.com/e87040b6c4589bba8b1079a23ae221d2.png). If you find `nohup.out` files, or find evidence of any suspicious activity, let others know.
+**Please** do not use `nohup nodejs server`, it creates output files like  [this](http://i.gyazo.com/e87040b6c4589bba8b1079a23ae221d2.png). If you find `nohup.out` files, or find evidence of any suspicious activity, let others know.
 <br><br>
-Use `node server > /dev/null 2>&1 &` which will [discard all output](http://stackoverflow.com/questions/8220098/how-to-redirect-the-output-of-an-application-in-background-to-dev-null) that is produced.
+Use `nodejs server > /dev/null 2>&1 &` which will [discard all output](http://stackoverflow.com/questions/8220098/how-to-redirect-the-output-of-an-application-in-background-to-dev-null) that is produced.
 
 ### Code Formatting
 
