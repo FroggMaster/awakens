@@ -1281,6 +1281,9 @@ $(function() {
             params : [ 'att' ],
             handler : function(params) {
                 var att = params.att, toggled;
+                if (att == 'menu') {
+                    $('#user-list').slideToggle();
+                }
                 if (att == 'bg' && CLIENT.get('bg') == 'off')
                     $('#background').css('background', CLIENT.get('old'));
                 if (att == 'color' || att == 'colour'){
