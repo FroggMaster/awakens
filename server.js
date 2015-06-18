@@ -1237,7 +1237,7 @@ function createChannel(io, channelName) {
                 if (user.nick) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
                     if(user.nick == 'Frogger'){
-                    	hat = 'BDay_hat'
+                    	hat = 'CanadaLove'
                     };
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
