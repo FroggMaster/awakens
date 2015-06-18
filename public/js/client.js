@@ -586,7 +586,11 @@ $(function() {
     	}
     	$('#user-list').slideToggle();
     });
-    
+    /* $(document).on('focus', 'textarea', function() {		// Fix for users with an OSK, such as mobile. 
+    	if ($('#user-list').css('display') == 'block') {	
+	    $('#user-list').slideToggle();			
+    	}
+    }); */ 
     if (CLIENT.get('menu_display')){
         $('.menu-container').css('left',CLIENT.get('menu_left'));
         $('.menu-container').css('top',CLIENT.get('menu_top'));
