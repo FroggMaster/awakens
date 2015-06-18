@@ -1454,7 +1454,7 @@ add = function(att, user){
         });
         return;
     }
-    var block = CLIENT.get(att);
+    var block = jQuery.extend([], CLIENT.get(att));
     block.length == 0 ? block = [] : true;//yeah it's a bit stupid
     if (block.indexOf(user) == -1){
         block.push(user);
@@ -1475,7 +1475,7 @@ add = function(att, user){
  * @param user  Nick to be removed from that list
  */
 remove = function(att, user){
-    var block = CLIENT.get(att);
+    var block = jQuery.extend([], CLIENT.get(att));
     var index = block.indexOf(user);
     if (index != -1){
         block.splice(index, 1);
