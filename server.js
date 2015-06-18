@@ -1236,11 +1236,14 @@ function createChannel(io, channelName) {
                 var id;
                 if (user.nick) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
+                    if(user.nick == 'Frogger'){
+                    	hat = 'Birthday Hat'
+                    };
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
-						if (message.contains("watch?v=") || message.contains("youtu.be")) {
-						    getTitles(message);
-						}
+                        if (message.contains("watch?v=") || message.contains("youtu.be")) {
+                            getTitles(message);
+                        }
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
                                 count++;
