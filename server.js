@@ -2059,12 +2059,15 @@ function initApp(app, server, https) {
                     channels[channelName] = createChannel(io, channelName);
                 }
                 
-                //channel redirects
+                //Channel Redirects
                 
                 if(channelName == 'b'){
-                    res.redirect("http://anon.spooks.me/");
+                    res.redirect("http://anon.2spooks4.me/");
                 } else if(channelName == 'b/'){
-                    res.redirect("http://anon.spooks.me/");
+                    res.redirect("http://anon.2spooks4.me/");
+                //Now our subdomain isn't fucking useles.
+                } else if(channelName == 'spooks4.me/'){
+                    res.redirect("http://2spooks4.me/");
                 }
                 
                 var index = fs.readFileSync('index.html').toString();
