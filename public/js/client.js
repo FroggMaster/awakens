@@ -160,9 +160,12 @@ $(function() {							//Overall function for the client's basic interactions with
     
 	//General way that people submit messages to the chat. Checks to make sure the person isn't blocked.
     socket.on('message', function(msg) {
-        if(CLIENT.get('block').indexOf(msg.nick) == -1){
-            CLIENT.show(msg);
+    	var list = CLIENT.get('block');
+        for (var i = 0; i < list.length; i++){
+            if (list[i].toLowerCase() == msg.nick.toLowerCase())
+                return false; //Don't do anything
         }
+        CLIENT.show(msg);
     });
     
 	//When someone joins, waste space in this program for no reason. 
@@ -293,9 +296,17 @@ $(function() {							//Overall function for the client's basic interactions with
         initialize : function() {
             /* Initialize from localstorage. */
             'color tcolor tfont tstyle timestamp font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
-                this.set(key, localStorage.getItem('chat-' + key));
+                var item = localStorage.getItem('chat-' + key);
+                try {
+                    item = JSON.parse(item);
+                } catch(e) {
+                    //don't care
+                }
+                this.set(key, item);
                 this.on('change:' + key, function(m, value) {
                     if (value) {
+                    	if (typeof value == 'object')
+                            value = JSON.stringify(value);
                         localStorage.setItem('chat-' + key, value);
                     } else {
                         localStorage.removeItem('chat-' + key);
@@ -727,17 +738,18 @@ $(function() {
     function buildMessage(message) {
         var el = $('<div class="message"></div>');
         var sound = 'message';
+        var content;
         message.type && el.addClass(message.type);
         var time = message.time ? new Date(message.time) : new Date();
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
-        var alert = CLIENT.get('alert').split(',');
+        var alert = CLIENT.get('alert');
         var valid = false;
-        for (i = 1; i < alert.length; i++) { 
-            if(message.message.indexOf(' ' + alert[i] + ' ') != -1){
+        for (var i = 0; i < alert.length; i++){
+            if (message.message.indexOf(alert[i]) != -1) {
                 valid = true;
+                break;
             }
         }
-        var content;
         if (message.type == 'general-message' || message.type == 'action-message'){
             message.count = message.count || localCount;
         }
@@ -755,7 +767,7 @@ $(function() {
             el.children().first().css('visibility','hidden');
             el.children().first().css('font-size','0.2em');
         }
-        if((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
+        if ((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
         }
@@ -1431,12 +1443,17 @@ $(function() {
  * @param user  Nick to be added to that list
  */
 add = function(att, user){
+    if (user.toLowerCase() == CLIENT.get('nick').toLowerCase()) {
+        CLIENT.show({
+            message : 'You may not add yourself',
+            type : 'error-message'
+        });
+        return;
+    }
     var block = CLIENT.get(att);
-    var searchTerm = new RegExp("(^|(?: ))" + user + "($|,+? )","i");
-    if (block.search(searchTerm) == -1){
-        block += ", " + user;
-        while (block[0] == "," | block[0] == " ") // it works...
-            block = block.substring(1);
+    block.length == 0 ? block = [] : true;//yeah it's a bit stupid
+    if (block.indexOf(user) == -1){
+        block.push(user);
         CLIENT.show(user + ' has been added');
         CLIENT.set(att, block);
     } else {
@@ -1455,16 +1472,9 @@ add = function(att, user){
  */
 remove = function(att, user){
     var block = CLIENT.get(att);
-    var searchTerm = new RegExp("(^|(?: ))" + user+"($|,+? )","i");
-    var index = block.search(searchTerm);
+    var index = block.indexOf(user);
     if (index != -1){
-        if (block.split(",").length == 1){
-            block = "";
-        } else {
-            block = block.substring(0,index-1) + block.substring(index+user.length+1).trim();
-            while (block[0] == ",")
-                block = block.substring(1);
-        }
+        block.splice(index, 1);
         CLIENT.show(user + ' was removed.');
         CLIENT.set(att, block);
     } else {
