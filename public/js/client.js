@@ -215,7 +215,7 @@ $(function() {							//Overall function for the client's basic interactions with
      * @param {Array.<string>} expect
      */
     function parseParams(name, input, expect) {
-        if ('pm block alert unblock unalert'.search(name) != -1 && input.trim() == ""){
+        if ('pm block alert unblock unalert'.split(' ').indexOf(name) != -1 && input.trim() == ""){
             CLIENT.show({
                 message : "Invalid: /"+name+" <nick>",
                 type : 'error-message'
