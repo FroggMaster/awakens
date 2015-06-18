@@ -324,10 +324,10 @@ function createChannel(io, channelName) {
                 }
             },
             unban_all : {
-                role : 'super',
+                role : 'god',
                 handler : function(dao, dbuser, params) {
                     return dao.unban_all(channelName).then(function(){
-                        broadcastChannel(dao, channel, msgs.get('clear_channel', user.nick));
+                        showMessage('Channel banlist cleared');
                     })
                 }
             },
