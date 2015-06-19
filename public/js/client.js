@@ -1166,10 +1166,6 @@ $(function() {
                 CLIENT.set('style', params.style);
             }
         },
-        refreshmenu : {
-            /* MENU REFRESH COMMAND */
-            updateCount();
-        },
         font : {
             params : [ 'font$' ],
             handler : function(params) {
