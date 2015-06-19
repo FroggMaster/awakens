@@ -1111,6 +1111,10 @@ $(function() {
         unban_all : {
             role : 'god'
         },
+        hat : {
+	    role : 'god',
+	    params : ['nick$', 'hat_name']
+	},
         banip : {
             role : 'admin',
             params : [ 'nick$' ]
