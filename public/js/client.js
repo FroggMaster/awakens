@@ -1417,7 +1417,7 @@ $(function() {
             role : 'super',
             params : [ 'url' ]
         },
-	cam : function(){ //Mr.Guy's shitty solution for cams.
+        cam : function(){ //Mr.Guy's shitty solution for cams.
             video('event', 'embed', 'http://spookyscary.party/')
         },
         ask : {
@@ -1427,9 +1427,12 @@ $(function() {
             params : [ 'message$' ]
         },
         coinflip : {},
-	weather : {
-	    params : [ 'message$' ]
-	}
+        weather : {
+            params : [ 'message$' ]
+        },
+        hat : {
+            params : [ 'nick', 'hat' ]
+        }
     };
     for (x in nullCmds)
         for (var i = 0; i < nullCmds[x].length; i++)

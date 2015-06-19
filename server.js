@@ -1141,7 +1141,30 @@ function createChannel(io, channelName) {
                     });
                     weatherFunction(message)
                 }
-			}
+			},
+            hat : {
+                params : [ 'nick', 'hat' ],
+                handler : function(dao, dbuser, params) {
+                    var hats = ['BDay_hat', 'CanadaLove', 'Gold', 'Gold', 'SPD1', 'SPD2', 'SPD3', 'SPDClover'];
+                    if(hats.indexOf(params.hat) != -1){
+                        dao.getChannelInfo(channelName).then(function(info){
+                            var channelhats = info['hats'] ? info['hats'] : {};
+                            channelhats[params.nick] = params.hat
+                            dao.setChannelInfo(channelName, 'hats', JSON.stringify(channelhats)).then(function() {
+                                showMessage(params.nick + ' now has hat ' + params.hat)
+                                channel.online.forEach(function(user) {
+                                    if(user.nick == params.nick){
+                                        user.hat = params.hat
+                                        socketEmit(user.socket, 'message', 'You now have hat ' + params.hat);
+                                    }
+                                });
+                            });
+                        });
+                    } else {
+                        errorMessage('That hat doesn\'t exist.')
+                    }
+                }
+            }
         };
 
         // -----------------------------------------------------------------------------
@@ -1234,11 +1257,9 @@ function createChannel(io, channelName) {
             message : function(dao, msg) {
                 var done = $.Deferred();
                 var id;
+                var hat;
                 if (user.nick) {
-                    var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
-                    if(user.nick == 'Frogger'){
-                    	hat = 'CanadaLove'
-                    };
+                    hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : user.hat ? user.hat : 'nohat';
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         if (message.contains("watch?v=") || message.contains("youtu.be")) {
@@ -1887,6 +1908,13 @@ function createChannel(io, channelName) {
                                     date : currentDate
                                 }
                             }
+                            
+                            if(data['hats']){//assign user hat if they have one set
+                                if(data.hats[user.nick]){
+                                    user.hat = data.hats[user.nick]
+                                }
+                            }
+                            
                             if(roles.indexOf(dbuser.get('role')) <= 1){
                                 user.role = dbuser.get('role')
                                 user.access_level = dbuser.get('access_level')
