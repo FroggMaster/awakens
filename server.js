@@ -1145,7 +1145,7 @@ function createChannel(io, channelName) {
             hat : {
                 params : [ 'nick', 'hat' ],
                 handler : function(dao, dbuser, params) {
-                    var hats = ['BDay_hat', 'CanadaLove', 'Gold', 'Gold', 'SPD1', 'SPD2', 'SPD3', 'SPDClover'];
+                    var hats = ['BDay_hat', 'CanadaLove', 'Gold', 'SPD1', 'SPD2', 'SPD3', 'SPDClover'];
                     if(hats.indexOf(params.hat) != -1){
                         dao.getChannelInfo(channelName).then(function(info){
                             var channelhats = info['hats'] ? info['hats'] : {};
