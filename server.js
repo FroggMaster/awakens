@@ -405,12 +405,6 @@ function createChannel(io, channelName) {
                     }
                 }
             },
-            hat : {
-            	params : ['nick', 'hat_name'],
-            	handler : function(dao, dbuser, params) {
-            	    hatList[params.nick] = params.nick;
-            	}
-            },
             //changes role and access level of another user
             access : {
                 params : [ 'role', 'access_level', 'nick' ],
@@ -1060,13 +1054,6 @@ function createChannel(io, channelName) {
                         unknown : {}, // if they have no role, which shouldn't happen
                     };
                     var strRoles = ['God','Super','Admins','Mods','Muted','Undefined'];
-                    var hatList = {
-			"Frogger" : "CanadaLove",
-			"Xultra" : "DevHat",
-			"Mr.Guy" : "DevHat",
-			"Randomguy_" : "DevHat",      
-			"sammich" : "DevHat"
-		    }; 
                     var users = channel.online;
                     // sort user role and access data
                     for (var i = 0; i < users.length; i++){
@@ -1249,9 +1236,9 @@ function createChannel(io, channelName) {
                 var id;
                 if (user.nick) {
                     var hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : 'nohat';
-                    if(user.nick in hatList){
-			hat = hatList[user.nick];
-		    };
+                    if(user.nick == 'Frogger'){
+                    	hat = 'CanadaLove'
+                    };
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
                         if (message.contains("watch?v=") || message.contains("youtu.be")) {
