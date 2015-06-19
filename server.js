@@ -2061,14 +2061,24 @@ function initApp(app, server, https) {
                 
                 //Channel Redirects
                 
+                /*Example of what a redirect would look like if you are a faggot like anon.
                 if(channelName == 'b'){
                     res.redirect("http://anon.2spooks4.me/");
                 } else if(channelName == 'b/'){
                     res.redirect("http://anon.2spooks4.me/");
+                }
+                */
+                
                 //Redirects to Main Channel
-                } else if(channelName == 'spooks4.me/'){
+                if(channelName == 'spooks4.me/'){
+                    res.redirect("http://2spooks4.me/");
+                } else if(channelName == 'spooks4.me'){
+                    res.redirect("http://2spooks4.me/");
+                } else if(channelName == 'www.spooks4.me'){
                     res.redirect("http://2spooks4.me/");
                 } else if(channelName == 'www.spooks4.me/'){
+                    res.redirect("http://2spooks4.me/");
+                } else if(channelName == 'www.2spooks4.me'){
                     res.redirect("http://2spooks4.me/");
                 } else if(channelName == 'www.2spooks4.me/'){
                     res.redirect("http://2spooks4.me/");
