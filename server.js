@@ -2052,7 +2052,7 @@ function initApp(app, server, https) {
             try {
                 var host = req.headers.host;
                 var channelName = channelRegex.exec(req.url)[1];
-                if (host != 'spooks.me') {
+                if (host != '2spooks4.me') {
                     channelName = host + '/' + channelName;
                 }
                 if (!channels[channelName]) {
