@@ -2065,8 +2065,12 @@ function initApp(app, server, https) {
                     res.redirect("http://anon.2spooks4.me/");
                 } else if(channelName == 'b/'){
                     res.redirect("http://anon.2spooks4.me/");
-                //Now our subdomain isn't fucking useles.
+                //Redirects to Main Channel
                 } else if(channelName == 'spooks4.me/'){
+                    res.redirect("http://2spooks4.me/");
+                } else if(channelName == 'www.spooks4.me/'){
+                    res.redirect("http://2spooks4.me/");
+                } else if(channelName == 'www.2spooks4.me/'){
                     res.redirect("http://2spooks4.me/");
                 }
                 
