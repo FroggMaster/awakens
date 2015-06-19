@@ -122,6 +122,18 @@ body {
 	height:50px;
 	background-size: 30px 20px;
 }
+.Bday_hat {
+    background: url('/css/img/hats/BDay_hat.png');
+}
+.DevHat {
+    background: url('/css/img/hats/DevHat.png');
+}
+.CanadaLove {
+    background: url('/css/img/hats/CanadaLove.png');
+}
+.Gold {
+    background: url('/css/img/hats/Gold.png'); 
+}
 
 #youtube{
 	display:none;
