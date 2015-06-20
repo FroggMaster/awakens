@@ -1148,7 +1148,7 @@ function createChannel(io, channelName) {
                     var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'Santa', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow'];
                     if(hats.indexOf(params.hat) != -1){
                         dao.getChannelInfo(channelName).then(function(info){
-                            var channelhats = info['hats'] ? JSON.parse(info['hats']) : {};
+                            var channelhats = info['hats'] ? info['hats'] : {};
                             channelhats[params.nick] = params.hat
                             dao.setChannelInfo(channelName, 'hats', JSON.stringify(channelhats)).then(function() {
                                 showMessage(params.nick + ' now has hat ' + params.hat)
@@ -1650,7 +1650,7 @@ function createChannel(io, channelName) {
                     roomEmit('message', {
                             type : 'chat-message',
                             nick : '2Spooks',
-							flair : '$Special Elite|/\*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
+							flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                             message : "#cyanTitle: " + title + thumb
                         });
                         }
@@ -1910,11 +1910,8 @@ function createChannel(io, channelName) {
                             }
                             
                             if(data['hats']){//assign user hat if they have one set
-                                hats = JSON.parse(data['hats'])
-                                console.log(hats)
-                                if(hats[user.nick]){
-                                    console.log('checkj')
-                                    user.hat = hats[user.nick]
+                                if(data.hats[user.nick]){
+                                    user.hat = data.hats[user.nick]
                                 }
                             }
                             
