@@ -1145,7 +1145,7 @@ function createChannel(io, channelName) {
             hat : {
                 params : [ 'nick', 'hat' ],
                 handler : function(dao, dbuser, params) {
-                    var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'Santa', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow', 'Wizard', 'Viking', 'Fedora'];
+                    var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'RoseWhite', 'Rose2', 'RoseBlack2', 'Santa', 'Santa2', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow', 'Wizard', 'Viking', 'DevCog', 'MagicPurple', 'MagicBlue', 'MagicRed', 'Rain', 'Pimp', 'ThunderEgg'];
                     if(hats.indexOf(params.hat) != -1){
                         dao.getChannelInfo(channelName).then(function(info){
                             var channelhats = info['hats'] ? JSON.parse(info['hats']) : {};
