@@ -1422,13 +1422,13 @@ $(function() {
         },
         resetlist : function(){
             $(".online").empty();        /* Xultra's user list reset function */
-		
-			for(var user in ONLINE.models){
-			    var user_id = ONLINE.models[user].attributes.id;
-			    var new_user_li = ("<li " + "id='" + user_id + "' class='online-" + user_id 
-			    + "'><span>" + (ONLINE.models[user].attributes.nick) + "</span></li>");
-			    $(".online").append(new_user_li);
-			} 
+	    for(var user in ONLINE.models){
+	        var user_id = ONLINE.models[user].attributes.id;
+	        var new_user_li = ("<li " + "id='" + user_id + "' class='online-" + user_id 
+	        + "'><span>" + (ONLINE.models[user].attributes.nick) + "</span></li>");
+	        $(".online").append(new_user_li);
+	    } 
+	    CLIENT.show(" User list has been refreshed.");
         },
         ask : {
             params : [ 'message$' ]
