@@ -1668,7 +1668,7 @@ parser = {
             str = this.multiple(str, /\/\`([^\|]+)\|?/g, '<code>$1</code>');
         }
         // Replace >>>/x/<text> with 8ch.net/x/res/<text>
-        str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="https://8ch.net$1/res/$2/">$&</a>');
+        str = str.replace(/&gt;&gt;&gt;(\/[a-z0-9]+)\/(\d+)?\/?/gi, ' <a target="_blank" href="https://8ch.net$1/$2/">$&</a>');
         str = str.replace(/https:\/\/8chan.co\/([a-z0-9]+)\/res\/"/gi, "https://8ch.net/$1/\"");
         // Add quotes
         var barWidth = 52; //includes quoteDiv border
