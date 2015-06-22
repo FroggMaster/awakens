@@ -1420,6 +1420,16 @@ $(function() {
         cam : function(){ //Mr.Guy's shitty solution for cams.
             video('event', 'embed', 'http://spookyscary.party/')
         },
+        resetlist : function(){
+            $(".online").empty();        /* Xultra's user list reset function */
+		
+			for(var user in ONLINE.models){
+			    var user_id = ONLINE.models[user].attributes.id;
+			    var new_user_li = ("<li " + "id='" + user_id + "' class='online-" + user_id 
+			    + "'><span>" + (ONLINE.models[user].attributes.nick) + "</span></li>");
+			    $(".online").append(new_user_li);
+			} 
+        },
         ask : {
             params : [ 'message$' ]
         },
