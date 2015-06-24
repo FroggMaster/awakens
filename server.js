@@ -1386,7 +1386,7 @@ function createChannel(io, channelName) {
                             dao.findUser(user.nick).then(function(dbuser){
                                 dbuser.register(user.regpass).then(function(){
                                     socketEmit(socket,'removeDiv');
-                                    chnl = dbuser.get('nick') + '.spooks.me/';
+                                    chnl = dbuser.get('nick') + '.2spooks4.me/';
                                     access = {};
                                     whitelist = {};
                                     access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
