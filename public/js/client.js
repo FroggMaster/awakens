@@ -134,6 +134,7 @@ $(function() {							//Overall function for the client's basic interactions with
             info.role = 'basic'
             info.idle = 1
         }
+        info.access_level ? info.access_level += '.' : true;
         CLIENT.set(info);
     });
     
@@ -318,6 +319,7 @@ $(function() {							//Overall function for the client's basic interactions with
             'color font style flair mute play mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
+                    	key == 'access_level' ? value = value.split('.')[0] : value;
                         this.show(key + ' changed to: ' + value);
                     } else {
                         this.show(key + ' reset to default');
@@ -352,7 +354,7 @@ $(function() {							//Overall function for the client's basic interactions with
 
         submit : function(input) {
             var role = this.get('role');
-            var access_level = this.get('access_level');
+            var access_level = this.get('access_level').split('.')[0];
             if (access_level >= 0) {
                 var parsed = /^\/(?!embed)(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
