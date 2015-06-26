@@ -14,8 +14,6 @@ var fs = require('fs');
 var httpsPort = settings.https && settings.https.port;
 var httpPort = settings.server.port;
 
-var channelList = [];
-
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
 /*
@@ -29,7 +27,6 @@ process.on('uncaughtException', function(err) {
 });
 
 function createChannel(io, channelName) {
-    channelList.push(channelName);
     console.log('Starting channel: ' + (channelName || '<fontpage>'));
 
     var elbot = require('./elbot').start();
@@ -52,9 +49,6 @@ function createChannel(io, channelName) {
     };
     
     room.on('connection', function(socket) {
-        
-        if (channelList.indexOf(channelName) == -1)
-            channelList.push(channelName);
         
         var user = {
             remote_addr : socket.request.connection.remoteAddress,
@@ -121,8 +115,6 @@ function createChannel(io, channelName) {
                         part : user.part,
                         kicked : user.kicked
                     });
-                    if (channel.online.length == 0 && channelList.indexOf(channelName) != -1)
-                        channelList.splice(channelList.indexOf(channelName), 1);
                 }
                 //log.info('Disconnected');
             } catch (err) {
@@ -1053,16 +1045,6 @@ function createChannel(io, channelName) {
                             frame_src : params.url
                         });
                     });
-                }
-            },
-            channels : {
-                role : 'super',
-                handler: function(params) {
-                    var msg = '';
-                    for (var i = 0; i < channelList.length; i++){
-                        msg += channelList[i] + '\n';
-                    }
-                    showMessage('Channels:\n' + msg);
                 }
             },
             ask : {
