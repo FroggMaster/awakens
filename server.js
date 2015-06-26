@@ -1481,28 +1481,45 @@ function createChannel(io, channelName) {
             return done.promise();
         }
 				
-		function define(word){
-	        request('https://api.wordnik.com/v4/word.json/' + word + '/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5', function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                   definition = JSON.parse(body);
-				   if (definition[0] === undefined){
-					   roomEmit('message', {
-                                    type : 'chat-message',
-                                    nick : '2Spooks',
-									flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
-                                    message : 'No definition found for ' + word + '.'
-                                });
-					} else {
-						   roomEmit('message', {
-                                    type : 'chat-message',
-                                    nick : '2Spooks',
-									flair : '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
-                                    message : definition[0].word + ': ' + definition[0].text
-                                });
-					}
-                }
-            });
-	     }
+	function define(word) {
+	    var options = {
+	        url: 'https://mashape-community-urban-dictionary.p.mashape.com/define?term=' + word,
+	        headers: {
+	            'X-Mashape-Key': 'Op0MmmRS7MmshQVQ4kTczTQNwuqfp1ZsMIdjsnV65xK9uyf1mm',
+	            'Accept': 'text/plain'
+	        }
+	    };
+	    request(options, callback)
+
+	    function callback(error, response, body) {
+	        if (!error && response.statusCode == 200) {
+	            definitions = JSON.parse(body).list;
+	            var valid = [];
+	            _.map(definitions, function (item) {
+	                if (item.definition.length < 500) {
+	                    valid.push(item);
+	                }
+	            });
+	            var randomIndex = Math.floor(Math.random() * valid.length);
+	            var item = valid[randomIndex];
+	            if (valid.length === 0) {
+	                roomEmit('message', {
+	                    type: 'chat-message',
+	                    nick: '2Spooks',
+	                    flair: '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
+	                    message: 'No definition found for ' + word + '.'
+	                });
+	            } else {
+	                roomEmit('message', {
+	                    type: 'chat-message',
+	                    nick: '2Spooks',
+	                    flair: '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
+	                    message: word + ': ' + item.definition
+	                });
+	            }
+	        }
+	    };
+	}
 		 
 		 function ask(name) { // Answers questions
             switch (Math.floor(Math.random()*3)) {
