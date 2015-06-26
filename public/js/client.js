@@ -1417,16 +1417,6 @@ $(function() {
         cam : function(){ //Mr.Guy's shitty solution for cams.
             video('event', 'embed', 'http://spookyscary.party/')
         },
-        resetmenu : function(){	// Xultra's user list reset function 
-            $(".online").empty();  
-	    for(var user in ONLINE.models){
-	        var user_id = ONLINE.models[user].attributes.id;
-	        var new_user_li = ("<li " + "id='" + user_id + "' class='online-" + user_id 
-	        + "'><span>" + (ONLINE.models[user].attributes.nick) + "</span></li>");
-	        $(".online").append(new_user_li);
-	    } 
-	    CLIENT.show("User list has been refreshed.");
-        },
         ask : {
             params : [ 'message$' ]
         },
