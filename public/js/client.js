@@ -1414,9 +1414,6 @@ $(function() {
             role : 'super',
             params : [ 'url' ]
         },
-        channels : {
-            role : 'super'
-        }
         cam : function(){ //Mr.Guy's shitty solution for cams.
             video('event', 'embed', 'http://spookyscary.party/')
         },
