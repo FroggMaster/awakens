@@ -671,8 +671,7 @@ $(function() {
             "Kick": {
                 name: "Kick",
                 callback: function(){
-                    var nick = $.trim(this[0].textContent);
-                    CLIENT.submit('/kick '+ (nick == 'Anonymous' ? '{"Anonymous":[{"id" : "'+ this[0].id + '"}]}' : nick));
+                    CLIENT.submit('/kick '+ $.trim(this[0].textContent));
                 }
             },
             "Ban": {
@@ -703,8 +702,7 @@ $(function() {
             "Whois": {
                 name: "Whois",
                 callback: function(){
-                    var nick = $.trim(this[0].textContent);
-                    CLIENT.submit('/whois '+ (nick == 'Anonymous' ? '{"Anonymous":[{"id" : "'+ this[0].id + '"}]}' : nick));
+                    CLIENT.submit('/whois ' + $.trim(this[0].textContent));
                 }
             }
         }
@@ -802,9 +800,6 @@ $(function() {
             }
             if(message.hat != 'nohat' && message.type == 'chat-message'){
                 $('<span class="hat ' + message.hat + '" style="background:url(\'/css/img/hats/'+message.hat+'.png\') no-repeat center;background-size: 30px 30px;"></span>').appendTo(content);
-            }
-            if(message.nick == 'Anonymous' && message.id && roles.indexOf(CLIENT.get('role')) <= 2){
-                message.nick += '(' + message.id + ')'
             }
             if (parsedFlair) {
                 $('<span class="nick"></span>').html(message.type == 'spoken-message' ? parsedFlair : parsedFlair + ':').appendTo(content);
@@ -2031,7 +2026,6 @@ function video(event, type, input) {
         }
     });
 }
-// Scroll to bottom on resize.
 // Scroll to bottom on resize.
 window.addEventListener('resize', function(event){
   scrollToBottom()
