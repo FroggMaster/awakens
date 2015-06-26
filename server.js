@@ -192,21 +192,17 @@ function createChannel(io, channelName) {
                             console.log("The API key for recaptcha is missing.");
                             return false;
                         }
-                        if(user.nick != 'Anonymous'){
-                            if (!dbuser) {
-                                dao.createUser(user.nick, user.remote_addr).done(function() {
-                                    dao.findUser(user.nick).then(function(dbuser){
-                                        user.regpass = params.initial_password;
-                                        showMessage(msgs.registeredAndVerified)
-                                        socketEmit(socket,'passverify');
-                                        console.log(user.nick + ' has been registered')
-                                    });
+                        if (!dbuser) {
+                            dao.createUser(user.nick, user.remote_addr).done(function() {
+                                dao.findUser(user.nick).then(function(dbuser){
+                                    user.regpass = params.initial_password;
+                                    showMessage(msgs.registeredAndVerified)
+                                    socketEmit(socket,'passverify');
+                                    console.log(user.nick + ' has been registered')
                                 });
-                            } else {
-                                showMessage(msgs.alreadyRegistered)
-                            }
+                            });
                         } else {
-                            errorMessage('may not register this nick')
+                            showMessage(msgs.alreadyRegistered)
                         }
                     });
                 }
@@ -298,19 +294,15 @@ function createChannel(io, channelName) {
                                 permit = 0
                             }
                             if(permit){
-                                if (params.nick != 'Anonymous') {
-                                	if (stats.socket){
-                                	    socketEmit(stats.socket, 'message', {
-                                	    	type : 'error-message',
-                                	    	message : msgs.get(msg.length > 0 ? 'banned_reason' : 'banned_by', user.nick + msg)
-                                	    });
-                                	    stats.socket.disconnect();
-                                	}
-                                	broadcastChannel(dao, channel, user.nick + ' has channel banned ' + nick + msg);
-                                	return dao.ban(nick, channelName);
-                                } else {
-                                    errorMessage('You may not ban "Anonymous"');
+                                if (stats.socket){
+                                    socketEmit(stats.socket, 'message', {
+                                        type : 'error-message',
+                                	message : msgs.get(msg.length > 0 ? 'banned_reason' : 'banned_by', user.nick + msg)
+                                    });
+                                    stats.socket.disconnect();
                                 }
+                                broadcastChannel(dao, channel, user.nick + ' has channel banned ' + nick + msg);
+                                return dao.ban(nick, channelName);
                             }
                         });
                     });
@@ -358,50 +350,34 @@ function createChannel(io, channelName) {
                     }
                 }
             },
-            kick : {
-                params : [ 'nick', 'message' ],
-                handler : function(dao, dbuser, params) {
-                    var nick = params.nick;
-                    var obj;
-                    try {//Lets you kick anonymous using menu, safely
-                        var id = JSON.parse(nick).Anonymous[0].id;
-                        if (findId(id) != -1) {
-                            nick = 'Anonymous';
-                            obj = findId(id);
-                        }
-                    } catch (e) {
-                        //nothing
-                    }
-                    if (nick.length == 31 && nick.search(/Anonymous\([\d\w-_]{20}\)/) == 0){//lets you kick by name
-                        if (findId(nick.substring(10,30)) != -1) {
-                            obj = findId(nick.substring(10,30));
-                            nick = 'Anonymous';
-                        }
-                    }
-                    var kuser = indexOf(nick);
+            kick: {
+                role: 'mod',
+                params: ['nick', 'message'],
+                handler: function(dao, dbuser, params) {
+                    var kuser = indexOf(params.nick);
                     var permit = 0;
-                    if(kuser != -1){
-                        kuser = obj || channel.online[kuser];
-                        fuser = obj || grab(nick);
-                        if(roles.indexOf(user.role) < roles.indexOf(fuser.role)){
+                    if (kuser != -1) {
+                        kuser = channel.online[kuser]
+                        fuser = grab(params.nick);
+                        if (roles.indexOf(user.role) < roles.indexOf(fuser.role)) {
                             permit = 1
-                        } else if(user.role == fuser.role && user.access_level < fuser.access_level){
+                        } else if (user.role == fuser.role && user.access_level < fuser.access_level) {
                             permit = 1
                         }
-                        if(permit){
+                        if (permit) {
                             msg = params.message.length > 1 ? ': ' + params.message.trim() : '';
                             socketEmit(kuser.socket, 'message', {
-                                type : 'error-message',
-                                message : msgs.get(msg.length > 0 ? 'kicked_reason' : 'kicked', user.nick, msg)
+                                type: 'error-message',
+                                message: msgs.get(msg.length > 0 ? 'kicked_reason' : 'kicked', user.nick, msg)
                             });
                             kuser.kicked = 1;
                             kuser.socket.disconnect();
-                            broadcastChannel(dao, channel, user.nick + " has kicked " + nick + msg);
+                            broadcastChannel(dao, channel, user.nick + " has kicked " + params.nick + msg);
                         } else {
                             errorMessage('Can\'t kick user with a role higher than your own.');
                         }
                     } else {
-                        errorMessage(nick  +' is not online');
+                        errorMessage(params.nick + ' is not online');
                     }
                 }
             },
@@ -540,36 +516,18 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-            whois : {
-                params : [ 'nick' ],
-                handler : function(dao, dbuser, params) {
-                    var obj, id;
-                    var nick = params.nick;
-                    try {//Lets you whois anonymous using menu, safely
-                        id = JSON.parse(nick).Anonymous[0].id;
-                        if (findId(id) != -1) {
-                            nick = 'Anonymous';
-                            obj = findId(id);
-                        }
-                    } catch (e) {
-                        //nothing
-                    }
-                    if (nick.length == 31 && nick.search(/Anonymous\([\d\w-_]{20}\)/) == 0){//lets you whois by name
-                        id = nick.substring(10,30);
-                        if (findId(nick.substring(10,30)) != -1) {
-                            obj = findId(nick.substring(10,30));
-                        }
-                    }
+            whois: {
+                params: ['nick'],
+                handler: function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        var stats = obj || grab(params.nick);
-                        stats != -1 ? id = stats.socket.id : id = "Not Online";
+                        var stats = grab(params.nick)
                         var reg, mask;
                         if (stats != -1 || dbuser) {
-                            if(dbuser){
-                                if (roles.indexOf(dbuser.get('role')) <= 1){
+                            if (dbuser) {
+                                if (roles.indexOf(dbuser.get('role')) <= 1) {
                                     stats = {
-                                        role : dbuser.get('role'),
-                                        access_level : dbuser.get('access_level')
+                                        role: dbuser.get('role'),
+                                        access_level: dbuser.get('access_level'),
                                     }
                                 } else {
                                     stats = GetInfo(params.nick);
@@ -581,10 +539,10 @@ function createChannel(io, channelName) {
                                 mask = (dbuser.get('vHost') ? dbuser.get('vHost') : 'Private');
                             } else {
                                 reg = 'not registered';
-                                mask = 'Private';
+                                mask = 'Private'
                             }
                             if (roles.indexOf(user.role) <= 1) {
-                                showMessage(msgs.get('whois', stats.nick, stats.role, stats.access_level, stats.remote_addr,stats.vHost, id, reg));
+                                showMessage(msgs.get('whois', stats.nick, stats.role, stats.access_level, stats.remote_addr, stats.vHost, reg));
                             } else if (roles.indexOf(user.role) >= 2) {
                                 showMessage(msgs.get('whoiss', stats.nick, stats.role, stats.access_level, mask, reg));
                             }
@@ -594,32 +552,25 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-            findalt : {
-                role : 'super',
-                params : [ 'nick' ],
-                handler : function(dao, dbuser, params) {
-                    var rem_add;
-                    var nick = params.nick;
-                    if (nick.length == 31 && nick.search(/Anonymous\([\d\w-_]{20}\)/) == 0){//lets you fidnalt by name
-                        id = nick.substring(10,30);
-                        if (findId(id) != -1) {
-                            rem_add = findId(id).remote_addr;
-                        }
-                    }
+            findalt: {
+                role: 'super',
+                params: ['nick'],
+                handler: function(dao, dbuser, params) {
                     return dao.findUser(params.nick).then(function(dbuser) {
-                        if (!dbuser){
-                            addr = rem_add || grab(params.nick) && grab(params.nick).remote_addr;
-                        }
-                        if(addr || dbuser) {
-                            var userip = dbuser && dbuser.get('remote_addr') ? dbuser.get('remote_addr') : addr ? addr : 'undefined';
-                            return dao.find_ip(userip).then(function(nicks) {
-                                if (nicks.length > 0 && userip) {
-                                    showMessage(msgs.get('find_ip', userip , nicks.join(', ')));
-                                } else {
-                                    showMessage(msgs.get('find_ip_empty', userip));
-                                }
-                                return true;
-                            });
+                        var stats = grab(params.nick);
+                        if (stats != -1 || dbuser) {
+                            if (dbuser) {
+                                return dao.find_ip(dbuser.get('remote_addr')).then(function(nicks) {
+                                    if (nicks.length > 0) {
+                                        showMessage(msgs.get('find_ip', params.remote_addr, nicks.join(', ')));
+                                    } else {
+                                        showMessage(msgs.get('find_ip_empty', params.remote_addr));
+                                    }
+                                    return true;
+                                });
+                            } else {
+                                return false;
+                            }
                         } else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
                         }
@@ -1096,7 +1047,7 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-			ask : {
+            ask : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
@@ -1109,7 +1060,7 @@ function createChannel(io, channelName) {
                     ask(user.nick)
                 }
             },
-			define : {
+            define : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
@@ -1122,7 +1073,7 @@ function createChannel(io, channelName) {
                     define(message)
                 }
             },
-			coinflip : {
+            coinflip : {
                 handler : function(dao, dbuser, params) {
                     roomEmit('message', {
                         type : 'action-message',
@@ -1130,10 +1081,10 @@ function createChannel(io, channelName) {
                     });
                     coinflip()
                 }
-			},
-			weather : {
-				params : [ 'message' ],
-				handler : function(dao, dbuser, params) {
+            },
+            weather : {
+                    params : [ 'message' ],
+                    handler : function(dao, dbuser, params) {
                     var message = params.message.substring(0, settings.limits.message);
                     roomEmit('message', {
                         type : 'action-message',
@@ -1141,7 +1092,7 @@ function createChannel(io, channelName) {
                     });
                     weatherFunction(message)
                 }
-			},
+            },
             hat : {
                 params : [ 'nick', 'hat' ],
                 handler : function(dao, dbuser, params) {
@@ -1871,7 +1822,7 @@ function createChannel(io, channelName) {
                     });
                     osock.disconnect();
                 }
-                if (indexOf(nick) >= 0 && nick != 'Anonymous' || user.nick && nick == 'Anonymous') {
+                if (indexOf(nick) >= 0) {
                     log.debug('Attempted to nick to ', nick, ' but someone else is using that nick right now');
                     if (user.nick) {
                         done.resolve(false, msgs.alreadyBeingUsed);
@@ -1890,7 +1841,7 @@ function createChannel(io, channelName) {
                         }
                         access = JSON.parse(data.access);
                         stats = GetInfo(user.nick);
-                        if(dbuser && user.nick != 'Anonymous'){
+                        if(dbuser){
                             var hashToken = hasher.hex_md5(hasher.genRandomSeed(6));
                             var currentDate = new Date();
                             currentDate = currentDate.getTime();
