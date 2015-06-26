@@ -1847,9 +1847,13 @@ function createChannel(io, channelName) {
              * @inner
              */
             function fallback() {
-                log.debug('Nick fallback');
-                attemptNick(dao, 'Anonymous').then(function(success, errorMessage) {
-                    done.resolve(success, errorMessage);
+                dao.nextNick().then(function(nick) {
+                    log.debug('Nick fallback to ', nick);
+                    attemptNick(dao, nick).then(function(success, errorMessage) {
+                        done.resolve(success, errorMessage);
+                    }, function(err) {
+                        done.reject(err);
+                    });
                 }, function(err) {
                     done.reject(err);
                 });
