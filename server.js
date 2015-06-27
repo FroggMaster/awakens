@@ -1063,7 +1063,7 @@ function createChannel(io, channelName) {
                     }
                     showMessage('Channels:\n' + msg);
                 }
-            }
+            },
             ask : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
