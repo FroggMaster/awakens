@@ -6,7 +6,7 @@
     "log" : {
         "error" : true,
         "info" : true,
-        "debug" : true,
+        "debug" : false,
         "db" : false
     },
     "https" : null,
