@@ -5,8 +5,8 @@
     },
     "log" : {
         "error" : true,
-        "info" : false,
-        "debug" : false,
+        "info" : true,
+        "debug" : true,
         "db" : false
     },
     "https" : null,
