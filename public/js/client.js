@@ -207,6 +207,10 @@ $(function() {							//Overall function for the client's basic interactions with
             }
         }
     });
+    
+    getTopicData = function(){
+        socket.emit('topicInfo');
+    }
 
     /*socket.on('updateMousePosition', function(msg) {
         CLIENT.trigger('updateMousePosition', msg);
@@ -1253,6 +1257,8 @@ $(function() {
                         type : 'escaped-message',
                         message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
                     });
+                    if (attribute_name = 'topic')
+                        getTopicData();
                 } else {
                     CLIENT.show({
                         type : 'error-message',
