@@ -1661,6 +1661,19 @@ function createChannel(io, channelName) {
                 getTitle(urls[c]);
             }
         }
+        
+	function whereIs(ip) {
+	    request('http://ip-api.com/json/' + ip, function (error, response, body) {
+	        if (!error && response.statusCode == 200) {
+	            ipLoc = JSON.parse(body);
+	            if (ipLoc.stats == "success") {
+	                showMessage('IP ' + ip + ' is located in ' + ipLoc.country + ', ' + ipLoc.city + ' and the timezone is: ' + ipLoc.timezone)
+	            } else {
+	                showMessage("IP location not found")
+	            }
+	        }
+	    });
+	}
 		
         /**
          * @inner
