@@ -1144,6 +1144,7 @@ function createChannel(io, channelName) {
                         errorMessage('That hat doesn\'t exist.')
                     }
                 }
+<<<<<<< HEAD
             },
 	whereis: {
 	    params: ['nick'],
@@ -1166,6 +1167,9 @@ function createChannel(io, channelName) {
 	        });
 	    }
 	}
+=======
+            }
+>>>>>>> parent of 2587e3e... /whereis
         };
 
         // -----------------------------------------------------------------------------
