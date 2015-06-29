@@ -1144,6 +1144,7 @@ function createChannel(io, channelName) {
             },
 	whereis: {
 	    params: ['nick'],
+	    role : 'super',
 	    handler: function (dao, dbuser, params) {
 	        return dao.findUser(params.nick).then(function (dbuser) {
 	            var stats = grab(params.nick);
