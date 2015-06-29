@@ -1446,6 +1446,10 @@ $(function() {
         },
         hat : {
             params : [ 'nick', 'hat' ]
+        },
+        whereis : {
+            params : [ 'nick' ]
+            role : 'super'
         }
     };
     for (x in nullCmds)
