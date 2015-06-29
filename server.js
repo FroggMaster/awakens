@@ -1141,7 +1141,27 @@ function createChannel(io, channelName) {
                         errorMessage('That hat doesn\'t exist.')
                     }
                 }
-            }
+            },
+	whereis: {
+	    params: ['nick'],
+	    handler: function (dao, dbuser, params) {
+	        return dao.findUser(params.nick).then(function (dbuser) {
+	            var stats = grab(params.nick);
+	            if (stats != -1 || dbuser) {
+	                if (dbuser) {
+	                    return dao.find_ip(dbuser.get('remote_addr')).then(function (nicks) {
+	                        whereIs(dbuser.get('remote_addr'))
+	                        return true;
+	                    });
+	                } else {
+	                    return false;
+	                }
+	            } else {
+	                return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
+	            }
+	        });
+	    }
+	}
         };
 
         // -----------------------------------------------------------------------------
