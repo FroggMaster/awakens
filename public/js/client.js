@@ -41,10 +41,11 @@ $(function() {							//Overall function for the client's basic interactions with
 	//When someone else joins, you add them to the user list, and then make a message that says " ** NAME has joined ** "
     socket.on('join', function(user) {
         ONLINE.add(user);
-        CLIENT.show({
-            type : 'general-message',
-            message : user.nick + ' has joined '
-        });
+        if (!CLIENT.get('tjoin') || CLIENT.get('tjoin') == 'on')
+            CLIENT.show({
+                type : 'general-message',
+                message : user.nick + ' has joined '
+            });
 		
     //If you have a part, you set it.
         if (CLIENT.get('part') != undefined)
@@ -102,7 +103,7 @@ $(function() {							//Overall function for the client's basic interactions with
     an empty string, then it's " ** NAME has left " + PART + " ** " */
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-        if (!user.kicked) {
+        if (!user.kicked && (!CLIENT.get('tjoin') || CLIENT.get('tjoin') == 'on')) {
             if (user.part == undefined) {
                 CLIENT.show({
                     type : 'general-message',
@@ -300,7 +301,7 @@ $(function() {							//Overall function for the client's basic interactions with
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tcolor tfont tstyle timestamp font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color tcolor tfont tstyle timestamp tjoin font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 var item = localStorage.getItem('chat-' + key);
                 try {
                     item = JSON.parse(item);
@@ -1353,6 +1354,13 @@ $(function() {
                         });
                     }
                     toggled = 'tstyle';
+                } else if (att == 'join' || att == 'leave'){
+                    if (CLIENT.get('tjoin') == 'on' || CLIENT.get('tjoin') == null && CLIENT.set('tjoin','on')){
+                        CLIENT.show('Join and leave mesages disabled');
+                    } else {
+                        CLIENT.show('Join and leave message enabled');
+                    }
+                    toggled = 'tjoin';
                 } else if (att != 'style' && att != 'font'){
                     toggled = att;
                 }
