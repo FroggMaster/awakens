@@ -75,6 +75,14 @@ function createChannel(io, channelName) {
         socket.on('alive', function(){
             user.alive = true
         });
+        
+        socket.on('topicInfo', function(){
+            try {
+                showMessage(topicInfo);
+            } catch(e) {
+                showMessage('Topic info not available');
+            }
+        });
  
         var log = {};
         [ 'error', 'info', 'debug' ].forEach(function(lvl) {
@@ -614,6 +622,7 @@ function createChannel(io, channelName) {
                 params : [ 'topic' ],
                 handler : function(dao, dbuser, params) {
                     var topic = params.topic.substring(0, settings.limits.message);
+                    topicInfo = "Set by " + user.nick + " on " + new Date();
                     dao.getChannelInfo(channelName).then(function(info){
                         if (info.topic == topic){
                             errorMessage(msgs.same_topic);
