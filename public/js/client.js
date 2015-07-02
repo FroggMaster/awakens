@@ -1281,7 +1281,7 @@ $(function() {
 						
 						CLIENT.show({
 							type : 'system-message',
-						    message : "Theme is set as:   " + theme_setting
+						    message : "Theme is currently set to: " + theme_setting
 						});
 						    /*\ 
 						    |*| I had to do this because of some genius bloat
