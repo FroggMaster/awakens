@@ -1247,17 +1247,52 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'color font style flair mute mute_speak play images note topic styles bg part block background mask msg alert security frame frame_src'.split(' ');
+                var valid = 'theme color font style flair mute mute_speak play images note topic styles bg part block background mask msg alert security frame frame_src'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
                     }else if (attribute_name == 'bg'){
                         attribute_name = 'background';
                     }
-                    CLIENT.show({
-                        type : 'escaped-message',
-                        message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
-                    });
+                    if (attribute_name == 'theme'){
+						var input_msg_clr = $("#input-bar").css('backgroundColor');
+						var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
+						var user_list_clr = $("#user-list").css('backgroundColor');
+						
+						function rgb2hex(rgb) {
+						    rgb = rgb.substring(4, rgb.length-1).split(", "); 
+						    function colorChange(color) {
+						        color = parseInt(color).toString(16);
+						        if (color.length < 2) {
+						            return "0" + color;
+						        }
+						        else {
+						            return color;
+						        }
+						    }
+						    var red = colorChange(rgb[0]);
+						    var green = colorChange(rgb[1]);
+						    var blue = colorChange(rgb[2]);
+						    return "#"+red+green+blue;
+						}
+						theme_setting = rgb2hex(input_msg_clr) + " " + 
+						                rgb2hex(scroll_bar_clr)+ " " +
+						                rgb2hex(user_list_clr) + " ";
+						
+						CLIENT.show({
+							type : 'system-message',
+						    message : "Theme is currently set to: " + theme_setting
+						});
+						    /*\ 
+						    |*| I had to do this because of some genius bloat
+						    |*| code one of you goofballs wrote long ago.  <3
+						    \*/
+                    }else {
+	                    CLIENT.show({
+	                        type : 'escaped-message',
+	                        message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
+	                    });
+                    }
                     if (attribute_name = 'topic')
                         getTopicData();
                 } else {
