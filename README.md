@@ -9,17 +9,22 @@ A simple Node.JS chat server with some user management and games.
 * node.js installed
 * MySQL installed
 * git installed (optional but recommended)
+* forever installed (optional highly recommended)
 
 ## Local Installation
 1. Create a database called nodejs_chat
 2. Add tables by executing the sql files inside /sql/
-3. Rename conf/settings.local to conf/settings.json
-<br>
-<br>
-To run:
+3. Rename default conf/settings.public to conf/settings.json
+
+To run with Forever:
+`forever start server.js`
+For local testing use:
+`nodejs server`
+
+To run without Forever:
 `nohup nodejs server`
 For local testing use:
 `nodejs server`
 
 ## Developing
-Contact Frogger on http://2spooks4.me to become a developer.
+Contact or E-Mail Frogger at http://2spooks4.me / Admin@2spooks4.me to become a developer
