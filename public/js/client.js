@@ -1,11 +1,12 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
-var localCount = 0, lastNick;
+var lastNick;
 var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm"; //Replace with your own from Google recaptcha
 // ------------------------------------------------------------------
 // Client
 // ------------------------------------------------------------------
 
+// Create list of online users
 ONLINE = new Backbone.Collection();
 
 $(function() {
@@ -13,9 +14,8 @@ $(function() {
     var requestId = 0;
     var requests = {};
     var roles = ['god','super','admin','mod','basic','mute'];
-																
-    Game.init(socket);
     
+    //Add user to list and show message
     socket.on('join', function(user) {
         ONLINE.add(user);
         if (!CLIENT.get('tjoin') || CLIENT.get('tjoin') == 'on')
@@ -27,19 +27,19 @@ $(function() {
         if (CLIENT.get('part') != undefined)
             socket.emit('SetPart', CLIENT.get('part'));
     });
-	
+    
+    //Synchronize user list with server
     socket.on('online', function(users) {
         ONLINE.add(users);
     });
-	
-    socket.on('updateCount', function(data){
-       localCount = data.count 
-    });
     
+    //Removes user registration window
     socket.on('removeDiv',function() {
         $('#passanchor').hide(500,function(){$('#passanchor').remove()});
     });
-	
+    
+    //Called when the user registers a name
+    //Sets the CSS and HTML properties for the visible elements
     socket.on('passverify', function() {
         $('head').append('<script src=\'https://www.google.com/recaptcha/api.js?\'></script>');
         $('body').append('<div id="passanchor"></div>');
@@ -62,31 +62,20 @@ $(function() {
                 setTimeout(function(){$('#captchaform').animate({opacity : 1.0}, 500); setTimeout(function(){addWarning()},2000);},700);
             }
         );
-        function addWarning() {
-            $('#passanchor').append('<div id="warning">Great. Now you have no way of verifying.</div>');
-            $('#warning').css('top',window.innerHeight/3.25-9);
-            $('#warning').css('left',window.innerWidth/2-129);
-            $('#warning').css('visibility','visible');
-        }
     });
     
+    //Shows user leave message with part, if it exists
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
         if (!user.kicked && (!CLIENT.get('tjoin') || CLIENT.get('tjoin') == 'on')) {
-            if (user.part == undefined) {
-                CLIENT.show({
-                    type : 'general-message',
-                    message : user.nick + ' has left '
-                });
-            } else {
-                CLIENT.show({
-                    type : 'general-message',
-                    message : user.nick + ' has left ' + user.part
-                });
-            }
+            CLIENT.show({
+                type : 'general-message',
+                message : user.nick + ' has left ' + (user.part ? user.part : '')
+            });
         }
     });
     
+    //Triggers name change message
     socket.on('nick', function(info) {
         var user = ONLINE.get(info.id);
         var old = user.get('nick');
@@ -96,26 +85,31 @@ $(function() {
             message : old + ' is now known as ' + info.nick
         });
     });
-	
+    
+    //Updates user information	
     socket.on('update', function(info) {
         if (info.role == 'mute') {
             info.role = 'basic'
             info.idle = 1
         }
+        //Prevents localStorage from reading the level as a number
         info.access_level ? info.access_level += '.' : true;
         CLIENT.set(info);
     });
     
+    //Updates the large center 'message'
     socket.on('centermsg', function(data){
         $('#sam').remove()
         $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     	CLIENT.set({ msg : data.msg });
     });
     
+    //Client side check to see if user is active
     socket.on('alive', function(){
         socket.emit('alive')
     });
-	
+    
+    //Plays youtube video when activated
     socket.on('playvid', function(url){
         if(url.url == "stop" || CLIENT.get('mute') == 'on' || CLIENT.get('play') == 'off'){
             $("#youtube")[0].innerHTML = ""
@@ -124,6 +118,7 @@ $(function() {
         }
     });
     
+    //Shows messages from users that aren't blocked
     socket.on('message', function(msg) {
     	var list = CLIENT.get('block');
         for (var i = 0; i < list.length; i++){
@@ -133,6 +128,7 @@ $(function() {
         CLIENT.show(msg);
     });
     
+    //Sends user info after connecting to the server
     socket.on('connect', function() {
         socket.emit('join', {
             nick : CLIENT.get('nick'),
@@ -140,11 +136,13 @@ $(function() {
         });
     });
     
+    //Displays disconnect message... that's really all.
     socket.on('disconnect', function() {
         ONLINE.reset();
         errorMessage('Disconnected');
     });
     
+    //Refreshes window on command
     socket.on('refresh', function() {
         window.location.reload();
     });
@@ -161,6 +159,7 @@ $(function() {
         }
     });
     
+    //Sends request for topic info
     getTopicData = function(){
         socket.emit('topicInfo');
     }
@@ -173,9 +172,10 @@ $(function() {
      */
     function parseParams(name, input, expect) {
         if ('pm block alert unblock unalert'.split(' ').indexOf(name) != -1 && input.trim() == ""){
-            errorMessage('Invalid: /"+name+" <nick>');
+            errorMessage('Invalid: /'+name+' <nick>');
             return;
         }
+        //Simplified switch statement for client-side commands
         switch(name) {
             case 'pm':
                 var pm = /^(.*?[^\\])\|([\s\S]*)$/.exec(input);
@@ -242,7 +242,8 @@ $(function() {
                 }
         }
     }
-
+    
+    //Backbone model containing functions to manage the user chat interface
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
@@ -251,7 +252,7 @@ $(function() {
                 try {
                     item = JSON.parse(item);
                 } catch(e) {
-                    //don't care
+                    //Ignore
                 }
                 this.set(key, item);
                 this.on('change:' + key, function(m, value) {
@@ -276,7 +277,8 @@ $(function() {
                     }
                 }, this);
             }, this);
-
+            
+            /* Display message sample to user */
             'color style font flair'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     this.submit('/echo Now your messages look like this');
@@ -293,7 +295,8 @@ $(function() {
             });
             return result.promise();
         },
-
+        
+        //Returns all valid commands
         getAvailableCommands : function() {
             var myrole = this.get('role');
             return myrole == null ? [] : _.filter(_.keys(COMMANDS), function(key) {
@@ -301,7 +304,8 @@ $(function() {
                 return cmd_level == null || roles.indexOf(myrole) <= roles.indexOf(cmd_level);
             });
         },
-
+        
+        //Parses and sends message to server
         submit : function(input) {
             var role = this.get('role');
             var access_level = this.get('access_level').split('.')[0];
@@ -351,13 +355,15 @@ $(function() {
                 }
             }
         },
-
+        
         show : function(message) {
             this.trigger('message', message);
         },
         
+        //List of invalid fonts, so errors don't keep showing up
         badfonts : [],
-
+        
+        //Adds formating to incoming text
         decorate : function(input) {
             if (input.charAt(0) != '>' || input.search(/(^| )>>[1-9]([0-9]+)?/) == 0 
             || input.search(/>>>(\/[a-z0-9]+)\/(\d+)?\/?/i) == 0) {
@@ -393,6 +399,8 @@ $(function() {
     var blurred = false;
     var unread = 0;
     var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
+    
+    //Changes unread count
     function updateTitle() {
         var topic = CLIENT.get('topic');
         if (topic) {
@@ -412,6 +420,7 @@ $(function() {
         blurred = false;
         updateTitle();
     });
+    //Updates unread status
     CLIENT.on('message', function(message) {
         if (blurred) {
             if(message.message.search(check) != -1 || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
@@ -421,6 +430,7 @@ $(function() {
             updateTitle();
         }
     });
+    //Show notification when it is updated
     CLIENT.on('change:notification', function(m, notification) {
         updateTitle();
         parser.getAllFonts(notification);
@@ -429,6 +439,7 @@ $(function() {
             message : notification
         });
     });
+    //Same for the topic
     CLIENT.on('change:topic', function(m, topic) {
         updateTitle();
         CLIENT.show({
@@ -436,6 +447,7 @@ $(function() {
             message : 'Topic: ' + topic
         });
     });
+    //Set the frame when it is changed
     CLIENT.on('change:frame_src', function(m) {
         var url = CLIENT.get('frame_src');
         if(CLIENT.get('frame') == 'on' && parser.linkreg.exec(url) && url != 'none'){
@@ -451,13 +463,14 @@ $(function() {
             $('#messages').append("<div class=frame><iframe width=\"100%\" height=\"100%\" src=\"" + CLIENT.get('frame_src') + "\"frameborder=\"0\" sandbox=\"allow-same-origin allow-scripts\"></iframe></div>")
         }
     });
+    //Turns play off
     CLIENT.on('change:play', function(){
         if(CLIENT.get('play') == 'off'){
             $("#youtube")[0].innerHTML = "";
         }
     });
-    
-    var attList = ['images', 'bg', 'styles', 'block', 'alert', 'frame', 'frame_src', 'play', 'tcolor'];// All attributes to set
+    // All attributes to set
+    var attList = ['images', 'bg', 'styles', 'block', 'alert', 'frame', 'frame_src', 'play', 'tcolor'];
     for (var i = 0; i < attList.length; i++){
     	var x = attList[i];
         if (!CLIENT.get(x))
@@ -492,7 +505,7 @@ $(function() {
             $('#messages').css('background', 'url(/public/css/img/bg.png) center / auto 50% no-repeat rgb(17, 17, 17)');
         }
     });
-    // scrollbar and input
+    // Set the theme for scrollbar and input textarea
     CLIENT.on('change:chat_style', function(m, style){
         style = CLIENT.get('chat_style').split(',');
         if (!style[2])
@@ -513,13 +526,12 @@ $(function() {
 
 $(function() {
     
-    /*
-     * Updates menu user count
-     */
+    //Updates menu user count
     function updateCount() {
         $('#tabbed-menu').text(ONLINE.size());
     }
     
+    //Hides and shows popup user menu
     $('#tabbed-menu').click(function(){
     	var distanceFromTop = $("#tabbed-menu").offset().top - $(window).scrollTop()
     	if ( distanceFromTop < 350 ) {
@@ -530,7 +542,7 @@ $(function() {
     	}
     	$('#user-list').slideToggle();
     });
-    $(document).on('focus', 'textarea', function() {		// Fix for users with an OSK, such as mobile. 
+    $(document).on('focus', 'textarea', function() {// Fix for users with an OSK, such as mobile. 
     	if ($('#user-list').css('display') == 'block') {	
 	    $('#user-list').slideToggle();			
     	}
@@ -539,13 +551,14 @@ $(function() {
         $('.menu-container').css('left',CLIENT.get('menu_left'));
         $('.menu-container').css('top',CLIENT.get('menu_top'));
     }
-    
+    //Adds user to the tabbed menu and updates count
     ONLINE.on('add', function(user) {
     	var nick;
         var li = $('<li class="users"></li>').attr({
             class : 'online-' + user.get('id'),
             id : user.get('id')
         }).appendTo('.online');
+        //Limit the maximum length to be displayed
         user.get('nick').length > 35 ? nick = $('<span></span>').text(user.get('nick').substring(0,32)+'...').appendTo(li) :
             nick = $('<span></span>').text(user.get('nick')).appendTo(li);
         li.append(' ');
@@ -553,11 +566,11 @@ $(function() {
             user.get('nick').length > 35 ? nick.text(user.get('nick').substring(0,32)+'...') : nick.text(user.get('nick'));
         });
         CLIENT.on('change:menu_display', function(e) {
-            //nothing for now
            updateCount();
         });
         updateCount();
     });
+    //Remove user div from the menu
     ONLINE.on('remove', function(user) {
         $('.online-' + user.get('id')).remove();
         updateCount();
@@ -663,6 +676,7 @@ $(function() {
     var animation = null;
     var roles = ['god','super','admin','mod','basic','mute'];
     
+    //Creates message to be displayed
     CLIENT.on('message', function(message) {
         if (typeof message == 'string') {
             message = {
@@ -681,6 +695,7 @@ $(function() {
         }
     });
     
+    //Builds message depending on type
     function buildMessage(message) {
         var el = $('<div class="message"></div>');
         var sound = 'message';
@@ -690,18 +705,17 @@ $(function() {
         var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
         var alert = CLIENT.get('alert');
         var valid = false;
+        //Check if msg contains any keywords
         for (var i = 0; i < alert.length; i++){
             if (message.message.indexOf(alert[i]) != -1) {
                 valid = true;
                 break;
             }
         }
-        if (message.type == 'general-message' || message.type == 'action-message'){
-            message.count = message.count || localCount;
-        }
         if (message.type == 'personal-message'){
             lastNick = message.nick;
         }
+        //Make quotable if relevant
         if (message.count){
             el.append($('<div class="timestamp" title=' + message.count + '></div>').text(time.format(DATE_FORMAT) + ' '));
             content = $('<div class="message-content spooky_msg_' + message.count + '"></div>').appendTo(el);
@@ -713,10 +727,12 @@ $(function() {
             el.children().first().css('visibility','hidden');
             el.children().first().css('font-size','0.2em');
         }
+        //Alert the user if their name is mentioned
         if ((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
             	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
             	sound = 'name'
         }
+        //Alert user if they are quoted
         if (message.message.search(/>>(\d)+/g) != -1) {
             for (var i = 0; i < message.message.match(/>>(\d)+/g).length; i++) {
                 var lastMatch = message.message.match(/>>(\d)+/g)[i];
@@ -788,6 +804,7 @@ $(function() {
             }
             $('<span class="content"></span>').html(parsed || message.message).appendTo(content);
         }
+        //Load and play speak messages
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
             var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
             if(voices.indexOf(message.voice) > 0){
@@ -838,9 +855,7 @@ $(function() {
     }
 });
 
-/*
- * Sets input bar value to clicked message
- */
+//Quotes any clicked message and formats it as needed
 $('#messages').on("click", ".message .timestamp", function(e){
     var number = e.currentTarget.title;
     if (number != "") {
@@ -855,6 +870,7 @@ $('#messages').on("click", ".message .timestamp", function(e){
 // PM Panel
 // ------------------------------------------------------------------
 
+//Not being used
 (function() {
     var PANELS = {};
     window.PM = {
@@ -909,6 +925,7 @@ $(function() {
 // Input Form / History
 // ------------------------------------------------------------------
 
+//Manage textarea inputs and actions
 $(function() {
     var history = [];
     var historyIndex = -1;
@@ -936,14 +953,19 @@ $(function() {
             }
             return;
         case 38: // up
-            if (e.shiftKey) {
+            if ($(this).val().indexOf('\n') == -1 || $(this)[0].selectionStart < $(this).val().indexOf('\n')) {
                 delta = 1;
             }
             break;
         case 40: // down
-            if (e.shiftKey) {
+            if ($(this)[0].selectionStart > $(this).val().lastIndexOf('\n')) {
                 delta = -1;
             }
+            break;
+        case 9: //tab
+            e.preventDefault();
+            if ($(this)[0].selectionStart == $(this).val().length)
+                $(this).val($(this).val() + '\n');
             break;
         }
         if (delta) {
@@ -958,7 +980,8 @@ $(function() {
     
     var ctrl = false;
     var hover;
-
+    
+    //Make images larger when hovering with ctrl
     $(document).keydown(function(e){
         if (e.keyCode == 17 && hover){
             if (hover.localName == 'img'){
@@ -986,11 +1009,13 @@ $(function() {
         }
     });
     
+    //Resize textarea on keyup
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
         input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
         $(window).resize();
     });
+    
 });
 
 // ------------------------------------------------------------------
@@ -1002,6 +1027,7 @@ $(function() {
         server : ['logout', 'unregister', 'whoami'],     // {}
         local : ['block', 'unblock', 'alert', 'unalert'] // function(){}
     };
+    //Object with all command data. See 2spooks4.me/help for more information
     window.COMMANDS = {
         help : function() {
             var cmdList = 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /');
@@ -1112,6 +1138,7 @@ $(function() {
                 if (params.font == 'default' || params.font == 'none') {
                     params.font = null;
                 }
+                //Make sure font is valid before 9001 of them get appended to the HTML head
                 if (!params.font || CLIENT.badfonts.indexOf(params.font) == -1) {
                     $.ajax({
                         url : 'https://fonts.googleapis.com/css?family=' + encodeURIComponent(params.font),
@@ -1192,7 +1219,7 @@ $(function() {
                     }else if (attribute_name == 'bg'){
                         attribute_name = 'background';
                     }
-                    if (attribute_name == 'theme'){
+                    if (attribute_name == 'theme'){//Xultra doing his own weird thing again
 						var input_msg_clr = $("#input-bar").css('backgroundColor');
 						var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
 						var user_list_clr = $("#user-list").css('backgroundColor');
@@ -1225,13 +1252,13 @@ $(function() {
 						    |*| I had to do this because of some genius bloat
 						    |*| code one of you goofballs wrote long ago.  <3
 						    \*/
-                    }else {
+                    } else {
 	                    CLIENT.show({
 	                        type : 'escaped-message',
 	                        message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
 	                    });
                     }
-                    if (attribute_name = 'topic')
+                    if (attribute_name == 'topic')
                         getTopicData();
                 } else {
                     errorMessage('Invalid: Variable can be one of [' + valid.join(', ') + ']');
@@ -1244,7 +1271,6 @@ $(function() {
         elbot : {
             params : [ 'message$' ]
         },
-        //sends an anonymous text
         anon : {
             params : [ 'message$' ]
         },
@@ -1269,10 +1295,6 @@ $(function() {
                 }
                 CLIENT.set(toggled, CLIENT.get(toggled) == 'on' ? 'off' : 'on');
             }
-        },
-        unblock_all : function(){
-            CLIENT.set('block',"");
-            CLIENT.show('Blocklist has been cleared');
         },
         private : {
             role : 'super'
@@ -1334,7 +1356,7 @@ $(function() {
         channels : {
             role : 'super'
         },
-        cam : function(){ //Mr.Guy's shitty solution for cams.
+        cam : function(){
             video('event', 'embed', 'http://spookyscary.party/')
         },
         ask : {
@@ -1354,11 +1376,13 @@ $(function() {
     for (x in nullCmds)
         for (var i = 0; i < nullCmds[x].length; i++)
             x == 'server' ? window.COMMANDS[nullCmds[x][i]] = {} : window.COMMANDS[nullCmds[x][i]] = function(){};
-
+    
+    //Alternate spellings of commands
     COMMANDS.colour = COMMANDS.color;
     COMMANDS.background = COMMANDS.bg;
 })();
 
+//Shortcut for displaying an error message
 function errorMessage(message){
     CLIENT.show({
         message : message,
@@ -1377,7 +1401,7 @@ add = function(att, user){
         errorMessage('You may not add yourself')
     } else {
         var block = jQuery.extend([], CLIENT.get(att));
-        block.length == 0 ? block = [] : true;//yeah it's a bit stupid
+        block.length == 0 ? block = [] : true;//Ignore this stupid ternary
         if (block.indexOf(user) == -1){
             block.push(user);
             CLIENT.show(user + ' has been added');
@@ -1395,6 +1419,11 @@ add = function(att, user){
  * @param user  Nick to be removed from that list
  */
 remove = function(att, user) {
+    if (user == 'all') {//unblock all clears list
+        CLIENT.set(att, "");
+        CLIENT.show(att + ' has been cleared');
+        return;
+    }
     var block = jQuery.extend([], CLIENT.get(att));
     var index = block.indexOf(user);
     if (index != -1) {
@@ -1409,8 +1438,11 @@ remove = function(att, user) {
 // ------------------------------------------------------------------
 // Message Parser
 // ------------------------------------------------------------------
+
+//Used for quote display
 var mouseX;
 var mouseY;
+//Message parser. I cry when I see this.
 parser = {
     linkreg : /(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)*(\?([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?(&#35;([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?/i,
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|blue|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
@@ -1428,6 +1460,7 @@ parser = {
         if (!this.loadedFonts[family] && CLIENT.badfonts.indexOf(family) == -1) {
             this.loadedFonts[family] = true;
             //var protocol = 'https:' == document.location.protocol ? 'https' : 'http';
+            //Again, more font checking
             var url = 'https://fonts.googleapis.com/css?family=' + encodeURIComponent(family);
             $.ajax({
                 url : url,
@@ -1447,6 +1480,7 @@ parser = {
     removeHTML : function(parsed) {
         return $('<span>' + parsed + '</span>').text();
     },
+    //Shorter version of parse
     parseLinks : function(str) {
         // Convert chars to html codes
         str = str.replace(/&/gi, '&amp;');
@@ -1657,9 +1691,7 @@ parser = {
 // ------------------------------------------------------------------
 
 $(function() {
-    /*
-     * Resizes chat elements to fit window
-     */
+    //Resizes chat elements to fit window
     function resize() {
         var width = $(window).width();
         var height = $(window).height();
@@ -1675,118 +1707,16 @@ $(function() {
         });
         scrollToBottom()
     }
-    $(window).resize(resize); // Add event listener to 'window'
+    $(window).resize(resize); // Add event listener to window
     resize();
 });
 
-// ------------------------------------------------------------------
-// Autocomplete
-// ------------------------------------------------------------------
-
-$(function() {
-    var autoCompleteList = false;
-    
-    $('<div id="autocomplete"></div>').css('bottom', $('#input-message').outerHeight() + 20 + 'px').appendTo('body');
-    $('#input-message').keydown(function(e) {
-        if (e.keyCode == 9 && !autoCompleteList) {//on tab
-            e.preventDefault();
-            var match = $(this).val().match(/\S+?$/);
-            var v = match && match[0].toLowerCase();
-            var list = [];
-            ONLINE.each(function(user) {
-                var user_name = user.get('nick');
-                if (!v || user_name.toLowerCase().indexOf(v) == 0)
-                    list.push(user_name);
-            });
-            $('#autocomplete').show();
-            $('#autocomplete').html('');
-            $(list).each(function(i) {
-                $('#autocomplete').append('<span>' + list[i] + '</span>');
-            });
-            autoCompleteList = list;
-        } else if (e.keyCode == 9 && autoCompleteList) {
-            e.preventDefault();
-            var list = autoCompleteList;
-            if (list.length == 0 || !list[0]) {
-                autoCompleteList = false;
-                $('#autocomplete').hide();
-                this.value += ' ';
-            } else if (list.length == 1) {
-                autoCompleteList = null;
-                $('#autocomplete').hide();
-                var x = $(this).val().split(' ');
-                x[x.length - 1] = (x[0][0] == "/" ? list[0] : list[0].replace(/([`~^%\-_\\#*]|:\/\/)/g, '\\$1'));
-                $(this).val(x.join(' '));
-            } else {
-                list.push(list.shift());
-                $('#autocomplete').html('');
-                $(list).each(function(i) {
-                    $('#autocomplete').append('<span>' + list[i] + '</span>');
-                });
-            }
-        } else if (e.keyCode == 27 && autoCompleteList) {
-            e.preventDefault();
-            autoCompleteList = false;
-            $('#autocomplete').hide();
-        } else if (autoCompleteList) {
-            e.preventDefault();
-            var list = autoCompleteList;
-            autoCompleteList = false;
-            $('#autocomplete').hide();
-            var chr = '';
-            if (e.keyCode > 47 && e.keyCode < 58) {
-                chr = String.fromCharCode(e.keyCode);
-            } else if (e.keyCode > 65 && e.keyCode < 91) {
-                chr = String.fromCharCode(e.keyCode + 32);
-            } else if (e.keyCode > 95 && e.keyCode < 106) {
-                chr = String.fromCharCode(e.keyCode - 48);
-            } else if (e.keyCode > 105 && e.keyCode < 112 && e.keyCode != 108) {
-                chr = String.fromCharCode(e.keyCode - 64);
-            } else if (e.keyCode > 218 && e.keyCode < 222) {
-                chr = String.fromCharCode(e.keyCode - 128);
-            } else if (e.keyCode > 188 && e.keyCode < 192) {
-                chr = String.fromCharCode(e.keyCode - 144);
-            } else {
-                switch (e.keyCode) {
-                case 186:
-                    chr = ';';
-                    break;
-                case 187:
-                    chr = '=';
-                    break;
-                case 188:
-                    chr = ',';
-                    break;
-                case 192:
-                    chr = '`';
-                    break;
-                case 222:
-                    chr = '\'';
-                    break;
-                case 32:
-                    chr = ' ';
-                    break;
-                default:
-                    break;
-                }
-            }
-            if (!list[0]) {
-                if (chr.length == 0)
-                    chr = ' ';
-                this.value += chr;
-            } else {
-                var x = $(this).val().split(' ');
-                x[x.length - 1] = (x[0][0] == "/" ? list[0] : list[0].replace(/([`~^%\-_$|\\#\*]|:\/\/)/g, '\\$1')) + chr;
-                $(this).val(x.join(' '));
-            }
-        }
-    });
-});
 
 // ------------------------------------------------------------------
 // Audio
 // ------------------------------------------------------------------
 
+//Setup audio sounds
 (function() {
     var SOUNDS = {
         message : '/audio/Bing.mp3',
@@ -1846,8 +1776,6 @@ function video(event, type, input) {
             embed = '<iframe src="//www.ustream.tv/embed/' + input + '?v=3&amp;wmode=direct" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
         case 'embed':
             embed = '<iframe width="100%" height="100%" src="' + input + '" frameborder="0" allowfullscreen></iframe>';
-            break;
-        default: // Shouldn't get here
             break;
     }
     var videoOverlay = $('.video-overlay');
@@ -1930,7 +1858,8 @@ function video(event, type, input) {
         }
     });
 }
-// Scroll to bottom on resize.
+
+// Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
   scrollToBottom()
 })
