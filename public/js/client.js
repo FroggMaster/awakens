@@ -6,39 +6,16 @@ var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm"; //Replace
 // Client
 // ------------------------------------------------------------------
 
-ONLINE = new Backbone.Collection();		/*Backbone.js, a model that allows binding and custom events, as well as API functions.
-										http://backbonejs.org/ */
-$(function() {							//Overall function for the client's basic interactions with server
+ONLINE = new Backbone.Collection();
+
+$(function() {
     var socket = io('/' + window.channel);
-    var first = true;
     var requestId = 0;
     var requests = {};
-    var roles = ['god','super','admin','mod','basic','mute']; /*The basic 6 roles of spooks.
-																-God: Owner(s), obviously the most powerful.
+    var roles = ['god','super','admin','mod','basic','mute'];
 																
-																-Super: Developer(s), have special abilities like seeing
-																who posted with anon, people's IP addresses, etc.
-																
-																-Admin: Trustworthy individual who has the ability to now ban.
-																
-																-Mod: Generally an inbetween stage to see if you can trust
-																someone, a Mod is the first step in gaining power on Spooks.
-																If you are an access 0 moderator, you can change the topic,
-																background, and kick people.
-																
-																-Basic: The standard person browsing Spooks. Every single person
-																who joins Spooks automatically is a Basic Access level 3.
-																
-																-Mute: Someone who when they speak cannot be heard. Subhuman
-																swine :^)
-																
-																==IMPORTANT: Access level also determines your abilities, as
-																seen in Mod, and by the fact that an Admin 3 cannot kick an
-																Admin 2-0. */
-																
-    Game.init(socket);					//Remnants of Mario considering adding games to Spooks.
+    Game.init(socket);
     
-	//When someone else joins, you add them to the user list, and then make a message that says " ** NAME has joined ** "
     socket.on('join', function(user) {
         ONLINE.add(user);
         if (!CLIENT.get('tjoin') || CLIENT.get('tjoin') == 'on')
@@ -47,28 +24,22 @@ $(function() {							//Overall function for the client's basic interactions with
                 message : user.nick + ' has joined '
             });
 		
-    //If you have a part, you set it.
         if (CLIENT.get('part') != undefined)
             socket.emit('SetPart', CLIENT.get('part'));
     });
 	
-    //When you join, you get added to the list of users.
     socket.on('online', function(users) {
         ONLINE.add(users);
     });
 	
-	//Use this to update the localCount variable.    
     socket.on('updateCount', function(data){
        localCount = data.count 
     });
     
-	//Remove the password verification GUI
     socket.on('removeDiv',function() {
         $('#passanchor').hide(500,function(){$('#passanchor').remove()});
     });
 	
-	/*The fun, long function that you go through when you try to verify your account, specifically your password. Uses Google
-    Recaptcha API*/
     socket.on('passverify', function() {
         $('head').append('<script src=\'https://www.google.com/recaptcha/api.js?\'></script>');
         $('body').append('<div id="passanchor"></div>');
@@ -99,8 +70,6 @@ $(function() {							//Overall function for the client's basic interactions with
         }
     });
     
-	/*When some fool leaves, generate a message that depends on if they have a part. If you pretend a lack of a set part is just
-    an empty string, then it's " ** NAME has left " + PART + " ** " */
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
         if (!user.kicked && (!CLIENT.get('tjoin') || CLIENT.get('tjoin') == 'on')) {
@@ -118,7 +87,6 @@ $(function() {							//Overall function for the client's basic interactions with
         }
     });
     
-	//When someone wants to change their name, also make a message that says " ** OLDNAME is now known as NAME ** "
     socket.on('nick', function(info) {
         var user = ONLINE.get(info.id);
         var old = user.get('nick');
@@ -129,7 +97,6 @@ $(function() {							//Overall function for the client's basic interactions with
         });
     });
 	
-   //When you update, make mutes role basic 
     socket.on('update', function(info) {
         if (info.role == 'mute') {
             info.role = 'basic'
@@ -139,19 +106,16 @@ $(function() {							//Overall function for the client's basic interactions with
         CLIENT.set(info);
     });
     
-	//Centermsg just centers the /msg.
     socket.on('centermsg', function(data){
         $('#sam').remove()
         $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     	CLIENT.set({ msg : data.msg });
     });
     
-	//Tests connection.
     socket.on('alive', function(){
         socket.emit('alive')
     });
 	
-    //Playvid command that turns the vid on, but checks to make sure the person doesn't have mute on.
     socket.on('playvid', function(url){
         if(url.url == "stop" || CLIENT.get('mute') == 'on' || CLIENT.get('play') == 'off'){
             $("#youtube")[0].innerHTML = ""
@@ -160,7 +124,6 @@ $(function() {							//Overall function for the client's basic interactions with
         }
     });
     
-	//General way that people submit messages to the chat. Checks to make sure the person isn't blocked.
     socket.on('message', function(msg) {
     	var list = CLIENT.get('block');
         for (var i = 0; i < list.length; i++){
@@ -170,33 +133,22 @@ $(function() {							//Overall function for the client's basic interactions with
         CLIENT.show(msg);
     });
     
-	//When someone joins, waste space in this program for no reason. 
     socket.on('connect', function() {
-        if (!first) {
-            //window.location.reload();
-        }
         socket.emit('join', {
             nick : CLIENT.get('nick'),
             security : CLIENT.get('security')
         });
-        first = false;
     });
     
-	//When told to disconnect, you get a red error type message that tells you that you've disconnected.
     socket.on('disconnect', function() {
         ONLINE.reset();
-        CLIENT.show({
-            message : 'Disconnected',
-            type : 'error-message'
-        });
+        errorMessage('Disconnected');
     });
     
-	//Refreshes.
     socket.on('refresh', function() {
         window.location.reload();
     });
     
-	//If the socket has an error, it rejects it, else it resolves it
     socket.on('response', function(msg) {
         var def = msg && requests[msg.id];
         if (def && def.state() == 'pending') {
@@ -212,10 +164,6 @@ $(function() {							//Overall function for the client's basic interactions with
     getTopicData = function(){
         socket.emit('topicInfo');
     }
-
-    /*socket.on('updateMousePosition', function(msg) {
-        CLIENT.trigger('updateMousePosition', msg);
-    });*/
  
     /**
      * @inner
@@ -225,10 +173,7 @@ $(function() {							//Overall function for the client's basic interactions with
      */
     function parseParams(name, input, expect) {
         if ('pm block alert unblock unalert'.split(' ').indexOf(name) != -1 && input.trim() == ""){
-            CLIENT.show({
-                message : "Invalid: /"+name+" <nick>",
-                type : 'error-message'
-            });
+            errorMessage('Invalid: /"+name+" <nick>');
             return;
         }
         switch(name) {
@@ -301,7 +246,7 @@ $(function() {							//Overall function for the client's basic interactions with
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tcolor tfont tstyle timestamp tjoin font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color tjoin font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 var item = localStorage.getItem('chat-' + key);
                 try {
                     item = JSON.parse(item);
@@ -321,7 +266,7 @@ $(function() {							//Overall function for the client's basic interactions with
             }, this);
 
             /* Notify when values change. */
-            'color font style flair mute play mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
+            'color style flair mute play mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                     	key == 'access_level' ? value = value.split('.')[0] : value;
@@ -332,7 +277,7 @@ $(function() {							//Overall function for the client's basic interactions with
                 }, this);
             }, this);
 
-            'color font style flair'.split(' ').forEach(function(key) {
+            'color style font flair'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     this.submit('/echo Now your messages look like this');
                 }, this);
@@ -383,16 +328,10 @@ $(function() {							//Overall function for the client's basic interactions with
                                 });
                             }
                         } else {
-                            CLIENT.show({
-                                message : 'Invalid: /' + name + ' <' + expect.join('> <').replace('$', '') + '>',
-                                type : 'error-message'
-                            });
+                            errorMessage('Invalid: /' + name + ' <' + expect.join('> <').replace('$', '') + '>');
                         }
                     } else {
-                        CLIENT.show({
-                            message : 'Invalid command. Use /help for a list of commands.',
-                            type : 'error-message'
-                        });
+                        errorMessage('Invalid command. Use /help for a list of commands.');
                     }
                 } else {
                     input = this.decorate(input);
@@ -416,6 +355,8 @@ $(function() {							//Overall function for the client's basic interactions with
         show : function(message) {
             this.trigger('message', message);
         },
+        
+        badfonts : [],
 
         decorate : function(input) {
             if (input.charAt(0) != '>' || input.search(/(^| )>>[1-9]([0-9]+)?/) == 0 
@@ -440,10 +381,6 @@ $(function() {							//Overall function for the client's basic interactions with
             }
             return input;
         }
-
-        /*updateMousePosition : function(position) {
-            socket.emit('updateMousePosition', position);
-        }*/
         
     }));
 });
@@ -1171,10 +1108,17 @@ $(function() {
         font : {
             params : [ 'font$' ],
             handler : function(params) {
+                var old = CLIENT.get('font');
                 if (params.font == 'default' || params.font == 'none') {
                     params.font = null;
                 }
-                CLIENT.set('font', params.font);
+                if (!params.font || CLIENT.badfonts.indexOf(params.font) == -1) {
+                    $.ajax({
+                        url : 'https://fonts.googleapis.com/css?family=' + encodeURIComponent(params.font),
+                        success : function(){CLIENT.set('font', params.font);},
+                        error : function(){CLIENT.badfonts.push(params.font);errorMessage('That is not a valid font');}
+                    });
+                }
             }
         },
         color : {
@@ -1185,10 +1129,7 @@ $(function() {
                 } else if (parser.isColor(params.color)){
                     CLIENT.set('color', params.color);
                 } else {
-                    CLIENT.show({
-                        type : 'error-message',
-                        message : 'I don\'t think that is a color. http://en.wikipedia.org/wiki/Web_colors'
-                    });
+                    errorMessage('I don\'t think that is a color. http://en.wikipedia.org/wiki/Web_colors');
                 }
             }
         },
@@ -1223,10 +1164,7 @@ $(function() {
                 if (lastNick){
                     CLIENT.submit("/pm "+lastNick+"|"+params.message);
                 } else {
-                    CLIENT.show({
-                        type : 'error-message',
-                        message : 'You have not PMed anyone yet'
-                    });
+                    errorMessage('You have not PMed anyone yet')
                 }
             }
         },
@@ -1296,10 +1234,7 @@ $(function() {
                     if (attribute_name = 'topic')
                         getTopicData();
                 } else {
-                    CLIENT.show({
-                        type : 'error-message',
-                        message : 'Invalid: Variable can be one of [' + valid.join(', ') + ']'
-                    });
+                    errorMessage('Invalid: Variable can be one of [' + valid.join(', ') + ']');
                 }
             }
         },
@@ -1320,75 +1255,8 @@ $(function() {
             params : [ 'att' ],
             handler : function(params) {
                 var att = params.att, toggled;
-                if (att == 'menu') {
-                    $('#user-list').slideToggle();
-                }
-                if (att == 'bg' && CLIENT.get('bg') == 'off')
+                if (att == 'bg' && CLIENT.get('bg') == 'off') {
                     $('#background').css('background', CLIENT.get('old'));
-                if (att == 'color' || att == 'colour'){
-                    if (CLIENT.get('tcolor') == 'on' || CLIENT.get('tcolor') == null && CLIENT.set('tcolor','on')){
-                        $.each($('.message-content'), function(key, value){
-                            value = value.innerHTML.replace(/<span style="(background-)?color: ([#\d\w]+);">/gi, function(match, p1, p2){
-                                if (p1 === undefined)
-                                    p1 = '';
-                                return '<span style="'+p1+'color: !'+p2+'!;">';
-                            });
-                            value = value.replace('color: transparent;','');
-                            $(this).html(value);
-                        });
-                    } else {
-                        $.each($('.message-content'), function(key, value){
-                            value = value.innerHTML.replace(/<span style="(background-)?color: !([#\d\w]+)!;">/gi, function(match, p1, p2){
-                                if (p1 === undefined)
-                                    p1 = '';
-                                return '<span style="'+p1+'color: '+p2+';">';
-                            });
-                            value = value.replace('<div id="test" style="text-shadow: 0 0 2px white;">','<div id="test" style="text-shadow: 0 0 2px white;color: transparent;">');
-                            $(this).html(value);
-                        });
-                    }
-                    toggled = 'tcolor';
-                } else if (att == 'timestamp'){
-                    if (CLIENT.get('timestamp') == 'on' || CLIENT.get('timestamp') == null && CLIENT.set('timestamp','on')){
-                        $.each($('.timestamp'), function(key, value){
-                                $(this).css('visibility', 'hidden');
-                                $(this).css('font-size', '0.2em');
-                            });
-                    } else {
-                        $.each($('.timestamp'), function(key, value){
-                                $(this).css('visibility', 'visible');
-                                $(this).css('font-size', '0.8em');
-                            });
-                    }
-                    toggled = 'timestamp';
-                } else if (att == 'font' || att == 'fonts') {
-                    if (CLIENT.get('tfont') == 'on' || CLIENT.get('tfont') == null && CLIENT.set('tfont','on')){
-                        $.each($('.message-content'), function(key, value){
-                            $(this).html(value.innerHTML.replace(/<span style="font-family:'([\w\s\d]+)'">/gi, function(match, p1){
-                                return '<span style="font-family:!\''+p1+'\'!">';
-                            }));
-                        });
-                    } else {
-                        $.each($('.message-content'), function(key, value){
-                            $(this).html(value.innerHTML.replace(/<span style="font-family:!'(\w+)'!">/gi, function(match, p1){
-                                return '<span style="font-family:\''+p1+'\'">';
-                            }));
-                        });
-                    }
-                    toggled = 'tfont';
-                } else if (att == 'style' || att == 'styles'){
-                    if (CLIENT.get('tstyle') == 'on' || CLIENT.get('tstyle') == null && CLIENT.set('tstyle','on')){
-                        $.each($('.message-content'), function(key, value){
-                            $(this).html(value.innerHTML.replace(/((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))/gi, function(match){
-                                return '<!--' + match + '-->';
-                            }));
-                        });
-                    } else {
-                        $.each($('.message-content'), function(key, value){
-                            $(this).html(value.innerHTML.replace(/<!--((<div id=(neon|spoil|spinner|rotat|marquee|flashing)>)|(<\/?(big|strong|i|strike|code|small)>)|(<div id="test" style="text-shadow: 0 0 2px white;(color: transparent;)?">)|(<u>(?!&gt;&gt;(\d)+))|(<\/u>(?!<\/a>))|(<\/div>))-->/gi, '$1'));
-                        });
-                    }
-                    toggled = 'tstyle';
                 } else if (att == 'join' || att == 'leave'){
                     if (CLIENT.get('tjoin') == 'on' || CLIENT.get('tjoin') == null && CLIENT.set('tjoin','on')){
                         CLIENT.show('Join and leave mesages disabled');
@@ -1491,6 +1359,13 @@ $(function() {
     COMMANDS.background = COMMANDS.bg;
 })();
 
+function errorMessage(message){
+    CLIENT.show({
+        message : message,
+        type : 'error-message'
+    });
+}
+
 /*
  * Adds user to the specified list
  * 
@@ -1499,23 +1374,17 @@ $(function() {
  */
 add = function(att, user){
     if (user.toLowerCase() == CLIENT.get('nick').toLowerCase()) {
-        CLIENT.show({
-            message : 'You may not add yourself',
-            type : 'error-message'
-        });
-        return;
-    }
-    var block = jQuery.extend([], CLIENT.get(att));
-    block.length == 0 ? block = [] : true;//yeah it's a bit stupid
-    if (block.indexOf(user) == -1){
-        block.push(user);
-        CLIENT.show(user + ' has been added');
-        CLIENT.set(att, block);
+        errorMessage('You may not add yourself')
     } else {
-        CLIENT.show({
-            message : 'That nick is already added',
-            type : 'error-message'
-        });
+        var block = jQuery.extend([], CLIENT.get(att));
+        block.length == 0 ? block = [] : true;//yeah it's a bit stupid
+        if (block.indexOf(user) == -1){
+            block.push(user);
+            CLIENT.show(user + ' has been added');
+            CLIENT.set(att, block);
+        } else {
+            errorMessage('That nick is already added');
+        }
     }
 }
 
@@ -1525,18 +1394,15 @@ add = function(att, user){
  * @param att   Name of the list
  * @param user  Nick to be removed from that list
  */
-remove = function(att, user){
+remove = function(att, user) {
     var block = jQuery.extend([], CLIENT.get(att));
     var index = block.indexOf(user);
-    if (index != -1){
+    if (index != -1) {
         block.splice(index, 1);
         CLIENT.show(user + ' was removed.');
         CLIENT.set(att, block);
     } else {
-        CLIENT.show({
-            message : 'That nick is not on the list',
-            type : 'error-message'
-        });
+        errorMessage('That nick is not on the list');
     }
 }
 
@@ -1551,7 +1417,6 @@ parser = {
     replink : 'ÃƒÂ©ÃƒÂ¤!#@&5nÃƒÂ¸ÃƒÂºENONHEInoheÃƒÂ¥ÃƒÂ¶',
     repslsh : 'ÃƒÂ¸ÃƒÂº!#@&5nÃƒÂ¥ÃƒÂ¶EESCHEInoheÃƒÂ©ÃƒÂ¤',
     fontRegex : /(\$|(&#36;))([\w \-\,Ã‚Â®]*)\|(.*)$/,
-    fonts : "ABeeZee,Abel,Abril Fatface,Aclonica,Acme,Actor,Adamina,Advent Pro,Aguafina Script,Akronim,Aladin,Aldrich,Alef,Alegreya,Alegreya Sans,Alegreya Sans SC,Alegreya SC,Alex Brush,Alfa Slab One,Alice,Alike,Alike Angular,Allan,Allerta,Allerta Stencil,Allura,Almendra,Almendra Display,Almendra SC,Amarante,Amaranth,Amatic SC,Amethysta,Amiri,Anaheim,Andada,Andika,Angkor,Annie Use Your Telescope,Anonymous Pro,Antic,Antic Didone,Antic Slab,Anton,Arapey,Arbutus,Arbutus Slab,Architects Daughter,Archivo Black,Archivo Narrow,Arimo,Arizonia,Armata,Artifika,Arvo,Asap,Asset,Astloch,Asul,Atomic Age,Aubrey,Audiowide,Autour One,Average,Average Sans,Averia Gruesa Libre,Averia Libre,Averia Sans Libre,Averia Serif Libre,Bad Script,Balthazar,Bangers,Basic,Battambang,Baumans,Bayon,Belgrano,Belleza,BenchNine,Bentham,Berkshire Swash,Bevan,Bigelow Rules,Bigshot One,Bilbo,Bilbo Swash Caps,Bitter,Black Ops One,Bokor,Bonbon,Boogaloo,Bowlby One,Bowlby One SC,Brawler,Bree Serif,Bubblegum Sans,Bubbler One,Buda,Buenard,Butcherman,Butterfly Kids,Cabin,Cabin Condensed,Cabin Sketch,Caesar Dressing,Cagliostro,Calligraffitti,Cambay,Cambo,Candal,Cantarell,Cantata One,Cantora One,Capriola,Cardo,Carme,Carrois Gothic,Carrois Gothic SC,Carter One,Caudex,Cedarville Cursive,Ceviche One,Changa One,Chango,Chau Philomene One,Chela One,Chelsea Market,Chenla,Cherry Cream Soda,Cherry Swash,Chewy,Chicle,Chivo,Cinzel,Cinzel Decorative,Clicker Script,Coda,Coda Caption,Codystar,Combo,Comfortaa,Coming Soon,Concert One,Condiment,Content,Contrail One,Convergence,Cookie,Copse,Corben,Courgette,Cousine,Coustard,Covered By Your Grace,Crafty Girls,Creepster,Crete Round,Crimson Text,Croissant One,Crushed,Cuprum,Cutive,Cutive Mono,Damion,Dancing Script,Dangrek,Dawning of a New Day,Days One,Dekko,Delius,Delius Swash Caps,Delius Unicase,Della Respira,Denk One,Devonshire,Dhurjati,Didact Gothic,Diplomata,Diplomata SC,Domine,Donegal One,Doppio One,Dorsa,Dosis,Dr Sugiyama,Droid Sans,Droid Sans Mono,Droid Serif,Duru Sans,Dynalight,Eagle Lake,Eater,EB Garamond,Economica,Ek Mukta,Electrolize,Elsie,Elsie Swash Caps,Emblema One,Emilys Candy,Engagement,Englebert,Enriqueta,Erica One,Esteban,Euphoria Script,Ewert,Exo,Exo 2,Expletus Sans,Fanwood Text,Fascinate,Fascinate Inline,Faster One,Fasthand,Fauna One,Federant,Federo,Felipa,Fenix,Finger Paint,Fira Mono,Fira Sans,Fjalla One,Fjord One,Flamenco,Flavors,Fondamento,Fontdiner Swanky,Forum,Francois One,Freckle Face,Fredericka the Great,Fredoka One,Freehand,Fresca,Frijole,Fruktur,Fugaz One,Gabriela,Gafata,Galdeano,Galindo,Gentium Basic,Gentium Book Basic,Geo,Geostar,Geostar Fill,Germania One,GFS Didot,GFS Neohellenic,Gidugu,Gilda Display,Give You Glory,Glass Antiqua,Glegoo,Gloria Hallelujah,Goblin One,Gochi Hand,Gorditas,Goudy Bookletter 1911,Graduate,Grand Hotel,Gravitas One,Great Vibes,Griffy,Gruppo,Gudea,Gurajada,Habibi,Halant,Hammersmith One,Hanalei,Hanalei Fill,Handlee,Hanuman,Happy Monkey,Headland One,Henny Penny,Herr Von Muellerhoff,Hind,Holtwood One SC,Homemade Apple,Homenaje,Iceberg,Iceland,IM Fell Double Pica,IM Fell Double Pica SC,IM Fell DW Pica,IM Fell DW Pica SC,IM Fell English,IM Fell English SC,IM Fell French Canon,IM Fell French Canon SC,IM Fell Great Primer,IM Fell Great Primer SC,Imprima,Inconsolata,Inder,Indie Flower,Inika,Irish Grover,Istok Web,Italiana,Italianno,Jacques Francois,Jacques Francois Shadow,Jim Nightshade,Jockey One,Jolly Lodger,Josefin Sans,Josefin Slab,Joti One,Judson,Julee,Julius Sans One,Junge,Jura,Just Another Hand,Just Me Again Down Here,Kalam,Kameron,Kantumruy,Karla,Karma,Kaushan Script,Kavoon,Kdam Thmor,Keania One,Kelly Slab,Kenia,Khand,Khmer,Khula,Kite One,Knewave,Kotta One,Koulen,Kranky,Kreon,Kristi,Krona One,La Belle Aurore,Laila,Lakki Reddy,Lancelot,Lateef,Lato,League Script,Leckerli One,Ledger,Lekton,Lemon,Libre Baskerville,Life Savers,Lilita One,Lily Script One,Limelight,Linden Hill,Lobster,Lobster Two,Londrina Outline,Londrina Shadow,Londrina Sketch,Londrina Solid,Lora,Love Ya Like A Sister,Loved by the King,Lovers Quarrel,Luckiest Guy,Lusitana,Lustria,Macondo,Macondo Swash Caps,Magra,Maiden Orange,Mako,Mallanna,Mandali,Marcellus,Marcellus SC,Marck Script,Margarine,Marko One,Marmelad,Martel Sans,Marvel,Mate,Mate SC,Maven Pro,McLaren,Meddon,MedievalSharp,Medula One,Megrim,Meie Script,Merienda,Merienda One,Merriweather,Merriweather Sans,Metal,Metal Mania,Metamorphous,Metrophobic,Michroma,Milonga,Miltonian,Miltonian Tattoo,Miniver,Miss Fajardose,Modak,Modern Antiqua,Molengo,Molle,Monda,Monofett,Monoton,Monsieur La Doulaise,Montaga,Montez,Montserrat,Montserrat Alternates,Montserrat Subrayada,Moul,Moulpali,Mountains of Christmas,Mouse Memoirs,Mr Bedfort,Mr Dafoe,Mr De Haviland,Mrs Saint Delafield,Mrs Sheppards,Muli,Mystery Quest,Neucha,Neuton,New Rocker,News Cycle,Niconne,Nixie One,Nobile,Nokora,Norican,Nosifer,Nothing You Could Do,Noticia Text,Noto Sans,Noto Serif,Nova Cut,Nova Flat,Nova Mono,Nova Oval,Nova Round,Nova Script,Nova Slim,Nova Square,NTR,Numans,Nunito,Odor Mean Chey,Offside,Old Standard TT,Oldenburg,Oleo Script,Oleo Script Swash Caps,Open Sans,Open Sans Condensed,Oranienbaum,Orbitron,Oregano,Orienta,Original Surfer,Oswald,Over the Rainbow,Overlock,Overlock SC,Ovo,Oxygen,Oxygen Mono,Pacifico,Paprika,Parisienne,Passero One,Passion One,Pathway Gothic One,Patrick Hand,Patrick Hand SC,Patua One,Paytone One,Peddana,Peralta,Permanent Marker,Petit Formal Script,Petrona,Philosopher,Piedra,Pinyon Script,Pirata One,Plaster,Play,Playball,Playfair Display,Playfair Display SC,Podkova,Poiret One,Poller One,Poly,Pompiere,Pontano Sans,Port Lligat Sans,Port Lligat Slab,Prata,Preahvihear,Press Start 2P,Princess Sofia,Prociono,Prosto One,PT Mono,PT Sans,PT Sans Caption,PT Sans Narrow,PT Serif,PT Serif Caption,Puritan,Purple Purse,Quando,Quantico,Quattrocento,Quattrocento Sans,Questrial,Quicksand,Quintessential,Qwigley,Racing Sans One,Radley,Rajdhani,Raleway,Raleway Dots,Ramabhadra,Ramaraja,Rambla,Rammetto One,Ranchers,Rancho,Ranga,Rationale,Ravi Prakash,Redressed,Reenie Beanie,Revalia,Ribeye,Ribeye Marrow,Righteous,Risque,Roboto,Roboto Condensed,Roboto Slab,Rochester,Rock Salt,Rokkitt,Romanesco,Ropa Sans,Rosario,Rosarivo,Rouge Script,Rozha One,Rubik Mono One,Rubik One,Ruda,Rufina,Ruge Boogie,Ruluko,Rum Raisin,Ruslan Display,Russo One,Ruthie,Rye,Sacramento,Sail,Salsa,Sanchez,Sancreek,Sansita One,Sarina,Sarpanch,Satisfy,Scada,Scheherazade,Schoolbell,Seaweed Script,Sevillana,Seymour One,Shadows Into Light,Shadows Into Light Two,Shanti,Share,Share Tech,Share Tech Mono,Shojumaru,Short Stack,Siemreap,Sigmar One,Signika,Signika Negative,Simonetta,Sintony,Sirin Stencil,Six Caps,Skranji,Slabo 13px,Slabo 27px,Slackey,Smokum,Smythe,Sniglet,Snippet,Snowburst One,Sofadi One,Sofia,Sonsie One,Sorts Mill Goudy,Source Code Pro,Source Sans Pro,Source Serif Pro,Special Elite,Spicy Rice,Spinnaker,Spirax,Squada One,Sree Krushnadevaraya,Stalemate,Stalinist One,Stardos Stencil,Stint Ultra Condensed,Stint Ultra Expanded,Stoke,Strait,Sue Ellen Francisco,Sunshiney,Supermercado One,Suranna,Suravaram,Suwannaphum,Swanky and Moo Moo,Syncopate,Tangerine,Taprom,Tauri,Teko,Telex,Tenali Ramakrishna,Tenor Sans,Text Me One,The Girl Next Door,Tienne,Timmana,Tinos,Titan One,Titillium Web,Trade Winds,Trocchi,Trochut,Trykker,Tulpen One,Ubuntu,Ubuntu Condensed,Ubuntu Mono,Ultra,Uncial Antiqua,Underdog,Unica One,UnifrakturCook,UnifrakturMaguntia,Unkempt,Unlock,Unna,Vampiro One,Varela,Varela Round,Vast Shadow,Vesper Libre,Vibur,Vidaloka,Viga,Voces,Volkhov,Vollkorn,Voltaire,VT323,Waiting for the Sunrise,Wallpoet,Walter Turncoat,Warnes,Wellfleet,Wendy One,Wire One,Yanone Kaffeesatz,Yellowtail,Yeseva One,Yesteryear,Zeyada".split(','),
     multiple : function(str, mtch, rep) {
         var ct = 0;
         while (str.match(mtch) != null && ct++ < 9)
@@ -1560,18 +1425,23 @@ parser = {
     },
     loadedFonts : {},
     addFont : function(family) {
-        if (!this.loadedFonts[family] && this.fonts.indexOf(family) != -1) {
+        if (!this.loadedFonts[family] && CLIENT.badfonts.indexOf(family) == -1) {
             this.loadedFonts[family] = true;
-            var protocol = 'https:' == document.location.protocol ? 'https' : 'http';
-            var url = protocol + '://fonts.googleapis.com/css?family=' + encodeURIComponent(family);
-          $('<link rel="stylesheet" href="' + url + '">').appendTo('head');
+            //var protocol = 'https:' == document.location.protocol ? 'https' : 'http';
+            var url = 'https://fonts.googleapis.com/css?family=' + encodeURIComponent(family);
+            $.ajax({
+                url : url,
+                success : function(){$('<link rel="stylesheet" href="' + url + '">').appendTo('head');},
+                error: function(){CLIENT.badfonts.push(family);}
+            });
         }
     },
     getAllFonts : function(str) {
         var match;
         while (match = this.fontRegex.exec(str)) {
             str = str.replace(this.fontRegex, "$2");
-            this.addFont(match[3]);
+            if (CLIENT.badfonts.indexOf(match[3]) == -1)
+                this.addFont(match[3]);
         }
     },
     removeHTML : function(parsed) {
@@ -1699,8 +1569,6 @@ parser = {
             str = this.multiple(str, /\/\-([^\|]+)\|?/g, '<strike>$1</strike>');
             str = str.replace(/\/\&amp;([^\|]+)\|?/g, '<div id=marquee>$1</div>');
             var ghostly = 'color: transparent;';
-            if (CLIENT.get('tcolor') == 'off')
-                ghostly = '';
             str = this.multiple(str, /\/\@([^\|]+)\|?/g, '<div id=test style="text-shadow: 0 0 2px white;'+ghostly+'">$1</div>')
             str = this.multiple(str, /\/\!([^\|]+)\|?/g, '<div id=flashing>$1</div>');
             str = this.multiple(str, /\/\&#126;([^\|]+)\|?/g, '<small>$1</small>');
@@ -1733,18 +1601,12 @@ parser = {
             }
         });
         // Replace colors
-        var wrap = '';
-        if (CLIENT.get('tcolor') == 'off')
-            wrap = '!';
-        str = this.multiple(str, /&#35;&#35;([\da-f]{6}|[\da-f]{3})(.+)$/i, '<span style="background-color: '+wrap+'#$1'+wrap+';">$2</span>');
-        str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: '+wrap+'#$1'+wrap+';">$2</span>');
-        str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: '+wrap+'#$1'+wrap+';">$2</span>');
-        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: '+wrap+'$1'+wrap+';">$2</span>');
-        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: '+wrap+'$1'+wrap+';">$2</span>');
-        wrap = '';
-        if (CLIENT.get('tfont') == 'off')
-            wrap = '!';
-        str = this.multiple(str, this.fontRegex, '<span style="font-family:'+wrap+'\'$3\''+wrap+'">$4</span>');
+        str = this.multiple(str, /&#35;&#35;([\da-f]{6}|[\da-f]{3})(.+)$/i, '<span style="background-color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;([\da-f]{6})([^;].*)$/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, /&#35;([\da-f]{3})([^;](?:..[^;].*|.|..|))$/i, '<span style="color: #$1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="background-color: $1;">$2</span>');
+        str = this.multiple(str, RegExp('&#35;(' + this.coloreg + ')(.+)$', 'i'), '<span style="color: $1;">$2</span>');
+        str = this.multiple(str, this.fontRegex, '<span style="font-family:\'$3\'">$4</span>');
         // Replace escapes
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i][1]);
