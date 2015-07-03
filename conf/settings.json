@@ -5,7 +5,7 @@
     },
     "log" : {
         "error" : true,
-        "info" : true,
+        "info" : false,
         "debug" : false,
         "db" : false
     },
