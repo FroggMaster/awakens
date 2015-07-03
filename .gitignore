@@ -2,4 +2,6 @@ ssl/
 nohup.out
 npm-debug.log
 /node_modules/
+/conf/settings.json
+/conf/settings.local
 .project
