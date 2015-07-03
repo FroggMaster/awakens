@@ -120,10 +120,6 @@ function createChannel(io, channelName) {
                     } else {
                         log.info('Disconnected user was not found');
                     }
-                    count++;
-                    roomEmit('updateCount',{
-                    	count : count
-                    });
                     //doesn't emit text if user was kicked
                     roomEmit('left', {
                         id : user.socket.id,
@@ -632,10 +628,6 @@ function createChannel(io, channelName) {
                             return false;
                         } else {
                             return dao.setChannelInfo(channelName, 'topic', topic).then(function() {
-                                count++;
-                                roomEmit('updateCount',{
-                                    count : count
-                                });
                                 roomEmit('update', {
                                     topic : topic
                                 });
@@ -1727,12 +1719,8 @@ function createChannel(io, channelName) {
         }
 
         function broadcastChannel(dao, channel, message) {
-       	    count++;
             channel.online.forEach(function(user){
                 dao.findUser(user.nick).done(function(dbuser) {
-                    socketEmit(user.socket,'updateCount',{
-                    	count : count	
-                    });
                     socketEmit(user.socket, 'message', {
                         type : 'general-message',
                         message : message
@@ -1945,10 +1933,6 @@ function createChannel(io, channelName) {
                             login : user.login
                         });
                         if (online && indexOf(user.nick) != -1) {
-                      	    count++;
-                      	    roomEmit('updateCount',{
-                            	count : count
-                            });
                             roomEmit('nick', {
                                 id : socket.id,
                                 nick : user.nick
@@ -1956,10 +1940,6 @@ function createChannel(io, channelName) {
                         } else {
                             channel.online.push(user);
                             log.debug('Successful join!');
-                            count++;
-                            roomEmit('updateCount',{
-                            	count : count
-                            });
                             roomEmit('join', {
                                 id : socket.id,
                                 nick : user.nick
