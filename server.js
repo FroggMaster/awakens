@@ -60,8 +60,8 @@ function createChannel(io, channelName) {
             socket : socket
         };
         
-        //Get Headers
-        console.log(socket.handshake.headers);
+        /*Get Headers Upon Connection
+        console.log(socket.handshake.headers);*/
         
         if(!socket.request.connection.remoteAddress){
             user.remote_addr = socket.handshake.address;
