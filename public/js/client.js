@@ -1136,10 +1136,11 @@ $(function() {
             handler : function(params) {
                 var old = CLIENT.get('font');
                 if (params.font == 'default' || params.font == 'none') {
-                    params.font = null;
+                    CLIENT.set('font',null);
+                    return;
                 }
                 //Make sure font is valid before 9001 of them get appended to the HTML head
-                if (!params.font || CLIENT.badfonts.indexOf(params.font) == -1) {
+                if (CLIENT.badfonts.indexOf(params.font) == -1) {
                     $.ajax({
                         url : 'https://fonts.googleapis.com/css?family=' + encodeURIComponent(params.font),
                         success : function(){CLIENT.set('font', params.font);},
