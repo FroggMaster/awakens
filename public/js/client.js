@@ -1283,7 +1283,9 @@ $(function() {
             handler : function(params) {
                 var att = params.att, toggled;
                 if (att == 'bg' && CLIENT.get('bg') == 'off') {
-                    $('#background').css('background', CLIENT.get('old'));
+                    //$('#background').css('background', CLIENT.get('old'));
+                    //Frog's attempt to fix Toggline BG on.
+                    CLIENT.set('bg','on');
                 } else if (att == 'join' || att == 'leave'){
                     if (CLIENT.get('tjoin') == 'on' || CLIENT.get('tjoin') == null && CLIENT.set('tjoin','on')){
                         CLIENT.show('Join and leave mesages disabled');
