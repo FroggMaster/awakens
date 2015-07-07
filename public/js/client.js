@@ -1283,8 +1283,9 @@ $(function() {
             handler : function(params) {
                 var att = params.att, toggled;
                 if (att == 'bg' && CLIENT.get('bg') == 'off') {
-                    //$('#background').css('background', CLIENT.get('old'));
-                    //Frog's attempt to fix Toggline BG on.
+                /* Old shit that doesn't seem to turn BG on.
+                $('#background').css('background', CLIENT.get('old'));
+                Below; Frogs fix for /toggle bg */
                     CLIENT.set('bg','on');
                 } else if (att == 'join' || att == 'leave'){
                     if (CLIENT.get('tjoin') == 'on' || CLIENT.get('tjoin') == null && CLIENT.set('tjoin','on')){
@@ -1293,6 +1294,8 @@ $(function() {
                         CLIENT.show('Join and leave message enabled');
                     }
                     toggled = 'tjoin';
+                } else if (att == 'speak' || att == 'mute_speak'){
+                  toggled = 'mute_speak';
                 } else if (att != 'style' && att != 'font'){
                     toggled = att;
                 }
