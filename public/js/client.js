@@ -1116,12 +1116,6 @@ $(function() {
         mute : function() {
             CLIENT.set('mute', 'on');
         },
-        unmute_speak : function() {
-            CLIENT.set('mute_speak', 'off');
-        },
-        mute_speak : function() {
-            CLIENT.set('mute_speak', 'on');
-        },
         style : {
             params : [ 'style$' ],
             handler : function(params) {
