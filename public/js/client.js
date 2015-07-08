@@ -1357,7 +1357,7 @@ $(function() {
             role : 'super'
         },
         cam : function(){
-            video('event', 'embed', 'http://spookyscary.party/')
+            video('event', 'embed', 'http://162.219.26.75:12202/spooks')
         },
         ask : {
             params : [ 'message$' ]
