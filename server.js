@@ -991,7 +991,7 @@ function createChannel(io, channelName) {
                 }
             },
             lock : {
-                role : 'admin',
+                role : 'super',
                 access_level : 0,
                 params : [ 'command', 'role' ],
                 handler : function(dao, dbuser, params) {
