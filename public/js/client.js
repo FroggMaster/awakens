@@ -1261,7 +1261,7 @@ $(function() {
             }
         },
         speak : {
-            params : [ '[voice]|message' ]
+            params : [ 'message' ]
         },
         elbot : {
             params : [ 'message$' ]
