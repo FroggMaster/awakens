@@ -67,8 +67,8 @@ function createChannel(io, channelName) {
             user.remote_addr = socket.handshake.address;
         }
         
-        if(socket.handshake.headers["x-real-ip"]){
-            user.remote_addr = socket.handshake.headers["x-real-ip"];
+        if(socket.handshake.headers["HTTP_X_FORWARDED_FOR"]){
+            user.remote_addr = socket.handshake.headers["HTTP_X_FORWARDED_FOR"];
         }
                 
         socket.on('SetPart', function(parts){
