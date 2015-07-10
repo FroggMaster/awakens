@@ -722,51 +722,25 @@ function createChannel(io, channelName) {
                     });
                 }
             },
-            speak : {
-                params : ['voice','message'],
-                handler : function(dao, dbuser, params) {
-                    var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
-                    var message = voices.indexOf(params.voice) <= 0 ? params.voice : params.message;
-                    var voice = voices.indexOf(params.voice) >= 0 ? params.voice : 'default';
+            speak: {
+                params: ['message'],
+                handler: function (dao, dbuser, params) {
+                    var message = params.message;
                     if (message) {
                         if (roles.indexOf(user.role) <= 5) {
-                            var al = roles.indexOf(user.role);
-                            var t = settings.speak[al];
-                            if (t === undefined) {
-                                t = settings.speak['default'];
-                            }
-                            //default voice requires no php processing
-                            if(voice == 'default') {
-                                roomEmit('message', {
-                                    type : 'spoken-message',
-                                    nick : user.nick,
-                                    message : message.substring(0, settings.limits.spoken),
-                                    source : null,
-                                    voice : voice
-                                });
-                            }
-                            //other voices send request to spooks.me:8080/speaks/ php files                       
-                            else {
-                                request('http://spooks.me:8080/speak/' + params.voice + 'speak.php?text=' + encodeURIComponent(params.message), function (error, response, body) {
-                                    return throttle.on('speak-' + al, t).then(function() {
-                                        roomEmit('message', {
-                                            type : 'spoken-message',
-                                            nick : user.nick,
-                                            message : message.substring(0, settings.limits.spoken),
-                                            source : body,
-                                            voice : voice
-                                        });
-                                    return true;
-                                    }, function() {
-                                        return $.Deferred().resolve(false, msgs.throttled);
-                                    });
-                                });
-                            }
+                            roomEmit('message', {
+                                type: 'spoken-message',
+                                nick: user.nick,
+                                message: message.substring(0, settings.limits.spoken),
+                                source: 'body',
+                                voice: 'test'
+                            });
+                            return true;
                         } else {
                             return $.Deferred().resolve(false, msgs.muted);
                         }
                     }
-                        return $.Deferred().resolve(true);
+                    return $.Deferred().resolve(true);
                 }
             },
             elbot : {
