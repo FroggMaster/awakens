@@ -205,14 +205,12 @@ $(function() {
                     var param2 = pm[2]  || " ";
                     if(name == 'speak'){
                         return {
-                            voice : param1,
-                            message : param2
+                            message : param1
                             
                         }; 
                     } else {
                         return {
-                            nick : param1,
-                            message : param2
+                            message : param1
                         };
                     }
                 }
@@ -807,18 +805,10 @@ $(function() {
         //Load and play speak messages
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
             var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
-            if(voices.indexOf(message.voice) > 0){
                 var uri = message.source
-            } else {
-                var uri = 'http://tts-api.com/tts.mp3?q=' + encodeURIComponent(message.message);
-            }
-            var html = [ '<audio autoplay="autoplay"><source src="', uri, '" type="audio/mpeg"></source><embed src="', uri, '"></audio>' ].join('');
+                var uri = 'http://tts.peniscorp.com/speak.lua?' + encodeURIComponent(message.message);
+            var html = [ '<embed src="', uri, '">' ].join('');
             var $audio = $(html).appendTo('body');
-            var audio = $audio[0];
-            audio.onerror = audio.onpause = function(e) {
-                $audio.remove();
-            }
-            audio.play();
         }
         playAudio(sound);
         return el;
