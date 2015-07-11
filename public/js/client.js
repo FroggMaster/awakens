@@ -210,7 +210,8 @@ $(function() {
                         }; 
                     } else {
                         return {
-                            message : param1
+                            nick : param1,
+                            message : param2
                         };
                     }
                 }
