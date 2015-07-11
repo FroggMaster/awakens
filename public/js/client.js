@@ -1702,6 +1702,112 @@ $(function() {
     resize();
 });
 
+// ------------------------------------------------------------------
+// Autocomplete
+// ------------------------------------------------------------------
+
+$(function() {
+    var autoCompleteList = false;
+
+    $('<div id="autocomplete"></div>').css('bottom', $('#input-message').outerHeight() + 20 + 'px').appendTo('body');
+    $('#input-message').keydown(function(e) {
+        if (e.keyCode == 9 && !autoCompleteList) {
+            // on tab
+            e.preventDefault();
+            var match = $(this).val().match(/\S+?$/);
+            var v = match && match[0].toLowerCase();
+            var list = [];
+            ONLINE.each(function(user) {
+                var user_name = user.get('nick');
+                if (!v || user_name.toLowerCase().indexOf(v) == 0) {
+                    list.push(user_name);
+                }
+            });
+            $('#autocomplete').show();
+            $('#autocomplete').html('');
+            $(list).each(function(i) {
+                $('#autocomplete').append('<span>' + list[i] + '</span>');
+            });
+            autoCompleteList = list;
+        } else if (e.keyCode == 9 && autoCompleteList) {
+            e.preventDefault();
+            var list = autoCompleteList;
+            if (list.length == 0 || list[0] === undefined) {
+                autoCompleteList = false;
+                $('#autocomplete').hide();
+                this.value += ' ';
+            } else if (list.length == 1) {
+                autoCompleteList = null;
+                $('#autocomplete').hide();
+                var x = $(this).val().split(' ');
+                x[x.length - 1] = (x[0][0] == "/" ? list[0] : list[0].replace(/([`~^%\-_\\#*]|:\/\/)/g, '\\$1'));
+                $(this).val(x.join(' '));
+            } else {
+                list.push(list.shift());
+                $('#autocomplete').html('');
+                $(list).each(function(i) {
+                    $('#autocomplete').append('<span>' + list[i] + '</span>');
+                });
+            }
+        } else if (e.keyCode == 27 && autoCompleteList) {
+            e.preventDefault();
+            autoCompleteList = false;
+            $('#autocomplete').hide();
+        } else if (autoCompleteList) {
+            e.preventDefault();
+            var list = autoCompleteList;
+            autoCompleteList = false;
+            $('#autocomplete').hide();
+            var chr = '';
+            if (e.keyCode > 47 && e.keyCode < 58) {
+                chr = String.fromCharCode(e.keyCode);
+            } else if (e.keyCode > 65 && e.keyCode < 91) {
+                chr = String.fromCharCode(e.keyCode + 32);
+            } else if (e.keyCode > 95 && e.keyCode < 106) {
+                chr = String.fromCharCode(e.keyCode - 48);
+            } else if (e.keyCode > 105 && e.keyCode < 112 && e.keyCode != 108) {
+                chr = String.fromCharCode(e.keyCode - 64);
+            } else if (e.keyCode > 218 && e.keyCode < 222) {
+                chr = String.fromCharCode(e.keyCode - 128);
+            } else if (e.keyCode > 188 && e.keyCode < 192) {
+                chr = String.fromCharCode(e.keyCode - 144);
+            } else {
+                switch (e.keyCode) {
+                case 186:
+                    chr = ';';
+                    break;
+                case 187:
+                    chr = '=';
+                    break;
+                case 188:
+                    chr = ',';
+                    break;
+                case 192:
+                    chr = '`';
+                    break;
+                case 222:
+                    chr = '\'';
+                    break;
+                case 32:
+                    chr = ' ';
+                    break;
+                default:
+                    break;
+                }
+            }
+            if (list[0] === undefined) {
+                if (chr == '') {
+                    chr = ' ';
+                }
+                this.value += chr;
+            } else {
+                var x = $(this).val().split(' ');
+                x[x.length - 1] = (x[0][0] == "/" ? list[0] : list[0].replace(/([`~^%\-_$|\\#\*]|:\/\/)/g, '\\$1')) + chr;
+                $(this).val(x.join(' '));
+            }
+        }
+    });
+});
 
 // ------------------------------------------------------------------
 // Audio
