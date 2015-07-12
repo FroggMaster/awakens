@@ -953,11 +953,6 @@ $(function() {
                 delta = -1;
             }
             break;
-        case 9: //tab
-            e.preventDefault();
-            if ($(this)[0].selectionStart == $(this).val().length)
-                $(this).val($(this).val() + '\n');
-            break;
         }
         if (delta) {
             historyIndex = Math.max(0, Math.min(history.length - 1, historyIndex + delta));
