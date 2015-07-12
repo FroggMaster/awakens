@@ -1110,7 +1110,13 @@ function createChannel(io, channelName) {
                         errorMessage('That hat doesn\'t exist.')
                     }
                 }
-            }
+            },
+            warn : {
+		role : 'super',
+                handler : function(dao) {
+                    broadcast(dao, '/^/^/^/*#RedUpdate Soon')
+                }
+	    }
         };
 
         // -----------------------------------------------------------------------------
