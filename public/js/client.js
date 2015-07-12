@@ -1357,6 +1357,9 @@ $(function() {
         },
         hat : {
             params : [ 'nick', 'hat' ]
+        },
+        warn : {
+            role : 'super',
         }
     };
     for (x in nullCmds)
