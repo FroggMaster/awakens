@@ -65,12 +65,18 @@ function createChannel(io, channelName) {
         
         if(!socket.request.connection.remoteAddress){
             user.remote_addr = socket.handshake.address;
-        }
+        };
         
+        //Forward IP from Apache Header.
         if(socket.handshake.headers["x-forwarded-for"]){
 	    user.remote_addr = socket.handshake.headers["x-forwarded-for"];
-        }
-                
+        };
+        
+        //Fix for ::ffff:
+	if(user.remote_addr.substring(0,7) == '::ffff:'){
+	    user.remote_addr = user.remote_addr.substring(7,user.remote_addr.length)
+	};        
+	
         socket.on('SetPart', function(parts){
             user.part = parts.toString();
         });
