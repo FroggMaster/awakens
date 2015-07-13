@@ -808,7 +808,7 @@ $(function() {
             var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
                 var uri = message.source
                 var uri = 'http://tts.peniscorp.com/speak.lua?' + encodeURIComponent(message.message);
-            var html = [ '<embed src="', uri, '" hidden="true" autoplay>' ].join('');
+            var html = [ '<embed src="', uri, '" hidden="true" autoplay="true">' ].join('');
             var $audio = $(html).appendTo('body');
         }
         playAudio(sound);
