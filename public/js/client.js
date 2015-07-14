@@ -1858,7 +1858,7 @@ function video(event, type, input) {
             embed = '<iframe width="100%" height="100%" src="//www.youtube.com/embed/' + input + '" frameborder="0" allowfullscreen></iframe>';
             break;
         case 'html5':
-            embed = '<video width="100%" height="100%" src="' + input + '" controls></video>';
+            embed = '<video width="100%" height="100%" src="' + input + '" controls loop></video>';
             break;
         case 'liveleak':
             embed = '<iframe width="100%" height="100%" src="http://www.liveleak.com/ll_embed?f=' + input + '" frameborder="0" allowfullscreen></iframe>';
