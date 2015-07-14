@@ -817,7 +817,12 @@ $(function() {
                 var uri = message.source
                 var uri = 'http://tts.peniscorp.com/speak.lua?' + encodeURIComponent(message.message);
             var html = [ '<embed src="', uri, '" hidden="true" autoplay>' ].join('');
+			var html = [ '<audio autoplay="autoplay"><source src="', uri, '" type="audio/wav"></source></audio>' ].join('');
             var $audio = $(html).appendTo('body');
+            var audio = $audio[0];
+            audio.onerror = audio.onpause = function(e) {
+                $audio.remove();
+            }
         }
         playAudio(sound);
         return el;
