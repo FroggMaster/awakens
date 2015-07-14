@@ -1606,7 +1606,7 @@ parser = {
         if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
 		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // Add greentext
-        str = str.replace(/^(&gt;.*)$/i, '&#35;789922 $1');
+        str = str.replace(/^((?!&gt).*)/gmi, "|$1").replace(/^(&gt;.*(\n|$)(?=(&gt;|^\d+$)))/gmi, '&#35;789922 $1').replace(/^(\|.*\n&gt;)/gmi, "&#35;789922 &gt;")
         // Javascript links
         str = str.replace(/(\/\?)([^\|]+)\|([^\|]+)\|?/gi, function(_, __, a, b){
             a = a.replace(/&#35;/gi, '#');
