@@ -163,6 +163,14 @@ $(function() {
     getTopicData = function(){
         socket.emit('topicInfo');
     }
+    
+    //Sends request for user's flair information
+    sendFlair = function(flair){
+        socket.emit('command', {
+            name : 'flair',
+            params : {flair : flair}
+        });
+    }  
  
     /**
      * @inner
@@ -1149,6 +1157,7 @@ $(function() {
                     flair = null;
                 }
                 flair = params.flair.replace(/&/g, '\\&')
+                sendFlair(flair);
                 CLIENT.set('flair', flair);
             }
         },
