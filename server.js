@@ -1616,7 +1616,7 @@ function createChannel(io, channelName) {
                         body, ['code.jquery.com/jquery-1.6.min.js'],
                         function (errors, window) {
 							title = window.document._ids['eow-title'][0]._attributes.title._nodeValue
-                            var video_id = url.split('v=')[1];
+                            var video_id = url.split('v=')[1] || url.split('.be/')[1];
                             var ampersandPosition = video_id.indexOf('&');
                             if (ampersandPosition !== -1) {
                                 video_id = video_id.substring(0, ampersandPosition);
