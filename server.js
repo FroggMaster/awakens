@@ -1122,7 +1122,13 @@ function createChannel(io, channelName) {
                 handler : function(dao) {
                     broadcast(dao, '/^/^/^/*#RedUpdate Soon')
                 }
-	    }
+	    },
+	    flair : {
+                params : [ 'flair' ],
+                handler : function(dao, dbuser, params) {
+                    return dbuser && dbuser.set('flair', params.flair);
+                }
+            }
         };
 
         // -----------------------------------------------------------------------------
@@ -1903,6 +1909,7 @@ function createChannel(io, channelName) {
                             dbuser.set('remote_addr', user.remote_addr);
                             user.vhost = dbuser.get('vHost')
                             user.login = true;
+                            user.flair = dbuser.get('flair') || null;
                             console.log(user.nick + ' joined with ' + user.role + ' - ' + user.access_level)
                         } else {
                             user.vhost = user.socket.id;
@@ -1916,7 +1923,8 @@ function createChannel(io, channelName) {
                             role : user.role,
                             vHost : user.vhost,
                             security : hashToken,
-                            login : user.login
+                            login : user.login,
+                            flair : user.flair
                         });
                         if (online && indexOf(user.nick) != -1) {
                             roomEmit('nick', {
