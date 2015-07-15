@@ -1679,6 +1679,8 @@ parser = {
         str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="([^'"]*\.mp4)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
         str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
+        /* Why create a new function when video() already exists */
+        str = str.replace(/<a [^>]*href="([^'"]*\.(mp3|wav|ogg|mid|flac))">([^<]*)<\/a>/i, '<a target="_blank" href="$1">$1</a> <a href="javascript:void(0) onclick="video(event, \'audio\', \'$1\')" class="show-video">[audio]</a>');
         // Parse spaces
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
@@ -1888,6 +1890,9 @@ function video(event, type, input) {
         case 'embed':
             embed = '<iframe width="100%" height="100%" src="' + input + '" frameborder="0" allowfullscreen></iframe>';
             break;
+        case 'audio':
+        	embed = '<audio src="' + input + '" controls loop>' + input + '</audio>';
+        	break;
     }
     var videoOverlay = $('.video-overlay');
     if (videoOverlay.length == 0) {
