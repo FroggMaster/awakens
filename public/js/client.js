@@ -1708,7 +1708,9 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
-        scrollToBottom()
+        if (scrolledToBottom && scrollDelta > 0) {
+            scrollToBottom();
+        }
     }
     $(window).resize(resize); // Add event listener to window
     resize();
@@ -1970,5 +1972,7 @@ function video(event, type, input) {
 
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
-  scrollToBottom()
+	if (scrolledToBottom && scrollDelta > 0) {
+	    scrollToBottom();
+	}
 })
