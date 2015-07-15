@@ -841,12 +841,14 @@ $(function() {
             }
         });
     }
+    var containerEl = $('#messages');
+    var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
+    var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
 
     function appendMessage(el) {
-        var containerEl = $('#messages');
-        var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
-        el.appendTo(containerEl);
-        var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
+	    scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
+		el.appendTo(containerEl);
+        scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         if (scrolledToBottom && scrollDelta > 0) {
             scrollToBottom();
         }
