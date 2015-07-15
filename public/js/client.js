@@ -1668,7 +1668,7 @@ parser = {
             for (var i = 0; i < BLACKLIST.length; i++){
                 blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
                 if (blacklisted) break;
-                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="if (scrolledToBottom && scrollDelta > 0) {scrollToBottom();}" onerror="imageError(this)" /></a>');
+                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="if (scrolledToBottom && scrollDelta > 0) { setTimeout(scrollToBottom();, 40); }" onerror="imageError(this)" /></a>');
             }
         }
         // Video embeds
