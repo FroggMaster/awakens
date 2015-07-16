@@ -679,11 +679,6 @@ $(function() {
 // Messages
 // ------------------------------------------------------------------
 
-function isScrolledToBottom(container) {
-	var containerEl = (container || $('#messages'));
-        return containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;	
-}
-
 $(function() {
     var animation = null;
     var roles = ['god','super','admin','mod','basic','mute'];
@@ -849,10 +844,10 @@ $(function() {
 
     function appendMessage(el) {
         var containerEl = $('#messages');
-        //var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
+        var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
         el.appendTo(containerEl);
         var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
-        if (isScrolledToBottom(containerEl) && scrollDelta > 0) {
+        if (scrolledToBottom && scrollDelta > 0) {
             scrollToBottom();
         }
     }
@@ -1715,7 +1710,7 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
-        if (isScrolledToBottom() && scrollDelta > 0) {
+        if (scrolledToBottom && scrollDelta > 0) {
             scrollToBottom();
         }
     }
@@ -1982,7 +1977,7 @@ function video(event, type, input) {
 
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
-	if (isScrolledToBottom() && scrollDelta > 0) {
+	if (scrolledToBottom && scrollDelta > 0) {
 	    scrollToBottom();
 	}
 })
