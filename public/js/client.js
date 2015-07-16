@@ -842,6 +842,18 @@ $(function() {
         });
     }
 
+//Scrolls the window if you're already already scrolled to bottom.	
+	window.IfScrolled = function(){
+		var containerEl = $('#messages');
+		var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
+		var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
+        
+		if (scrolledToBottom && scrollDelta > 0) {
+            scrollToBottom();
+        }
+		
+	}
+	
     function appendMessage(el) {
         var containerEl = $('#messages');
         var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
@@ -1668,7 +1680,7 @@ parser = {
             for (var i = 0; i < BLACKLIST.length; i++){
                 blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
                 if (blacklisted) break;
-                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '" onerror="imageError(this)" /></a>');
+                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="IfScrolled()" onerror="imageError(this)" /></a>');
             }
         }
         // Video embeds
@@ -1710,9 +1722,7 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
-        if (scrolledToBottom && scrollDelta > 0) {
-            scrollToBottom();
-        }
+		IfScrolled()
     }
     $(window).resize(resize); // Add event listener to window
     resize();
@@ -1977,7 +1987,5 @@ function video(event, type, input) {
 
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
-	if (scrolledToBottom && scrollDelta > 0) {
-	    scrollToBottom();
-	}
+	IfScrolled()
 })
