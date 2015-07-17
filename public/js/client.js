@@ -848,7 +848,7 @@ $(function() {
 		var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
 		var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         
-		if (scrolledToBottom && scrollDelta > 0) {
+		if (scrolledToBottom /*&& scrollDelta*/ > 0) {
             scrollToBottom();
         }
 		
@@ -1680,7 +1680,7 @@ parser = {
             for (var i = 0; i < BLACKLIST.length; i++){
                 blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
                 if (blacklisted) break;
-                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="IfScrolled()" onerror="imageError(this)" /></a>');
+                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="IfScrolled();" onerror="imageError(this)" /></a>');
             }
         }
         // Video embeds
@@ -1722,7 +1722,7 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
-		IfScrolled()
+		IfScrolled();
     }
     $(window).resize(resize); // Add event listener to window
     resize();
