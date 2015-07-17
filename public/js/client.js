@@ -844,13 +844,13 @@ $(function() {
 
 //Scrolls the window if you're already already scrolled to bottom.	
 	window.IfScrolled = function(){
-		var containerEl = $('#messages');
-		var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
-		var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
+	    var containerEl = $('#messages');
+	    var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
+	    var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         
-		if (scrolledToBottom /*&& scrollDelta*/ > 0) {
-            scrollToBottom();
-        }
+	    if (scrolledToBottom && scrollDelta > 0) {
+                scrollToBottom();
+            }
 		
 	}
 	
@@ -1680,19 +1680,19 @@ parser = {
             for (var i = 0; i < BLACKLIST.length; i++){
                 blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
                 if (blacklisted) break;
-                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="IfScrolled();" onerror="imageError(this)" /></a>');
+                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="scrollToBottom();" onerror="imageError(this)" /></a>');
             }
         }
         // Video embeds
         if (str.search(/(youtu(\.)?be)/gi) != -1)
             str = str.replace(/<a [^>]*href="[^"]*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="[^"]*liveleak.com\/ll_embed\?f=(\w+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'liveleak\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="([^'"]*\.mp4)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
-        /* Why create a new function when video() already exists */
-        str = str.replace(/<a [^>]*href="([^'"]*\.(mp3|wav|ogg|mid|flac))">([^<]*)<\/a>/i, '<a target="_blank" href="$1">$1</a> <a href="javascript:void(0) onclick="video(event, \'audio\', \'$1\')" class="show-video">[audio]</a>');
+            str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="[^"]*liveleak.com\/ll_embed\?f=(\w+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'liveleak\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="([^'"]*\.mp4)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
+        // Why create a new function when video() already exists 
+            str = str.replace(/<a [^>]*href="([^'"]*\.(mp3|wav|ogg|mid|flac))">([^<]*)<\/a>/i, '<a target="_blank" href="$1">$1</a> <a href="javascript:void(0) onclick="video(event, \'audio\', \'$1\')" class="show-video">[audio]</a>');
         // Parse spaces
         escs = str.match(/<[^>]+?>/gi);
         str = str.replace(/<[^>]+?>/gi, this.repslsh);
