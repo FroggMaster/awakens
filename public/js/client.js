@@ -1987,5 +1987,5 @@ function video(event, type, input) {
 
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
-	IfScrolled()
+	scrollToBottom();
 })
