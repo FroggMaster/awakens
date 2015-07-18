@@ -1,5 +1,5 @@
 var DATE_FORMAT = 'shortTime';
-var BLACKLIST = [ 'bruno.sucks', 'donkey.dong'];
+var BLACKLIST = [ 'sammich.sucks', 'donkey.dong'];
 var lastNick;
 var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm"; //Replace with your own from Google recaptcha
 // ------------------------------------------------------------------
@@ -14,7 +14,7 @@ $(function() {
     var requestId = 0;
     var requests = {};
     var roles = ['god','super','admin','mod','basic','mute'];
-    
+
     //Add user to list and show message
     socket.on('join', function(user) {
         ONLINE.add(user);
@@ -23,21 +23,21 @@ $(function() {
                 type : 'general-message',
                 message : user.nick + ' has joined '
             });
-		
+
         if (CLIENT.get('part') != undefined)
             socket.emit('SetPart', CLIENT.get('part'));
     });
-    
+
     //Synchronize user list with server
     socket.on('online', function(users) {
         ONLINE.add(users);
     });
-    
+
     //Removes user registration window
     socket.on('removeDiv',function() {
         $('#passanchor').hide(500,function(){$('#passanchor').remove()});
     });
-    
+
     //Called when the user registers a name
     //Sets the CSS and HTML properties for the visible elements
     socket.on('passverify', function() {
@@ -63,7 +63,7 @@ $(function() {
             }
         );
     });
-    
+
     //Shows user leave message with part, if it exists
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
@@ -74,7 +74,7 @@ $(function() {
             });
         }
     });
-    
+
     //Triggers name change message
     socket.on('nick', function(info) {
         var user = ONLINE.get(info.id);
@@ -85,8 +85,8 @@ $(function() {
             message : old + ' is now known as ' + info.nick
         });
     });
-    
-    //Updates user information	
+
+    //Updates user information
     socket.on('update', function(info) {
         if (info.role == 'mute') {
             info.role = 'basic'
@@ -96,19 +96,19 @@ $(function() {
         info.access_level ? info.access_level += '.' : true;
         CLIENT.set(info);
     });
-    
+
     //Updates the large center 'message'
     socket.on('centermsg', function(data){
         $('#sam').remove()
         $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     	CLIENT.set({ msg : data.msg });
     });
-    
+
     //Client side check to see if user is active
     socket.on('alive', function(){
         socket.emit('alive')
     });
-    
+
     //Plays youtube video when activated
     socket.on('playvid', function(url){
         if(url.url == "stop" || CLIENT.get('mute') == 'on' || CLIENT.get('play') == 'off'){
@@ -117,7 +117,7 @@ $(function() {
             $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
         }
     });
-    
+
     //Shows messages from users that aren't blocked
     socket.on('message', function(msg) {
     	var list = CLIENT.get('block');
@@ -127,7 +127,7 @@ $(function() {
         }
         CLIENT.show(msg);
     });
-    
+
     //Sends user info after connecting to the server
     socket.on('connect', function() {
         socket.emit('join', {
@@ -135,18 +135,18 @@ $(function() {
             security : CLIENT.get('security')
         });
     });
-    
+
     //Displays disconnect message... that's really all.
     socket.on('disconnect', function() {
         ONLINE.reset();
         errorMessage('Disconnected');
     });
-    
+
     //Refreshes window on command
     socket.on('refresh', function() {
         window.location.reload();
     });
-    
+
     socket.on('response', function(msg) {
         var def = msg && requests[msg.id];
         if (def && def.state() == 'pending') {
@@ -158,20 +158,20 @@ $(function() {
             }
         }
     });
-    
+
     //Sends request for topic info
     getTopicData = function(){
         socket.emit('topicInfo');
     }
-    
+
     //Sends request for user's flair information
     sendFlair = function(flair){
         socket.emit('command', {
             name : 'flair',
             params : {flair : flair}
         });
-    }  
- 
+    }
+
     /**
      * @inner
      * @param {string} name
@@ -192,7 +192,7 @@ $(function() {
                     return {
                         nick : nick,
                         message : pm[2],
-                    }; 
+                    };
                 }
                 break;
             case 'block':
@@ -214,8 +214,8 @@ $(function() {
                     if(name == 'speak'){
                         return {
                             message : param1
-                            
-                        }; 
+
+                        };
                     } else {
                         return {
                             nick : param1,
@@ -249,7 +249,7 @@ $(function() {
                 }
         }
     }
-    
+
     //Backbone model containing functions to manage the user chat interface
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
@@ -284,7 +284,7 @@ $(function() {
                     }
                 }, this);
             }, this);
-            
+
             /* Display message sample to user */
             'color style font flair'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
@@ -302,7 +302,7 @@ $(function() {
             });
             return result.promise();
         },
-        
+
         //Returns all valid commands
         getAvailableCommands : function() {
             var myrole = this.get('role');
@@ -311,7 +311,7 @@ $(function() {
                 return cmd_level == null || roles.indexOf(myrole) <= roles.indexOf(cmd_level);
             });
         },
-        
+
         //Parses and sends message to server
         submit : function(input) {
             var role = this.get('role');
@@ -362,17 +362,17 @@ $(function() {
                 }
             }
         },
-        
+
         show : function(message) {
             this.trigger('message', message);
         },
-        
+
         //List of invalid fonts, so errors don't keep showing up
         badfonts : [],
-        
+
         //Adds formating to incoming text
         decorate : function(input) {
-            if (input.charAt(0) != '>' || input.search(/(^| )>>[1-9]([0-9]+)?/) == 0 
+            if (input.charAt(0) != '>' || input.search(/(^| )>>[1-9]([0-9]+)?/) == 0
             || input.search(/>>>(\/[a-z0-9]+)\/(\d+)?\/?/i) == 0) {
                 var style = this.get('style');
                 var color = this.get('color');
@@ -394,7 +394,7 @@ $(function() {
             }
             return input;
         }
-        
+
     }));
 });
 
@@ -406,7 +406,7 @@ $(function() {
     var blurred = false;
     var unread = 0;
     var check = new RegExp('\\b'+ CLIENT.get('nick') +'\\b',"gi");
-    
+
     //Changes unread count
     function updateTitle() {
         var topic = CLIENT.get('topic');
@@ -532,12 +532,12 @@ $(function() {
 // ------------------------------------------------------------------
 
 $(function() {
-    
+
     //Updates menu user count
     function updateCount() {
         $('#tabbed-menu').text(ONLINE.size());
     }
-    
+
     //Hides and shows popup user menu
     $('#tabbed-menu').click(function(){
     	var distanceFromTop = $("#tabbed-menu").offset().top - $(window).scrollTop()
@@ -549,11 +549,11 @@ $(function() {
     	}
     	$('#user-list').slideToggle();
     });
-    $(document).on('focus', 'textarea', function() {// Fix for users with an OSK, such as mobile. 
-    	if ($('#user-list').css('display') == 'block') {	
-	    $('#user-list').slideToggle();			
+    $(document).on('focus', 'textarea', function() {// Fix for users with an OSK, such as mobile.
+    	if ($('#user-list').css('display') == 'block') {
+	    $('#user-list').slideToggle();
     	}
-    }); 
+    });
     if (CLIENT.get('menu_display')){
         $('.menu-container').css('left',CLIENT.get('menu_left'));
         $('.menu-container').css('top',CLIENT.get('menu_top'));
@@ -595,11 +595,11 @@ $(function() {
             }
         }
     });
-    
+
     $('#messages').droppable({
         accept: '#tabbed-menu-cotainer'
     });
-    
+
     $('#input-bar').droppable({
         accept: '#tabbed-menu-cotainer',
         drop: function (event, ui) {
@@ -613,19 +613,19 @@ $(function() {
         out: function(event, ui){
             //expand chat-bar
             $('#input-message').css('width','100%');
-            //set containment 
+            //set containment
             $('#tabbed-menu-cotainer').draggable('option','containment','#messages');
         }
     });
-    
+
     $.contextMenu({
-        selector: '.online li', 
+        selector: '.online li',
         className: 'data-title',
         trigger: 'left',
         items: {
             "PM": {
                 name: "PM",
-                callback: function(){ 
+                callback: function(){
                     $('#input-message').focus().val('').val('/pm ' + $.trim(this[0].textContent) + '|');
                 }
             },
@@ -669,7 +669,7 @@ $(function() {
             }
         }
     });
-    
+
     $('.online').click(function(e){
         $('.data-title').attr('data-menutitle', e.target.textContent);
     });
@@ -682,7 +682,7 @@ $(function() {
 $(function() {
     var animation = null;
     var roles = ['god','super','admin','mod','basic','mute'];
-    
+
     //Creates message to be displayed
     CLIENT.on('message', function(message) {
         if (typeof message == 'string') {
@@ -701,7 +701,7 @@ $(function() {
             break;
         }
     });
-    
+
     //Builds message depending on type
     function buildMessage(message) {
         var el = $('<div class="message"></div>');
@@ -794,7 +794,7 @@ $(function() {
                     break;
                 case 'note-message':
                     parsed = parser.parse(message.message);
-                    break; 
+                    break;
                 case 'anon-message':
                     if(CLIENT.get('role') == null || roles.indexOf(CLIENT.get('role')) >= 2){
                         parsed = parser.parse( '#6464C0' + 'anon' + ': ' + message.message);
@@ -827,7 +827,7 @@ $(function() {
         playAudio(sound);
         return el;
     }
-     
+
     window.scrollToBottom = function() {
         var containerEl = $('#messages');
         var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
@@ -842,25 +842,25 @@ $(function() {
         });
     }
 
-//Scrolls the window if you're already already scrolled to bottom.	
+//Scrolls the window if you're already already scrolled to bottom.
 	window.IfScrolled = function(AntiScroll){
 		var containerEl = $('#messages');
 		var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
 		var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         var ScrolledUp = containerEl.scrollTop() < containerEl.prop('scrollHeight') - containerEl.prop('clientHeight') - 50;
-        
+
 		if (scrolledToBottom && scrollDelta > 0) {
             scrollToBottom();
         } else if (AntiScroll){
             if(ScrolledUp){
-                
+
             }
             else {
                 scrollToBottom();
             }
         }
 	}
-	
+
     function appendMessage(el) {
         var containerEl = $('#messages');
         var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
@@ -995,10 +995,10 @@ $(function() {
             }
         }
     });
-    
+
     var ctrl = false;
     var hover;
-    
+
     //Make images larger when hovering with ctrl
     $(document).keydown(function(e){
         if (e.keyCode == 17 && hover){
@@ -1026,14 +1026,14 @@ $(function() {
             $('#bigimg')[0].innerHTML = '';
         }
     });
-    
+
     //Resize textarea on keyup
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
         input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
         $(window).resize();
     });
-    
+
 });
 
 // ------------------------------------------------------------------
@@ -1237,9 +1237,9 @@ $(function() {
 						var input_msg_clr = $("#input-bar").css('backgroundColor');
 						var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
 						var user_list_clr = $("#user-list").css('backgroundColor');
-						
+
 						function rgb2hex(rgb) {
-						    rgb = rgb.substring(4, rgb.length-1).split(", "); 
+						    rgb = rgb.substring(4, rgb.length-1).split(", ");
 						    function colorChange(color) {
 						        color = parseInt(color).toString(16);
 						        if (color.length < 2) {
@@ -1254,15 +1254,15 @@ $(function() {
 						    var blue = colorChange(rgb[2]);
 						    return "#"+red+green+blue;
 						}
-						theme_setting = rgb2hex(input_msg_clr) + " " + 
+						theme_setting = rgb2hex(input_msg_clr) + " " +
 						                rgb2hex(scroll_bar_clr)+ " " +
 						                rgb2hex(user_list_clr) + " ";
-						
+
 						CLIENT.show({
 							type : 'system-message',
 						    message : "Theme is currently set to: " + theme_setting
 						});
-						    /*\ 
+						    /*\
 						    |*| I had to do this because of some genius bloat
 						    |*| code one of you goofballs wrote long ago.  <3
 						    \*/
@@ -1389,16 +1389,26 @@ $(function() {
             params : [ 'message$' ]
         },
         hat : {
+            role: 'super',
             params : [ 'nick', 'hat' ]
         },
         warn : {
-            role : 'super',
+            role : 'super'
+        },
+        duel : {
+            params : ['target_nick']
+        },
+        rps : {
+            params : ['target_nick', 'choice']
+        },
+        rps_play : {
+            params : ['choice', 'game_id']
         }
     };
     for (x in nullCmds)
         for (var i = 0; i < nullCmds[x].length; i++)
             x == 'server' ? window.COMMANDS[nullCmds[x][i]] = {} : window.COMMANDS[nullCmds[x][i]] = function(){};
-    
+
     //Alternate spellings of commands
     COMMANDS.colour = COMMANDS.color;
     COMMANDS.background = COMMANDS.bg;
@@ -1414,7 +1424,7 @@ function errorMessage(message){
 
 /*
  * Adds user to the specified list
- * 
+ *
  * @param att   Name of the list
  * @param user  Nick to be added to that list
  */
