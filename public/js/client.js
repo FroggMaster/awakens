@@ -844,12 +844,12 @@ $(function() {
 
 //Scrolls the window if you're already already scrolled to bottom.
 	window.IfScrolled = function(AntiScroll){
-		var containerEl = $('#messages');
-		var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
-		var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
-        var ScrolledUp = containerEl.scrollTop() < containerEl.prop('scrollHeight') - containerEl.prop('clientHeight') - 50;
+	var containerEl = $('#messages');
+	var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 100;
+	var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
+        var ScrolledUp = containerEl.scrollTop() < containerEl.prop('scrollHeight') - containerEl.prop('clientHeight') - 200;
 
-		if (scrolledToBottom && scrollDelta > 0) {
+	if (scrolledToBottom && scrollDelta > 0) {
             scrollToBottom();
         } else if (AntiScroll){
             if(ScrolledUp){
@@ -858,7 +858,7 @@ $(function() {
             else {
                 scrollToBottom();
             }
-        }
+          }
 	}
 
     function appendMessage(el) {
