@@ -1670,7 +1670,8 @@ function createChannel(io, channelName) {
                 var game = rps_games[id];
                 var ended = (game === undefined);
                 if (ended) {
-                    spooksbot_pm(caller, "#redThat game has already ended, dummy!");
+                    //spooksbot_pm(caller, "#redThat game has already ended, dummy!");
+                    errorMessage('That game has already ended, dummy!');
                 } else if (command == quit) {
                     spooksbot_send("#red" + caller + " just pussied out of a fair Rock-Paper-Scissors duel against " + game[0] + "!");
                 } else {
