@@ -1631,7 +1631,8 @@ function createChannel(io, channelName) {
             // Give someone reusable links for dueling a user
             function duel(caller, subject) {
                 if (!isOnline(subject)) {
-                    spooksbot_pm(caller, "#redThat user is not online!");
+                    //spooksbot_pm(caller, "#redThat user is not online!");
+                    errorMessage('That user is not online!');
                     return false;
                 }
                 var invitation = "#orangeYou asked to duel " + subject + " in a fair game of rock-paper-scissors. Pick your arms.";
@@ -1646,7 +1647,8 @@ function createChannel(io, channelName) {
             // Start a game between two users
             function startGame(caller, subject, start) {
                 if (!isOnline(subject)) {
-                    spooksbot_pm(caller, "#redThat user is not online!");
+                    //spooksbot_pm(caller, "#redThat user is not online!");
+                    errorMessage('That user is not online!');
                     return false;
                 } else if (start == "quit") {
                     spooksbot_send("#red" + caller + " just gave up on dueling " + subject + "!");
