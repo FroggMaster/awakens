@@ -976,13 +976,17 @@ $(function() {
             }
             return;
         case 38: // up
-            if ($(this).val().indexOf('\n') == -1 || $(this)[0].selectionStart < $(this).val().indexOf('\n')) {
-                delta = 1;
+            if(e.shiftKey){
+                if ($(this).val().indexOf('\n') == -1 || $(this)[0].selectionStart < $(this).val().indexOf('\n')) {
+                    delta = 1;
+                }
             }
             break;
         case 40: // down
-            if ($(this)[0].selectionStart > $(this).val().lastIndexOf('\n')) {
-                delta = -1;
+            if(e.shiftKey){
+                if ($(this)[0].selectionStart > $(this).val().lastIndexOf('\n')) {
+                    delta = -1;
+                }
             }
             break;
         }
