@@ -41,8 +41,8 @@ function createChannel(io, channelName) {
     var tokenCache = {};
     var count = 0;
     var command_access = {
-        bg : ['mod',0],
-        topic : ['mod',0],
+        bg : ['mod',3],
+        topic : ['mod',3],
         theme : ['admin',0],
         note : ['admin',0],
         kick : ['admin',3],
