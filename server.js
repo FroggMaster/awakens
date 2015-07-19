@@ -1600,7 +1600,7 @@ function createChannel(io, channelName) {
             // ======================
             // By Bruno02468
 
-            // Defining some variables
+            // Defining some variables...
             var rock = "rock";
             var paper = "paper";
             var scissors = "scissors";
@@ -1608,7 +1608,7 @@ function createChannel(io, channelName) {
             var valid_rps = [rock, paper, scissors, quit];
             rps_games = [];
 
-            // Check whether a user is online
+            // Check whether a user is online by their nick
             function isOnline(nick) {
                 for (c in channel.online) {
                     var found = channel.online[c];
@@ -1632,37 +1632,35 @@ function createChannel(io, channelName) {
             // Give someone reusable links for dueling a user
             function duel(caller, subject) {
                 if (!isOnline(subject)) {
-                    //spooksbot_pm(caller, "#redThat user is not online!");
                     errorMessage('That user is not online!');
-                    return false;
+                } else if (caller === subject) {
+                    errorMessage("Duelling yourself does not seem like a good idea.");
+                } else {
+                    var invitation = "#orangeYou asked to duel " + subject + " in a fair game of rock-paper-scissors. Pick your arms.";
+                    var lrock = clink("/rps " + subject + " " + rock, "Rock!\\n");
+                    var lpaper = clink("/rps " + subject + " " + paper, "Paper!\\n");
+                    var lscissors = clink("/rps " + subject + " " + scissors, "Scissors!\\n");
+                    invitation += "#orange\\n" + lrock + lpaper + lscissors + "(Tip: /_these links are reusable!|)";
+                    spooksbot_pm(caller, invitation);
                 }
-                var invitation = "#orangeYou asked to duel " + subject + " in a fair game of rock-paper-scissors. Pick your arms.";
-                var lrock = clink("/rps " + subject + " " + rock, "Rock!");
-                var lpaper = clink("/rps " + subject + " " + paper, "Paper!");
-                var lscissors = clink("/rps " + subject + " " + scissors, "Scissors!");
-                var lquit = clink("/rps " + subject + " " + quit, "Uh... nevermind.");
-                invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors + "\\n" + lquit + "\n(Tip: /_these links are reusable!|)";
-                spooksbot_pm(caller, invitation);
             }
 
             // Start a game between two users
             function startGame(caller, subject, start) {
                 if (!isOnline(subject)) {
-                    //spooksbot_pm(caller, "#redThat user is not online!");
                     errorMessage('That user is not online!');
-                    return false;
-                } else if (start == "quit") {
-                    spooksbot_send("#red" + caller + " just gave up on dueling " + subject + "!");
-                } else if (valid_rps.indexOf(start) < 0) {
+                } else if (caller === subject) {
+                    errorMessage("Duelling yourself does NOT seem like a good idea at all.");
+                } else if (valid_rps.indexOf(start) < 0 || start == quit) {
                     errorMessage("That's not a valid command, stop hacking!");
                 } else {
                     var myId = rps_games.length;
-                    var lrock = clink("/rps_play " + rock + " " + myId, "Rock!");
-                    var lpaper = clink("/rps_play " + paper + " " + myId, "Paper!");
-                    var lscissors = clink("/rps_play " + scissors + " " + myId, "Scissors!");
+                    var lrock = clink("/rps_play " + rock + " " + myId, "Rock!\\n");
+                    var lpaper = clink("/rps_play " + paper + " " + myId, "Paper!\\n");
+                    var lscissors = clink("/rps_play " + scissors + " " + myId, "Scissors!\\n");
                     var lquit = clink("/rps_play " + quit + " " + myId, "I'm a coward.");
                     var invitation = "#green" + caller + " has challenged you for a fair duel of Rock-Paper-Scissors!\\nPick your arms or run.";
-                    invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors + "\\n" + lquit;
+                    invitation += "#orange\\n" + lrock + lpaper + lscissors + lquit;
                     spooksbot_pm(subject, invitation);
                     rps_games[myId] = [caller, subject, start, false];
                     spooksbot_send("#orangeUser /_" + caller + "| just challenged /_" + subject + "| for a fair duel of Rock-Paper-Scissors! Who shall win?");
@@ -1674,8 +1672,7 @@ function createChannel(io, channelName) {
                 var game = rps_games[id];
                 var ended = (game === undefined);
                 if (ended) {
-                    //spooksbot_pm(caller, "#redThat game has already ended, dummy!");
-                    errorMessage('That game has already ended, dummy!');
+                    errorMessage("Invalid game; it has already ended, probably.");
                 } else if (command == quit) {
                     spooksbot_send("#red" + caller + " just pussied out of a fair Rock-Paper-Scissors duel against " + game[0] + "!");
                 } else if (valid_rps.indexOf(command) < 0) {
