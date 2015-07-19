@@ -66,7 +66,7 @@ DROP TABLE IF EXISTS `chat_users`;
 CREATE TABLE `chat_users` (
   `nick` varchar(100) NOT NULL,
   `vHost` varchar(100) DEFAULT NULL,
-  `flair` varchar(100) DEFAULT NULL,
+  `flair` varchar(255) DEFAULT NULL,
   `remote_addr` varchar(100) NOT NULL,
   `pw_hash` varchar(256) DEFAULT NULL,
   `access_level` int(11) DEFAULT NULL,
