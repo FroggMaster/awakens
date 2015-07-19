@@ -1605,6 +1605,7 @@ function createChannel(io, channelName) {
             var paper = "paper";
             var scissors = "scissors";
             var quit = "quit";
+            var valid_rps = [rock, paper, scissors, quit];
             rps_games = [];
 
             // Check whether a user is online
@@ -1652,6 +1653,8 @@ function createChannel(io, channelName) {
                     return false;
                 } else if (start == "quit") {
                     spooksbot_send("#red" + caller + " just gave up on dueling " + subject + "!");
+                } else if (valid_rps.indexOf(start) < 0) {
+                    errorMessage("That's not a valid command, stop hacking!");
                 } else {
                     var myId = rps_games.length;
                     var lrock = clink("/rps_play " + rock + " " + myId, "Rock!");
@@ -1661,7 +1664,8 @@ function createChannel(io, channelName) {
                     var invitation = "#green" + caller + " has challenged you for a fair duel of Rock-Paper-Scissors!\\nPick your arms or run.";
                     invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors + "\\n" + lquit;
                     spooksbot_pm(subject, invitation);
-                    rps_games.push([caller, subject, start, false]);
+                    rps_games[myId] = [caller, subject, start, false];
+                    spooksbot_send("#orangeUser /_" + caller + "| just challenged /_" + subject + "| for a fair duel of Rock-Paper-Scissors! Who shall win?");
                 }
             }
 
@@ -1674,6 +1678,8 @@ function createChannel(io, channelName) {
                     errorMessage('That game has already ended, dummy!');
                 } else if (command == quit) {
                     spooksbot_send("#red" + caller + " just pussied out of a fair Rock-Paper-Scissors duel against " + game[0] + "!");
+                } else if (valid_rps.indexOf(command) < 0) {
+                    errorMessage("That's not a valid command, stop hacking!");
                 } else {
                     rps_games[id][3] = true;
                     var start = game[2];
@@ -1690,7 +1696,7 @@ function createChannel(io, channelName) {
                         }
                         spooksbot_send("#orangeHonorful /_" + winner + "| defeated /_" + loser + "| on a duel of Rock-Paper-Scissors!");
                     }
-                    rps_games.splice(id, 1);
+                    rps_games[id] = undefined;
                 }
             }
 
