@@ -1,5 +1,5 @@
 var DATE_FORMAT = 'shortTime';
-var BLACKLIST = [ 'sammich.sucks', 'donkey.dong'];
+var BLACKLIST = [ 'get.rekt', 'you.bitch.cunt'];
 var lastNick;
 var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm"; //Replace with your own from Google recaptcha
 // ------------------------------------------------------------------
@@ -1796,7 +1796,7 @@ $(function() {
                     $('#autocomplete').append('<span>' + list[i] + '</span>');
                 });
             }
-        } else if (e.keyCode == 27 && autoCompleteList) {
+        } else if (e.keyCode == 27 || e.keyCode == 8 && autoCompleteList) {
             e.preventDefault();
             autoCompleteList = false;
             $('#autocomplete').hide();
