@@ -1729,11 +1729,13 @@ function createChannel(io, channelName) {
 
             // Emit a 2Spooks message. Avoids code repetition. ~Bruno02468
             function spooksbot_send(msg) {
+                count++;
                 roomEmit('message', {
                     type: 'chat-message',
                     nick: '2Spooks',
                     flair: '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
-                    message: msg
+                    message: msg,
+                    count: count
                 });
             }
 
