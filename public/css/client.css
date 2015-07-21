@@ -86,6 +86,7 @@ body {
     border-radius: 1px;
 }
 #messages {
+    height: calc(100% - 49px);
     background: #111;
     color: white;
     position: absolute;
