@@ -1035,7 +1035,7 @@ $(function() {
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
         input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
-        $(window).resize();
+        //$(window).resize(); Get Fukt scrolling.
     });
 
 });
