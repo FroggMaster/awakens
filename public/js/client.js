@@ -1730,31 +1730,6 @@ parser = {
 };
 
 // ------------------------------------------------------------------
-// Height Adjustment
-// ------------------------------------------------------------------
-
-$(function() {
-    //Resizes chat elements to fit window
-    function resize() {
-        var width = $(window).width();
-        var height = $(window).height();
-        var input = $('#input-bar');
-        $('.full-height').each(function() {
-            var $this = $(this);
-            var padding = $this.outerHeight(true) - $this.height();
-            $this.css('height', (height - input.outerHeight(true) - padding) + 'px');
-        });
-        $('.full-width').each(function() {
-            var $this = $(this);
-            $this.css('width', $(window).width() + 'px');
-        });
-		IfScrolled()
-    }
-    $(window).resize(resize); // Add event listener to window
-    resize();
-});
-
-// ------------------------------------------------------------------
 // Autocomplete
 // ------------------------------------------------------------------
 
