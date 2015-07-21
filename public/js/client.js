@@ -1597,14 +1597,19 @@ parser = {
         var links = [];
         var embedLinks = [];
         // Filter out embed links
-        str = str.replace(/(\\*)\/embed (\S*) *\|/g, function(match, p1, p2){
+        str = str.replace(/(\\*)\/embed (\S*) */g, function(match, p1, p2){
             if (p1.length == 0){
-                if (p2.match(this.linkreg))
-                    for (var i = 0; i < 3; i++ )
-                        embedLinks.push(p2)
-                return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';
+                if (parser.linkreg.test(p2)){
+                    if (p2.match(this.linkreg)){
+                        for (var i = 0; i < 3; i++ )
+                            embedLinks.push(p2)
+                        return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';
+                    } 
+                } else {
+                    errorMessage('Insert a valid link to embed');
+                }
             }
-            return match;
+            return 'I failed at embedding';
         });
         // Replace links
         var prestr = "";
