@@ -92,7 +92,7 @@ body {
     width: 100%;
     overflow-x: hidden;
     overflow-y: shown;
-    height: 1000px;
+    height: calc(100% - 49px);
 }
 
 /*
