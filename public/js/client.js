@@ -317,7 +317,8 @@ $(function() {
             var role = this.get('role');
             var access_level = this.get('access_level').split('.')[0];
             if (access_level >= 0) {
-                var parsed = /^\/(?!embed)(\w+) ?([\s\S]*)/.exec(input);
+                //var parsed = /^\/(?!donkeydong)(\w+) ?([\s\S]*)/.exec(input);
+                var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
                     var name = parsed[1].toLowerCase();
@@ -845,9 +846,9 @@ $(function() {
 //Scrolls the window if you're already already scrolled to bottom.
 	window.IfScrolled = function(AntiScroll){
 	var containerEl = $('#messages');
-	var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 100;
+	var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 200;
 	var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
-        var ScrolledUp = containerEl.scrollTop() < containerEl.prop('scrollHeight') - containerEl.prop('clientHeight') - 200;
+        var ScrolledUp = containerEl.scrollTop() < containerEl.prop('scrollHeight') - containerEl.prop('clientHeight') - 300;
 
 	if (scrolledToBottom && scrollDelta > 0) {
             scrollToBottom();
@@ -863,7 +864,7 @@ $(function() {
 
     function appendMessage(el) {
         var containerEl = $('#messages');
-        var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
+        var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 200;
         el.appendTo(containerEl);
         var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         if (scrolledToBottom && scrollDelta > 0) {
@@ -969,7 +970,7 @@ $(function() {
             if (!e.shiftKey) {
                 e.preventDefault();
                 var text = input.val();
-                text && CLIENT.submit(text);
+                text && submit();
                 historyIndex = -1;
                 history.push(text);
                 input.val('');
@@ -1035,10 +1036,12 @@ $(function() {
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
         input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
-        //$(window).resize(); Get Fukt scrolling.
+        $(window).resize(); //Corrects Message Box if window resized.
     });
-
+    
 });
+
+
 
 // ------------------------------------------------------------------
 // Commands
@@ -1407,6 +1410,21 @@ $(function() {
         },
         rps_play : {
             params : ['choice', 'game_id']
+        },
+        e : { //Popup Embed
+            role : 'super',
+            params : [ 'url' ],
+            handler : function(params) {
+                var url = params.url
+                if (url.substring(0, 4) !== 'http'){
+                    var url = 'http://' + params.url
+                } if (url.substring(0, 4) == 'http'){
+                    video('event', 'embed', url);
+                    //console.log(url)
+                } else {
+                    errorMessage('Insert a valid link to embed');
+                }
+            }
         }
     };
     for (x in nullCmds)
@@ -1589,16 +1607,16 @@ parser = {
         str = str.replace(/\\n/g, '<br />');
         str = str.replace(this.repslsh, '\\\\n');
         // Define embed substring
-        var repEmb = this.replink.substring(0,40) + '¤';
+        //var repEmb = this.replink.substring(0,40) + '¤';
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
         // set links array for embeds and links
         var links = [];
-        var embedLinks = [];
+        // var embedLinks = [];
         // Filter out embed links
-        str = str.replace(/(\\*)\/embed (\S*) */g, function(match, p1, p2){
-            if (p1.length == 0){
+        //str = str.replace(/(\\*)\/embed (\S*) */g, function(match, p1, p2){
+        /*    if (p1.length == 0){
                 if (parser.linkreg.test(p2)){
                     if (p2.match(this.linkreg)){
                         for (var i = 0; i < 3; i++ )
@@ -1610,7 +1628,7 @@ parser = {
                 }
             }
             return 'I failed at embedding';
-        });
+        }); */
         // Replace links
         var prestr = "";
         var poststr = str;
@@ -1686,12 +1704,13 @@ parser = {
             str = str.replace(this.repslsh, escs[i][1]);
         }
         // Replace embed links
-        if (embedLinks.length > 0) {
+        /*if (embedLinks.length > 0) {
             for (var i = 0; i < embedLinks.length; i++) {
                 elink = embedLinks[i].replace(/^((.)(.+))$/, '$1');
                 str = str.replace(repEmb, elink);
             }
-        }
+        }*/
+        
         // Replace other links
         if (links.length > 0) {
             for (var i = 0; i < links.length; i++) {
@@ -1712,17 +1731,17 @@ parser = {
         // Video embeds
         if (str.search(/(youtu(\.)?be)/gi) != -1)
             str = str.replace(/<a [^>]*href="[^"]*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?"]*)[^"]*">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'youtube\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="[^"]*liveleak.com\/ll_embed\?f=(\w+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'liveleak\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="([^'"]*\.mp4)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
-        str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="[^"]*vimeo.com\/(\d+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'vimeo\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="[^"]*liveleak.com\/ll_embed\?f=(\w+)">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'liveleak\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="([^'"]*\.mp4)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
+            str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
         /* Why create a new function when video() already exists */
-        str = str.replace(/<a [^>]*href="([^'"]*\.(mp3|wav|ogg|mid|flac))">([^<]*)<\/a>/i, '<a target="_blank" href="$1">$1</a> <a href="javascript:void(0) onclick="video(event, \'audio\', \'$1\')" class="show-video">[audio]</a>');
+            str = str.replace(/<a [^>]*href="([^'"]*\.(mp3|wav|ogg|mid|flac))">([^<]*)<\/a>/i, '<a target="_blank" href="$1">$1</a> <a href="javascript:void(0) onclick="video(event, \'audio\', \'$1\')" class="show-video">[audio]</a>');
         // Parse spaces
-        escs = str.match(/<[^>]+?>/gi);
-        str = str.replace(/<[^>]+?>/gi, this.repslsh);
-        str = str.replace(/\s{2}/gi, ' &nbsp;');
+            escs = str.match(/<[^>]+?>/gi);
+            str = str.replace(/<[^>]+?>/gi, this.repslsh);
+            str = str.replace(/\s{2}/gi, ' &nbsp;');
         for (i in escs)
             str = str.replace(this.repslsh, escs[i]);
         return str;
