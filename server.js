@@ -1737,7 +1737,7 @@ function createChannel(io, channelName) {
 
             // Emit a 2Spooks message. Avoids code repetition. ~Bruno02468
             // The allow_colors parameter can be ommited, it defaults to false.
-            var escape_regex = /(\/[~?^%*]|\$|\\)/gi;
+            var escape_regex = /(\/[~?^&+%*]|\$|\\)/gi;
             var http_regex = /https*:\/\//gi;
             function spooksbot_send(msg, allow_colors) {
                 msg = msg.replace(escape_regex, "\\$1").replace(http_regex, "");
