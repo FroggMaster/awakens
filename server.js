@@ -1539,25 +1539,25 @@ function createChannel(io, channelName) {
             function ask(name) { // Answers questions
                 switch (Math.floor(Math.random()*3)) {
                     case (0):
-                        spooksbot_send("#redNo, " + name + ".");
+                        spooksbot_send("#redNo, " + name + ".", true, true);
                         break;
                     case (1):
-                        spooksbot_send("#greenYes, " + name + ".");
+                        spooksbot_send("#greenYes, " + name + ".", true, true);
                         break;
                     case (2):
-                        spooksbot_send("#yellowMaybe, " + name + ".");
+                        spooksbot_send("#yellowMaybe, " + name + ".", true, true);
                         break;
                     default: // Also covers unexpected results
-                        spooksbot_send("#orangeI don't know, " + name + ".");
+                        spooksbot_send("#orangeI don't know, " + name + ".", true, true);
                         break;
                 }
             }
 
             function coinflip() { // Self-explanatory
                 if (Math.random() < 0.5) {
-                    spooksbot_send("#orangeHeads.");
+                    spooksbot_send("#orangeHeads.", true, true);
                 } else {
-                    spooksbot_send("#orangeTails.");
+                    spooksbot_send("#orangeTails.", true, true);
                 }
             }
 
@@ -1589,11 +1589,12 @@ function createChannel(io, channelName) {
                                     video_id = video_id.substring(0, ampersandPosition);
                                 }
                                 var thumb = "\n           https://img.youtube.com/vi/" + video_id + "/default.jpg";
-                                spooksbot_send("#cyanTitle: " + title + thumb);
-                            });
-                        }
-                    });
-                }
+                                spooksbot_send("#cyanTitle: " + title + thumb, true, false);
+                            }
+                        );
+                    }
+                });
+            }
 
             // ======================
             //  Rock-Paper-Scissors!
@@ -1663,7 +1664,7 @@ function createChannel(io, channelName) {
                     invitation += "#orange\\n" + lrock + lpaper + lscissors + lquit;
                     spooksbot_pm(subject, invitation);
                     rps_games[myId] = [caller, subject, start, false];
-                    spooksbot_send("#orangeUser /_" + remove_colors(caller) + "| just challenged /_" + remove_colors(subject) + "| for a fair duel of Rock-Paper-Scissors! Who shall win?", true);
+                    spooksbot_send("#orangeUser /_" + remove_colors(caller) + "| just challenged /_" + remove_colors(subject) + "| for a fair duel of Rock-Paper-Scissors! Who shall win?", false, true);
                 }
             }
 
@@ -1674,7 +1675,7 @@ function createChannel(io, channelName) {
                 if (ended) {
                     errorMessage("Invalid game; it has already ended, probably.");
                 } else if (command == quit) {
-                    spooksbot_send("#red" + remove_colors(caller) + " just pussied out of a fair Rock-Paper-Scissors duel against " + remove_colors(game[0]) + "!", true);
+                    spooksbot_send("#red" + remove_colors(caller) + " just pussied out of a fair Rock-Paper-Scissors duel against " + remove_colors(game[0]) + "!", false, true);
                 } else if (valid_rps.indexOf(command) < 0) {
                     errorMessage("That's not a valid command, stop hacking!");
                 } else {
@@ -1683,7 +1684,7 @@ function createChannel(io, channelName) {
                     var starter = game[0];
                     var end = runGame(start, command);
                     if (end == "tie") {
-                        spooksbot_send("#orangeThe duel between " + remove_colors(starter)+ " and " + remove_colors(caller) + " has ended in a #redTIE#yellow!", true);
+                        spooksbot_send("#orangeThe duel between " + remove_colors(starter)+ " and " + remove_colors(caller) + " has ended in a #redTIE#yellow!", false, true);
                     } else {
                         var winner = starter;
                         var loser = caller;
@@ -1691,7 +1692,7 @@ function createChannel(io, channelName) {
                             winner = caller;
                             loser = starter;
                         }
-                        spooksbot_send("#orangeHonorful /_" + remove_colors(winner) + "| defeated /_" + remove_colors(loser) + "| on a duel of Rock-Paper-Scissors!", true);
+                        spooksbot_send("#orangeHonorful /_" + remove_colors(winner) + "| defeated /_" + remove_colors(loser) + "| on a duel of Rock-Paper-Scissors!", false, true);
                     }
                     rps_games[id] = undefined;
                 }
@@ -1739,10 +1740,11 @@ function createChannel(io, channelName) {
             // The allow_colors parameter can be ommited, it defaults to false.
             var escape_regex = /(\/[~?^&+%*]|\$|\\)/gi;
             var http_regex = /https*:\/\//gi;
-            function spooksbot_send(msg, allow_colors) {
-                msg = msg.replace(escape_regex, "\\$1").replace(http_regex, "");
-                if (!allow_colors) {
-                    msg = remove_colors(msg);
+            function spooksbot_send(msg, isSafe, allow_colors) {
+                if (!isSafe) {
+                    msg = msg.replace(escape_regex, "\\$1").replace(http_regex, "");
+                    if (!allow_colors)
+                        msg = remove_colors(msg);
                 }
                 count++;
                 roomEmit('message', {
