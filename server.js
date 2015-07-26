@@ -1621,7 +1621,7 @@ function createChannel(io, channelName) {
 
             // Make a JS link
             function jslink(script, text) {
-                return "/?javascript:" + script + "|[" + text + "]|";
+                return "/?javascript:" + script + "|" + text + "|";
             }
 
             // Make a JS link to send something
@@ -1636,10 +1636,10 @@ function createChannel(io, channelName) {
                 } else if (caller === subject) {
                     errorMessage("Duelling yourself does not seem like a good idea.");
                 } else {
-                    var invitation = "#orangeYou asked to duel " + subject + " in a fair game of rock-paper-scissors. Pick your arms.";
-                    var lrock = clink("/rps " + subject + " " + rock, "Rock!\\n");
-                    var lpaper = clink("/rps " + subject + " " + paper, "Paper!\\n");
-                    var lscissors = clink("/rps " + subject + " " + scissors, "Scissors!\\n");
+                    var invitation = "#orangeYou asked to duel " + remove_colors(subject) + " in a fair game of rock-paper-scissors. Pick your arms.";
+                    var lrock = clink("/rps " + subject + " " + rock, "[Rock!]") + "\\n";
+                    var lpaper = clink("/rps " + subject + " " + paper, "[Paper!]") + "\\n";
+                    var lscissors = clink("/rps " + subject + " " + scissors, "[Scissors!]") + "\\n";
                     invitation += "#orange\\n" + lrock + lpaper + lscissors + "(Tip: /_these links are reusable!|)";
                     spooksbot_pm(caller, invitation);
                 }
@@ -1655,15 +1655,15 @@ function createChannel(io, channelName) {
                     errorMessage("That's not a valid command, stop hacking!");
                 } else {
                     var myId = rps_games.length;
-                    var lrock = clink("/rps_play " + rock + " " + myId, "Rock!\\n");
-                    var lpaper = clink("/rps_play " + paper + " " + myId, "Paper!\\n");
-                    var lscissors = clink("/rps_play " + scissors + " " + myId, "Scissors!\\n");
+                    var lrock = clink("/rps_play " + rock + " " + myId, "[Rock!]") + "\\n";
+                    var lpaper = clink("/rps_play " + paper + " " + myId, "[Paper!]") + "\\n";
+                    var lscissors = clink("/rps_play " + scissors + " " + myId, "[Scissors!]") + "\\n";
                     var lquit = clink("/rps_play " + quit + " " + myId, "I'm a coward.");
-                    var invitation = "#green" + caller + " has challenged you for a fair duel of Rock-Paper-Scissors!\\nPick your arms or run.";
+                    var invitation = "#green" + remove_colors(caller) + " has challenged you for a fair duel of Rock-Paper-Scissors!\\nPick your arms or run.";
                     invitation += "#orange\\n" + lrock + lpaper + lscissors + lquit;
                     spooksbot_pm(subject, invitation);
                     rps_games[myId] = [caller, subject, start, false];
-                    spooksbot_send("#orangeUser /_" + caller + "| just challenged /_" + subject + "| for a fair duel of Rock-Paper-Scissors! Who shall win?");
+                    spooksbot_send("#orangeUser /_" + remove_colors(caller) + "| just challenged /_" + remove_colors(subject) + "| for a fair duel of Rock-Paper-Scissors! Who shall win?", true);
                 }
             }
 
@@ -1674,7 +1674,7 @@ function createChannel(io, channelName) {
                 if (ended) {
                     errorMessage("Invalid game; it has already ended, probably.");
                 } else if (command == quit) {
-                    spooksbot_send("#red" + caller + " just pussied out of a fair Rock-Paper-Scissors duel against " + game[0] + "!");
+                    spooksbot_send("#red" + remove_colors(caller) + " just pussied out of a fair Rock-Paper-Scissors duel against " + remove_colors(game[0]) + "!", true);
                 } else if (valid_rps.indexOf(command) < 0) {
                     errorMessage("That's not a valid command, stop hacking!");
                 } else {
@@ -1683,7 +1683,7 @@ function createChannel(io, channelName) {
                     var starter = game[0];
                     var end = runGame(start, command);
                     if (end == "tie") {
-                        spooksbot_send("#orangeThe duel between " + starter + " and " + caller + " has ended in a #redTIE#yellow!");
+                        spooksbot_send("#orangeThe duel between " + remove_colors(starter)+ " and " + remove_colors(caller) + " has ended in a #redTIE#yellow!", true);
                     } else {
                         var winner = starter;
                         var loser = caller;
@@ -1691,7 +1691,7 @@ function createChannel(io, channelName) {
                             winner = caller;
                             loser = starter;
                         }
-                        spooksbot_send("#orangeHonorful /_" + winner + "| defeated /_" + loser + "| on a duel of Rock-Paper-Scissors!");
+                        spooksbot_send("#orangeHonorful /_" + remove_colors(winner) + "| defeated /_" + remove_colors(loser) + "| on a duel of Rock-Paper-Scissors!", true);
                     }
                     rps_games[id] = undefined;
                 }
@@ -1730,8 +1730,20 @@ function createChannel(io, channelName) {
                 }
             }
 
+            // Also kills color codes in usernames. ~Bruno02468
+            function remove_colors(str) {
+                return str.replace(/#/g, "\\#");
+            }
+
             // Emit a 2Spooks message. Avoids code repetition. ~Bruno02468
-            function spooksbot_send(msg) {
+            // The allow_colors parameter can be ommited, it defaults to false.
+            var escape_regex = /(\/[~?^%*]|\$|\\)/gi;
+            var http_regex = /https*:\/\//gi;
+            function spooksbot_send(msg, allow_colors) {
+                msg = msg.replace(escape_regex, "\\$1").replace(http_regex, "");
+                if (!allow_colors) {
+                    msg = remove_colors(msg);
+                }
                 count++;
                 roomEmit('message', {
                     type: 'chat-message',
