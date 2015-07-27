@@ -16,9 +16,9 @@ $(function() {
     var roles = ['god','super','admin','mod','basic','mute'];
 
     //Add user to list and show message
-    var tjoin = 'on';
-    
     socket.on('join', function(user) {
+        var tjoin = 'on';
+        
         ONLINE.add(user);
         if (CLIENT.has('tjoin') && CLIENT.get('tjoin') == 'on') {
             CLIENT.show({
