@@ -18,14 +18,16 @@ $(function() {
     //Add user to list and show message
     socket.on('join', function(user) {
         ONLINE.add(user);
-        if (!CLIENT.get('tjoin') || CLIENT.get('tjoin') == 'on')
+        if (CLIENT.has('tjoin') && CLIENT.get('tjoin') == 'on') {
             CLIENT.show({
                 type : 'general-message',
                 message : user.nick + ' has joined '
             });
+        }
 
-        if (CLIENT.get('part') != undefined)
+        if (CLIENT.has('part')) {
             socket.emit('SetPart', CLIENT.get('part'));
+        }
     });
 
     //Synchronize user list with server
@@ -67,7 +69,7 @@ $(function() {
     //Shows user leave message with part, if it exists
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-        if (!user.kicked && (!CLIENT.get('tjoin') || CLIENT.get('tjoin') == 'on')) {
+        if (!user.kicked && CLIENT.has('tjoin') && CLIENT.get('tjoin') == 'on') {
             CLIENT.show({
                 type : 'general-message',
                 message : user.nick + ' has left ' + (user.part ? user.part : '')
@@ -99,20 +101,20 @@ $(function() {
 
     //Updates the large center 'message'
     socket.on('centermsg', function(data){
-        $('#sam').remove()
+        $('#sam').remove();
         $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
     	CLIENT.set({ msg : data.msg });
     });
 
     //Client side check to see if user is active
     socket.on('alive', function(){
-        socket.emit('alive')
+        socket.emit('alive');
     });
 
     //Plays youtube video when activated
     socket.on('playvid', function(url){
-        if(url.url == "stop" || CLIENT.get('mute') == 'on' || CLIENT.get('play') == 'off'){
-            $("#youtube")[0].innerHTML = ""
+        if(url.url == "stop" || CLIENT.get('mute') == 'on' || CLIENT.get('play') == 'off') {
+            $("#youtube")[0].innerHTML = "";
         } else {
             $("#youtube")[0].innerHTML = "<iframe width=\"420\" height=\"345\" src=\"https://www.youtube.com/embed/" + url.url +"?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe>"
         }
@@ -120,12 +122,16 @@ $(function() {
 
     //Shows messages from users that aren't blocked
     socket.on('message', function(msg) {
-    	var list = CLIENT.get('block');
-        for (var i = 0; i < list.length; i++){
-            if (list[i].toLowerCase() == msg.nick.toLowerCase())
-                return false; //Don't do anything
+        if (!msg.nick) {
+            CLIENT.show(msg);
+        } else {
+            var list = _.map(CLIENT.get('block'), function(value){
+                return value.toLowerCase();
+            });
+            if (list.indexOf(msg.nick.toLowerCase()) == -1) {
+                CLIENT.show(msg);
+            }
         }
-        CLIENT.show(msg);
     });
 
     //Sends user info after connecting to the server
@@ -254,7 +260,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tjoin font style mute mute_speak play nick images security msg flair cursors styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 var item = localStorage.getItem('chat-' + key);
                 try {
                     item = JSON.parse(item);
@@ -274,7 +280,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color style flair mute play mute_speak images cursors styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
+            'color style flair mute play mute_speak images styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                     	key == 'access_level' ? value = value.split('.')[0] : value;
@@ -390,8 +396,9 @@ $(function() {
                 }
                 input = ' ' + input;
                 color ? input = '#' + color + input + ' ' : input = input + ' ';
-                if (font)
+                if (font) {
                     input = '$' + font + '|' + input;
+                }
             }
             return input;
         }
@@ -1133,7 +1140,7 @@ $(function() {
             params : [ 'message$' ]
         },
         clear : function() {
-            $('#messages').html('');
+            $('#messages').empty();
         },
         unmute : function() {
             CLIENT.set('mute', 'off');
@@ -1237,42 +1244,42 @@ $(function() {
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
-                    }else if (attribute_name == 'bg'){
+                    } else if (attribute_name == 'bg') {
                         attribute_name = 'background';
                     }
-                    if (attribute_name == 'theme'){//Xultra doing his own weird thing again
-						var input_msg_clr = $("#input-bar").css('backgroundColor');
-						var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
-						var user_list_clr = $("#user-list").css('backgroundColor');
+                    if (attribute_name == 'theme') {
+			var input_msg_clr = $("#input-bar").css('backgroundColor');
+			var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
+			var user_list_clr = $("#user-list").css('backgroundColor');
 
-						function rgb2hex(rgb) {
-						    rgb = rgb.substring(4, rgb.length-1).split(", ");
-						    function colorChange(color) {
-						        color = parseInt(color).toString(16);
-						        if (color.length < 2) {
-						            return "0" + color;
-						        }
-						        else {
-						            return color;
-						        }
-						    }
-						    var red = colorChange(rgb[0]);
-						    var green = colorChange(rgb[1]);
-						    var blue = colorChange(rgb[2]);
-						    return "#"+red+green+blue;
-						}
-						theme_setting = rgb2hex(input_msg_clr) + " " +
-						                rgb2hex(scroll_bar_clr)+ " " +
-						                rgb2hex(user_list_clr) + " ";
+			function rgb2hex(rgb) {
+			    rgb = rgb.substring(4, rgb.length-1).split(", ");
+			    function colorChange(color) {
+			        color = parseInt(color).toString(16);
+			        if (color.length < 2) {
+			            return "0" + color;
+			        }
+			        else {
+			            return color;
+			        }
+			    }
+			    var red = colorChange(rgb[0]);
+			    var green = colorChange(rgb[1]);
+			    var blue = colorChange(rgb[2]);
+			    return "#"+red+green+blue;
+			}
+			theme_setting = rgb2hex(input_msg_clr) + " " +
+			                rgb2hex(scroll_bar_clr)+ " " +
+			                rgb2hex(user_list_clr) + " ";
 
-						CLIENT.show({
-							type : 'system-message',
-						    message : "Theme is currently set to: " + theme_setting
-						});
-						    /*\
-						    |*| I had to do this because of some genius bloat
-						    |*| code one of you goofballs wrote long ago.  <3
-						    \*/
+			CLIENT.show({
+				type : 'system-message',
+			    message : "Theme is currently set to: " + theme_setting
+			});
+			    /*\
+			    |*| I had to do this because of some genius bloat
+			    |*| code one of you goofballs wrote long ago.  <3
+			    \*/
                     } else {
 	                    CLIENT.show({
 	                        type : 'escaped-message',
@@ -1496,9 +1503,9 @@ remove = function(att, user) {
 //Used for quote display
 var mouseX;
 var mouseY;
-//Message parser. I cry when I see this.
+//Message parser
 parser = {
-    linkreg : /(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)*(\?([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?(&#35;([a-z\d-._:%?[\]@!()*+,;=]|((&#126;)|(&#36;)|(&amp;)|(&#39;)))*)?/i,
+    linkreg : /(\/embed )?(https?:\/\/)(www\.)?([\d\w_]+\.)*([\d\w_]+\.[\w]{2,})([\/\d\w_+_!@=#$%^&*()\-?\.[\]])*/gi,//Works as well as the last
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|blue|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
     replink : 'ÃƒÂ©ÃƒÂ¤!#@&5nÃƒÂ¸ÃƒÂºENONHEInoheÃƒÂ¥ÃƒÂ¶',
     repslsh : 'ÃƒÂ¸ÃƒÂº!#@&5nÃƒÂ¥ÃƒÂ¶EESCHEInoheÃƒÂ©ÃƒÂ¤',
@@ -1606,46 +1613,20 @@ parser = {
         str = str.replace(/\\\\n/g, this.repslsh);
         str = str.replace(/\\n/g, '<br />');
         str = str.replace(this.repslsh, '\\\\n');
-        // Define embed substring
-        //var repEmb = this.replink.substring(0,40) + '¤';
+        // Replace links
+        str = str.replace(this.linkreg, function(match, p1){if (p1) {return match;} else {return '<a target="_blank" href="' + match + '">' + match + '</a>';}});
+        // Filter out embed links
+        str = str.replace(/(\\*)\/embed (\S*)/g, function(match, p1, p2){
+            var matching = p2.match(this.linkreg);
+            if (p1.length == 0 && (matching.length > 1 || matching[0] != "")) {
+                    return '<a target=\"_blank\" href=\"'+p2+'\">'+p2+'</a> <a target=\"_blank\" onclick=\"video(\'\', \'embed\', \''+p2+'\')\">[embed]</a>';
+            } else {
+                return match;
+            }
+        });
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
-        // set links array for embeds and links
-        var links = [];
-        // var embedLinks = [];
-        // Filter out embed links
-        //str = str.replace(/(\\*)\/embed (\S*) */g, function(match, p1, p2){
-        /*    if (p1.length == 0){
-                if (parser.linkreg.test(p2)){
-                    if (p2.match(this.linkreg)){
-                        for (var i = 0; i < 3; i++ )
-                            embedLinks.push(p2)
-                        return '<a target="_blank" href="'+repEmb+'">'+repEmb+'</a> <a target="_blank" onclick="video(\'\', \'embed\', \''+repEmb+'\')">[embed]</a>';
-                    } 
-                } else {
-                    errorMessage('Insert a valid link to embed');
-                }
-            }
-            return 'I failed at embedding';
-        }); */
-        // Replace links
-        var prestr = "";
-        var poststr = str;
-        var index;
-        while (poststr.search(/https?:\/\//i) != -1){
-            index = poststr.search(/https?:\/\//i);
-            prestr += poststr.substring(0, index);
-            poststr = poststr.substring(index);
-            if (poststr.search(this.linkreg) != -1){
-                links.push(poststr.match(this.linkreg)[0]);
-                poststr = poststr.replace(poststr.match(this.linkreg)[0],this.replink);
-            } else {
-                prestr += poststr.substring(0,poststr.match(/https?:\/\//i)[0].length);
-                poststr = poststr.substring(poststr.match(/https?:\/\//i)[0].length);
-            }
-            str = prestr + poststr;
-        }
         var escs = str.match(/\\./g);
         if (!second) // Does not remove backslashes for gen-messages
             str = str.replace(/\\./g, this.repslsh);
@@ -1703,21 +1684,6 @@ parser = {
         for (i in escs) {
             str = str.replace(this.repslsh, escs[i][1]);
         }
-        // Replace embed links
-        /*if (embedLinks.length > 0) {
-            for (var i = 0; i < embedLinks.length; i++) {
-                elink = embedLinks[i].replace(/^((.)(.+))$/, '$1');
-                str = str.replace(repEmb, elink);
-            }
-        }*/
-        
-        // Replace other links
-        if (links.length > 0) {
-            for (var i = 0; i < links.length; i++) {
-                link = links[i].replace(/^((.)(.+))$/, '$1');
-                str = str.replace(this.replink, '<a target="_blank" href="' + link + '">' + link + '</a>');
-            }
-        }
         // Prevent blacklisted images, parse images
         var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:gif|jpg|jpeg|png|bmp))<\/a>/i.exec(str);
         if (img && CLIENT.get('images') == 'on') {
@@ -1769,7 +1735,7 @@ $(function() {
         });
 		IfScrolled()
     }
-    $(window).resize(resize); // Add event listener to window
+    $(window).resize(resize); // Add event listener to Iwindow
     resize();
 });
 
@@ -2033,4 +1999,4 @@ function video(event, type, input) {
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
 	IfScrolled(true);
-})
+});
