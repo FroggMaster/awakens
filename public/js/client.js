@@ -16,6 +16,8 @@ $(function() {
     var roles = ['god','super','admin','mod','basic','mute'];
 
     //Add user to list and show message
+    var tjoin = 'on';
+    
     socket.on('join', function(user) {
         ONLINE.add(user);
         if (CLIENT.has('tjoin') && CLIENT.get('tjoin') == 'on') {
@@ -1240,12 +1242,14 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'theme color font style flair mute mute_speak play images note topic styles bg part block background mask msg alert security frame frame_src'.split(' ');
+                var valid = 'theme color font style flair mute mute_speak play images note topic styles bg part block background mask msg alert security frame frame_src join tjoin'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
                     } else if (attribute_name == 'bg') {
                         attribute_name = 'background';
+                    } else if (attribute_name = 'join') {
+                        attribute_name = 'tjoin';
                     }
                     if (attribute_name == 'theme') {
 			var input_msg_clr = $("#input-bar").css('backgroundColor');
