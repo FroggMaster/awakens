@@ -17,7 +17,10 @@ $(function() {
 
     //Add user to list and show message
     socket.on('join', function(user) {
-        var tjoin = 'on';
+        var tjoin
+        if (tjoin !== 'on' || 'off') {
+            CLIENT.set('tjoin', 'on');
+        }
         
         ONLINE.add(user);
         if (CLIENT.has('tjoin') && CLIENT.get('tjoin') == 'on') {
