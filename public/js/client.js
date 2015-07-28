@@ -833,9 +833,9 @@ $(function() {
         }
         //Load and play speak messages
         if (message.type == 'spoken-message' && CLIENT.get('mute') != 'on' && CLIENT.get('mute_speak') != 'on') {
-            var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
-                var uri = message.source
-                var uri = 'http://tts.peniscorp.com/speak.lua?' + encodeURIComponent(message.message);
+            //var voices = ['default','yoda', 'old', 'loli', 'whisper', 'badguy'];
+            var uri = message.source
+            var uri = 'http://tts.peniscorp.com/speak.lua?' + encodeURIComponent(message.message);
             var html = [ '<embed src="', uri, '" hidden="true" autoplay>' ].join('');
 			var html = [ '<audio autoplay="autoplay"><source src="', uri, '" type="audio/wav"></source></audio>' ].join('');
             var $audio = $(html).appendTo('body');
@@ -1541,7 +1541,8 @@ var mouseX;
 var mouseY;
 //Message parser
 parser = {
-    linkreg : /(\/embed )?(https?:\/\/)(www\.)?([\d\w_]+\.)*([\d\w_]+\.[\w]{2,})([\/\d\w_+_!@=#$%^&*()\-?\.[\]])*/gi,//Works as well as the last
+    //linkreg : /(\/embed )?(https?:\/\/)(www\.)?([\d\w_]+\.)*([\d\w_]+\.[\w]{2,})([\/\d\w_+_!@=#$%^&*()\-?\.[\]])*/gi,//Embed string if required.
+    linkreg : /(https?:\/\/)(www\.)?([\d\w_]+\.)*([\d\w_]+\.[\w]{2,})([\/\d\w_+_!@=#$%^&*()\-?\.[\]])*/gi,
     coloreg : '(?:alice|cadet|cornflower|dark(?:slate)?|deepsky|dodger|light(?:sky|steel)?|medium(?:slate)?|midnight|powder|royal|sky|slate|steel)?blue|(?:antique|floral|ghost|navajo)?white|aqua|(?:medium)?aquamarine|blue|beige|bisque|black|blanchedalmond|(?:blue|dark)?violet|(?:rosy|saddle|sandy)?brown|burlywood|chartreuse|chocolate|(?:light)?coral|cornsilk|crimson|(?:dark|light)?cyan|(?:dark|pale)?goldenrod|(?:dark(?:slate)?|dim|light(?:slate)?|slate)?gr(?:a|e)y|(?:dark(?:olive|sea)?|forest|lawn|light(?:sea)?|lime|medium(?:sea|spring)|pale|sea|spring|yellow)?green|(?:dark)?khaki|(?:dark)?magenta|(?:dark)?orange|(?:medium|dark)?orchid|(?:dark|indian|(?:medium|pale)?violet|orange)?red|(?:dark|light)?salmon|(?:dark|medium|pale)?turquoise|(?:deep|hot|light)?pink|firebrick|fuchsia|gainsboro|gold|(?:green|light(?:goldenrod)?)?yellow|honeydew|indigo|ivory|lavender(?:blush)?|lemonchiffon|lime|linen|maroon|(?:medium)?purple|mintcream|mistyrose|moccasin|navy|oldlace|olive(?:drab)?|papayawhip|peachpuff|peru|plum|seashell|sienna|silver|snow|tan|teal|thistle|tomato|wheat|whitesmoke',
     replink : 'ÃƒÂ©ÃƒÂ¤!#@&5nÃƒÂ¸ÃƒÂºENONHEInoheÃƒÂ¥ÃƒÂ¶',
     repslsh : 'ÃƒÂ¸ÃƒÂº!#@&5nÃƒÂ¥ÃƒÂ¶EESCHEInoheÃƒÂ©ÃƒÂ¤',
@@ -1651,7 +1652,8 @@ parser = {
         str = str.replace(this.repslsh, '\\\\n');
         // Replace links
         str = str.replace(this.linkreg, function(match, p1){if (p1) {return match;} else {return '<a target="_blank" href="' + match + '">' + match + '</a>';}});
-        // Filter out embed links
+        // Filter out embed links (Temporarily Disabled)
+        /*
         str = str.replace(/(\\*)\/embed (\S*)/g, function(match, p1, p2){
             var matching = p2.match(this.linkreg);
             if (p1.length == 0 && (matching.length > 1 || matching[0] != "")) {
@@ -1659,7 +1661,7 @@ parser = {
             } else {
                 return match;
             }
-        });
+        });*/
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
