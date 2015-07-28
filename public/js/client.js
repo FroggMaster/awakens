@@ -1089,9 +1089,9 @@ $(function() {
 // ------------------------------------------------------------------
 
 (function() {
-    var nullCmds = { // Command objects with no properties
-        server : ['logout', 'unregister', 'whoami'],     // {}
-        local : ['block', 'unblock', 'alert', 'unalert'] // function(){}
+    var nullCmds = { //Command objects with no properties
+        server : ['logout', 'unregister', 'whoami'],
+        local : ['block', 'unblock', 'alert', 'unalert']
     };
     //Object with all command data. See 2spooks4.me/help for more information
     window.COMMANDS = {
@@ -1117,8 +1117,12 @@ $(function() {
         change_password : {
             params : [ 'old_password', 'new_password' ]
         },
-        banlist : {role : 'admin'},
-        permabanlist : {role : 'admin'},
+        banlist : {
+            role : 'admin'
+        },
+        permabanlist : {
+            role : 'admin'
+        },
         find : {
             role : 'admin',
             params : [ 'remote_addr' ]
