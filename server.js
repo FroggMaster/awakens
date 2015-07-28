@@ -301,7 +301,10 @@ function createChannel(io, channelName) {
                                         };
                                     } else {
                                         errorMessage(nick + ' has not joined since the last update and is not registered.');
+                                        return dbuser = false; //Not sure why we need to return anything here.
+                                        /*Possible cause for server crash upon bans
                                         return false;
+                                        */
                                     }
                                 } else {
                                     return {
