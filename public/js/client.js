@@ -171,10 +171,10 @@ $(function() {
     });
 
     //Sends request for topic info
-    getTopicData = function(){
+    getTopicData = function() {
         socket.emit('topicInfo');
     }
-
+  
     //Sends request for user's flair information
     sendFlair = function(flair){
         socket.emit('command', {
@@ -636,6 +636,13 @@ $(function() {
         className: 'data-title',
         trigger: 'left',
         items: {
+            //Removed until PM Panels are finished.
+            /*"Panel" : {
+                name: "PM Panel",
+                callback: function(){
+
+                }
+            },*/
             "PM": {
                 name: "PM",
                 callback: function(){
@@ -906,7 +913,8 @@ $('#messages').on("click", ".message .timestamp", function(e){
 // PM Panel
 // ------------------------------------------------------------------
 
-//Not being used
+//Soon to be in use 
+/*
 (function() {
     var PANELS = {};
     window.PM = {
@@ -919,9 +927,30 @@ $('#messages').on("click", ".message .timestamp", function(e){
             if (!panel) {
                 panel = $('<div>').attr('title', 'PM: ' + ONLINE.get(id).get('NICK'));
             }
+        },
+        create : function(id) {
+            var pan = $('<div>')
+            $('body').append(pan);
+            $(pan).css({
+               position: 'absolute',
+               width: '200px',
+               height: '200px',
+               backgroundColor: 'black',
+               zIndex: '50'
+           }).resizable().draggable();
+           
+            $(pan).html('<div id="input-bar"><div><input id="input-message" class="panel-'+id+'" style="width:100%"></input></div></div>');
+            $('.panel-' + id).keydown(function(e){
+               if (e.keyCode == 13){
+                   CLIENT.submit('/pm ' + ONLINE.get(id).get('nick') + '|' + $('.panel-' + id).val());
+                   $('.panel-' + id).val('');
+               }
+           });
+           
         }
     };
 })();
+*/
 
 // ------------------------------------------------------------------
 // Input Box Shadow Color
@@ -1253,48 +1282,48 @@ $(function() {
                         attribute_name = 'background';
                     } else if (attribute_name == 'join') {
                         attribute_name = 'tjoin';
-                    }
-                    if (attribute_name == 'theme') {
-			var input_msg_clr = $("#input-bar").css('backgroundColor');
-			var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
-			var user_list_clr = $("#user-list").css('backgroundColor');
+                    } else if (attribute_name == 'theme') {
+                        var input_msg_clr = $("#input-bar").css('backgroundColor');
+                        var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
+                        var user_list_clr = $("#user-list").css('backgroundColor');
 
-			function rgb2hex(rgb) {
-			    rgb = rgb.substring(4, rgb.length-1).split(", ");
-			    function colorChange(color) {
-			        color = parseInt(color).toString(16);
-			        if (color.length < 2) {
-			            return "0" + color;
-			        }
-			        else {
-			            return color;
-			        }
-			    }
-			    var red = colorChange(rgb[0]);
-			    var green = colorChange(rgb[1]);
-			    var blue = colorChange(rgb[2]);
-			    return "#"+red+green+blue;
-			}
-			theme_setting = rgb2hex(input_msg_clr) + " " +
-			                rgb2hex(scroll_bar_clr)+ " " +
-			                rgb2hex(user_list_clr) + " ";
+                        function rgb2hex(rgb) {
+                            rgb = rgb.substring(4, rgb.length-1).split(", ");
+                            function colorChange(color) {
+                                color = parseInt(color).toString(16);
+                                if (color.length < 2) {
+                                    return "0" + color;
+                                } else {
+                                    return color;
+                                }
+                            }
+                            
+                            var red = colorChange(rgb[0]);
+                            var green = colorChange(rgb[1]);
+                            var blue = colorChange(rgb[2]);
+                            return "#"+red+green+blue;
+                        }
+                    theme_setting = rgb2hex(input_msg_clr) + " " +
+			        rgb2hex(scroll_bar_clr)+ " " +
+			        rgb2hex(user_list_clr) + " ";
 
-			CLIENT.show({
-				type : 'system-message',
-			    message : "Theme is currently set to: " + theme_setting
-			});
-			    /*\
-			    |*| I had to do this because of some genius bloat
-			    |*| code one of you goofballs wrote long ago.  <3
-			    \*/
+                CLIENT.show({
+                    type : 'system-message',
+                    message : "Theme is currently set to: " + theme_setting
+                });
+                        /*\
+                        |*| I had to do this because of some genius bloat
+                        |*| code one of you goof balls wrote long ago.  <3
+                        \*/
                     } else {
 	                    CLIENT.show({
 	                        type : 'escaped-message',
 	                        message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
 	                    });
                     }
-                    if (attribute_name == 'topic')
-                        getTopicData();
+                    if (attribute_name == 'topic') {
+                        getTopicData(); 
+                    }
                 } else {
                     errorMessage('Invalid: Variable can be one of [' + valid.join(', ') + ']');
                 }
