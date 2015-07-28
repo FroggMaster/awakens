@@ -1251,7 +1251,7 @@ $(function() {
                         attribute_name = 'notification';
                     } else if (attribute_name == 'bg') {
                         attribute_name = 'background';
-                    } else if (attribute_name = 'join') {
+                    } else if (attribute_name == 'join') {
                         attribute_name = 'tjoin';
                     }
                     if (attribute_name == 'theme') {
