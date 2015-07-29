@@ -265,7 +265,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask birthday frame'.split(' ').forEach(function(key) {
                 var item = localStorage.getItem('chat-' + key);
                 try {
                     item = JSON.parse(item);
@@ -285,7 +285,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color style flair mute play mute_speak images styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
+            'color style flair mute play mute_speak images styles bg role access_level part birthday mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                     	key == 'access_level' ? value = value.split('.')[0] : value;
@@ -1278,7 +1278,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'theme color font style flair mute mute_speak play images note topic styles bg part block background mask msg alert security frame frame_src join tjoin'.split(' ');
+                var valid = 'theme color font style flair mute mute_speak play images note topic styles bg part block background mask birthday msg alert security frame frame_src join tjoin'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1407,6 +1407,9 @@ $(function() {
         },
         mask : {
             params : [ 'vHost' ]
+        },
+		birthday : {
+            params : [ 'birthday' ]
         },
         ghost : {
         	role : 'super'
