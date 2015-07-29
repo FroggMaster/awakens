@@ -301,10 +301,8 @@ function createChannel(io, channelName) {
                                         };
                                     } else {
                                         errorMessage(nick + ' has not joined since the last update and is not registered.');
-                                        return dbuser = false; //Not sure why we need to return anything here.
-                                        /*Possible cause for server crash upon bans
-                                        return false;
-                                        */
+                                        /*//return dbuser = false; //Only need to return an errorMessage
+                                        Cause for server crash upon bans?*/
                                     }
                                 } else {
                                     return {
@@ -2031,7 +2029,7 @@ function createChannel(io, channelName) {
                                     hats = JSON.parse(data['hats']);
                                     console.log(hats);
                                     if (hats[user.nick]) {
-                                        console.log('checkj');
+                                        //console.log('oldshitfrombread<3');
                                         user.hat = hats[user.nick];
                                     }
                                 }
