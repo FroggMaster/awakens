@@ -946,11 +946,16 @@ function createChannel(io, channelName) {
 			birthday : {
                 params : [ 'birthday' ],
                 handler : function(dao, dbuser, params) {
-					dbuser.set('birthday', params.birthday).then(function() {
-						socketEmit(socket, 'update', {
-							birthday : params.birthday
+					var birthdayTest = /[0-2]\d-[0-3]\d-[{1|2}][{9|0}]\d\d/;
+					if (birthdayTest.test(params.birthday)) {
+						dbuser.set('birthday', params.birthday).then(function() {
+							socketEmit(socket, 'update', {
+								birthday : params.birthday
+							});
 						});
-					});
+					} else {
+						errorMessage(msgs.get('invalidFormat', 'DD-MM-YYYY'));
+					}
                 }
             },
             ghost : {
