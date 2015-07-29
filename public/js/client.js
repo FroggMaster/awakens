@@ -1286,7 +1286,9 @@ $(function() {
                         attribute_name = 'background';
                     } else if (attribute_name == 'join') {
                         attribute_name = 'tjoin';
-                    } else if (attribute_name == 'theme') {
+                    } else if (attribute_name == 'topic') {
+                        getTopicData(); 
+                    } if (attribute_name == 'theme') {
                         var input_msg_clr = $("#input-bar").css('backgroundColor');
                         var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
                         var user_list_clr = $("#user-list").css('backgroundColor');
@@ -1324,9 +1326,6 @@ $(function() {
 	                        type : 'escaped-message',
 	                        message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
 	                    });
-                    }
-                    if (attribute_name == 'topic') {
-                        getTopicData(); 
                     }
                 } else {
                     errorMessage('Invalid: Variable can be one of [' + valid.join(', ') + ']');
