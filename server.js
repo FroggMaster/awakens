@@ -47,6 +47,7 @@ function createChannel(io, channelName) {
         note : ['admin',0],
         kick : ['admin',3],
         ban : ['admin',0],
+        banip : ['admin',0],
         unban : ['admin',0],
         access : ['admin',0]
     };
@@ -347,8 +348,6 @@ function createChannel(io, channelName) {
                 }
             },
             banip : {
-                role : 'admin',
-                access_level : 0,
                 params : [ 'nick' ],
                 handler : function(dao, dbuser, params) {
                     var stats = grab(params.nick);
