@@ -108,7 +108,7 @@ $(function() {
     socket.on('centermsg', function(data){
         $('#sam').remove();
         $('#messages').append("<table id=sam style='width:100%;'><tr><td style=text-align:center;vertical-align:middle;> " + parser.parse(data.msg) +"</td></tr><table>")
-        CLIENT.set({ msg : data.msg });
+    	CLIENT.set({ msg : data.msg });
     });
 
     //Client side check to see if user is active
@@ -265,7 +265,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask birthday frame'.split(' ').forEach(function(key) {
+            'color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 var item = localStorage.getItem('chat-' + key);
                 try {
                     item = JSON.parse(item);
@@ -275,7 +275,7 @@ $(function() {
                 this.set(key, item);
                 this.on('change:' + key, function(m, value) {
                     if (value) {
-                        if (typeof value == 'object')
+                    	if (typeof value == 'object')
                             value = JSON.stringify(value);
                         localStorage.setItem('chat-' + key, value);
                     } else {
@@ -285,10 +285,10 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color style flair mute play mute_speak images styles bg role access_level part birthday mask frame'.split(' ').forEach(function(key) {
+            'color style flair mute play mute_speak images styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
-                        key == 'access_level' ? value = value.split('.')[0] : value;
+                    	key == 'access_level' ? value = value.split('.')[0] : value;
                         this.show(key + ' changed to: ' + value);
                     } else {
                         this.show(key + ' reset to default');
@@ -492,7 +492,7 @@ $(function() {
     // All attributes to set
     var attList = ['images', 'bg', 'styles', 'block', 'alert', 'frame', 'frame_src', 'play', 'tcolor'];
     for (var i = 0; i < attList.length; i++){
-        var x = attList[i];
+    	var x = attList[i];
         if (!CLIENT.get(x))
             if ('block alert frame_src'.search(x) != -1) // Include here attributes to set to ''
                 CLIENT.set(x, '');
@@ -553,19 +553,19 @@ $(function() {
 
     //Hides and shows popup user menu
     $('#tabbed-menu').click(function(){
-        var distanceFromTop = $("#tabbed-menu").offset().top - $(window).scrollTop()
-        if ( distanceFromTop < 350 ) {
-            document.getElementById("user-list").style.bottom = "inherit";
-        }
-        else {
-            document.getElementById("user-list").style.bottom = "50px";
-        }
-        $('#user-list').slideToggle();
+    	var distanceFromTop = $("#tabbed-menu").offset().top - $(window).scrollTop()
+    	if ( distanceFromTop < 350 ) {
+    	    document.getElementById("user-list").style.bottom = "inherit";
+    	}
+    	else {
+    	    document.getElementById("user-list").style.bottom = "50px";
+    	}
+    	$('#user-list').slideToggle();
     });
     $(document).on('focus', 'textarea', function() {// Fix for users with an OSK, such as mobile.
-        if ($('#user-list').css('display') == 'block') {
-        $('#user-list').slideToggle();
-        }
+    	if ($('#user-list').css('display') == 'block') {
+	    $('#user-list').slideToggle();
+    	}
     });
     if (CLIENT.get('menu_display')){
         $('.menu-container').css('left',CLIENT.get('menu_left'));
@@ -573,7 +573,7 @@ $(function() {
     }
     //Adds user to the tabbed menu and updates count
     ONLINE.on('add', function(user) {
-        var nick;
+    	var nick;
         var li = $('<li class="users"></li>').attr({
             class : 'online-' + user.get('id'),
             id : user.get('id')
@@ -756,8 +756,8 @@ $(function() {
         }
         //Alert the user if their name is mentioned
         if ((check.test(message.message.replace('\\','')) || valid) && (message.nick != CLIENT.get('nick') && message.type == 'chat-message' || message.type == 'action-message' && message.message.split(' ')[0] != CLIENT.get('nick')) || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
-                message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
-                sound = 'name'
+            	message.count && el.children('.timestamp').attr('class', "timestamp highlightname");
+            	sound = 'name'
         }
         //Alert user if they are quoted
         if (message.message.search(/>>(\d)+/g) != -1) {
@@ -837,7 +837,7 @@ $(function() {
             var uri = message.source
             var uri = 'http://tts.peniscorp.com/speak.lua?' + encodeURIComponent(message.message);
             var html = [ '<embed src="', uri, '" hidden="true" autoplay>' ].join('');
-            var html = [ '<audio autoplay="autoplay"><source src="', uri, '" type="audio/wav"></source></audio>' ].join('');
+			var html = [ '<audio autoplay="autoplay"><source src="', uri, '" type="audio/wav"></source></audio>' ].join('');
             var $audio = $(html).appendTo('body');
             var audio = $audio[0];
             audio.onerror = audio.onpause = function(e) {
@@ -863,13 +863,13 @@ $(function() {
     }
 
 //Scrolls the window if you're already already scrolled to bottom.
-    window.IfScrolled = function(AntiScroll){
-    var containerEl = $('#messages');
-    var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 200;
-    var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
+	window.IfScrolled = function(AntiScroll){
+	var containerEl = $('#messages');
+	var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 200;
+	var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         var ScrolledUp = containerEl.scrollTop() < containerEl.prop('scrollHeight') - containerEl.prop('clientHeight') - 300;
 
-    if (scrolledToBottom && scrollDelta > 0) {
+	if (scrolledToBottom && scrollDelta > 0) {
             scrollToBottom();
         } else if (AntiScroll){
             if(ScrolledUp){
@@ -879,7 +879,7 @@ $(function() {
                 scrollToBottom();
             }
           }
-    }
+	}
 
     function appendMessage(el) {
         var containerEl = $('#messages');
@@ -963,7 +963,7 @@ $(function() {
             var i = color.lastIndexOf('#');
             i >= 0 ? textColor = color.substring(i + 1) : textColor = color;
             if (/([a-f]{6}|[a-f]{3})/i.test(textColor))
-                textColor = '#' + textColor;
+            	textColor = '#' + textColor;
         } else {
             textColor = '#888';
         }
@@ -1098,7 +1098,7 @@ $(function() {
         help : function() {
             var cmdList = 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /');
             CLIENT.show({
-                type : 'system-message',
+            	type : 'system-message',
                 message : cmdList
             });
         },
@@ -1278,7 +1278,7 @@ $(function() {
             params : [ 'attribute_name' ],
             handler : function(params) {
                 var attribute_name = params.attribute_name;
-                var valid = 'theme color font style flair mute mute_speak play images note topic styles bg part block background mask birthday msg alert security frame frame_src join tjoin'.split(' ');
+                var valid = 'theme color font style flair mute mute_speak play images note topic styles bg part block background mask msg alert security frame frame_src join tjoin'.split(' ');
                 if (valid.indexOf(attribute_name) >= 0) {
                     if (attribute_name == 'note') {
                         attribute_name = 'notification';
@@ -1310,8 +1310,8 @@ $(function() {
                             return "#"+red+green+blue;
                         }
                     theme_setting = rgb2hex(input_msg_clr) + " " +
-                    rgb2hex(scroll_bar_clr)+ " " +
-                    rgb2hex(user_list_clr) + " ";
+			        rgb2hex(scroll_bar_clr)+ " " +
+			        rgb2hex(user_list_clr) + " ";
 
                 CLIENT.show({
                     type : 'system-message',
@@ -1322,10 +1322,10 @@ $(function() {
                         |*| code one of you goof balls wrote long ago.  <3
                         \*/
                     } else {
-                        CLIENT.show({
-                            type : 'escaped-message',
-                            message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
-                        });
+	                    CLIENT.show({
+	                        type : 'escaped-message',
+	                        message : params.attribute_name + ' is currently set to: ' + (CLIENT.get(attribute_name) || 'none')
+	                    });
                     }
                 } else {
                     errorMessage('Invalid: Variable can be one of [' + valid.join(', ') + ']');
@@ -1407,11 +1407,8 @@ $(function() {
         mask : {
             params : [ 'vHost' ]
         },
-        birthday : {
-            params : [ 'birthday' ]
-        },
         ghost : {
-            role : 'super'
+        	role : 'super'
         },
         global : {
             role : 'super',
@@ -1698,7 +1695,7 @@ parser = {
         function scrollHTML(str1, str2){return '<a onmouseenter = "var quoteDiv = document.createElement(\x27div\x27); quoteDiv.setAttribute(\x27id\x27,\x27quoteDiv\x27); quoteDiv.setAttribute(\x27style\x27,\x27visibility:hidden\x27); setTimeout(function(){$(\x27#quoteDiv\x27).css(\x27visibility\x27,\x27visible\x27);},50); $(\x27#messages\x27).prepend(quoteDiv); $(\x27#quoteDiv\x27).css(\x27position\x27,\x27fixed\x27); $(\x27#quoteDiv\x27).css(\x27z-index\x27,\x275\x27); if (x == undefined){var x = $(document).mousemove(function(e){mouseX = e.pageX; mouseY = e.pageY})} if (quoteDiv != undefined){var msgClone = $(\x27.spooky_msg_'+str2+'\x27).last().parent().clone(); msgClone.children(\x27.message-content\x27).attr(\x27class\x27,\x27message-content msg_quote_'+str2+'\x27); msgClone.find(\x27img\x27).attr(\x27onload\x27,\x27\x27); msgClone.appendTo(\x27#quoteDiv\x27);}if ($(\x27#quoteDiv\x27).height() + mouseY + '+barWidth+' < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - '+barWidth+' - $(\x27#quoteDiv\x27).height()})}" onmousemove = "if ($(\x27#quoteDiv\x27).height() + mouseY + '+barWidth+' < window.innerHeight){$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:mouseY})}else{$(\x27#quoteDiv\x27).css({left:mouseX + 30,top:window.innerHeight - '+barWidth+' - $(\x27#quoteDiv\x27).height()})}" onmouseout = "$(\x27#quoteDiv\x27).remove();" onclick = "$(\x27#messages\x27).animate({scrollTop: $(\x27.spooky_msg_'+str2+'\x27).last().offset().top - $(\x27#messages\x27).offset().top + $(\x27#messages\x27).scrollTop()},\x27normal\x27,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27rgb(255, 255, 255,0.8)\x27},400,function(){$(\x27.spooky_msg_'+str2+'\x27).last().animate({\x27background-color\x27:\x27transparent\x27},400)});});"><u>'+str1+'</u></a>';}
         function invalidHTML(str){return '<div style = "color: #AD0000">'+str+'</div>';}
         if (str.match(/(^| )&gt;&gt;[1-9]([0-9]+)?/) != null)
-        str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
+		str = str.replace(/(&gt;&gt;([1-9]([0-9]+)?))/gi, function(match,p1,p2){if(document.getElementsByClassName('spooky_msg_'+p2)[0] != null){return scrollHTML(p1,p2)}else{return invalidHTML(p1)}});
         // Add greentext
         str = str.replace(/^(&gt;.*)$/i, '&#35;789922 $1');
         // Javascript links
@@ -1706,7 +1703,7 @@ parser = {
             a = a.replace(/&#35;/gi, '#');
             if(/[^:]*javascript *:/im.test(a)) {
                     if (b.trim() == ""){
-                        return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
+                    	return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + '[JavaScript]' + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
                     }
                     return '<div><a href="javascript:void(0)" title = "'+a+'" onclick = "'+a+'">' + b.trim() + '</a>&nbsp;<a onclick="window.prompt(&quot;The text is below&quot;,&quot;'+a+'&quot;);">[Copy]</a></div>';
             } else {
@@ -1776,7 +1773,7 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
-        IfScrolled()
+		IfScrolled()
     }
     $(window).resize(resize); // Add event listener to Iwindow
     resize();
@@ -1955,8 +1952,8 @@ function video(event, type, input) {
             embed = '<iframe width="100%" height="100%" src="' + input + '" frameborder="0" allowfullscreen></iframe>';
             break;
         case 'audio':
-            embed = '<audio src="' + input + '" controls loop>' + input + '</audio>';
-            break;
+        	embed = '<audio src="' + input + '" controls loop>' + input + '</audio>';
+        	break;
     }
     var videoOverlay = $('.video-overlay');
     if (videoOverlay.length == 0) {
@@ -2031,15 +2028,15 @@ function video(event, type, input) {
     videoOverlay.show();
     $(".video-overlay").resizable({
         start: function(event, ui) {
-            $(".video-overlay iframe").css("display","none")
+        	$(".video-overlay iframe").css("display","none")
         },
         stop: function(event, ui) {
-            $(".video-overlay iframe").css("display","block")
+        	$(".video-overlay iframe").css("display","block")
         }
     });
 }
 
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
-    IfScrolled(true);
+	IfScrolled(true);
 });

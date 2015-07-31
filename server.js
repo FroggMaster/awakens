@@ -557,7 +557,6 @@ function createChannel(io, channelName) {
                                 stats.remote_addr = dbuser.get('remote_addr');
                                 stats.vHost = dbuser.get('vHost');
                                 stats.nick = dbuser.get('nick');
-                                stats.birthday = dbuser.get('birthday');
                                 reg = (dbuser.get('registered') ? 'registered' : 'not registered');
                                 mask = (dbuser.get('vHost') ? dbuser.get('vHost') : 'Private');
                             } else {
@@ -565,9 +564,9 @@ function createChannel(io, channelName) {
                                 mask = 'Private';
                             }
                             if (roles.indexOf(user.role) <= 1) {
-                                showMessage(msgs.get('whois', stats.nick, stats.role, stats.access_level, stats.birthday, stats.remote_addr, stats.vHost, reg));
+                                showMessage(msgs.get('whois', stats.nick, stats.role, stats.access_level, stats.remote_addr, stats.vHost, reg));
                             } else if (roles.indexOf(user.role) >= 2) {
-                                showMessage(msgs.get('whoiss', stats.nick, stats.role, stats.access_level, stats.birthday, mask, reg));
+                                showMessage(msgs.get('whoiss', stats.nick, stats.role, stats.access_level, mask, reg));
                             }
                         } else {
                             return $.Deferred().resolve(false, msgs.get('user_doesnt_exist', params.nick));
@@ -938,21 +937,6 @@ function createChannel(io, channelName) {
                             errorMessage(msgs.get('vhosttaken', params.vHost));
                         }
                     });
-                }
-            },
-            birthday : {
-                params : [ 'birthday' ],
-                handler : function(dao, dbuser, params) {
-                    var birthdayTest = /[0-2]\d-[0-3]\d-[{1|2}][{9|0}]\d\d/;
-                    if (birthdayTest.test(params.birthday)) {
-                        dbuser.set('birthday', params.birthday).then(function() {
-                            socketEmit(socket, 'update', {
-                                birthday : params.birthday
-                            });
-                        });
-                    } else {
-                        errorMessage(msgs.get('invalidFormat', 'DD-MM-YYYY'));
-                    }
                 }
             },
             ghost : {
@@ -2058,7 +2042,6 @@ function createChannel(io, channelName) {
                                 }
                                 dbuser.set('remote_addr', user.remote_addr);
                                 user.vhost = dbuser.get('vHost');
-                                user.birthday = dbuser.get('birthday');
                                 user.login = true;
                                 user.flair = dbuser.get('flair') || null;
                                 console.log(user.nick + ' joined with ' + user.role + ' - ' + user.access_level);
@@ -2073,7 +2056,6 @@ function createChannel(io, channelName) {
                                 access_level : user.access_level.toString(),
                                 role : user.role,
                                 vHost : user.vhost,
-                                birthday : user.birthday,
                                 security : hashToken,
                                 login : user.login,
                                 flair : user.flair

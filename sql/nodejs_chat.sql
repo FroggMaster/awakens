@@ -65,13 +65,12 @@ DROP TABLE IF EXISTS `chat_users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `chat_users` (
   `nick` varchar(100) NOT NULL,
-  `vHost` varchar(100) DEFAULT NULL,
-  `birthday` varchar(100) DEFAULT NULL,
+  `vHost` varchar(36) DEFAULT NULL,
   `flair` varchar(255) DEFAULT NULL,
   `remote_addr` varchar(100) NOT NULL,
   `pw_hash` varchar(256) DEFAULT NULL,
   `access_level` int(11) DEFAULT NULL,
-  `email_address` varchar(1000) DEFAULT NULL,
+  `email_address` varchar(36) DEFAULT NULL,
   `verification_code` varchar(64) DEFAULT NULL,
   `verified` tinyint(4) NOT NULL DEFAULT '0',
   `registered` tinyint(4) NOT NULL DEFAULT '0',

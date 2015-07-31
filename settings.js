@@ -162,8 +162,8 @@ module.exports = {
         channel_banlist : 'Channel banned: {0}',
         access_granted : 'User {0} now has level {1}',
         whoami : 'You are {0} with role {1} with access_level {2} with ip {3}',
-        whois : '{0} ({6}),\nRole: {1}\nLevel: {2}\nBirthday: {3}\nIP: {4}\nMask: {5}\nUser ID: {6}',
-        whoiss : '{0} ({5}),\nRole: {1}\nLevel: {2}\nBirthday: {3}\nIP: {4}',
+        whois : '{0} \nRole: {1}\nLevel: {2}\nIP: {3}\nMask: {4}\nUser ID: {5}',
+        whoiss : '{0} ({4}),\nRole: {1}\nLevel: {2}\nIP: {3}',
         user_doesnt_exist : '{0} does not exist',
         find_ip : 'ip {0} uses: {1}',
         find_ip_empty : 'Could not find ip {0}',
@@ -191,8 +191,7 @@ module.exports = {
         InvalidCharacters : 'Name contained invalid character(s)',
         clear_channel : '{0} has cleared the banlist',
         same_topic : 'That is already the topic',
-        alone : 'There is nobody online...',
-        invalidFormat : 'Command parameters wrong, please format it like {0}'
+        alone : 'There is nobody online...'
     },
 
     nouns : [ 'alien', 'apparition', 'bat', 'blood', 'bogeyman', 'boogeyman', 'boo', 'bone', 'cadaver', 'casket', 'cauldron', 'cemetery', 'cobweb', 'coffin', 'corpse', 'crypt', 'darkness', 'dead', 'demon', 'devil', 'death', 'eyeball', 'fangs', 'fear', 'gastly', 'gengar', 'ghost', 'ghoul', 'goblin', 'grave', 'gravestone', 'grim', 'grimreaper', 'gruesome', 'haunter', 'headstone', 'hobgoblin', 'hocuspocus', 'howl', 'jack-o-lantern', 'mausoleum', 'midnight', 'monster', 'moon', 'mummy', 'night', 'nightmare', 'ogre', 'phantasm', 'phantom', 'poltergeist', 'pumpkin', 'scarecrow', 'scream', 'shadow', 'skeleton', 'skull', 'specter', 'spider', 'spine', 'spirit', 'spook', 'tarantula', 'tomb', 'tombstone', 'troll', 'vampire', 'werewolf', 'witch', 'witchcraft', 'wraith', 'zombie' ],
