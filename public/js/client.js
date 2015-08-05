@@ -1742,6 +1742,8 @@ parser = {
             str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
             str = str.replace(/<a [^>]*href="([^'"]*\.mp4)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
             str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
+        //    str = str.replace(/<a [^>]*href="[^"]*[i.]?imgur.com\/([A-Za-z]*\.gifv)[^<]*<\/a>/i, '<iframe allowfullscreen="" frameborder="0" scrolling="no" style="max-width: 200px; max-height: 200px;" src="http://$1#embed"></iframe>'); 
+        // Audio Embeds    
             str = str.replace(/<a [^>]*href="([^'"]*\.(mp3|wav|ogg|mid|flac))">([^<]*)<\/a>/i, '<a target="_blank" href="$1">$1</a> <a href="javascript:void(0)" onclick="video(event, \'audio\', \'$1\')" class="show-video">[audio]</a>');
         // Parse spaces
             escs = str.match(/<[^>]+?>/gi);
