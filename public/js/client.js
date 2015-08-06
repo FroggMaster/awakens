@@ -741,6 +741,7 @@ $(function() {
         }
         if (message.type == 'personal-message'){
             lastNick = message.nick;
+            window.PM.show(message, message.from);
         }
         //Make quotable if relevant
         if (message.count){
@@ -914,46 +915,45 @@ $('#messages').on("click", ".message .timestamp", function(e){
 // ------------------------------------------------------------------
 
 //Soon to be in use 
-/*
 (function() {
-    var PANELS = {};
-    window.PM = {
-        show : function(message, el) {
-            var id = message.to;
-            if (message.to == CLIENT.get('id')) {
-                id = message.from;
-            }
-            var panel = PANELS[id];
-            if (!panel) {
-                panel = $('<div>').attr('title', 'PM: ' + ONLINE.get(id).get('NICK'));
+    PANELS = {};
+    PM = {
+        show : function(message, id) {
+            var nick = ONLINE.get(id).get('nick');
+            var panel = PANELS[nick];
+            if(panel){
+                $(panel).append('<div id="PM-wrap"><span>' + message.nick + ': </span>' + '<span>' + parser.parse(message.message) + '</span></div>');
             }
         },
         create : function(id) {
             var pan = $('<div>');
             $('body').append(pan);
-            $(pan).attr('id', 'panel-' + id);
+            $(pan).attr({
+                id : 'panel-' + id,
+                title : 'PM: ' + ONLINE.get(id).get('nick')
+            });
             $(pan).css({
                position: 'absolute',
                width: '200px',
                height: '200px',
                backgroundColor: 'black',
                zIndex: '50'
-            }).resizable().draggable();
-            
-            $(pan).html('<div class="pm-messages"></div></div><div id="input-bar"><div><input id="input-message" style="width:100%"></input></div></div>');
+            }).draggable().resizable();
+
+            $(pan).html('<div style="position:absolute;right:0;color:red;" onclick="$(\'#panel-'+id+'\').remove();">X</div><div class="pm-messages" style="width:100%;height:calc(100% - 48px);color:white;"></div></div><div id="input-bar"><div><input id="input-message" style="width:100%"></input></div></div>');
             
             var input = $('#panel-' + id + ' input');
             $(input).keydown(function(e){
-               if (e.keyCode == 13){
+                if (e.keyCode == 13){
                    CLIENT.submit('/pm ' + ONLINE.get(id).get('nick') + '|' + $(input).val());
                    $(input).val('');
                 }
             });
-           
+            PANELS[ONLINE.get(id).get('nick')] = pan.find('.pm-messages');
+            console.log(PANELS)
         }
     };
 })();
-*/
 
 // ------------------------------------------------------------------
 // Input Box Shadow Color
