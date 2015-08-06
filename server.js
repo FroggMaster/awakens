@@ -1777,9 +1777,7 @@ function createChannel(io, channelName) {
                 var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/gim;
                 var idpattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
                 var urls = message.match(urlpattern);
-                for (var c in urls) {
-                    getTitle(urls[c]);
-                }
+                    getTitle(urls[0]);
             }
 
             /**
