@@ -929,23 +929,26 @@ $('#messages').on("click", ".message .timestamp", function(e){
             }
         },
         create : function(id) {
-            var pan = $('<div>')
+            var pan = $('<div>');
             $('body').append(pan);
+            $(pan).attr('id', 'panel-' + id);
             $(pan).css({
                position: 'absolute',
                width: '200px',
                height: '200px',
                backgroundColor: 'black',
                zIndex: '50'
-           }).resizable().draggable();
-           
-            $(pan).html('<div id="input-bar"><div><input id="input-message" class="panel-'+id+'" style="width:100%"></input></div></div>');
-            $('.panel-' + id).keydown(function(e){
+            }).resizable().draggable();
+            
+            $(pan).html('<div class="pm-messages"></div></div><div id="input-bar"><div><input id="input-message" style="width:100%"></input></div></div>');
+            
+            var input = $('#panel-' + id + ' input');
+            $(input).keydown(function(e){
                if (e.keyCode == 13){
-                   CLIENT.submit('/pm ' + ONLINE.get(id).get('nick') + '|' + $('.panel-' + id).val());
-                   $('.panel-' + id).val('');
-               }
-           });
+                   CLIENT.submit('/pm ' + ONLINE.get(id).get('nick') + '|' + $(input).val());
+                   $(input).val('');
+                }
+            });
            
         }
     };
