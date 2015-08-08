@@ -436,7 +436,7 @@ $(function() {
         unread = 0;
     });
     $(window).focus(function() {
-        $("#icon").attr("href","http://2spooks4.me/img/icon2.ico");
+        $("#icon").attr("href","../img/icon2.ico");
         blurred = false;
         updateTitle();
     });
@@ -444,7 +444,7 @@ $(function() {
     CLIENT.on('message', function(message) {
         if (blurred) {
             if(message.message.search(check) != -1 || (message.type == 'personal-message' && message.nick != CLIENT.get('nick'))){
-                $("#icon").attr("href","http://2spooks4.me/img/icon.ico");
+                $("#icon").attr("href","../img/icon.ico");
             }
             unread++;
             updateTitle();
