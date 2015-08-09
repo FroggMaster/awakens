@@ -2023,7 +2023,7 @@ function createChannel(io, channelName) {
 
                                 if (data['hats']) {//assign user hat if they have one set
                                     hats = JSON.parse(data['hats']);
-                                    console.log(hats);
+                                    //console.log(hats); Remove console junk
                                     if (hats[user.nick]) {
                                         //console.log('oldshitfrombread<3');
                                         user.hat = hats[user.nick];
