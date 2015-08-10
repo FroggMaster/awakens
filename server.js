@@ -1776,8 +1776,8 @@ function createChannel(io, channelName) {
             function getTitles(message) {
                 var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/i;
                 var urls = message.match(urlpattern);
-                if {
-                    (urls) getTitle(urls[0]);
+                if (urls) {
+                    getTitle(urls[0]);
                 }
             }
 
