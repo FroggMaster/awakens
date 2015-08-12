@@ -1535,9 +1535,12 @@ function createChannel(io, channelName) {
                 }
 
             }
-
-            function ask(name) { // Answers questions
-                switch (Math.floor(Math.random()*3)) {
+            
+            /* Commented out sloppily, love Dooms
+             * P.S. Bruno, Mr. Guy: FIX YOUR SHIT
+             */
+            /*function ask(name) { // Answers questions
+                //switch (Math.floor(Math.random()*3)) {
                     case (0):
                         spooksbot_send("#redNo, " + name + ".", true, true);
                         break;
@@ -1750,8 +1753,8 @@ function createChannel(io, channelName) {
                 roomEmit('message', {
                     type: 'chat-message',
                     nick: '2Spooks',
-                    flair: '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
-                    message: msg,
+                    //flair: '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
+                    /*message: msg,
                     count: count
                 });
             }
@@ -1779,7 +1782,8 @@ function createChannel(io, channelName) {
                 if (urls) {
                     getTitle(urls[0]);
                 }
-            }
+            }*/
+            
 
             /**
             * @inner
