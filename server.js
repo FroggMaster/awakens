@@ -1505,7 +1505,7 @@ function createChannel(io, channelName) {
                 return done.promise();
             }
 
-            function define(word) {
+            /*function define(word) {
                 var options = {
                     url: 'https://mashape-community-urban-dictionary.p.mashape.com/define?term=' + word,
                     headers: {
@@ -1750,7 +1750,7 @@ function createChannel(io, channelName) {
                 roomEmit('message', {
                     type: 'chat-message',
                     nick: '2Spooks',
-                    flair: '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
+                    flair: '$Special Elite|/*^/^/^/@#3333FF2|||||$Risque|/*^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
                     message: msg,
                     count: count
                 });
@@ -1779,7 +1779,7 @@ function createChannel(io, channelName) {
                 if (urls) {
                     getTitle(urls[0]);
                 }
-            }
+            }*/
 
             /**
             * @inner
