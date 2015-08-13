@@ -4,7 +4,6 @@ var dao = require('./dao');
 var throttle = require('./throttle');
 var request = require('request');
 var hasher = require('./md5');
-var htmlparser = require("htmlparser2");
 var jsdom = require("jsdom");
 
 var _ = require('underscore');
@@ -1117,18 +1116,63 @@ function createChannel(io, channelName) {
                 }
             },
             hat : {
+                params : [ 'hat' ],
+                handler : function(dao, dbuser, params){
+                    var data = dbuser.get('hat');
+                    if(data){
+                        data = JSON.parse(data);
+                        if(data.available.indexOf(params.hat) != -1){//check if user has access to given hat
+                            //set hat
+                            user.hat = params.hat;
+                            data.current = user.hat;
+                            //store data
+                            dbuser.set('hat', JSON.stringify(data));
+                            //tell user
+                            showMessage('You are now using hat ' + params.hat);
+                        } else {
+                            errorMessage('You don\'t have access to that hat');
+                        }
+                    } else {
+                        errorMessage('You don\'t have any hats');
+                    }
+                }
+            },
+            hatset : {
                 role: 'super',
                 params : [ 'nick', 'hat' ],
                 handler : function(dao, dbuser, params) {
+                    /* Example of how hat data is stored in the database
+                        {
+                            available : ['Crown','Gold'],
+                            using : 'Gold'
+                        }
+                    */
                     var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'RoseWhite', 'Rose2', 'RoseBlack2', 'Santa', 'Santa2', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow', 'Wizard', 'Viking', 'DevCog', 'BugCog', 'MagicPurple', 'MagicBlue', 'MagicRed', 'Rain', 'Pimp', 'ThunderEgg', 'BlueRain', 'Jester', 'MethSkull', 'Artism', 'Fez', 'CrownP', 'BeerCats', 'Void', 'Police', 'BottleCap', 'ShitPost', 'GoldStar'];
                     if (hats.indexOf(params.hat) != -1) {
                         dao.findUser(params.nick).then(function(dbuser){
-                            if(dbuser){
-                                var index = indexOf(dbuser.get('nick'));
-                                channel.online[index].hat = params.hat;
-                                dbuser.set('hat', params.hat);
-                                showMessage(params.nick + '\'s hat changed to ' + params.hat);
-                                socketEmit(channel.online[index].socket, 'message', 'hat changed to ' + params.hat);
+                            if(dbuser){//make sure given user is registered
+                                var data = dbuser.get('hat');
+                                if(data){//if data is defined parse otherwise define that shit
+                                    data = JSON.parse(data);
+                                } else {
+                                    data = {
+                                        available : [],
+                                        using : ''
+                                    }
+                                }
+                                if(data.available.indexOf(params.hat) != -1){//check if user already has given hat
+                                    //push hat to data
+                                    data.available.push(params.hat);
+                                    //store in database
+                                    dbuser.set('hat', JSON.stringify(data));
+                                    //get user index
+                                    var index = indexOf(dbuser.get('nick'));
+                                    //tell the user
+                                    showMessage(params.nick + ' now has access to hat: ' + params.hat);
+                                    socketEmit(channel.online[index].socket, 'message', 'You now have access to hat: ' + params.hat);
+                                } else {
+                                    errorMessage('User already has that hat.');
+                                }  
                             } else {
                                 errorMessage('User must be registered.');
                             }
@@ -1136,6 +1180,28 @@ function createChannel(io, channelName) {
                     } else {
                         errorMessage('That hat doesn\'t exist.');
                     }
+                }
+            },
+            hatkill : {
+                role : 'super',
+                params : [ 'nick', 'hat' ],
+                handler : function(dao, dbuser, params) {
+                    dao.findUser(params.nick).then(function(dbuser){
+                        var data = dbuser.get('hat');
+                        if(data){
+                            data = JSON.parse(data);
+                            var index = data.available.indexOf(params.hat);
+                            if(index != -1){//if user has given hat remove that shit
+                                data.available.splice(index);
+                                //store data
+                                dbuser.set('hat',JSON.stringify(data));
+                                //tell user
+                                showMessage('User nolonger has access to hat:' + params.hat);
+                            } else {
+                                errorMessage('User doesn\'t have given hat.');
+                            }
+                        }
+                    });
                 }
             },
             warn : {
@@ -2022,7 +2088,10 @@ function createChannel(io, channelName) {
                                 }
 
                                 if(dbuser.get('hat')) {//assign user hat if they have one set
-                                    user.hat = dbuser.get('hat');
+                                    var data = JSON.parse(dbuser.get('hat'));
+                                    if(data.current){
+                                        user.hat = data.current;
+                                    }
                                 }
 
                                 if (roles.indexOf(dbuser.get('role')) <= 1) {

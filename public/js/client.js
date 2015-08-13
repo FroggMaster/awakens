@@ -1445,7 +1445,14 @@ $(function() {
             params : [ 'message$' ]
         },
         hat : {
+            params : [ 'hat' ]
+        },
+        hatset : {
             role: 'super',
+            params : [ 'nick', 'hat' ]
+        },
+        hatkill : {
+            role : 'super',
             params : [ 'nick', 'hat' ]
         },
         warn : {
