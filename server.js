@@ -1122,18 +1122,16 @@ function createChannel(io, channelName) {
                 handler : function(dao, dbuser, params) {
                     var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'RoseWhite', 'Rose2', 'RoseBlack2', 'Santa', 'Santa2', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow', 'Wizard', 'Viking', 'DevCog', 'BugCog', 'MagicPurple', 'MagicBlue', 'MagicRed', 'Rain', 'Pimp', 'ThunderEgg', 'BlueRain', 'Jester', 'MethSkull', 'Artism', 'Fez', 'CrownP', 'BeerCats', 'Void', 'Police', 'BottleCap', 'ShitPost', 'GoldStar'];
                     if (hats.indexOf(params.hat) != -1) {
-                        dao.getChannelInfo(channelName).then(function(info) {
-                            var channelhats = info['hats'] ? JSON.parse(info['hats']) : {};
-                            channelhats[params.nick] = params.hat;
-                            dao.setChannelInfo(channelName, 'hats', JSON.stringify(channelhats)).then(function() {
-                                showMessage(params.nick + ' now has hat ' + params.hat);
-                                channel.online.forEach(function(user) {
-                                    if (user.nick == params.nick) {
-                                        user.hat = params.hat;
-                                        socketEmit(user.socket, 'message', 'You now have hat ' + params.hat);
-                                    }
-                                });
-                            });
+                        dao.findUser(params.nick).then(function(dbuser){
+                            if(dbuser){
+                                var index = indexOf(dbuser.get('nick'));
+                                channel.online[index].hat = params.hat;
+                                dbuser.set('hat', params.hat);
+                                showMessage(params.nick + '\'s hat changed to ' + params.hat);
+                                socketEmit(channel.online[index].socket, 'message', 'hat changed to ' + params.hat);
+                            } else {
+                                errorMessage('User must be registered.');
+                            }
                         });
                     } else {
                         errorMessage('That hat doesn\'t exist.');
@@ -2023,13 +2021,8 @@ function createChannel(io, channelName) {
                                     };
                                 }
 
-                                if (data['hats']) {//assign user hat if they have one set
-                                    hats = JSON.parse(data['hats']);
-                                    //console.log(hats); Remove console junk
-                                    if (hats[user.nick]) {
-                                        //console.log('oldshitfrombread<3');
-                                        user.hat = hats[user.nick];
-                                    }
+                                if(dbuser.get('hat')) {//assign user hat if they have one set
+                                    user.hat = dbuser.get('hat');
                                 }
 
                                 if (roles.indexOf(dbuser.get('role')) <= 1) {
