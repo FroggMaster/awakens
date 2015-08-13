@@ -1160,7 +1160,7 @@ function createChannel(io, channelName) {
                                         using : ''
                                     }
                                 }
-                                if(data.available.indexOf(params.hat) != -1){//check if user already has given hat
+                                if(data.available.indexOf(params.hat) == -1){//check if user already has given hat
                                     //push hat to data
                                     data.available.push(params.hat);
                                     //store in database
