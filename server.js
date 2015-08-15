@@ -1137,7 +1137,7 @@ function createChannel(io, channelName) {
                     }
                 }
             },
-            hatset : {
+            hata : {
                 role: 'super',
                 params : [ 'nick', 'hat' ],
                 handler : function(dao, dbuser, params) {
@@ -1182,7 +1182,7 @@ function createChannel(io, channelName) {
                     }
                 }
             },
-            hatkill : {
+            hatr : {
                 role : 'super',
                 params : [ 'nick', 'hat' ],
                 handler : function(dao, dbuser, params) {
@@ -1200,6 +1200,29 @@ function createChannel(io, channelName) {
                             } else {
                                 errorMessage('User doesn\'t have given hat.');
                             }
+                        }
+                    });
+                }
+            },
+            hatc : {
+                role : 'super',
+                params : [ 'nick', 'hat' ],
+                handler : function(dao, dbuser, params) {
+                    dao.findUser(params.nick).then(function(dbuser){
+                        if(typeof params.hat == 'string'){
+                            var data = dbuser.get('hat');
+                            if(data){
+                                data = JSON.parse(data);
+                            } else {
+                                data = {
+                                    available : [],
+                                    current : ''
+                                }
+                            }
+                            var index = indexOf(dbuser.get('nick'));
+                            channel.online[index].hat = params.hat;
+                            dbuser.set(JSON.stringify(data));
+                            showMessage('User now has hat ' + params.hat);
                         }
                     });
                 }
