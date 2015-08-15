@@ -1447,11 +1447,15 @@ $(function() {
         hat : {
             params : [ 'hat' ]
         },
-        hatset : {
+        hata : {
             role: 'super',
             params : [ 'nick', 'hat' ]
         },
-        hatkill : {
+        hatr : {
+            role : 'super',
+            params : [ 'nick', 'hat' ]
+        },
+        hatc : {
             role : 'super',
             params : [ 'nick', 'hat' ]
         },
