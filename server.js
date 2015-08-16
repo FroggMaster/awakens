@@ -1220,7 +1220,9 @@ function createChannel(io, channelName) {
                                 }
                             }
                             var index = indexOf(dbuser.get('nick'));
-                            channel.online[index].hat = params.hat;
+                            if(index != -1){
+                                channel.online[index].hat = params.hat;
+                            }
                             dbuser.set(JSON.stringify(data));
                             showMessage('User now has hat ' + params.hat);
                         }
