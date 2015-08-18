@@ -173,7 +173,7 @@ $(function() {
     //Sends request for topic info
     getTopicData = function() {
         socket.emit('topicInfo');
-    }
+    };
   
     //Sends request for user's flair information
     sendFlair = function(flair){
@@ -181,7 +181,7 @@ $(function() {
             name : 'flair',
             params : {flair : flair}
         });
-    }
+    };
 
     /**
      * @inner
