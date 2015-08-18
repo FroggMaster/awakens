@@ -17,7 +17,7 @@ $(function() {
 
     //Add user to list and show message
     socket.on('join', function(user) {
-        var tjoin
+        var tjoin;
         if (tjoin !== 'on' || 'off') {
             CLIENT.set('tjoin', 'on');
         }
@@ -96,8 +96,8 @@ $(function() {
     //Updates user information
     socket.on('update', function(info) {
         if (info.role == 'mute') {
-            info.role = 'basic'
-            info.idle = 1
+            info.role = 'basic';
+            info.idle = 1;
         }
         //Prevents localStorage from reading the level as a number
         info.access_level ? info.access_level += '.' : true;
