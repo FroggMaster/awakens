@@ -1224,7 +1224,7 @@ function createChannel(io, channelName) {
                                 channel.online[index].hat = params.hat;
                             }
                             dbuser.set(JSON.stringify(data));
-                            showMessage('User now has hat ' + params.hat);
+                            showMessage(params.nick + ' now has hat ' + params.hat);
                         }
                     });
                 }
