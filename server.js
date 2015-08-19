@@ -2300,14 +2300,15 @@ function initApp(app, server, https) {
                 */
 
                 //Redirects to Main Channel
-                if (channelName == 'spooks4.me/') {
-                    res.redirect("http://2spooks4.me/");
-                } else if (channelName == 'spooks4.me') {
-                    res.redirect("http://2spooks4.me/");
-                } else if (channelName == 'www.spooks4.me') {
-                    res.redirect("http://2spooks4.me/");
+                
+                //Dev Server Redirects
+                if (channelName == 'www.spooks4.me') {
+                    res.redirect("http://spooks4.me/");
                 } else if (channelName == 'www.spooks4.me/') {
-                    res.redirect("http://2spooks4.me/");
+                    res.redirect("http://spooks4.me/");
+                } else if (channelName == '142.4.208.125:9000/') {
+                    res.redirect("http://spooks4.me/");
+                //Production Server Redirects
                 } else if (channelName == 'www.2spooks4.me') {
                     res.redirect("http://2spooks4.me/");
                 } else if (channelName == 'www.2spooks4.me/') {
