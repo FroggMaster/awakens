@@ -1338,9 +1338,11 @@ function createChannel(io, channelName) {
                     hat = Math.random() < 0.0001 ? 'Gold' : Math.random() < 0.001 ? 'Coin' : user.hat ? user.hat : 'nohat';
                     var message = msg && msg.message;
                     if (typeof message == 'string') {
+                        /* Disabled until this shit is properly transferred into Client.JS
                         if (message.contains("watch?v=") || message.contains("youtu.be")) {
                             getTitles(message);
                         }
+                        */
                         dao.findUser(user.nick).done(function(dbuser) {
                             if (user.role != 'mute') {
                                 count++;
@@ -1861,7 +1863,7 @@ function createChannel(io, channelName) {
                 }
             }
 
-
+            /* Disabled until properly transferred to the Client.JS (The Regex here, is fucking disgusting.)
             function getTitles(message) {
                 var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/i;
                 var urls = message.match(urlpattern);
@@ -1869,7 +1871,8 @@ function createChannel(io, channelName) {
                     getTitle(urls[0]);
                 }
             }
-
+            */
+            
             /**
             * @inner
             * @param {Socket} socket
