@@ -1096,7 +1096,7 @@ $(function() {
         server : ['logout', 'unregister', 'whoami'],
         local : ['block', 'unblock', 'alert', 'unalert']
     };
-    //Object with all command data. See 2spooks4.me/help for more information
+    //Object with all command data. See Awakens.me/help for more information
     window.COMMANDS = {
         help : function() {
             var cmdList = 'Available Commands: /' + CLIENT.getAvailableCommands().join(', /');
