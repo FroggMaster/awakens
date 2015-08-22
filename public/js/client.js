@@ -1,5 +1,5 @@
 var DATE_FORMAT = 'shortTime';
-var BLACKLIST = [ 'get.rekt', 'you.bitch.cunt'];
+var BLACKLIST = ['get.rekt', 'you.bitch.cunt'];
 var lastNick;
 var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm"; //Replace with your own from Google recaptcha
 // ------------------------------------------------------------------
