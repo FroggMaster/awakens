@@ -1464,7 +1464,7 @@ function createChannel(io, channelName) {
                                         dao.findUser(user.nick).then(function(dbuser) {
                                             dbuser.register(user.regpass).then(function() {
                                                 socketEmit(socket,'removeDiv');
-                                                chnl = dbuser.get('nick') + '.2spooks4.me/';
+                                                chnl = dbuser.get('nick') + '.awakens.me/';
                                                 access = {};
                                                 whitelist = {};
                                                 access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
@@ -2282,7 +2282,7 @@ function initApp(app, server, https) {
             try {
                 var host = req.headers.host;
                 var channelName = channelRegex.exec(req.url)[1];
-                if (host != '2spooks4.me') {
+                if (host != 'awakens.me') {
                     channelName = host + '/' + channelName;
                 }
                 if (!channels[channelName]) {
@@ -2313,6 +2313,11 @@ function initApp(app, server, https) {
                     res.redirect("http://2spooks4.me/");
                 } else if (channelName == 'www.2spooks4.me/') {
                     res.redirect("http://2spooks4.me/");
+                //Newest Prod Domain
+                } else if (channelName == 'www.awakens.me') {
+                    res.redirect("http://awakens.me/");
+                } else if (channelName == 'www.awakens.me/') {
+                    res.redirect("http://awakens.me/");
                 }
 
                 var index = fs.readFileSync('index.html').toString();
