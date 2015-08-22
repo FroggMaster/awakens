@@ -18,7 +18,7 @@ module.exports = {
     },
 
     https : {
-        domain : '2spooks4.me',
+        domain : 'awakens.me',
         key : './ssl/myserver.key',
         cert : './ssl/server.crt',
         port : 443
@@ -102,7 +102,7 @@ module.exports = {
     },
 
     registrationEmail : {
-        from : 'Chat Server <donotreply@2spooks4.me>',
+        from : 'Chat Server <donotreply@awakens.me>',
         subject : 'Registering Chat Nickname',
         text : 'You are registering the nickname {0}.\r\nTo verify your account, all you have to do is type out the following: /verify {1}'
     },
