@@ -1,7 +1,7 @@
-spooks-chatjs
+awaken-chat
 ================
 
-![Spooks logo variant](http://i.imgur.com/gs3iohM.jpg "Spooks logo")
+![Spooks logo variant](http://i.imgur.com/gs3iohM.jpg "Awakens logo")
 
 A simple Node.JS chat server with some user management and games.
 
@@ -27,4 +27,4 @@ For local testing use:
 `nodejs server`
 
 ## Developing
-Contact or E-Mail Frogger at http://2spooks4.me / Admin@2spooks4.me to become a developer
+Contact or E-Mail Frogger at http://awakens.me / Admin@awakens.me to become a developer
