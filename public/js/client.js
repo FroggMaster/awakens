@@ -740,7 +740,9 @@ $(function() {
             }
         }
         if (message.type == 'personal-message'){
-            lastNick = message.nick;
+            if(message.nick != CLIENT.get('nick')){
+              lastNick = message.nick;   
+            }
             window.PM.show(message, message.from);
         }
         //Make quotable if relevant
