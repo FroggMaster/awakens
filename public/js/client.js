@@ -1,7 +1,5 @@
 var DATE_FORMAT = 'shortTime';
 var BLACKLIST = ['get.rekt', 'you.bitch.cunt'];
-var lastNick;
-var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm"; //Replace with your own from Google recaptcha
 // ------------------------------------------------------------------
 // Client
 // ------------------------------------------------------------------
@@ -10,6 +8,7 @@ var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm"; //Replace
 ONLINE = new Backbone.Collection();
 
 $(function() {
+    var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm";
     var socket = io('/' + window.channel);
     var requestId = 0;
     var requests = {};
@@ -741,7 +740,7 @@ $(function() {
         }
         if (message.type == 'personal-message'){
             if(message.nick != CLIENT.get('nick')){
-              lastNick = message.nick;   
+                CLIENT.lastNick = message.nick;   
             }
             window.PM.show(message, message.from);
         }
@@ -1259,8 +1258,9 @@ $(function() {
         r : {
             params : [ 'message$' ],
             handler : function(params){
-                if (lastNick){
-                    CLIENT.submit("/pm "+lastNick+"|"+params.message);
+            	var last = CLIENT.lastNick;
+                if (last){
+                    CLIENT.submit("/pm "+last+"|"+params.message);
                 } else {
                     errorMessage('You have not PMed anyone yet')
                 }
