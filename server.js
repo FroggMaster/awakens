@@ -41,6 +41,7 @@ function createChannel(io, channelName) {
     var count = 0;
     var command_access = {
         bg : ['mod',3],
+        msg : ['mod',3],
         topic : ['mod',3],
         theme : ['admin',0],
         note : ['admin',0],
@@ -632,7 +633,7 @@ function createChannel(io, channelName) {
                     dao.getChannelInfo(channelName).then(function(info) {
                         if (info.topic == topic) {
                             errorMessage(msgs.same_topic);
-                            return false;
+                            //return false; We don't need to return a value here. Crashses the Server
                         } else {
                             return dao.setChannelInfo(channelName, 'topic', topic).then(function() {
                                 roomEmit('update', {
