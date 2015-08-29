@@ -41,11 +41,10 @@ function createChannel(io, channelName) {
     var count = 0;
     var command_access = {
         bg : ['mod',3],
-        msg : ['mod',3],
         topic : ['mod',3],
         theme : ['admin',0],
         note : ['admin',0],
-        kick : ['admin',3],
+        kick : ['mod',2],
         ban : ['admin',0],
         banip : ['admin',0],
         unban : ['admin',0],
@@ -373,7 +372,6 @@ function createChannel(io, channelName) {
                 }
             },
             kick: {
-                role: 'mod',
                 params: ['nick', 'message'],
                 handler: function(dao, dbuser, params) {
                     var kuser = indexOf(params.nick);
