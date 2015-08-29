@@ -1272,7 +1272,7 @@ $(function() {
             params : [ 'theme_style$' ]
         },
         theme : {
-            role : 'admin',
+            role : 'mod',
             params : [ 'input_style', 'scrollbar_style', 'menu_style' ]
         },
         reset : {
