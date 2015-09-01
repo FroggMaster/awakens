@@ -1388,7 +1388,7 @@ $(function() {
             params : [ 'nick' ]
         },
         whitelist : {
-            role : 'admin'
+            role : 'super'
         },
         play : {
             role : 'super',
@@ -1436,15 +1436,11 @@ $(function() {
         cam : function(){
             video('event', 'embed', 'http://162.219.26.75:12202/spooks')
         },
-        ask : {
-            params : [ 'message$' ]
-        },
         define : {
             params : [ 'message$' ]
         },
-        coinflip : {},
-        weather : {
-            params : [ 'message$' ]
+        coinflip : {
+            
         },
         hat : {
             params : [ 'hat' ]
@@ -1463,15 +1459,6 @@ $(function() {
         },
         warn : {
             role : 'super'
-        },
-        duel : {
-            params : ['target_nick']
-        },
-        rps : {
-            params : ['target_nick', 'choice']
-        },
-        rps_play : {
-            params : ['choice', 'game_id']
         },
         e : { //Popup Embed
             role : 'super',

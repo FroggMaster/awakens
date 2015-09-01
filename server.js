@@ -77,7 +77,7 @@ function createChannel(io, channelName) {
         if (user.remote_addr.substring(0,7) == '::ffff:') {
             user.remote_addr = user.remote_addr.substring(7,user.remote_addr.length);
         }
-
+        //Set Users Part
         socket.on('SetPart', function(parts) {
             user.part = parts.toString();
         });
@@ -85,7 +85,7 @@ function createChannel(io, channelName) {
         socket.on('alive', function() {
             user.alive = true;
         });
-
+        //Provide Topic Information when requested.
         socket.on('topicInfo', function() {
             try {
                 showMessage(topicInfo);
@@ -1050,19 +1050,6 @@ function createChannel(io, channelName) {
                     showMessage('Channels:\n' + msg);
                 }
             },
-            ask : {
-                params : [ 'message' ],
-                handler : function(dao, dbuser, params) {
-                    var message = params.message.substring(0, settings.limits.message);
-                    count++;
-                    roomEmit('message', {
-                        type : 'action-message',
-                        message : user.nick + ' asked the spooky server: ' + params.message,
-                        count : count
-                    });
-                    ask(user.nick);
-                }
-            },
             define : {
                 params : [ 'message' ],
                 handler : function(dao, dbuser, params) {
@@ -1082,36 +1069,13 @@ function createChannel(io, channelName) {
                         type : 'action-message',
                         message : user.nick + ' called for a coinflip!',
                     });
-                    coinflip();
-                }
-            },
-            weather : {
-                params : [ 'message' ],
-                handler : function(dao, dbuser, params) {
-                    var message = params.message.substring(0, settings.limits.message);
-                    roomEmit('message', {
-                        type : 'action-message',
-                        message : user.nick + ' wants to know the weather at ' + params.message,
-                    });
-                    weatherFunction(message);
-                }
-            },
-            duel : {
-                params : ['target_nick'],
-                handler : function(dao, dbuser, params) {
-                    duel(user.nick, params.target_nick);
-                }
-            },
-            rps : {
-                params : ['target_nick', 'choice'],
-                handler : function(dao, dbuser, params) {
-                    startGame(user.nick, params.target_nick, params.choice);
-                }
-            },
-            rps_play : {
-                params : ['choice', 'game_id'],
-                handler : function(dao, dbuser, params) {
-                    rps_play(user.nick, params.choice, params.game_id);
+                //function coinflip() {
+                    if (Math.random() < 0.5) {
+                        bot_send("#orangeHeads.", true, true);
+                    } else {
+                        bot_send("#orangeTails.", true, true);
+                    }
+                //}  
                 }
             },
             hat : {
@@ -1595,77 +1559,7 @@ function createChannel(io, channelName) {
                 return done.promise();
             }
 
-            function define(word) {
-                var options = {
-                    url: 'https://mashape-community-urban-dictionary.p.mashape.com/define?term=' + word,
-                    headers: {
-                        'X-Mashape-Key': 'Op0MmmRS7MmshQVQ4kTczTQNwuqfp1ZsMIdjsnV65xK9uyf1mm',
-                        'Accept': 'text/plain'
-                    }
-                };
-                request(options, callback);
-
-                function callback(error, response, body) {
-                    if (!error && response.statusCode == 200) {
-                        definitions = JSON.parse(body).list;
-                        var valid = [];
-                        _.map(definitions, function (item) {
-                            if (item.definition.length < 500) {
-                                valid.push(item);
-                            }
-                        });
-                        var randomIndex = Math.floor(Math.random() * valid.length);
-                        var item = valid[randomIndex];
-                        if (valid.length === 0) {
-                            spooksbot_send('No definition found for ' + word + '.');
-                        } else {
-                            spooksbot_send(word + ': ' + item.definition);
-                        }
-                    }
-                }
-
-            }
-
-            function ask(name) { // Answers questions
-                switch (Math.floor(Math.random()*3)) {
-                    case (0):
-                        spooksbot_send("#redNo, " + name + ".", true, true);
-                        break;
-                    case (1):
-                        spooksbot_send("#greenYes, " + name + ".", true, true);
-                        break;
-                    case (2):
-                        spooksbot_send("#yellowMaybe, " + name + ".", true, true);
-                        break;
-                    default: // Also covers unexpected results
-                        spooksbot_send("#orangeI don't know, " + name + ".", true, true);
-                        break;
-                }
-            }
-
-            function coinflip() { // Self-explanatory
-                if (Math.random() < 0.5) {
-                    spooksbot_send("#orangeHeads.", true, true);
-                } else {
-                    spooksbot_send("#orangeTails.", true, true);
-                }
-            }
-
-            function weatherFunction(location) {
-                request('https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + location + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys', function (error, response, body) {
-                    if (!error && response.statusCode == 200) {
-                        weather = JSON.parse(body);
-                        farenheit = weather.query.results.channel.item.condition.temp;
-                        celsius = (farenheit - 32) * (5 / 9);
-                        if (weather.query.results !== null) {
-                            spooksbot_send('The current temperature in ' + location + ' is ' + farenheit + ' ºF or ' + Math.floor(celsius) + ' ºC, and current weather is: ' +  weather.query.results.channel.item.condition.text);
-                        }
-                    } else {
-                        spooksbot_send('No weather found for ' + location + '.');
-                    }
-                });
-            }
-
+            /*Disabled until properly transferred to the Client.JS 
             function getTitle(url) {
                 request(url, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
@@ -1679,190 +1573,14 @@ function createChannel(io, channelName) {
                                     video_id = video_id.substring(0, ampersandPosition);
                                 }
                                 var thumb = "\n           https://img.youtube.com/vi/" + video_id + "/default.jpg";
-                                spooksbot_send("#cyanTitle: " + title + thumb, true, false);
+                                bot_send("#cyanTitle: " + title + thumb, true, false);
                             }
                         );
                     }
                 });
             }
 
-            // ======================
-            //  Rock-Paper-Scissors!
-            // ======================
-            // By Bruno02468
-
-            // Defining some variables...
-            var rock = "rock";
-            var paper = "paper";
-            var scissors = "scissors";
-            var quit = "quit";
-            var valid_rps = [rock, paper, scissors, quit];
-            rps_games = [];
-
-            // Check whether a user is online by their nick
-            function isOnline(nick) {
-                for (c in channel.online) {
-                    var found = channel.online[c];
-                    if (found.nick == nick) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            // Make a JS link
-            function jslink(script, text) {
-                return "/?javascript:" + script + "|" + text + "|";
-            }
-
-            // Make a JS link to send something
-            function clink(message, text) {
-                return jslink("CLIENT.submit(\"" + message + "\");", text);
-            }
-
-            // Give someone reusable links for dueling a user
-            function duel(caller, subject) {
-                if (!isOnline(subject)) {
-                    errorMessage('That user is not online!');
-                } else if (caller === subject) {
-                    errorMessage("Duelling yourself does not seem like a good idea.");
-                } else {
-                    var invitation = "#orangeYou asked to duel " + remove_colors(subject) + " in a fair game of rock-paper-scissors. Pick your arms.";
-                    var lrock = clink("/rps " + subject + " " + rock, "[Rock!]") + "\\n";
-                    var lpaper = clink("/rps " + subject + " " + paper, "[Paper!]") + "\\n";
-                    var lscissors = clink("/rps " + subject + " " + scissors, "[Scissors!]") + "\\n";
-                    invitation += "#orange\\n" + lrock + lpaper + lscissors + "(Tip: /_these links are reusable!|)";
-                    spooksbot_pm(caller, invitation);
-                }
-            }
-
-            // Start a game between two users
-            function startGame(caller, subject, start) {
-                if (!isOnline(subject)) {
-                    errorMessage('That user is not online!');
-                } else if (caller === subject) {
-                    errorMessage("Duelling yourself does NOT seem like a good idea at all.");
-                } else if (valid_rps.indexOf(start) < 0 || start == quit) {
-                    errorMessage("That's not a valid command, stop hacking!");
-                } else {
-                    var myId = rps_games.length;
-                    var lrock = clink("/rps_play " + rock + " " + myId, "[Rock!]") + "\\n";
-                    var lpaper = clink("/rps_play " + paper + " " + myId, "[Paper!]") + "\\n";
-                    var lscissors = clink("/rps_play " + scissors + " " + myId, "[Scissors!]") + "\\n";
-                    var lquit = clink("/rps_play " + quit + " " + myId, "I'm a coward.");
-                    var invitation = "#green" + remove_colors(caller) + " has challenged you for a fair duel of Rock-Paper-Scissors!\\nPick your arms or run.";
-                    invitation += "#orange\\n" + lrock + lpaper + lscissors + lquit;
-                    spooksbot_pm(subject, invitation);
-                    rps_games[myId] = [caller, subject, start, false];
-                    spooksbot_send("#orangeUser /_" + remove_colors(caller) + "| just challenged /_" + remove_colors(subject) + "| for a fair duel of Rock-Paper-Scissors! Who shall win?", false, true);
-                }
-            }
-
-            // When the challenged user picks an option...
-            function rps_play(caller, command, id) {
-                var game = rps_games[id];
-                var ended = (game === undefined);
-                if (ended) {
-                    errorMessage("Invalid game; it has already ended, probably.");
-                } else if (command == quit) {
-                    spooksbot_send("#red" + remove_colors(caller) + " just pussied out of a fair Rock-Paper-Scissors duel against " + remove_colors(game[0]) + "!", false, true);
-                } else if (valid_rps.indexOf(command) < 0) {
-                    errorMessage("That's not a valid command, stop hacking!");
-                } else {
-                    rps_games[id][3] = true;
-                    var start = game[2];
-                    var starter = game[0];
-                    var end = runGame(start, command);
-                    if (end == "tie") {
-                        spooksbot_send("#orangeThe duel between " + remove_colors(starter)+ " and " + remove_colors(caller) + " has ended in a #redTIE#yellow!", false, true);
-                    } else {
-                        var winner = starter;
-                        var loser = caller;
-                        if (end == "b") {
-                            winner = caller;
-                            loser = starter;
-                        }
-                        spooksbot_send("#orangeHonorful /_" + remove_colors(winner) + "| defeated /_" + remove_colors(loser) + "| on a duel of Rock-Paper-Scissors!", false, true);
-                    }
-                    rps_games[id] = undefined;
-                }
-            }
-
-            // Run game for two strings, returns result, or false for invalid input
-            function runGame(a, b) {
-                a = a.toLowerCase();
-                b = b.toLowerCase();
-                if (a !== rock && a !== paper && a !== scissors || b !== rock && b !== paper && b !== scissors) {
-                    return false;
-                }
-                if (a == b) {
-                    return "tie";
-                }
-                if (a == rock) {
-                    if (b == scissors) {
-                        return "a";
-                    } else {
-                        return "b";
-                    }
-                }
-                if (a == paper) {
-                    if (b == rock) {
-                        return "a";
-                    } else {
-                        return "b";
-                    }
-                }
-                if (a == scissors) {
-                    if (b == paper) {
-                        return "a";
-                    } else {
-                        return "b";
-                    }
-                }
-            }
-
-            // Also kills color codes in usernames. ~Bruno02468
-            function remove_colors(str) {
-                return str.replace(/#/g, "\\#");
-            }
-
-            // Emit a 2Spooks message. Avoids code repetition. ~Bruno02468
-            // The allow_colors parameter can be ommited, it defaults to false.
-            var escape_regex = /(\/[~?^&+%*]|\$|\\)/gi;
-            var http_regex = /https*:\/\//gi;
-            function spooksbot_send(msg, isSafe, allow_colors) {
-                if (!isSafe) {
-                    msg = msg.replace(escape_regex, "\\$1").replace(http_regex, "");
-                    if (!allow_colors)
-                        msg = remove_colors(msg);
-                }
-                count++;
-                roomEmit('message', {
-                    type: 'chat-message',
-                    nick: '2Spooks',
-                    flair: '$Special Elite|/*/^/^/^/@#3333FF2|||||$Risque|/*/^/^/%#0F0S#2D2p#4B4o#6A6o#797k#888s',
-                    message: msg,
-                    count: count
-                });
-            }
-
-            // Make 2Spooks PM  a user. ~Bruno02468
-            function spooksbot_pm(nick, msg) {
-                var to = indexOf(nick);
-                if (to >= 0) {
-                    var toSocket = channel.online[to].socket;
-                    var message = {
-                        type : 'personal-message',
-                        from : null,
-                        to : toSocket.id,
-                        nick : "2Spooks",
-                        message : msg
-                    };
-                    socket && socketEmit(toSocket, 'message', message);
-                }
-            }
-
-            /* Disabled until properly transferred to the Client.JS (The Regex here, is fucking disgusting.)
+            //The Regex here, is fucking disgusting.
             function getTitles(message) {
                 var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/i;
                 var urls = message.match(urlpattern);
@@ -1872,6 +1590,8 @@ function createChannel(io, channelName) {
             }
             */
             
+            /*
+                       
             /**
             * @inner
             * @param {Socket} socket
@@ -2022,8 +1742,6 @@ function createChannel(io, channelName) {
                 /**
                 * make sure name is valid
                 */
-
-
 
                 function ValidName(name) {
                     //[^\x00-z]/.test(name)
@@ -2233,7 +1951,87 @@ function createChannel(io, channelName) {
 
                 return done.promise();
             }
+            
+            // -----------------------------------------------------------------------------
+            // AwksBot
+            // -----------------------------------------------------------------------------
 
+            /* Basic Set up and customization to Emit Bot Messages
+             The allow_colors parameter can be ommited, it defaults to false. */
+             
+            var escape_regex = /(\/[~?^&+%*]|\$|\\)/gi;
+            var http_regex = /https*:\/\//gi;
+            function bot_send(msg, isSafe, allow_colors) {
+                if (!isSafe) {
+                    msg = msg.replace(escape_regex, "\\$1").replace(http_regex, "");
+                    if (!allow_colors)
+                        msg = remove_colors(msg);
+                }
+                count++;
+                roomEmit('message', {
+                    type: 'chat-message',
+                    nick: 'AwksBot',
+                    flair: '$Josefin Sans|/^/^#85fAwks#666Bot',
+                    message: msg,
+                    count: count
+                });
+            }
+
+            // Make bot PM a user.
+            function bot_pm(nick, msg) {
+                var to = indexOf(nick);
+                if (to >= 0) {
+                    var toSocket = channel.online[to].socket;
+                    var message = {
+                        type : 'personal-message',
+                        from : null,
+                        to : toSocket.id,
+                        nick : "AwksBot",
+                        message : msg
+                    };
+                    socket && socketEmit(toSocket, 'message', message);
+                }
+            } 
+            
+            /* Inner Bot Functions, Required for certain Commands.*/
+            
+            // Kills Color Codes.
+            function remove_colors(str) {
+                return str.replace(/#/g, "\\#");
+            }  
+            
+            //Varaibles required for the define command.
+            function define(word) {
+                var options = {
+                    url: 'https://mashape-community-urban-dictionary.p.mashape.com/define?term=' + word,
+                    headers: {
+                        'X-Mashape-Key': 'Op0MmmRS7MmshQVQ4kTczTQNwuqfp1ZsMIdjsnV65xK9uyf1mm',
+                        'Accept': 'text/plain'
+                    }
+                };
+                request(options, callback);
+
+                function callback(error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        definitions = JSON.parse(body).list;
+                        var valid = [];
+                        _.map(definitions, function (item) {
+                            if (item.definition.length < 500) {
+                                valid.push(item);
+                            }
+                        });
+                        var randomIndex = Math.floor(Math.random() * valid.length);
+                        var item = valid[randomIndex];
+                        if (valid.length === 0) {
+                            bot_send('No definition found for ' + word + '.');
+                        } else {
+                            bot_send(word + ': ' + item.definition);
+                        }
+                    }
+                }
+
+            }    
+            
         // ---------------------------------------------------------------------
         // INITIALIZE THE CLIENT
         // ---------------------------------------------------------------------
