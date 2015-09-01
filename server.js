@@ -1071,9 +1071,9 @@ function createChannel(io, channelName) {
                     });
                     
                     if (Math.random() < 0.5) {
-                        bot_send("#orangeHeads.", true, true);
+                        bot_send("#yellow\Heads.", true, true);
                     } else {
-                        bot_send("#orangeTails.", true, true);
+                        bot_send("#yellow\Tails.", true, true);
                     }  
                 }
             },
