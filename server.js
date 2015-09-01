@@ -29,7 +29,7 @@ process.on('uncaughtException', function(err) {
 
 function createChannel(io, channelName) {
     channelList.push(channelName);
-    console.log('Starting channel: ' + (channelName || '<fontpage>'));
+    console.log('Starting channel: ' + (channelName || '<frontpage>'));
 
     var elbot = require('./elbot').start();
     var room = io.of('/' + channelName);
