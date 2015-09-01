@@ -1069,13 +1069,12 @@ function createChannel(io, channelName) {
                         type : 'action-message',
                         message : user.nick + ' called for a coinflip!',
                     });
-                //function coinflip() {
+                    
                     if (Math.random() < 0.5) {
                         bot_send("#orangeHeads.", true, true);
                     } else {
                         bot_send("#orangeTails.", true, true);
-                    }
-                //}  
+                    }  
                 }
             },
             hat : {
