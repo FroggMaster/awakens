@@ -20,7 +20,7 @@ $(function() {
         if (tjoin !== 'on' || 'off') {
             CLIENT.set('tjoin', 'on');
         }
-        
+
         ONLINE.add(user);
         if (CLIENT.has('tjoin') && CLIENT.get('tjoin') == 'on') {
             CLIENT.show({
@@ -173,7 +173,7 @@ $(function() {
     getTopicData = function() {
         socket.emit('topicInfo');
     };
-  
+
     //Sends request for user's flair information
     sendFlair = function(flair){
         socket.emit('command', {
@@ -740,7 +740,7 @@ $(function() {
         }
         if (message.type == 'personal-message'){
             if(message.nick != CLIENT.get('nick')){
-                CLIENT.lastNick = message.nick;   
+                CLIENT.lastNick = message.nick;
             }
             window.PM.show(message, message.from);
         }
@@ -915,7 +915,7 @@ $('#messages').on("click", ".message .timestamp", function(e){
 // PM Panel
 // ------------------------------------------------------------------
 
-//Soon to be in use 
+//Soon to be in use
 (function() {
     PANELS = {};
     PM = {
@@ -942,7 +942,7 @@ $('#messages').on("click", ".message .timestamp", function(e){
             }).draggable().resizable();
 
             $(pan).html('<div style="position:absolute;right:0;color:red;" onclick="$(\'#panel-'+id+'\').remove();">X</div><div class="pm-messages" style="width:100%;height:calc(100% - 48px);color:white;"></div></div><div id="input-bar"><div><input id="input-message" style="width:100%"></input></div></div>');
-            
+
             var input = $('#panel-' + id + ' input');
             $(input).keydown(function(e){
                 if (e.keyCode == 13){
@@ -1083,7 +1083,7 @@ $(function() {
         input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
         $(window).resize(); //Corrects Message Box if window resized.
     });
-    
+
 });
 
 
@@ -1292,7 +1292,7 @@ $(function() {
                     } else if (attribute_name == 'join') {
                         attribute_name = 'tjoin';
                     } else if (attribute_name == 'topic') {
-                        getTopicData(); 
+                        getTopicData();
                     } if (attribute_name == 'theme') {
                         var input_msg_clr = $("#input-bar").css('backgroundColor');
                         var scroll_bar_clr = $(".scrollbar_default").css('backgroundColor');
@@ -1308,7 +1308,7 @@ $(function() {
                                     return color;
                                 }
                             }
-                            
+
                             var red = colorChange(rgb[0]);
                             var green = colorChange(rgb[1]);
                             var blue = colorChange(rgb[2]);
@@ -1440,7 +1440,7 @@ $(function() {
             params : [ 'message$' ]
         },
         coinflip : {
-            
+
         },
         hat : {
             params : [ 'hat' ]
@@ -1667,12 +1667,12 @@ parser = {
                 return match;
             }
         });*/
-        
+
         //Word Filters
         str = str.replace(/spooks/gi, 'awakens');
         str = str.replace(/vegan/gi, 'fag');
         str = str.replace(/anon2000/gi, 'homosexual');
-        
+
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
@@ -1734,7 +1734,7 @@ parser = {
             str = str.replace(this.repslsh, escs[i][1]);
         }
         // Prevent blacklisted images, parse images
-        var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:gif|jpg|jpeg|png|bmp))<\/a>/i.exec(str);
+        var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:agif|apng|gif|jpg|jpeg|png|bmp|svg))<\/a>/i.exec(str);
         if (img && CLIENT.get('images') == 'on') {
             var blacklisted = false;
             for (var i = 0; i < BLACKLIST.length; i++){
@@ -1751,8 +1751,8 @@ parser = {
             str = str.replace(/<a [^>]*href="([^'"]*\.webm)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
             str = str.replace(/<a [^>]*href="([^'"]*\.mp4)">([^<]*)<\/a>/i, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'html5\', \'$1\')" class="show-video">[video]</a>');
             str = str.replace(/<a [^>]*href="[^"]*ustream.tv\/embed\/(\d+)\?v=3&amp;wmode=direct">([^<]*)<\/a>/, '<a target="_blank" href="$2">$2</a> <a href="javascript:void(0)" onclick="video(event, \'ustream\', \'$1\')" class="show-video">[video]</a>');
-        //    str = str.replace(/<a [^>]*href="[^"]*[i.]?imgur.com\/([A-Za-z]*\.gifv)[^<]*<\/a>/i, '<iframe allowfullscreen="" frameborder="0" scrolling="no" style="max-width: 200px; max-height: 200px;" src="http://$1#embed"></iframe>'); 
-        // Audio Embeds    
+        //    str = str.replace(/<a [^>]*href="[^"]*[i.]?imgur.com\/([A-Za-z]*\.gifv)[^<]*<\/a>/i, '<iframe allowfullscreen="" frameborder="0" scrolling="no" style="max-width: 200px; max-height: 200px;" src="http://$1#embed"></iframe>');
+        // Audio Embeds
             str = str.replace(/<a [^>]*href="([^'"]*\.(mp3|wav|ogg|mid|flac))">([^<]*)<\/a>/i, '<a target="_blank" href="$1">$1</a> <a href="javascript:void(0)" onclick="video(event, \'audio\', \'$1\')" class="show-video">[audio]</a>');
         // Parse spaces
             escs = str.match(/<[^>]+?>/gi);
@@ -1937,7 +1937,7 @@ function video(event, type, input) {
         e.preventDefault();
         e.stopPropagation();
     }
-    function hide() { 
+    function hide() {
         videoOverlay.hide();
         $('.container', videoOverlay).html('');
     }
