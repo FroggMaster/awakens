@@ -148,7 +148,7 @@ module.exports = {
         invalidAccess : 'Invalid access_level',
         invalidCommand : 'Invalid command',
         invalidCommandParams : 'Invalid command parameters',
-        invalidCommandAccess : 'No permissioned for this command',
+        invalidCommandAccess : 'You do not have the required permission for this command',
         invalidLogin : 'The password you provided was incorrect',
         nickVerified : 'The nick has been taken, please use /login instead',
         nickNotVerified : 'You cannot login to a nick that was not registered or verified',
