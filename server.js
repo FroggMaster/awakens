@@ -1214,6 +1214,20 @@ function createChannel(io, channelName) {
         */
 
         _.each({
+			
+			updateMousePosition : function(dao, position) {
+                if (position && typeof position.x == 'number' && typeof position.y == 'number') {
+                    otherEmit('updateMousePosition', {
+                        id : socket.id,
+                        position : {
+                            x : position.x,
+                            y : position.y
+                        }
+                    });
+                }
+                return $.Deferred().resolve(true);
+            },
+			
             join : function(dao, msg) {
                 user.tabs = 0;
                 if (channel.online.length > 0) {
