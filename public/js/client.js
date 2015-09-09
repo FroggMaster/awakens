@@ -539,8 +539,8 @@ $(function() {
         $('#user-list').css('background-color', style[2]);
 
         if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-            document.styleSheets[1].deleteRule(14);
-            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",14);
+            document.styleSheets[1].deleteRule(15);
+            document.styleSheets[1].insertRule(".scrollbar_default::-webkit-scrollbar-thumb { border-radius: 5px; background: " + style[1] + "",15);
         }
     });
 });
