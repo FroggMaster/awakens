@@ -2072,10 +2072,10 @@ $(function() {
         if (CLIENT.get('cursors') == 'off' ? 0 : 1 && !position || position.x != x || position.y != y) {
             CLIENT.updateMousePosition(position = {
                 x : x,
-                y : y
+                y : y,
             });
         }
-    }, 50);
+    }, 100);
     CLIENT.on('updateMousePosition', function(msg) {
         var el = $('#cursor-' + msg.id);
         if (el.length == 0) {

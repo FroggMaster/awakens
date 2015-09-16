@@ -1216,7 +1216,27 @@ function createChannel(io, channelName) {
         _.each({
 			
 			updateMousePosition : function(dao, position) {
-                if (position && typeof position.x == 'number' && typeof position.y == 'number') {
+			    // Anti-spam variables
+                var antiSpam = false;
+                var score = 0;
+
+                // Increment spam score
+                function spamFilters() {
+                    score++;
+                   antiSpam = true;
+                   setTimeout(function() {
+                       antiSpam = false;
+                   }, 200);
+                }
+
+                // Decrement spam score
+                setInterval(function() {
+                    if (score > 0) {
+                        score--;
+                    }
+                }, 250);
+                if (!antiSpam && score < 1 && position && typeof position.x == 'number' && typeof position.y == 'number') {
+                    spamFilters();
                     otherEmit('updateMousePosition', {
                         id : socket.id,
                         position : {
