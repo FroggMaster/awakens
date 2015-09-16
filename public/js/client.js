@@ -267,7 +267,7 @@ $(function() {
     CLIENT = new (Backbone.Model.extend({
         initialize : function() {
             /* Initialize from localstorage. */
-            'color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
+            'cursors color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 var item = localStorage.getItem('chat-' + key);
                 try {
                     item = JSON.parse(item);
@@ -287,7 +287,7 @@ $(function() {
             }, this);
 
             /* Notify when values change. */
-            'color style flair mute play mute_speak images styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
+            'cursors color style flair mute play mute_speak images styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
                     	key == 'access_level' ? value = value.split('.')[0] : value;
