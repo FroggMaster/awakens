@@ -1669,9 +1669,10 @@ parser = {
         });*/
 
         //Word Filters
-        str = str.replace(/spooks/gi, 'awakens');
-        str = str.replace(/vegan/gi, 'fag');
-        str = str.replace(/anon2000/gi, 'homosexual');
+        str = str.replace(/spooks/gi, 'forgetme')
+        		.replace(/awakens/gi, 'the shitty chat')
+    			.replace(/vegan/gi, 'homosexual')
+    			.replace(/anon2000/gi, 'fag');
 
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
