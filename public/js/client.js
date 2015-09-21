@@ -1586,14 +1586,14 @@ parser = {
     //Shorter version of parse
     parseLinks : function(str) {
         // Convert chars to html codes
-        str = str.replace(/&/gi, '&amp;');
-        str = str.replace(/>/gi, '&gt;');
-        str = str.replace(/</gi, '&lt;');
-        str = str.replace(/\n/g, '\\n');
-        str = str.replace(/\$/gi, '&#36;');
-        str = str.replace(/\\\\n/g, this.repslsh);
-        str = str.replace(/\\n/g, '<br />');
-        str = str.replace(this.repslsh, '\\\\n');
+        str =str.replace(/&/gi, '&amp;')
+				.replace(/>/gi, '&gt;')
+				.replace(/</gi, '&lt;')
+				.replace(/\n/g, '\\n')
+				.replace(/\$/gi, '&#36;')
+				.replace(/\\\\n/g, this.repslsh)
+				.replace(/\\n/g, '<br />')
+				.replace(this.repslsh, '\\\\n');
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
