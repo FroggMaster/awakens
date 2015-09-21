@@ -1356,7 +1356,7 @@ $(function() {
                 if (att == 'bg' && CLIENT.get('bg') == 'off') {
                 /* Old shit that doesn't seem to turn BG on.
                 $('#background').css('background', CLIENT.get('old'));
-                Below; Frogs fix for /toggle bg */
+                Below; Fix for /toggle bg */
                     CLIENT.set('bg','on');
                 } else if (att == 'join' || att == 'leave'){
                     if (CLIENT.get('tjoin') == 'on' || CLIENT.get('tjoin') == null && CLIENT.set('tjoin','on')){
