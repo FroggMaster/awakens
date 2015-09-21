@@ -1669,9 +1669,11 @@ parser = {
         });*/
 
         //Word Filters
-        str = str.replace(/spooks/gi, 'awakens');
-        str = str.replace(/vegan/gi, 'fag');
-        str = str.replace(/anon2000/gi, 'homosexual');
+        //str = str.replace(/spooks/gi, 'awakens');
+        //str = str.replace(/vegan/gi, 'fag');
+        //str = str.replace(/anon2000/gi, 'homosexual');
+        str = str.replace(/word filter/gi, 'cancer');
+        str = str.replace(/wordfilter/gi, 'cancer');
 
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
