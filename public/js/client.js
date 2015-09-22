@@ -181,7 +181,9 @@ $(function() {
             params : {flair : flair}
         });
     };
-
+    socket.on('updateMousePosition', function(msg) {
+        CLIENT.trigger('updateMousePosition', msg);
+    });
     /**
      * @inner
      * @param {string} name
@@ -405,8 +407,10 @@ $(function() {
                 }
             }
             return input;
-        }
-
+        },
+        updateMousePosition : function(position) {
+            socket.emit('updateMousePosition', position);
+         }	
     }));
 });
 
@@ -2051,4 +2055,53 @@ function video(event, type, input) {
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
 	IfScrolled(true);
+});
+
+/////////////////////////////
+//Cursors
+/////////////////////////////
+$(function() {
+    var position = null, x, y;
+    $(window).mousemove(function(e) {
+        x = e.clientX / $(window).width();
+        y = e.clientY / $(window).height();
+    });
+
+    setInterval(function() {
+        if (CLIENT.get('cursors') == 'off' ? 0 : 1 && !position || position.x != x || position.y != y) {
+            CLIENT.updateMousePosition(position = {
+                x : x,
+                y : y
+            });
+        }
+    }, 50);
+    CLIENT.on('updateMousePosition', function(msg) {
+        var el = $('#cursor-' + msg.id);
+        if (el.length == 0) {
+            var user = ONLINE.get(msg.id);
+            if (user) {
+                var nick = $('<span class="nick"></span>').text(user.get('nick'));
+                el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
+                el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
+                user.on('change:nick', function(m, newNick) {
+                    nick.text(newNick);
+                });
+            }
+        }
+        el.css({
+            left : (msg.position.x * 100) + '%',
+            top : (msg.position.y * 100) + '%'
+        });
+    });
+    ONLINE.on('remove', function(user) {
+        $('#cursor-' + user.get('id')).remove();
+    });
+    ONLINE.on('reset', function() {
+        $('.mouseCursor').remove();
+    });
+    CLIENT.on('change:cursors', function(m, cursors) {
+        $('.mouseCursor').css({
+            display : cursors == 'off' ? 'none' : 'block'
+        })
+    });
 });
