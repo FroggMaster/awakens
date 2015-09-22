@@ -25,4 +25,4 @@ For local testing use:
 `nodejs server`
 
 ## Developing
-Contact or E-Mail Frogger at http://awakens.me / Admin@awakens.me to become a developer
+Contact or E-Mail Landon at http://awakens.me / landonjpowell@airmail.cc to gain development privs. 
