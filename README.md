@@ -11,7 +11,7 @@ A simple Node.JS chat server with some user management and games.
 
 ## Local Installation
 1. Create a database called nodejs_chat
-2. Add tables by executing the sql files inside /sql/
+2. Add tables by executing /sql/nodejs_chat.sql
 3. Rename default conf/settings.public to conf/settings.json
 
 To run with Forever:
