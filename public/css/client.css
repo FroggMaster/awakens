@@ -407,7 +407,11 @@ z-index:1;
 #marquee {
 	position: relative;
 	width:95%;
+    -o-animation: rightThenLeft 15s infinite;
+    -ms-animation: rightThenLeft 15s infinite;
+    -moz-animation: rightThenLeft 15s infinite;
     -webkit-animation: rightThenLeft 15s infinite;
+    animation: rightThenLeft 15s infinite;
 }  
 
 #flashing {
@@ -421,8 +425,16 @@ z-index:1;
 }
 
 #neon {
--webkit-animation: neon1 1.5s ease-in-out alternate;
--webkit-animation-iteration-count: 20;
+    -o-animation: neon1 1.5s ease-in-out alternate;
+    -o-animation-iteration-count: 20;
+    -ms-animation: neon1 1.5s ease-in-out alternate;
+    -ms-animation-iteration-count: 20;
+    -moz-animation: neon1 1.5s ease-in-out alternate;
+    -moz-animation-iteration-count: 20;
+    -webkit-animation: neon1 1.5s ease-in-out alternate;
+    -webkit-animation-iteration-count: 20;
+    animation: neon1 1.5s ease-in-out alternate;
+    animation-iteration-count: 20;
 }
 
 #spoil{
@@ -435,20 +447,28 @@ color:white;
 }
 
 #rotat{
-	-webkit-animation: rotate 1.5s ease-in-out alternate;
+	-o-animation: rotate 1.5s ease-in-out alternate;
+    -ms-animation: rotate 1.5s ease-in-out alternate;
+    -moz-animation: rotate 1.5s ease-in-out alternate;
+    -webkit-animation: rotate 1.5s ease-in-out alternate;
+    animation: rotate 1.5s ease-in-out alternate;
 }
 
 @-webkit-keyframes rotate {
-  from {
-	-ms-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-	-ms-transform: rotate(360deg); 
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+    from {
+        -o-transform: rotate(0deg);
+	    -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -o-transform: rotate(360deg);
+	    -ms-transform: rotate(360deg); 
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
 @-webkit-keyframes neon1 {
@@ -462,7 +482,7 @@ color:white;
   }
 }
 
-@-webkit-keyframes rightThenLeft {
+@keyframes rightThenLeft {
 
     0%  {left:0%;}
 	25%  {left:90%;}
@@ -472,7 +492,7 @@ color:white;
 	
 }
 
-@-webkit-keyframes flash {
+@keyframes flash {
 
 	0% {color: #F00;} 
 	20% {color: #F90;}
