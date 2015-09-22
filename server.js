@@ -1109,7 +1109,7 @@ function createChannel(io, channelName) {
                             using : 'Gold'
                         }
                     */
-                    var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'RoseWhite', 'Rose2', 'RoseBlack2', 'Santa', 'Santa2', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow', 'Wizard', 'Viking', 'DevCog', 'BugCog', 'MagicPurple', 'MagicBlue', 'MagicRed', 'Rain', 'Pimp', 'ThunderEgg', 'BlueRain', 'Jester', 'MethSkull', 'Artism', 'Fez', 'CrownP', 'BeerCats', 'Void', 'Police', 'BottleCap', 'ShitPost', 'GoldStar', 'Pumpkin', 'FlameTails', 'FoxTail'];
+                    var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'RoseWhite', 'Rose2', 'RoseBlack2', 'Santa', 'Santa2', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow', 'Wizard', 'Viking', 'DevCog', 'BugCog', 'MagicPurple', 'MagicBlue', 'MagicRed', 'Rain', 'Pimp', 'ThunderEgg', 'BlueRain', 'Jester', 'MethSkull', 'Artism', 'Fez', 'CrownP', 'BeerCats', 'Void', 'Police', 'BottleCap', 'ShitPost', 'GoldStar', 'Pumpkin', 'FlameTails', 'FoxTail', 'Kryohazard'];
                     if (hats.indexOf(params.hat) != -1) {
                         dao.findUser(params.nick).then(function(dbuser){
                             if(dbuser){//make sure given user is registered
