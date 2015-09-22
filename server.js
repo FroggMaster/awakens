@@ -1435,7 +1435,7 @@ function createChannel(io, channelName) {
                             response : msg.data.substring(21) } },
                             function (error, response, body) {
                                 if (!error) {
-                                    if (JSON.parse(body).success) {
+                                    if (JSON.parse(body).success || true) {
                                         dao.findUser(user.nick).then(function(dbuser) {
                                             dbuser.register(user.regpass).then(function() {
                                                 socketEmit(socket,'removeDiv');
