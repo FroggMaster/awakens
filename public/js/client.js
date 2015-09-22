@@ -201,7 +201,7 @@ $(function() {
                     var nick = pm[1].replace('\\|', '|');
                     return {
                         nick : nick,
-                        message : pm[2],
+                        message : pm[2]
                     };
                 }
                 break;
