@@ -10,8 +10,6 @@ ONLINE = new Backbone.Collection();
 $(function() {
     var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm";
     var socket = io('/' + window.channel);
-    var requestId = 0;
-    var requests = {};
     var roles = ['god','super','admin','mod','basic','mute'];
 
     //Add user to list and show message
@@ -157,18 +155,6 @@ $(function() {
         window.location.reload();
     });
 
-    socket.on('response', function(msg) {
-        var def = msg && requests[msg.id];
-        if (def && def.state() == 'pending') {
-            requests[msg.id] = null;
-            if (msg.error) {
-                def.reject(msg.error);
-            } else {
-                def.resolve(msg.message);
-            }
-        }
-    });
-
     //Sends request for topic info
     getTopicData = function() {
         socket.emit('topicInfo');
@@ -303,16 +289,6 @@ $(function() {
                     this.submit('/echo Now your messages look like this');
                 }, this);
             }, this);
-        },
-
-        request : function(msg) {
-            var id = requestId++;
-            var result = requests[id] = $.Deferred();
-            socket.emit('request', {
-                id : id,
-                msg : msg
-            });
-            return result.promise();
         },
 
         //Returns all valid commands
