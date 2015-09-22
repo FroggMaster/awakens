@@ -3,7 +3,7 @@ var msgs = settings.msgs;
 var dao = require('./dao');
 var throttle = require('./throttle');
 var request = require('request');
-var hasher = require('./md5');
+var crypto = require('crypto');
 var jsdom = require("jsdom");
 
 var _ = require('underscore');
@@ -1822,7 +1822,7 @@ function createChannel(io, channelName) {
                             access = JSON.parse(data.access);
                             stats = GetInfo(user.nick);
                             if (dbuser) {
-                                var hashToken = hasher.hex_md5(hasher.genRandomSeed(6));
+                                var hashToken = crypto.randomBytes(64).toString('hex');
                                 var currentDate = new Date();
                                 currentDate = currentDate.getTime();
                                 if (tokenCache[user.nick]) {
