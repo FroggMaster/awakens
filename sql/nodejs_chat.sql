@@ -70,6 +70,7 @@ CREATE TABLE `chat_users` (
   `flair` varchar(255) DEFAULT NULL,
   `remote_addr` varchar(100) NOT NULL,
   `pw_hash` varchar(256) DEFAULT NULL,
+  `role` VARCHAR(45) NULL DEFAULT NULL,
   `access_level` int(11) DEFAULT NULL,
   `email_address` varchar(36) DEFAULT NULL,
   `verification_code` varchar(64) DEFAULT NULL,
