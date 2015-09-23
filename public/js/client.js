@@ -71,7 +71,7 @@ $(function() {
     //Shows user leave message with part, if it exists
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-        if (!user.kicked && CLIENT.has('tjoin') && CLIENT.get('tjoin') == 'on') {
+        if (!user.kicked && CLIENT.get('tjoin') == 'on') {
             CLIENT.show({
                 type : 'general-message',
                 message : user.nick + ' has left ' + (user.part ? user.part : '')
@@ -96,8 +96,6 @@ $(function() {
             info.role = 'basic';
             info.idle = 1;
         }
-        //Prevents localStorage from reading the level as a number
-        info.access_level ? info.access_level += '.' : true;
         CLIENT.set(info);
     });
 
@@ -254,16 +252,9 @@ $(function() {
             /* Initialize from localstorage. */
             'color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 var item = localStorage.getItem('chat-' + key);
-                try {
-                    item = JSON.parse(item);
-                } catch(e) {
-                    //Ignore
-                }
                 this.set(key, item);
                 this.on('change:' + key, function(m, value) {
                     if (value) {
-                    	if (typeof value == 'object')
-                            value = JSON.stringify(value);
                         localStorage.setItem('chat-' + key, value);
                     } else {
                         localStorage.removeItem('chat-' + key);
@@ -275,7 +266,6 @@ $(function() {
             'color style flair mute play mute_speak images styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
-                    	key == 'access_level' ? value = value.split('.')[0] : value;
                         this.show(key + ' changed to: ' + value);
                     } else {
                         this.show(key + ' reset to default');
@@ -303,9 +293,8 @@ $(function() {
         //Parses and sends message to server
         submit : function(input) {
             var role = this.get('role');
-            var access_level = this.get('access_level').split('.')[0];
+            var access_level = parseInt(this.get('access_level'));
             if (access_level >= 0) {
-                //var parsed = /^\/(?!donkeydong)(\w+) ?([\s\S]*)/.exec(input);
                 var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
@@ -1481,14 +1470,13 @@ function errorMessage(message){
  */
 add = function(att, user){
     if (user.toLowerCase() == CLIENT.get('nick').toLowerCase()) {
-        errorMessage('You may not add yourself')
+        errorMessage('You may not add yourself');
     } else {
-        var block = jQuery.extend([], CLIENT.get(att));
-        block.length == 0 ? block = [] : true;//Ignore this stupid ternary
+        var block = JSON.parse(CLIENT.get(att) || '[]');
         if (block.indexOf(user) == -1){
             block.push(user);
             CLIENT.show(user + ' has been added');
-            CLIENT.set(att, block);
+            CLIENT.set(att, JSON.stringify(block));
         } else {
             errorMessage('That nick is already added');
         }
@@ -1507,12 +1495,12 @@ remove = function(att, user) {
         CLIENT.show(att + ' has been cleared');
         return;
     }
-    var block = jQuery.extend([], CLIENT.get(att));
+    var block = JSON.parse(CLIENT.get(att));
     var index = block.indexOf(user);
     if (index != -1) {
         block.splice(index, 1);
         CLIENT.show(user + ' was removed.');
-        CLIENT.set(att, block);
+        CLIENT.set(att, JSON.stringify(block));
     } else {
         errorMessage('That nick is not on the list');
     }
@@ -1764,7 +1752,7 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
-		IfScrolled()
+	IfScrolled();
     }
     $(window).resize(resize); // Add event listener to Iwindow
     resize();
@@ -1792,7 +1780,7 @@ $(function() {
                 }
             });
             $('#autocomplete').show();
-            $('#autocomplete').html('');
+            $('#autocomplete').empty();
             $(list).each(function(i) {
                 $('#autocomplete').append('<span>' + list[i] + '</span>');
             });
