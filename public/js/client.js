@@ -10,8 +10,6 @@ ONLINE = new Backbone.Collection();
 $(function() {
     var CLIENT_RECAPTCHA_KEY = "6Lcw6wcTAAAAANJlc4WS4P4uecBjcLjW7jtHrZCm";
     var socket = io('/' + window.channel);
-    var requestId = 0;
-    var requests = {};
     var roles = ['god','super','admin','mod','basic','mute'];
 
     //Add user to list and show message
@@ -73,7 +71,7 @@ $(function() {
     //Shows user leave message with part, if it exists
     socket.on('left', function(user) {
         ONLINE.remove(user.id);
-        if (!user.kicked && CLIENT.has('tjoin') && CLIENT.get('tjoin') == 'on') {
+        if (!user.kicked && CLIENT.get('tjoin') == 'on') {
             CLIENT.show({
                 type : 'general-message',
                 message : user.nick + ' has left ' + (user.part ? user.part : '')
@@ -98,8 +96,6 @@ $(function() {
             info.role = 'basic';
             info.idle = 1;
         }
-        //Prevents localStorage from reading the level as a number
-        info.access_level ? info.access_level += '.' : true;
         CLIENT.set(info);
     });
 
@@ -157,18 +153,6 @@ $(function() {
         window.location.reload();
     });
 
-    socket.on('response', function(msg) {
-        var def = msg && requests[msg.id];
-        if (def && def.state() == 'pending') {
-            requests[msg.id] = null;
-            if (msg.error) {
-                def.reject(msg.error);
-            } else {
-                def.resolve(msg.message);
-            }
-        }
-    });
-
     //Sends request for topic info
     getTopicData = function() {
         socket.emit('topicInfo');
@@ -181,7 +165,9 @@ $(function() {
             params : {flair : flair}
         });
     };
-
+    socket.on('updateMousePosition', function(msg) {
+        CLIENT.trigger('updateMousePosition', msg);
+    });
     /**
      * @inner
      * @param {string} name
@@ -266,16 +252,9 @@ $(function() {
             /* Initialize from localstorage. */
             'color tjoin font style mute mute_speak play nick images security msg flair styles bg access_level role part block alert menu_top menu_left menu_display mask frame'.split(' ').forEach(function(key) {
                 var item = localStorage.getItem('chat-' + key);
-                try {
-                    item = JSON.parse(item);
-                } catch(e) {
-                    //Ignore
-                }
                 this.set(key, item);
                 this.on('change:' + key, function(m, value) {
                     if (value) {
-                    	if (typeof value == 'object')
-                            value = JSON.stringify(value);
                         localStorage.setItem('chat-' + key, value);
                     } else {
                         localStorage.removeItem('chat-' + key);
@@ -287,7 +266,6 @@ $(function() {
             'color style flair mute play mute_speak images styles bg role access_level part mask frame'.split(' ').forEach(function(key) {
                 this.on('change:' + key, function(m, value) {
                     if (value) {
-                    	key == 'access_level' ? value = value.split('.')[0] : value;
                         this.show(key + ' changed to: ' + value);
                     } else {
                         this.show(key + ' reset to default');
@@ -303,16 +281,6 @@ $(function() {
             }, this);
         },
 
-        request : function(msg) {
-            var id = requestId++;
-            var result = requests[id] = $.Deferred();
-            socket.emit('request', {
-                id : id,
-                msg : msg
-            });
-            return result.promise();
-        },
-
         //Returns all valid commands
         getAvailableCommands : function() {
             var myrole = this.get('role');
@@ -325,9 +293,8 @@ $(function() {
         //Parses and sends message to server
         submit : function(input) {
             var role = this.get('role');
-            var access_level = this.get('access_level').split('.')[0];
+            var access_level = parseInt(this.get('access_level'));
             if (access_level >= 0) {
-                //var parsed = /^\/(?!donkeydong)(\w+) ?([\s\S]*)/.exec(input);
                 var parsed = /^\/(\w+) ?([\s\S]*)/.exec(input);
                 if (parsed) {
                     input = parsed[2];
@@ -405,8 +372,10 @@ $(function() {
                 }
             }
             return input;
-        }
-
+        },
+        updateMousePosition : function(position) {
+            socket.emit('updateMousePosition', position);
+         }	
     }));
 });
 
@@ -864,28 +833,9 @@ $(function() {
         });
     }
 
-//Scrolls the window if you're already already scrolled to bottom.
-	window.IfScrolled = function(AntiScroll){
-	var containerEl = $('#messages');
-	var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 200;
-	var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
-        var ScrolledUp = containerEl.scrollTop() < containerEl.prop('scrollHeight') - containerEl.prop('clientHeight') - 300;
-
-	if (scrolledToBottom && scrollDelta > 0) {
-            scrollToBottom();
-        } else if (AntiScroll){
-            if(ScrolledUp){
-
-            }
-            else {
-                scrollToBottom();
-            }
-          }
-	}
-
     function appendMessage(el) {
         var containerEl = $('#messages');
-        var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 200;
+        var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
         el.appendTo(containerEl);
         var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         if (scrolledToBottom && scrollDelta > 0) {
@@ -1081,7 +1031,7 @@ $(function() {
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
         input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
-        $(window).resize(); //Corrects Message Box if window resized.
+        //$(window).resize(); //Messes up scrolling. Add back if needed
     });
 
 });
@@ -1356,7 +1306,7 @@ $(function() {
                 if (att == 'bg' && CLIENT.get('bg') == 'off') {
                 /* Old shit that doesn't seem to turn BG on.
                 $('#background').css('background', CLIENT.get('old'));
-                Below; Frogs fix for /toggle bg */
+                Below; Fix for /toggle bg */
                     CLIENT.set('bg','on');
                 } else if (att == 'join' || att == 'leave'){
                     if (CLIENT.get('tjoin') == 'on' || CLIENT.get('tjoin') == null && CLIENT.set('tjoin','on')){
@@ -1501,14 +1451,13 @@ function errorMessage(message){
  */
 add = function(att, user){
     if (user.toLowerCase() == CLIENT.get('nick').toLowerCase()) {
-        errorMessage('You may not add yourself')
+        errorMessage('You may not add yourself');
     } else {
-        var block = jQuery.extend([], CLIENT.get(att));
-        block.length == 0 ? block = [] : true;//Ignore this stupid ternary
+        var block = JSON.parse(CLIENT.get(att) || '[]');
         if (block.indexOf(user) == -1){
             block.push(user);
             CLIENT.show(user + ' has been added');
-            CLIENT.set(att, block);
+            CLIENT.set(att, JSON.stringify(block));
         } else {
             errorMessage('That nick is already added');
         }
@@ -1527,12 +1476,12 @@ remove = function(att, user) {
         CLIENT.show(att + ' has been cleared');
         return;
     }
-    var block = jQuery.extend([], CLIENT.get(att));
+    var block = JSON.parse(CLIENT.get(att));
     var index = block.indexOf(user);
     if (index != -1) {
         block.splice(index, 1);
         CLIENT.show(user + ' was removed.');
-        CLIENT.set(att, block);
+        CLIENT.set(att, JSON.stringify(block));
     } else {
         errorMessage('That nick is not on the list');
     }
@@ -1586,14 +1535,14 @@ parser = {
     //Shorter version of parse
     parseLinks : function(str) {
         // Convert chars to html codes
-        str = str.replace(/&/gi, '&amp;');
-        str = str.replace(/>/gi, '&gt;');
-        str = str.replace(/</gi, '&lt;');
-        str = str.replace(/\n/g, '\\n');
-        str = str.replace(/\$/gi, '&#36;');
-        str = str.replace(/\\\\n/g, this.repslsh);
-        str = str.replace(/\\n/g, '<br />');
-        str = str.replace(this.repslsh, '\\\\n');
+        str =str.replace(/&/gi, '&amp;')
+				.replace(/>/gi, '&gt;')
+				.replace(/</gi, '&lt;')
+				.replace(/\n/g, '\\n')
+				.replace(/\$/gi, '&#36;')
+				.replace(/\\\\n/g, this.repslsh)
+				.replace(/\\n/g, '<br />')
+				.replace(this.repslsh, '\\\\n');
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
         str = str.replace(RegExp(this.repslsh, 'g'), '');
@@ -1669,9 +1618,10 @@ parser = {
         });*/
 
         //Word Filters
-        str = str.replace(/spooks/gi, 'awakens');
-        str = str.replace(/vegan/gi, 'fag');
-        str = str.replace(/anon2000/gi, 'homosexual');
+        str = str.replace(/spooks/gi, 'forgetme')
+        		.replace(/awakens/gi, 'the shitty chat')
+    			.replace(/vegan/gi, 'homosexual')
+    			.replace(/anon2000/gi, 'fag');
 
         // Remove replacement codes
         str = str.replace(RegExp(this.replink, 'g'), '');
@@ -1682,6 +1632,7 @@ parser = {
         // Add styles
         if (CLIENT.get('styles') == 'on'){
             str = this.multiple(str, /\/\!!([^\|]+)\|?/g, '<div id=neon>$1</div>');
+            str = this.multiple(str, /\/\=([^\|]+)\|?/g, '<div id=no-shadow>$1</div>');
             str = this.multiple(str, /\/\&#35;([^\|]+)\|?/g, '<div id=spoil>$1</div>');
             str = this.multiple(str, /\/\+([^\|]+)\|?/g, '<div id=rotat>$1</div>');
             str = this.multiple(str, /\/\^([^\|]+)\|?/g, '<big>$1</big>');
@@ -1740,7 +1691,7 @@ parser = {
             for (var i = 0; i < BLACKLIST.length; i++){
                 blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
                 if (blacklisted) break;
-                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="IfScrolled(true)" onerror="imageError(this)" /></a>');
+                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="scrollToBottom()" onerror="imageError(this)" /></a>');
             }
         }
         // Video embeds
@@ -1783,9 +1734,9 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
-		IfScrolled()
+	scrollToBottom();
     }
-    $(window).resize(resize); // Add event listener to Iwindow
+    $(window).resize(resize); // Add event listener to window
     resize();
 });
 
@@ -1811,7 +1762,7 @@ $(function() {
                 }
             });
             $('#autocomplete').show();
-            $('#autocomplete').html('');
+            $('#autocomplete').empty();
             $(list).each(function(i) {
                 $('#autocomplete').append('<span>' + list[i] + '</span>');
             });
@@ -2049,5 +2000,54 @@ function video(event, type, input) {
 
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
-	IfScrolled(true);
+	scrollToBottom();
+});
+
+/////////////////////////////
+//Cursors
+/////////////////////////////
+$(function() {
+    var position = null, x, y;
+    $(window).mousemove(function(e) {
+        x = e.clientX / $(window).width();
+        y = e.clientY / $(window).height();
+    });
+
+    setInterval(function() {
+        if (CLIENT.get('cursors') == 'off' ? 0 : 1 && !position || position.x != x || position.y != y) {
+            CLIENT.updateMousePosition(position = {
+                x : x,
+                y : y
+            });
+        }
+    }, 50);
+    CLIENT.on('updateMousePosition', function(msg) {
+        var el = $('#cursor-' + msg.id);
+        if (el.length == 0) {
+            var user = ONLINE.get(msg.id);
+            if (user) {
+                var nick = $('<span class="nick"></span>').text(user.get('nick'));
+                el = $('<div id="cursor-' + msg.id + '" class="mouseCursor"></div>').append(nick).appendTo('body');
+                el.css('display', CLIENT.get('cursors') == 'off' ? 'none' : 'block');
+                user.on('change:nick', function(m, newNick) {
+                    nick.text(newNick);
+                });
+            }
+        }
+        el.css({
+            left : (msg.position.x * 100) + '%',
+            top : (msg.position.y * 100) + '%'
+        });
+    });
+    ONLINE.on('remove', function(user) {
+        $('#cursor-' + user.get('id')).remove();
+    });
+    ONLINE.on('reset', function() {
+        $('.mouseCursor').remove();
+    });
+    CLIENT.on('change:cursors', function(m, cursors) {
+        $('.mouseCursor').css({
+            display : cursors == 'off' ? 'none' : 'block'
+        })
+    });
 });

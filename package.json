@@ -1,6 +1,7 @@
 {
   "name": "spooks-chat",
   "version": "0.0.1",
+  "license": "GPL-2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/codefactor/spooks-chat.git"

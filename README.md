@@ -1,7 +1,5 @@
-awaken-chat
+Forget Me
 ================
-
-<img src="http://i.imgur.com/G7aRUWX.png" width="250">
 
 A simple Node.JS chat server with some user management and games.
 
@@ -13,7 +11,7 @@ A simple Node.JS chat server with some user management and games.
 
 ## Local Installation
 1. Create a database called nodejs_chat
-2. Add tables by executing the sql files inside /sql/
+2. Add tables by executing /sql/nodejs_chat.sql
 3. Rename default conf/settings.public to conf/settings.json
 
 To run with Forever:
@@ -27,4 +25,4 @@ For local testing use:
 `nodejs server`
 
 ## Developing
-Contact or E-Mail Frogger at http://awakens.me / Admin@awakens.me to become a developer
+Contact or E-Mail Landon at http://forgetme.ml / landonjpowell@airmail.cc to gain development privs. 

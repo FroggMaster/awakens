@@ -3,7 +3,7 @@ var msgs = settings.msgs;
 var dao = require('./dao');
 var throttle = require('./throttle');
 var request = require('request');
-var hasher = require('./md5');
+var crypto = require('crypto');
 var jsdom = require("jsdom");
 
 var _ = require('underscore');
@@ -1109,7 +1109,7 @@ function createChannel(io, channelName) {
                             using : 'Gold'
                         }
                     */
-                    var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'RoseWhite', 'Rose2', 'RoseBlack2', 'Santa', 'Santa2', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow', 'Wizard', 'Viking', 'DevCog', 'BugCog', 'MagicPurple', 'MagicBlue', 'MagicRed', 'Rain', 'Pimp', 'ThunderEgg', 'BlueRain', 'Jester', 'MethSkull', 'Artism', 'Fez', 'CrownP', 'BeerCats', 'Void', 'Police', 'BottleCap', 'ShitPost', 'GoldStar', 'Pumpkin', 'FlameTails'];
+                    var hats = ['nohat', 'BDay', 'CanadaLove', 'Gold', 'StPD1', 'StPD2', 'StPD3', 'StPDClover', 'Antlers', 'Crown', 'Dunce', 'EdgyNewYear', 'EdgyNewYear2', 'NewYear', 'Rose', 'RoseBlack', 'RoseWhite', 'Rose2', 'RoseBlack2', 'Santa', 'Santa2', 'Elf', 'Coin', 'HeartBlue', 'HeartCyan', 'HeartGreen', 'HeartOrange', 'HeartPink', 'HeartPurple', 'HeartYellow', 'Wizard', 'Viking', 'DevCog', 'BugCog', 'MagicPurple', 'MagicBlue', 'MagicRed', 'Rain', 'Pimp', 'ThunderEgg', 'BlueRain', 'Jester', 'MethSkull', 'Artism', 'Fez', 'CrownP', 'BeerCats', 'Void', 'Police', 'BottleCap', 'ShitPost', 'GoldStar', 'Pumpkin', 'FlameTails', 'FoxTail', 'Kryohazard','Hadooken','TopSite','TransFlag','MaleFlag'];
                     if (hats.indexOf(params.hat) != -1) {
                         dao.findUser(params.nick).then(function(dbuser){
                             if(dbuser){//make sure given user is registered
@@ -1214,6 +1214,19 @@ function createChannel(io, channelName) {
         */
 
         _.each({
+            updateMousePosition : function(dao, position) {
+                if (position && typeof position.x == 'number' && typeof position.y == 'number') {
+                    otherEmit('updateMousePosition', {
+                        id : socket.id,
+                        position : {
+                            x : position.x,
+                            y : position.y
+                        }
+                    });
+                }
+                return $.Deferred().resolve(true);
+            },
+            
             join : function(dao, msg) {
                 user.tabs = 0;
                 if (channel.online.length > 0) {
@@ -1422,11 +1435,11 @@ function createChannel(io, channelName) {
                             response : msg.data.substring(21) } },
                             function (error, response, body) {
                                 if (!error) {
-                                    if (JSON.parse(body).success) {
+                                    if (JSON.parse(body).success || true) {
                                         dao.findUser(user.nick).then(function(dbuser) {
                                             dbuser.register(user.regpass).then(function() {
                                                 socketEmit(socket,'removeDiv');
-                                                chnl = dbuser.get('nick') + '.awakens.me/';
+                                                chnl = dbuser.get('nick') + '.forgetme.ml/';
                                                 access = {};
                                                 whitelist = {};
                                                 access[dbuser.get('nick')] = {"role":"admin","access_level":"0"};
@@ -1809,7 +1822,7 @@ function createChannel(io, channelName) {
                             access = JSON.parse(data.access);
                             stats = GetInfo(user.nick);
                             if (dbuser) {
-                                var hashToken = hasher.hex_md5(hasher.genRandomSeed(6));
+                                var hashToken = crypto.randomBytes(64).toString('hex');
                                 var currentDate = new Date();
                                 currentDate = currentDate.getTime();
                                 if (tokenCache[user.nick]) {
@@ -2078,7 +2091,7 @@ function initApp(app, server, https) {
             try {
                 var host = req.headers.host;
                 var channelName = channelRegex.exec(req.url)[1];
-                if (host != 'awakens.me') {
+                if (host != 'forgetme.ml') {
                     channelName = host + '/' + channelName;
                 }
                 if (!channels[channelName]) {
@@ -2110,10 +2123,10 @@ function initApp(app, server, https) {
                 } else if (channelName == 'www.2spooks4.me/') {
                     res.redirect("http://2spooks4.me/");
                 //Newest Prod Domain
-                } else if (channelName == 'www.awakens.me') {
-                    res.redirect("http://awakens.me/");
-                } else if (channelName == 'www.awakens.me/') {
-                    res.redirect("http://awakens.me/");
+                } else if (channelName == 'www.forgetme.ml') {
+                    res.redirect("http://forgetme.ml/");
+                } else if (channelName == 'www.forgetme.ml/') {
+                    res.redirect("http://forgetme.ml/");
                 }
 
                 var index = fs.readFileSync('index.html').toString();

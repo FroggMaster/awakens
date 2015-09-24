@@ -22,8 +22,8 @@ body {
 #captchaform {
     opacity: 0.0;
     position: absolute;
-    top: 50%
-    left: 50%
+    top: 50%;
+    left: 50%;
     visibility: hidden;
     z-index: 3;
 }
@@ -47,16 +47,16 @@ body {
     opacity:0.0;
     height: 100%;
     width: 100%;
-    left: 0px;
-    top: 0px;
+    left: 0;
+    top: 0;
     z-index: 1;
 }
 
 #passanchor {
     position : fixed;
     text-align: center;
-    left: 0px;
-    top: 0px;
+    left: 0;
+    top: 0;
     z-index: 7;
 }
 
@@ -72,8 +72,8 @@ body {
     left:50%;
     margin-left:-150px;
     margin-top:200px;
-    background-color:rgba(20, 20, 20, 0.75);
-    box-shadow:rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0px;
+    background-color: rgba(20, 20, 20, 0.75);
+    box-shadow:rgba(255, 255, 255, 0.1) 0 1px 0, rgba(0, 0, 0, 0.8) 0 1px 7px 0;
     width:400px;
     height:300px;
     color:white;
@@ -83,7 +83,7 @@ body {
 }
 #quoteDiv {
     background:#1F1F1F;
-    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.8) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.8) inset;
     border: 1px solid #2F2F2F;
     border-radius: 1px;
 }
@@ -232,6 +232,11 @@ a:hover {
 
 .action-message {
     color: rgba(102, 178, 255, 1);
+}
+
+#no-shadow {
+    text-shadow: none; 
+    pointer-events: auto;
 }
  
 .spoken-message .message-content:before,
@@ -407,12 +412,20 @@ z-index:1;
 #marquee {
 	position: relative;
 	width:95%;
+    -o-animation: rightThenLeft 15s infinite;
+    -ms-animation: rightThenLeft 15s infinite;
+    -moz-animation: rightThenLeft 15s infinite;
     -webkit-animation: rightThenLeft 15s infinite;
+    animation: rightThenLeft 15s infinite;
 }  
 
 #flashing {
 	width:95%;
+    -o-animation: flash 15s linear;
+    -ms-animation: flash 15s linear;
+    -moz-animation: flash 15s linear;
     -webkit-animation: flash 15s linear;
+    animation: flash 15s linear;
 }
 
 #spookytext{
@@ -421,8 +434,16 @@ z-index:1;
 }
 
 #neon {
--webkit-animation: neon1 1.5s ease-in-out alternate;
--webkit-animation-iteration-count: 20;
+    -o-animation: neon1 1.5s ease-in-out alternate;
+    -o-animation-iteration-count: 20;
+    -ms-animation: neon1 1.5s ease-in-out alternate;
+    -ms-animation-iteration-count: 20;
+    -moz-animation: neon1 1.5s ease-in-out alternate;
+    -moz-animation-iteration-count: 20;
+    -webkit-animation: neon1 1.5s ease-in-out alternate;
+    -webkit-animation-iteration-count: 20;
+    animation: neon1 1.5s ease-in-out alternate;
+    animation-iteration-count: 20;
 }
 
 #spoil{
@@ -435,23 +456,38 @@ color:white;
 }
 
 #rotat{
-	-webkit-animation: rotate 1.5s ease-in-out alternate;
+	-o-animation: rotate 3s ease-in-out alternate;
+    -ms-animation: rotate 3s ease-in-out alternate;
+    -moz-animation: rotate 3s ease-in-out alternate;
+    -webkit-animation: rotate 3s ease-in-out alternate;
+    animation: rotate 3s ease-in-out alternate;
 }
 
-@-webkit-keyframes rotate {
-  from {
-	-ms-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-	-ms-transform: rotate(360deg); 
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+@keyframes rotate {
+    0% {
+        -o-transform: rotate(0deg);
+	    -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    50% {
+        -o-transform: rotate(180deg);
+	    -ms-transform: rotate(180deg); 
+        -moz-transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+    100% {
+        -o-transform: rotate(360deg);
+	    -ms-transform: rotate(360deg); 
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
-@-webkit-keyframes neon1 {
+@keyframes neon1 {
   from {
 	text-shadow: 0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1) , 0 0 15px rgba(255,255,255,1) , 0 0 20px #ff00de , 0 0 70px #ff00de , 0 0 40px #ff00de , 0 0 50px #ff00de ;
     color:#ff00de;
@@ -462,17 +498,15 @@ color:white;
   }
 }
 
-@-webkit-keyframes rightThenLeft {
+@keyframes rightThenLeft {
 
     0%  {left:0%;}
-	25%  {left:90%;}
-    50%  {left:0%;}
-	75%  {left:90%;}
-    100% {left:0%;}
+	50%  {left:90%;}
+    100%  {left:0%;}
 	
 }
 
-@-webkit-keyframes flash {
+@keyframes flash {
 
 	0% {color: #F00;} 
 	20% {color: #F90;}
