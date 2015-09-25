@@ -864,28 +864,9 @@ $(function() {
         });
     }
 
-//Scrolls the window if you're already already scrolled to bottom.
-	window.IfScrolled = function(AntiScroll){
-	var containerEl = $('#messages');
-	var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 200;
-	var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
-        var ScrolledUp = containerEl.scrollTop() < containerEl.prop('scrollHeight') - containerEl.prop('clientHeight') - 300;
-
-	if (scrolledToBottom && scrollDelta > 0) {
-            scrollToBottom();
-        } else if (AntiScroll){
-            if(ScrolledUp){
-
-            }
-            else {
-                scrollToBottom();
-            }
-          }
-	}
-
     function appendMessage(el) {
         var containerEl = $('#messages');
-        var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 200;
+        var scrolledToBottom = containerEl.prop('scrollTop') + containerEl.prop('clientHeight') >= containerEl.prop('scrollHeight') - 50;
         el.appendTo(containerEl);
         var scrollDelta = containerEl.prop('scrollHeight') - containerEl.prop('clientHeight');
         if (scrolledToBottom && scrollDelta > 0) {
@@ -1081,7 +1062,7 @@ $(function() {
     var input = $('#input-message').keyup(function(e) {
         input.css('height', '1px');
         input.css('height', Math.min(Math.max(input.prop('scrollHeight') + 4, 20), $(window).height() / 3) + 'px');
-        $(window).resize(); //Corrects Message Box if window resized.
+        //$(window).resize(); //Messes up scrolling. Add if needed.
     });
 
 });
@@ -1740,7 +1721,7 @@ parser = {
             for (var i = 0; i < BLACKLIST.length; i++){
                 blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
                 if (blacklisted) break;
-                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="IfScrolled(true)" onerror="imageError(this)" /></a>');
+                str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="scrollToBottom()" onerror="imageError(this)" /></a>');
             }
         }
         // Video embeds
@@ -1783,9 +1764,9 @@ $(function() {
             var $this = $(this);
             $this.css('width', $(window).width() + 'px');
         });
-		IfScrolled()
+	scrollToBottom();
     }
-    $(window).resize(resize); // Add event listener to Iwindow
+    $(window).resize(resize); // Add event listener to window
     resize();
 });
 
@@ -2049,5 +2030,5 @@ function video(event, type, input) {
 
 // Scroll to bottom when window is resized
 window.addEventListener('resize', function(event){
-	IfScrolled(true);
+    scrollToBottom();
 });
