@@ -1,9 +1,10 @@
 {
-  "name": "spooks-chat",
+  "name": "Awakens",
   "version": "0.0.1",
+  "license": "GPL-2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/codefactor/spooks-chat.git"
+    "url": "https://github.com/FroggMaster/awakens.git"
   },
   "description": "A simple node.js chat server with some user management and games.",
   "dependencies": {
