@@ -1,8 +1,6 @@
 awaken-chat
 ================
 
-<img src="http://i.imgur.com/G7aRUWX.png" width="250">
-
 A simple Node.JS chat server with some user management and games.
 
 ## Requirements
