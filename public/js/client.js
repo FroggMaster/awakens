@@ -1410,7 +1410,7 @@ $(function() {
             role : 'super'
         },
         cam : function(){
-            video('event', 'embed', 'http://162.219.26.75:12202/spooks')
+            video('event', 'embed', 'http://opentokrtc.com/awakens')
         },
         define : {
             params : [ 'message$' ]
