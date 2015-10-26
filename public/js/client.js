@@ -1712,12 +1712,12 @@ parser = {
         // Prevent blacklisted images, parse images
         var img = /(<a target="_blank" href="[^"]+?">)([^<]+?\.(?:agif|apng|gif|jpg|jpeg|png|bmp|svg))<\/a>/i.exec(str);
         if (img && CLIENT.get('images') == 'on') {
-            var blacklisted = false;
-            for (var i = 0; i < BLACKLIST.length; i++){
-                blacklisted = img[2].indexOf(BLACKLIST[i]) >= 0;
-                if (blacklisted) break;
+            (function(){
+                for (var i = 0; i < BLACKLIST.length; i++) {
+                    if (img[2].indexOf(BLACKLIST[i]) >= 0) return;
+                }
                 str = str.replace(img[0], img[1] + '<img src="' + img[2] + '"onload="scrollToBottom()" onerror="imageError(this)" /></a>');
-            }
+            })();
         }
         // Video embeds
         if (str.search(/(youtu(\.)?be)/gi) != -1)
