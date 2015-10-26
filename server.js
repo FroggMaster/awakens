@@ -69,9 +69,11 @@ function createChannel(io, channelName) {
         }
 
         //Forward IP from Apache Header.
+        /*
         if (socket.handshake.headers["x-forwarded-for"]) {
             user.remote_addr = socket.handshake.headers["x-forwarded-for"];
         }
+        */
 
         //Fix for ::ffff:
         if (user.remote_addr.substring(0,7) == '::ffff:') {
