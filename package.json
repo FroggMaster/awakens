@@ -17,7 +17,6 @@
     "underscore": "^1.6.0",
     "emailjs": "^0.3.9",
     "htmlparser2": "^3.8.3",
-    "jsdom": "^3",
     "request": "^2.39.0"
   }
 }
